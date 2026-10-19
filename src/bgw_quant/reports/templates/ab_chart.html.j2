@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>{{ symbol }} {{ day }} 双模式复盘</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>
+ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;background:#fafafa;color:#222}
+ .banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin-bottom:12px}
+ .live{background:#d1e7dd;border-color:#a3cfbb}
+ table{border-collapse:collapse;font-size:13px;margin:8px 0}
+ th,td{border:1px solid #ddd;padding:4px 8px;text-align:right}
+ th{background:#f0f0f0} td:first-child,th:first-child,td:nth-child(2),th:nth-child(2){text-align:left}
+ #chart{height:420px} #equity{height:160px}
+ .legend{font-size:13px;color:#555}
+ h1{font-size:20px} h2{font-size:16px;margin-top:20px}
+ .neg{color:#c62828}.pos{color:#2e7d32}
+</style>
+</head>
+<body>
+<h1>{{ symbol }} · {{ day }} · 双模式历史复盘（成本模型：{{ cost_profile }}，本金 {{ "%.0f"|format(capital) }} USD）</h1>
+<div class="banner {% if not simulated %}live{% endif %}">
+{% if simulated %}⚠ 数据来源：<b>{{ source }}</b> —— 这是明确标注的模拟数据，不是真实行情；所有收益数字仅用于验证流水线。{% else %}数据来源：{{ source }}{% endif %}
+</div>
+<div class="legend">时间轴为美东时间（America/New_York）。蓝色箭头 = A 事后最优（看过全日行情，理论上限）；绿/红箭头 = B 当时可执行（策略：{{ strategy }}，信号后下一根K线开盘成交）。</div>
+<div id="chart"></div>
+<div class="legend">B 模式权益曲线（按收盘价计）</div>
+<div id="equity"></div>
+
+<h2>A/B 对照</h2>
+<table><tr><th>模式</th><th>策略</th><th>净收益</th><th>交易次数</th><th>成本(USD)</th><th>与A差距</th></tr>
+{% for r in summary %}<tr><td>{{ r['模式'] }}</td><td>{{ r['策略'] }}</td>
+<td class="{{ 'pos' if r['净收益']>=0 else 'neg' }}">{{ "%.2f%%"|format(r['净收益']*100) }}</td><td>{{ r['交易次数'] }}</td>
+<td>{{ "%.2f"|format(r['成本(USD)']) }}</td><td>{{ "%.2f%%"|format(r['与A差距']*100) }}</td></tr>{% endfor %}
+</table>
+
+<h2>为什么 A 与 B 存在差距</h2>
+<ol>{% for e in explanation %}<li>{{ e }}</li>{% endfor %}</ol>
+
+<h2>A 模式交易明细（理论最优，不可实现）</h2>
+<table><tr><th>#</th><th>买入时间</th><th>买入成交价</th><th>卖出时间</th><th>卖出成交价</th><th>成本(USD)</th><th>净盈亏(USD)</th><th>净收益</th></tr>
+{% for t in trades_a %}<tr><td>{{ loop.index }}</td><td>{{ t.buy_ts[11:16] }}</td><td>{{ "%.3f"|format(t.buy_exec) }}</td><td>{{ t.sell_ts[11:16] }}</td><td>{{ "%.3f"|format(t.sell_exec) }}</td><td>{{ "%.2f"|format(t.cost_usd) }}</td><td class="{{ 'pos' if t.net_pnl_usd>=0 else 'neg' }}">{{ "%.2f"|format(t.net_pnl_usd) }}</td><td>{{ "%.2f%%"|format(t.net_ret*100) }}</td></tr>{% endfor %}
+{% if not trades_a %}<tr><td colspan="8">无交易：即使事后看全日行情，也没有任何波段能覆盖交易成本。</td></tr>{% endif %}
+</table>
+
+<h2>B 模式交易明细（{{ strategy }}）</h2>
+<table><tr><th>#</th><th>信号时刻</th><th>买入时间</th><th>买入成交价</th><th>卖出时间</th><th>卖出成交价</th><th>成本(USD)</th><th>净盈亏(USD)</th><th>净收益</th><th>原因</th></tr>
+{% for t in trades_b %}<tr><td>{{ loop.index }}</td><td>{{ t.signal_ts[11:16] }}</td><td>{{ t.buy_ts[11:16] }}</td><td>{{ "%.3f"|format(t.buy_exec) }}</td><td>{{ t.sell_ts[11:16] }}</td><td>{{ "%.3f"|format(t.sell_exec) }}</td><td>{{ "%.2f"|format(t.cost_usd) }}</td><td class="{{ 'pos' if t.net_pnl_usd>=0 else 'neg' }}">{{ "%.2f"|format(t.net_pnl_usd) }}</td><td>{{ "%.2f%%"|format(t.net_ret*100) }}</td><td>{{ t.reason }}{% if t.unverifiable %}（不可验证）{% endif %}</td></tr>{% endfor %}
+{% if not trades_b %}<tr><td colspan="10">无交易（不交易是合法输出）。</td></tr>{% endif %}
+</table>
+
+<script>
+const candles = {{ candles_json|safe }};
+const markersA = {{ markers_a_json|safe }};
+const markersB = {{ markers_b_json|safe }};
+const equity = {{ equity_json|safe }};
+const opts = {layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},
+  timeScale:{timeVisible:true,secondsVisible:false}, localization:{locale:'zh-CN'}};
+function draw(){
+const chart = LightweightCharts.createChart(document.getElementById('chart'), opts);
+const cs = chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+cs.setData(candles.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+const vs = chart.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:''});
+vs.priceScale().applyOptions({scaleMargins:{top:0.85,bottom:0}});
+vs.setData(candles.map(c=>({time:c.time,value:c.volume,color:c.close>=c.open?'rgba(38,166,154,0.4)':'rgba(239,83,80,0.4)'})));
+cs.setMarkers(markersA.concat(markersB).sort((a,b)=>a.time-b.time));
+chart.timeScale().fitContent();
+const eq = LightweightCharts.createChart(document.getElementById('equity'), opts);
+eq.addLineSeries({color:'#1565c0',lineWidth:2}).setData(equity);
+eq.timeScale().fitContent();
+}
+(function wait(){ if (window.LightweightCharts) draw(); else setTimeout(wait, 100); })();
+</script>
+</body></html>

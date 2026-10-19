@@ -1,0 +1,53 @@
+# 研究标的清单。asset_verification 由 `bgwq verify-assets` 根据官方 stockList/stockInfo 填写；
+# 未经官方接口验证的标的保持 unverified，SPCX 在验证通过前 tradable=false。
+symbols:
+  - ticker: NVDA
+    name: NVIDIA
+    kind: common_stock
+    tradable: true
+  - ticker: SPY
+    name: SPDR S&P 500 ETF
+    kind: etf
+    tradable: true
+  - ticker: SPCX
+    name: "待验证：疑似 SpaceX 代币化股票（Ondo 代号 SPCXon）"
+    kind: unknown
+    tradable: false
+    verification_required: true
+    notes: >
+      公开资料显示 Ondo 发行 SPCXon（声称 1:1 对应 SPCX 份额，Solana/Ethereum/BNB Chain）。
+      未经官方 stockInfo 返回 ticker/data_source/contract 核对前，不纳入可交易策略；
+      且 Massive 是否提供 SPCX 原生分钟线未知，若无原生基准则无法区分原股价与代币成交价。
+  - ticker: MU
+    name: Micron
+    kind: common_stock
+    tradable: true
+  - ticker: QQQ
+    name: Invesco QQQ
+    kind: etf
+    tradable: true
+  - ticker: TSLA
+    name: Tesla
+    kind: common_stock
+    tradable: true
+  - ticker: MSFT
+    name: Microsoft
+    kind: common_stock
+    tradable: true
+  - ticker: SNDK
+    name: Sandisk
+    kind: common_stock
+    tradable: true
+  - ticker: INTC
+    name: Intel
+    kind: common_stock
+    tradable: true
+  - ticker: META
+    name: Meta Platforms
+    kind: common_stock
+    tradable: true
+
+# 官方 SDK 枚举中的发行商（data_source）只有 ondo / xstocks；"Reality" 未出现在官方枚举中，
+# 作为待确认发行商保留，只有 checkContractIsRwa 返回时才会标记。
+issuers_known: [ondo, xstocks]
+issuers_unconfirmed: [reality]

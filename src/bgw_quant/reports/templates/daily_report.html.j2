@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 日报 · Bitget Wallet 美股代币化量化复盘</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1200px}
+h1{font-size:22px}h2{font-size:17px;margin-top:26px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:15px}
+table{border-collapse:collapse;font-size:12.5px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 6px;text-align:right}
+th{background:#f3f3f3}td:first-child,th:first-child{text-align:left}
+.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}
+</style></head><body>
+<h1>{{ day }} · 每日复盘报告（成本模型 {{ cost_profile }}，基准本金 {{ capital|num(0) }} USD）</h1>
+<div class="muted">生成时间 {{ generated_at }} · V1 仅研究/回测/模拟，不含任何真实交易</div>
+<div class="banner {{ 'warn' if status.data_mode=='simulated' else 'ok' }}">{{ status.banner }}</div>
+{% if status.blockers %}<div class="banner bad"><b>阻塞项（未伪造完成）：</b><ul>{% for b in status.blockers[:8] %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endif %}
+<div class="banner warn"><b>本金档位配置问题（原样标记，未擅自修改）：</b><ul>{% for i in status.tier_issues %}<li>{{ i }}</li>{% endfor %}</ul>
+<b>重要：</b>每日 0.8%–2.2% 仅为研究目标，不是保证收益；本报告所有“达标/未达标”仅描述历史模拟结果。</div>
+
+<h2>1. 每日涨跌与行情排名</h2>
+<table><tr><th>#</th><th>标的</th><th>开盘</th><th>收盘</th><th>涨跌</th><th>振幅</th><th>成交额(USD)</th><th>代币收盘</th><th>代币基差(bps)</th><th>来源</th><th>可交易</th></tr>
+{% for r in rankings %}<tr><td>{{ r.rank }}</td><td>{{ r.symbol }}</td><td>{{ r.open|num }}</td><td>{{ r.close|num }}</td>
+<td class="{{ 'pos' if r.change_pct>=0 else 'neg' }}">{{ "%.2f%%"|format(r.change_pct) }}</td><td>{{ "%.2f%%"|format(r.range_pct) }}</td><td>{{ r.amount_usd|num(0) }}</td>
+<td>{{ r.token_close|num if r.token_close is not none else '—' }}</td><td>{{ r.token_basis_bps|num(1) if r.token_basis_bps is not none else '—' }}</td><td><span class="tag">{{ r.source }}</span></td><td>{{ '是' if r.tradable else '否(待验证)' }}</td></tr>{% endfor %}
+</table>
+
+<h2>2. 各标的双模式复盘（A 事后最优 vs B 当时可执行）</h2>
+{% for e in per_symbol %}
+<h3>{{ e.symbol }} {% if not e.tradable %}<span class="tag">未验证资产，不纳入可交易策略</span>{% endif %} · <a href="{{ e.chart }}">K线与买卖点图</a></h3>
+<table><tr><th>模式/策略</th><th>净收益</th><th>交易次数</th><th>成本(USD)</th><th>与A差距</th></tr>
+{% for r in e.ab.summary_table().to_dict(orient='records') %}<tr><td>{{ r['模式'] }} · {{ r['策略'] }}</td><td class="{{ 'pos' if r['净收益']>=0 else 'neg' }}">{{ r['净收益']|pct }}</td><td>{{ r['交易次数'] }}</td><td>{{ r['成本(USD)']|num }}</td><td>{{ r['与A差距']|pct }}</td></tr>{% endfor %}</table>
+<div class="muted">{% for g in e.ab.gap_explanation %}• {{ g }}<br>{% endfor %}</div>
+{% if e.bt %}
+<b>样本外 walk-forward（{{ e.bt.n_days }} 个交易日，规则策略，最佳：{{ e.bt.best_oos_strategy }}）</b>
+<table><tr><th>策略</th><th>日均净收益(OOS)</th><th>样本内日均</th><th>累计</th><th>年化</th><th>Sharpe</th><th>Sortino</th><th>最大回撤</th><th>日胜率</th><th>笔/日</th><th>成本/日(占本金)</th><th>相对A捕获率</th></tr>
+{% for k, v in e.bt.strategies.items() %}{% set m=v.oos_metrics %}<tr><td>{{ k }}</td><td class="{{ 'pos' if m.mean_daily_net_return>=0 else 'neg' }}">{{ m.mean_daily_net_return|pct(3) }}</td><td>{{ v.in_sample_vs_oos.in_sample_mean_daily|pct(3) }}</td><td>{{ m.total_net_return|pct }}</td><td>{{ m.annualized_return|pct if m.annualized_return is not none else '—' }}</td><td>{{ m.sharpe|num }}</td><td>{{ m.sortino|num }}</td><td>{{ m.max_drawdown|pct }}</td><td>{{ m.daily_win_rate|pct(0) }}</td><td>{{ m.trades_per_day|num(1) }}</td><td>{{ m.cost_pct_of_capital_per_day|pct(3) }}</td><td>{{ m.capture_ratio_vs_hindsight|num if m.capture_ratio_vs_hindsight is not none else '—' }}</td></tr>{% endfor %}
+{% for k, m in e.bt.benchmarks.items() %}<tr><td><i>基准 {{ k }}</i></td><td>{{ m.mean_daily_net_return|pct(3) if m.mean_daily_net_return is defined else '—' }}</td><td>—</td><td>{{ m.total_net_return|pct if m.total_net_return is defined else '—' }}</td><td colspan="8"></td></tr>{% endfor %}
+</table>
+{% if e.attain %}<b>七档本金目标达成率（最佳策略 OOS 每日净收益；计息口径未知）</b>
+<table><tr><th>档位</th><th>目标/日</th><th>周期(天)</th><th>样本天数</th><th>达标天数</th><th>达标率</th><th>日均净收益</th><th>周期单利合计</th><th>周期复利</th><th>结论</th></tr>
+{% for a in e.attain %}<tr><td>{{ a.tier }}</td><td>{{ a.target_daily_pct[0] }}%–{{ a.target_daily_pct[1] }}%</td><td>{{ a.period_days }}</td><td>{{ a.n_days }}</td><td>{{ a.attained_days }}</td><td>{{ a.attainment_rate|pct(0) }}</td><td class="{{ 'pos' if a.mean_daily_ret_pct>=0 else 'neg' }}">{{ "%.3f%%"|format(a.mean_daily_ret_pct) }}</td><td>{{ a.period_simple_sum_pct|num if a.period_simple_sum_pct is not none else '—' }}%</td><td>{{ a.period_compound_pct|num if a.period_compound_pct is not none else '—' }}%</td><td class="{{ 'pos' if a.met else 'neg' }}"><b>{{ a.status }}</b></td></tr>{% endfor %}</table>{% endif %}
+{% endif %}{% if e.bt_error %}<div class="banner bad">回测失败：{{ e.bt_error }}</div>{% endif %}
+{% if e.ml %}<b>AI（LightGBM）多周期样本外结论</b>
+<table><tr><th>周期(分)</th><th>折数</th><th>OOS AUC</th><th>OOS Brier</th><th>OOS样本</th><th>信号数</th><th>交易时平均净收益</th><th>95%CI</th><th>命中率</th><th>有统计优势</th></tr>
+{% for m in e.ml %}<tr><td>{{ m.horizon_min }}</td><td>{{ m.folds }}</td><td>{{ m.auc_oos_mean|num(3) if m.auc_oos_mean is not none else '—' }}</td><td>{{ m.brier_oos_mean|num(3) if m.brier_oos_mean is not none else '—' }}</td><td>{{ m.n_oos_bars }}</td><td>{{ m.n_signals }}</td><td>{{ m.mean_net_ret_when_trading|pct(3) if m.mean_net_ret_when_trading is not none else '—' }}</td><td>{{ m.ci95 if m.ci95 else '—' }}</td><td>{{ m.hit_rate|pct(0) if m.hit_rate is not none else '—' }}</td><td class="{{ 'pos' if m.has_edge else 'neg' }}">{{ '是' if m.has_edge else '否 → 不交易' }}</td></tr>{% endfor %}</table>
+<div class="muted">当日 AI 信号数：{{ e.ai_n_signals }}；不交易理由分布：{{ e.ai_reasons }}</div>{% endif %}{% if e.ml_error %}<div class="banner bad">ML 失败：{{ e.ml_error }}</div>{% endif %}
+{% endfor %}
+
+<h2>3. 七档本金容量模拟（成本模型 {{ cost_profile }}）</h2>
+<table><tr><th>档位</th><th>点</th><th>本金</th><th>拆单笔数</th><th>单边成本</th><th>冲击</th><th>往返成本</th><th>Gas往返</th><th>盈亏平衡涨幅</th><th>占深度</th><th>目标/日</th><th>单笔可达标</th><th>可验证</th><th>备注</th></tr>
+{% for c in capacity %}<tr><td>{{ c.tier_id }}</td><td>{{ c.point }}</td><td>{{ c.capital_usd|num(0) }}</td><td>{{ c.child_orders }}</td><td>{{ "%.3f%%"|format(c.side_cost_pct) }}</td><td>{{ "%.3f%%"|format(c.impact_pct) }}</td><td>{{ "%.3f%%"|format(c.round_trip_pct) }}</td><td>{{ c.gas_usd_round_trip|num }}</td><td>{{ "%.3f%%"|format(c.break_even_move_pct) }}</td><td>{{ c.pct_of_depth|pct(1) }}</td><td>{{ c.target_low_pct }}–{{ c.target_high_pct }}%</td><td class="{{ 'pos' if c.feasible_vs_breakeven else 'neg' }}">{{ '可能' if c.feasible_vs_breakeven else '否' }}</td><td class="{{ 'neg' if c.unverifiable else 'pos' }}">{{ '不可验证' if c.unverifiable else '可验证' }}</td><td style="text-align:left;font-size:11px">{{ c.notes|join('；') }}</td></tr>{% endfor %}</table>
+
+<h2>4. 交易明细</h2>
+<div>CSV：<a href="{{ csv_name }}">{{ csv_name }}</a>（A/B 两模式全部模拟交易：买卖价格、成本、净盈亏）</div>
+<h2>5. 执行安全</h2>
+<div class="banner ok">模式：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

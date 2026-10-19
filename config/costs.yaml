@@ -1,0 +1,46 @@
+# 交易成本模型参数（全部可调；默认值为保守假设，并非官方费率）
+# 单位：bps = 万分之一
+default_profile: token_dex
+profiles:
+  token_dex:
+    description: "链上代币化美股（DEX 聚合器成交）保守假设"
+    fee_bps: 30            # 协议/聚合器手续费（假设）
+    spread_bps: 20         # 买卖价差一半（单边）
+    gas_usd: 0.30          # 每笔链上交易 Gas（Solana/BNB 量级；ETH 主网需另设）
+    slippage_bps: 5        # 固定执行滑点（单边）
+    impact_coeff: 1.0      # 价格冲击系数 k：impact = k * daily_vol * sqrt(order_usd / depth_usd)
+    daily_vol: 0.025       # 冲击模型日波动率假设
+    depth_usd: 2000000     # 可用流动性深度（美元）；无法验证时视为不可验证
+    max_tx_usd: 50000      # 单笔最大成交额（对应官方 tx_maximum_buy_usd，缺省假设）
+    min_tx_usd: 1          # 单笔最小成交额
+    fill_prob: 0.97        # 单笔成交成功概率
+    partial_fill_prob: 0.05
+    partial_fill_min_ratio: 0.4
+  token_dex_optimistic:
+    description: "链上代币化美股乐观假设（低费率池、充足深度）"
+    fee_bps: 10
+    spread_bps: 8
+    gas_usd: 0.05
+    slippage_bps: 2
+    impact_coeff: 0.8
+    daily_vol: 0.025
+    depth_usd: 10000000
+    max_tx_usd: 200000
+    min_tx_usd: 1
+    fill_prob: 0.99
+    partial_fill_prob: 0.02
+    partial_fill_min_ratio: 0.5
+  native_broker:
+    description: "原生美股券商成交（仅作基准对照，不代表可在 Bitget Wallet 内实现）"
+    fee_bps: 0
+    spread_bps: 1
+    gas_usd: 0
+    slippage_bps: 1
+    impact_coeff: 0.5
+    daily_vol: 0.02
+    depth_usd: 50000000
+    max_tx_usd: 2000000
+    min_tx_usd: 1
+    fill_prob: 0.995
+    partial_fill_prob: 0.01
+    partial_fill_min_ratio: 0.7

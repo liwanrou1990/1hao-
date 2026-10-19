@@ -1,0 +1,16 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+data_store/*.duckdb
+data_store/*.wal
+reports_out/
+frontend/node_modules/
+frontend/dist/
+*.egg-info/
+build/
+dist/
+.ruff_cache/
+models_out/
