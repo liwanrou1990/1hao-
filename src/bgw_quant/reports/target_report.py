@@ -100,15 +100,17 @@ def generate_target_report(pipeline, day: date, symbols: list[str] | None = None
                                     **st.to_dict(), "in_sample": wf.in_sample_stats_mean, "params_last": wf.folds[-1].params if wf.folds else {}})
                 except Exception as e:  # noqa: BLE001
                     wf_rows.append({"symbol": sym, "capital_usd": cap, "error": str(e)})
-    csv_path = out_dir / f"target_trades_{day}.csv"
+    csv_path = out_dir / f"target_trades_{day}_{pipeline.cost_profile_name}.csv"
     _write_csv(csv_rows, csv_path)
     summary = pipeline.target_summary(day, symbols)
+    summary_rows = [{k: (None if isinstance(v, float) and v != v else v) for k, v in r.items()}
+                    for r in (summary.to_dict(orient="records") if not summary.empty else [])]
     tpl = _env.get_template("target_report.html.j2")
     html = tpl.render(day=day.isoformat(), generated_at=datetime.now(timezone.utc).isoformat(), status=pipeline.status(),
-                      per_symbol=per_symbol, summary=summary.to_dict(orient="records") if not summary.empty else [], wf_rows=wf_rows,
+                      per_symbol=per_symbol, summary=summary_rows, wf_rows=wf_rows,
                       cfg=pipeline.target_cfg.__dict__, csv_name=csv_path.name, cost_profile=pipeline.cost_profile_name,
                       cost=pipeline.cost.describe(), formal=not pipeline.plan.is_simulated)
-    html_path = out_dir / f"target_report_{day}.html"
+    html_path = out_dir / f"target_report_{day}_{pipeline.cost_profile_name}.html"
     html_path.write_text(html, encoding="utf-8")
     return {"html": str(html_path), "csv": str(csv_path), "n_rows": len(csv_rows), "symbols": [e["symbol"] for e in per_symbol],
             "formal_validation": not pipeline.plan.is_simulated}

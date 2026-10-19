@@ -34,6 +34,8 @@ def test_target_for_capital_rules():
     assert target_for_capital(100_000)[1] == "T3" and target_for_capital(100_000)[0] == pytest.approx(0.01)
     assert target_for_capital(10_000)[0] is None                                 # 缺档
     assert target_for_capital(5_000_000)[1] == "T7"
+    t10, tid10, note10 = target_for_capital(10_000_000)
+    assert tid10 == "T7" and t10 == pytest.approx(0.02) and "超出最高档上限" in note10
 
 
 def test_batch_fill_respects_per_bar_liquidity(tok, cfg):

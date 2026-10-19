@@ -43,12 +43,18 @@ def target_for_capital(capital_usd: float, tiers: TierConfig | None = None, mode
     """返回 (目标日净收益率, 档位 id, 说明)。缺档返回 (None, None, 说明)。"""
     tiers = tiers or load_tiers()
     hits = tiers.find(capital_usd)
+    extra = ""
     if not hits:
-        return None, None, f"本金 {capital_usd:,.0f} USD 无对应档位（缺档），需显式指定目标"
+        top = max(tiers.tiers, key=lambda x: x.max_usd)
+        if capital_usd > top.max_usd:
+            hits = [top]
+            extra = f"；本金超出最高档上限 {top.max_usd:,.0f}，按最高档 {top.id} 目标处理（可在 tiers.yaml 调整）"
+        else:
+            return None, None, f"本金 {capital_usd:,.0f} USD 无对应档位（缺档），需显式指定目标"
     t = hits[0] if overlap_rule == "first" else hits[-1]
     lo, hi = t.target_daily_pct
     pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(mode, lo)
     note = f"档位 {t.id} [{t.min_usd:,.0f}-{t.max_usd:,.0f}] 目标区间 {lo}%–{hi}%，取 {mode} = {pct:.3f}%"
     if len(hits) > 1:
         note += f"；本金同时命中 {[h.id for h in hits]}，按 overlap_rule={overlap_rule} 取 {t.id}"
-    return pct / 100, t.id, note
+    return pct / 100, t.id, note + extra
