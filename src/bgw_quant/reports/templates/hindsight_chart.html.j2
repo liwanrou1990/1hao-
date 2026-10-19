@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ symbol }} {{ day }} 事后最优路径</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;color:#222}
+.banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin:8px 0}
+table{border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{border:1px solid #ddd;padding:3px 7px;text-align:right}th{background:#f0f0f0}
+td:first-child,th:first-child{text-align:left}#chart{height:440px}.pos{color:#2e7d32}.neg{color:#c62828}select{padding:4px 8px}</style></head><body>
+<h1 style="font-size:19px">{{ symbol }} · {{ day }} · 已知完整走势的事后最优路径（成本模型 {{ cost_profile }}）</h1>
+<div class="banner"><b>已知完整走势的事后最优模拟</b>：使用昨日全部K线反向求解，实盘无法预知走势，不代表未来可获得同等收益。
+数据来源 <b>{{ source }}</b>（venue={{ venue }}）{% if simulated %} —— <b>SIMULATED 模拟数据</b>{% endif %}。时间轴为美东时间。</div>
+<div>本金档位：<select id="tier"></select> <span id="meta"></span> · 显示：<select id="which"><option value="max">最高收益路径</option><option value="target">最少交易达标路径</option></select></div>
+<div id="chart"></div>
+<div id="notes" class="banner" style="display:none"></div>
+<table id="trades"></table>
+<script>
+const candles={{ candles_json|safe }}; const tiers={{ tiers_json|safe }};
+const sel=document.getElementById('tier'); tiers.forEach((t,i)=>{const o=document.createElement('option');o.value=i;o.text=`${t.tier} ${t.point} ${t.capital.toLocaleString()} USD`;sel.appendChild(o)});
+let chart, cs;
+function draw(){
+ chart=LightweightCharts.createChart(document.getElementById('chart'),{layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},timeScale:{timeVisible:true,secondsVisible:false},localization:{locale:'zh-CN'}});
+ cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+ cs.setData(candles.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+ const vs=chart.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:''}); vs.priceScale().applyOptions({scaleMargins:{top:0.85,bottom:0}});
+ vs.setData(candles.map(c=>({time:c.time,value:c.volume,color:c.close>=c.open?'rgba(38,166,154,0.4)':'rgba(239,83,80,0.4)'})));
+ chart.timeScale().fitContent(); update();
+}
+function update(){
+ const t=tiers[sel.value]; const which=document.getElementById('which').value;
+ const tr=which==='max'?t.trades:t.target_path; cs.setMarkers(which==='max'?t.markers_max:t.markers_target);
+ document.getElementById('meta').innerHTML=`目标 ${t.target_pct}%/日 · 最高可实现 <b class="${t.max_ret>=0?'pos':'neg'}">${(t.max_ret*100).toFixed(3)}%</b>（${t.profit.toFixed(2)} USD，${t.n_trades} 笔）· ${t.target_met?'<b class="pos">达标</b>，最少 '+t.min_k+' 笔':'<b class="neg">未达标</b>（显示最高可行收益）'}${t.unverifiable?' · <b class="neg">不可验证</b>':''}`;
+ const n=document.getElementById('notes'); n.style.display=t.notes.length?'block':'none'; n.innerHTML=t.notes.join('<br>');
+ let h='<tr><th>#</th><th>买入时间</th><th>买入参考价</th><th>买入成交价</th><th>卖出时间</th><th>卖出参考价</th><th>卖出成交价</th><th>投入(USD)</th><th>数量</th><th>成本(USD)</th><th>净盈亏(USD)</th><th>净收益</th><th>持有(根)</th><th>受流动性限制</th></tr>';
+ tr.forEach((x,i)=>{h+=`<tr><td>${i+1}</td><td>${x.buy_ts.slice(11,16)}</td><td>${x.buy_ref.toFixed(3)}</td><td>${x.buy_exec.toFixed(3)}</td><td>${x.sell_ts.slice(11,16)}</td><td>${x.sell_ref.toFixed(3)}</td><td>${x.sell_exec.toFixed(3)}</td><td>${x.size_usd.toFixed(2)}</td><td>${x.qty.toFixed(4)}</td><td>${x.cost_usd.toFixed(2)}</td><td class="${x.net_pnl_usd>=0?'pos':'neg'}">${x.net_pnl_usd.toFixed(2)}</td><td>${(x.net_ret*100).toFixed(3)}%</td><td>${x.hold_bars}</td><td>${x.liquidity_capped?'是':'否'}</td></tr>`});
+ if(!tr.length) h+='<tr><td colspan="14">无交易：'+(which==='max'?'没有任何波段能覆盖成本':'目标不可达，无达标路径')+'</td></tr>';
+ document.getElementById('trades').innerHTML=h;
+}
+sel.onchange=update; document.getElementById('which').onchange=update;
+(function wait(){ if(window.LightweightCharts) draw(); else setTimeout(wait,100); })();
+</script></body></html>

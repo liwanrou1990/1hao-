@@ -20,6 +20,7 @@ from ..execution.guard import ExecutionGuard
 from ..pipeline import Pipeline, default_window
 from ..reports.charts import bars_to_candles, markers_from_trades
 from ..reports.daily import generate_daily_report
+from ..reports.hindsight_report import generate_hindsight_report, path_markers
 from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
@@ -184,6 +185,64 @@ def ai(symbol: str, day: str | None = None):
 @app.get("/api/execution/status")
 def execution_status():
     return _guard.status()
+
+
+# ---------------------------------------------------------------- 事后最优路径
+@app.get("/api/hindsight/summary")
+def hindsight_summary(day: str | None = None):
+    d = _day(day)
+    p = pl()
+    return _clean({"day": d, "rows": p.hindsight_summary(d), "tier_issues": p.tiers.issues, "simulated": p.plan.is_simulated,
+                   "disclaimer": "已知完整走势的事后最优模拟，不代表实盘未来收益"})
+
+
+@app.get("/api/hindsight/portfolio")
+def hindsight_portfolio(day: str | None = None, tier: str = "T1", point: str = "mid"):
+    d = _day(day)
+    p = pl()
+    t = next((x for x in p.tiers.tiers if x.id == tier), None)
+    if t is None:
+        raise HTTPException(404, "档位不存在")
+    cap = t.representative_capitals((point,))[point]
+    res = p.hindsight_portfolio(d, cap, target_return=t.target_daily_pct[0] / 100)
+    return _clean({"tier": tier, "point": point, **res.to_dict()})
+
+
+@app.get("/api/hindsight/{symbol}")
+def hindsight_symbol(symbol: str, day: str | None = None, tier: str | None = None, point: str = "mid", capital: float | None = None):
+    d = _day(day, symbol)
+    p = pl()
+    bars = p.hindsight_bars(symbol, d)
+    if bars.empty:
+        raise HTTPException(404, f"{symbol} {d} 无数据")
+    if capital:
+        tiers_hit = p.tiers.find(capital)
+        target = tiers_hit[0].target_daily_pct[0] / 100 if tiers_hit else None
+        r = p.hindsight_symbol(symbol, d, capital, target_return=target)
+        rows = [{"tier": tiers_hit[0].id if tiers_hit else "无档位", "point": "custom", "capital_usd": capital, "result": r,
+                 "target_daily_pct": list(tiers_hit[0].target_daily_pct) if tiers_hit else [None, None]}]
+    else:
+        rows = p.hindsight_tiers(symbol, d)
+        if tier:
+            rows = [x for x in rows if x["tier"] == tier and x["point"] == point] or rows[:1]
+    out = {"symbol": symbol, "day": d, "venue": str(bars["venue"].iloc[0]), "source": str(bars["source"].iloc[0]),
+           "fallback_native": bool(bars.attrs.get("fallback_native")), "simulated": bool((bars["quality"] & 128).any()),
+           "candles": bars_to_candles(bars),
+           "tiers": [{"tier": x["tier"], "point": x["point"], "capital_usd": x["capital_usd"], "target_daily_pct": x["target_daily_pct"],
+                      **x["result"].to_dict(), "markers_max": path_markers(x["result"].trades, bars),
+                      "markers_target": path_markers(x["result"].target_path, bars, "目标")} for x in rows],
+           "chart_url": f"/reports/charts/hindsight_{symbol}_{d}_{p.cost_profile_name}.html"}
+    return _clean(out)
+
+
+@app.post("/api/hindsight/report")
+def hindsight_report(day: str | None = None, symbols: list[str] | None = Query(default=None), with_portfolio: bool = True):
+    d = _day(day)
+    out = generate_hindsight_report(pl(), d, symbols, with_portfolio=with_portfolio)
+    root = pl().settings.resolve_path(pl().settings.report_dir)
+    out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
+    out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
+    return _clean(out)
 
 
 # ---------------------------------------------------------------- 训练模式

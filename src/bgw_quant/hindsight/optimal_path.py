@@ -221,7 +221,8 @@ def optimal_path(bars: pd.DataFrame, cost: CostModel, capital_usd: float, *, sym
     if not known:
         notes.append("该数据源不含成交额（如 ondo 报价K线）：流动性未知，未施加逐根成交额上限，结果标记为不可验证")
     if capped:
-        notes.append(f"本金 {capital_usd:,.0f} USD 受逐根流动性上限（参与率 {participation_rate:.0%}）限制，单笔最大投入 {max_deployed:,.0f} USD")
+        notes.append(f"本金 {capital_usd:,.0f} USD 受逐根流动性上限（参与率 {participation_rate:.0%}）限制，单笔最大投入 {max_deployed:,.0f} USD；"
+                     "模型假设每笔在一根K线内完成买入/卖出，未建模跨多根分批建仓，结果偏保守；其余资金闲置")
     if cost.is_unverifiable(max_deployed):
         notes.append(f"单笔投入超过深度假设 {cost.p.depth_usd:,.0f} USD 的 10%，成交不可验证")
     res = OptimalPathResult(symbol, day, venue, source, capital_usd, cost_profile, max_profit, max_profit / capital_usd,

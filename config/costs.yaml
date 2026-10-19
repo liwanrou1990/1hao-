@@ -1,6 +1,8 @@
 # 交易成本模型参数（全部可调；默认值为保守假设，并非官方费率）
 # 单位：bps = 万分之一
 default_profile: token_dex
+# 事后最优路径：单根K线可成交金额占该根成交额的比例（流动性约束）
+participation_rate: 0.10
 profiles:
   token_dex:
     description: "链上代币化美股（DEX 聚合器成交）保守假设"

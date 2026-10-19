@@ -79,6 +79,33 @@ def cmd_report(args):
     _p(out)
 
 
+def cmd_optimal(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    rows = pl.hindsight_tiers(args.symbol, day)
+    from .hindsight.optimal_path import DISCLAIMER
+    print(DISCLAIMER)
+    for row in rows:
+        r = row["result"]
+        print(f"{row['tier']:3s} {row['point']:3s} 本金 {row['capital_usd']:>12,.0f}  目标 {row['target_daily_pct'][0]:.2f}%  "
+              f"最高可实现 {r.max_net_return:+.3%} ({r.max_net_profit_usd:,.2f} USD, {r.n_trades} 笔)  "
+              f"{'达标 最少'+str(r.min_trades_for_target)+'笔' if r.target_met else '未达标'}  {'不可验证' if r.unverifiable else ''}")
+    mid = [row for row in rows if row["point"] == "mid"]
+    if mid:
+        r = mid[0]["result"]
+        print(f"\n{mid[0]['tier']} mid 最高收益路径：")
+        for i, t in enumerate(r.trades, 1):
+            print(f"  {i}. {t.buy_ts[11:16]} 买 {t.buy_exec:.3f} → {t.sell_ts[11:16]} 卖 {t.sell_exec:.3f}  投入 {t.size_usd:,.0f} 数量 {t.qty:.4f} 成本 {t.cost_usd:.2f} 净盈亏 {t.net_pnl_usd:+.2f} ({t.net_ret:+.3%})")
+
+
+def cmd_optimal_report(args):
+    from .reports.hindsight_report import generate_hindsight_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_hindsight_report(pl, day, args.symbols, with_portfolio=not args.no_portfolio))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -118,6 +145,8 @@ def main(argv=None):
     p = sub.add_parser("backtest", help="规则策略 walk-forward"); p.add_argument("symbol"); p.add_argument("--train-days", type=int, default=20); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_backtest)
     p = sub.add_parser("train-ml", help="LightGBM walk-forward"); p.add_argument("symbol"); p.add_argument("--train-days", type=int, default=40); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_train_ml)
     p = sub.add_parser("report", help="生成日报"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--no-ml", action="store_true"); p.add_argument("--no-backtest", action="store_true"); p.set_defaults(f=cmd_report)
+    p = sub.add_parser("optimal", help="事后最优路径：七档本金 × 最高收益/最少交易达标路径"); p.add_argument("symbol"); p.add_argument("--day"); p.set_defaults(f=cmd_optimal)
+    p = sub.add_parser("optimal-report", help="生成事后最优日报（全部标的×七档+组合）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--no-portfolio", action="store_true"); p.set_defaults(f=cmd_optimal_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

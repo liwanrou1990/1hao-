@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 事后最优日报</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1250px}
+h1{font-size:21px}h2{font-size:17px;margin-top:24px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:15px;margin:14px 0 4px}
+table{border-collapse:collapse;font-size:12.5px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 6px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 事后最优交易路径日报（已知完整走势的事后最优模拟）</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }} · 流动性参与率 {{ (participation*100)|round(0) }}% · V1 仅研究，不含真实交易</div>
+<div class="banner bad"><b>声明：</b>以下全部结果都是在已经知道昨日完整走势之后反向求解的理论最优路径，用于研究“昨天怎样交易才能取得更高收益”。实盘无法预知走势，<b>不得宣称实盘未来可获得同等收益</b>，也不要求交易员复制这些操作。</div>
+<div class="banner {{ 'warn' if status.data_mode=='simulated' else 'ok' }}">{{ status.banner }}</div>
+{% if status.blockers %}<div class="banner bad"><b>阻塞项（未伪造完成）：</b><ul>{% for b in status.blockers[:6] %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endif %}
+<div class="banner warn"><b>本金档位（原样保留，系统提示）：</b><ul>{% for i in status.tier_issues %}<li>{{ i }}</li>{% endfor %}
+<li>图片中的理财周期（1/3/5/10/15/20/30 天）并不等于日收益口径；本报告只把档位百分比当作“单日净收益研究目标”对照，不做任何换算。</li></ul>
+成本假设：手续费 {{ cost.fee_bps }} bps、半价差 {{ cost.spread_bps }} bps、滑点 {{ cost.slippage_bps }} bps、Gas {{ cost.gas_usd }} USD/笔、单笔上限 {{ cost.max_tx_usd|num(0) }} USD、深度 {{ cost.depth_usd|num(0) }} USD、冲击系数 {{ cost.impact_coeff }}。</div>
+
+<h2>1. 全标的 × 七档本金 总览（代表点 = 档位下限/中位/上限）</h2>
+<table><tr><th>标的</th><th>档位</th><th>点</th><th>本金</th><th>目标/日</th><th>最高可实现净收益</th><th>净利润(USD)</th><th>交易次数</th><th>是否达标</th><th>达标最少笔数</th><th>单笔最大投入</th><th>受流动性限制</th><th>可验证</th><th>来源</th></tr>
+{% for r in summary %}<tr><td>{{ r.symbol }}{% if not r.tradable %} <span class="tag">待验证</span>{% endif %}</td><td>{{ r.tier }}</td><td>{{ r.point }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_pct }}%</td>
+<td class="{{ 'pos' if r.max_net_return_pct>=0 else 'neg' }}">{{ "%.3f%%"|format(r.max_net_return_pct) }}</td><td>{{ r.max_net_profit_usd|num }}</td><td>{{ r.n_trades }}</td>
+<td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.min_trades_for_target if r.min_trades_for_target is not none else '—' }}</td>
+<td>{{ r.max_deployed_usd|num(0) }}</td><td>{{ '是' if r.liquidity_capped else '否' }}</td><td class="{{ 'neg' if r.unverifiable else 'pos' }}">{{ '不可验证' if r.unverifiable else '可验证' }}</td><td><span class="tag">{{ r.source }}</span></td></tr>{% endfor %}
+</table>
+
+<h2>2. 多股票组合（各档中位本金；轮动 vs 并行均分）</h2>
+<table><tr><th>档位</th><th>本金</th><th>目标/日</th><th>轮动净利润</th><th>轮动笔数</th><th>并行均分 m</th><th>并行净利润</th><th>更优方式</th><th>最高可实现收益</th><th>是否达标</th></tr>
+{% for p in portfolio %}{% if p.res %}<tr><td>{{ p.tier }}</td><td>{{ p.capital_usd|num(0) }}</td><td>{{ p.target_pct }}%</td><td>{{ p.res.sequential_profit_usd|num }}</td><td>{{ p.res.sequential_trades|length }}</td><td>{{ p.res.parallel_best_m }}</td><td>{{ p.res.parallel_profit_usd|num }}</td><td>{{ '轮动' if p.res.best_mode=='sequential' else '并行均分' }}</td><td class="{{ 'pos' if p.res.best_return>=0 else 'neg' }}">{{ p.res.best_return|pct(3) }}</td><td class="{{ 'pos' if p.res.target_met else 'neg' }}"><b>{{ '达标' if p.res.target_met else '未达标' }}</b></td></tr>
+{% else %}<tr><td>{{ p.tier }}</td><td colspan="9">失败：{{ p.error }}</td></tr>{% endif %}{% endfor %}</table>
+{% for p in portfolio %}{% if p.res and p.res.sequential_trades %}<h3>{{ p.tier }} 轮动路径（本金 {{ p.capital_usd|num(0) }} USD）</h3>
+<table><tr><th>#</th><th>股票</th><th>买入时间</th><th>买入成交价</th><th>卖出时间</th><th>卖出成交价</th><th>投入(USD)</th><th>数量</th><th>成本</th><th>净盈亏</th><th>净收益</th></tr>
+{% for t in p.res.sequential_trades %}<tr><td>{{ loop.index }}</td><td>{{ t.symbol }}</td><td>{{ t.buy_ts[11:16] }}</td><td>{{ t.buy_exec|num(3) }}</td><td>{{ t.sell_ts[11:16] }}</td><td>{{ t.sell_exec|num(3) }}</td><td>{{ t.size_usd|num }}</td><td>{{ t.qty|num(4) }}</td><td>{{ t.cost_usd|num }}</td><td class="{{ 'pos' if t.net_pnl_usd>=0 else 'neg' }}">{{ t.net_pnl_usd|num }}</td><td>{{ t.net_ret|pct(3) }}</td></tr>{% endfor %}</table>{% endif %}{% endfor %}
+
+<h2>3. 各标的逐档明细</h2>
+{% for e in per_symbol %}
+<h3>{{ e.symbol }} {% if not e.tradable %}<span class="tag">资产未经官方核对，不纳入可交易策略</span>{% endif %} · 来源 <span class="tag">{{ e.source }}</span>{% if e.fallback_native %} <b class="neg">警告：无代币成交K线，使用原生价格</b>{% endif %} · <a href="{{ e.chart }}">K线与全部买卖点（可切换档位）</a></h3>
+{% for row in e.rows %}{% set r=row.result %}
+<div><b>{{ row.tier }} {{ row.point }} · 本金 {{ row.capital_usd|num(0) }} USD · 目标 {{ row.target_daily_pct[0] }}%/日</b>：最高可实现 <span class="{{ 'pos' if r.max_net_return>=0 else 'neg' }}">{{ r.max_net_return|pct(3) }}</span>（{{ r.max_net_profit_usd|num }} USD，{{ r.n_trades }} 笔）
+· <b class="{{ 'pos' if r.target_met else 'neg' }}">{{ '达标，最少 '+(r.min_trades_for_target|string)+' 笔' if r.target_met else '未达标（显示最高可行收益）' }}</b>{% if r.unverifiable %} · <span class="neg">不可验证</span>{% endif %}
+{% if r.notes %}<div class="muted">{{ r.notes|join('；') }}</div>{% endif %}</div>
+{% if row.point == 'mid' and r.trades %}<table><tr><th>#</th><th>买入时间</th><th>买入参考</th><th>买入成交</th><th>卖出时间</th><th>卖出参考</th><th>卖出成交</th><th>投入(USD)</th><th>数量</th><th>成本</th><th>净盈亏</th><th>净收益</th></tr>
+{% for t in r.trades %}<tr><td>{{ loop.index }}</td><td>{{ t.buy_ts[11:16] }}</td><td>{{ t.buy_ref|num(3) }}</td><td>{{ t.buy_exec|num(3) }}</td><td>{{ t.sell_ts[11:16] }}</td><td>{{ t.sell_ref|num(3) }}</td><td>{{ t.sell_exec|num(3) }}</td><td>{{ t.size_usd|num }}</td><td>{{ t.qty|num(4) }}</td><td>{{ t.cost_usd|num }}</td><td class="{{ 'pos' if t.net_pnl_usd>=0 else 'neg' }}">{{ t.net_pnl_usd|num }}</td><td>{{ t.net_ret|pct(3) }}</td></tr>{% endfor %}</table>{% endif %}
+{% endfor %}{% endfor %}
+
+<h2>4. 交易明细 CSV</h2><div><a href="{{ csv_name }}">{{ csv_name }}</a>（全部档位的最高收益路径、最少交易达标路径与组合轮动路径）</div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

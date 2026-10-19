@@ -21,6 +21,8 @@ from .data.registry import DataPlan, build_data_plan
 from .data.schema import Venue
 from .data.simulated import regime_for_day
 from .data.store import Store
+from .hindsight.optimal_path import OptimalPathResult, optimal_path
+from .hindsight.portfolio import PortfolioResult, portfolio_optimal
 from .ml.predict import ai_signals_for_day
 from .ml.train import WalkForwardOutput, walk_forward_train
 from .replay.compare import ABComparison, run_ab
@@ -54,6 +56,8 @@ class Pipeline:
         self._ml_cache: dict[tuple, WalkForwardOutput] = {}
         self._bt_cache: dict[tuple, dict] = {}
         self._ab_cache: dict[tuple, ABComparison] = {}
+        self._hs_cache: dict[tuple, object] = {}
+        self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
     def symbols(self, tradable_only: bool = False) -> list[str]:
@@ -204,12 +208,82 @@ class Pipeline:
         tbl.insert(0, "symbol", symbol)
         return tbl
 
+    # ------------------------------------------------------------------ 事后最优路径（核心）
+    def hindsight_bars(self, symbol: str, day: date, venue: str = Venue.TOKEN) -> pd.DataFrame:
+        """事后最优研究使用代币成交价（token venue）；若无代币数据则明确回退原生并标注。"""
+        b = self.day_bars(symbol, day, venue)
+        if b.empty and venue == Venue.TOKEN:
+            b = self.day_bars(symbol, day, Venue.NATIVE)
+            if not b.empty:
+                b = b.copy()
+                b.attrs["fallback_native"] = True
+        return b
+
+    def hindsight_symbol(self, symbol: str, day: date, capital_usd: float, target_return: float | None = None,
+                         venue: str = Venue.TOKEN) -> OptimalPathResult:
+        key = ("hs", symbol, day, round(capital_usd, 2), target_return, self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.hindsight_bars(symbol, day, venue)
+        if bars.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        res = optimal_path(bars, CostModel(self.profile), capital_usd, symbol=symbol, participation_rate=self.participation_rate,
+                           target_return=target_return, cost_profile=self.cost_profile_name)
+        if bars.attrs.get("fallback_native"):
+            res.notes.insert(0, "警告：无代币成交K线，本结果使用原生股票价格，不能视为代币成交价")
+            res.unverifiable = True
+        self._hs_cache[key] = res
+        return res
+
+    def hindsight_tiers(self, symbol: str, day: date, points: tuple[str, ...] | None = None, venue: str = Venue.TOKEN) -> list[dict]:
+        out = []
+        for t in self.tiers.tiers:
+            for pt, cap in t.representative_capitals(points or self.tiers.representative_points).items():
+                r = self.hindsight_symbol(symbol, day, cap, target_return=t.target_daily_pct[0] / 100, venue=venue)
+                out.append({"tier": t.id, "point": pt, "capital_usd": cap, "target_daily_pct": list(t.target_daily_pct),
+                            "period_days": t.period_days, "result": r})
+        return out
+
+    def hindsight_portfolio(self, day: date, capital_usd: float, target_return: float | None = None,
+                            symbols: list[str] | None = None, venue: str = Venue.TOKEN) -> PortfolioResult:
+        syms = symbols or self.symbols(tradable_only=True)
+        key = ("hsp", day, round(capital_usd, 2), target_return, tuple(syms), self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = {s: self.hindsight_bars(s, day, venue) for s in syms}
+        bars = {s: b for s, b in bars.items() if not b.empty}
+        res = portfolio_optimal(bars, CostModel(self.profile), capital_usd, cost_profile=self.cost_profile_name,
+                                participation_rate=self.participation_rate, target_return=target_return)
+        self._hs_cache[key] = res
+        return res
+
+    def hindsight_summary(self, day: date, symbols: list[str] | None = None, venue: str = Venue.TOKEN) -> pd.DataFrame:
+        rows = []
+        for sym in symbols or self.symbols():
+            try:
+                for row in self.hindsight_tiers(sym, day, venue=venue):
+                    r: OptimalPathResult = row["result"]
+                    rows.append({"symbol": sym, "tier": row["tier"], "point": row["point"], "capital_usd": row["capital_usd"],
+                                 "target_pct": row["target_daily_pct"][0], "max_net_return_pct": r.max_net_return * 100,
+                                 "max_net_profit_usd": r.max_net_profit_usd, "n_trades": r.n_trades, "target_met": r.target_met,
+                                 "min_trades_for_target": r.min_trades_for_target, "max_deployed_usd": r.max_deployed_usd,
+                                 "liquidity_capped": r.liquidity_capped_any, "unverifiable": r.unverifiable,
+                                 "tradable": sym in self.symbols(tradable_only=True), "source": r.source})
+            except LookupError:
+                continue
+        return pd.DataFrame(rows)
+
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,
                 "probes": [p.__dict__ for p in self.plan.probes], "cost_profile": self.cost_profile_name,
                 "cost": self.cost.describe(), "capital_usd": self.capital_usd, "tier_issues": self.tiers.issues,
                 "symbols": research_symbols(), "store": self.store.sources_summary().to_dict(orient="records"),
                 "execution": {"mode": "research_only", "live_trading": False}}
+
+
+def load_yaml_participation() -> float:
+    from .config import load_yaml
+    return float(load_yaml("costs.yaml").get("participation_rate", 0.1))
 
 
 def _json_safe(obj: Any) -> Any:
