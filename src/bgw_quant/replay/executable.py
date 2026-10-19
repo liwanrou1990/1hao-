@@ -102,7 +102,6 @@ class ExecutableReplay:
             cash += proceeds
             total_cost += f.total_cost_usd
             t = dict(open_trade or {})
-            entry_cash = t["qty"] * t["buy_exec"] + t.get("buy_cost_usd", 0) - (t["qty"] * t["buy_exec"] * 0)  # 买入投入（含费）
             t.update({"sell_idx": int(i), "sell_ts": pd.Timestamp(ts[i]).isoformat(), "sell_ref": ref,
                       "sell_exec": f.exec_price, "sell_cost_usd": f.total_cost_usd, "reason": reason,
                       "cost_usd": t.get("buy_cost_usd", 0) + f.total_cost_usd,

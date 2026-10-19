@@ -5,7 +5,6 @@ c = 单边比例成本 + 冲击；另扣 Gas（按名义本金折算）。
 """
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 from ..costs.model import CostModel

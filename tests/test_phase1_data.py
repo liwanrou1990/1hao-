@@ -5,7 +5,7 @@ import httpx
 import pandas as pd
 import pytest
 
-from bgw_quant.calendar_utils import is_trading_day, previous_trading_day, regular_minute_index, trading_days
+from bgw_quant.calendar_utils import is_trading_day, previous_trading_day, regular_minute_index
 from bgw_quant.config import load_yaml, research_symbols
 from bgw_quant.data.bitget_rwa import BitgetRwaClient, build_sign_payload, sign_payload
 from bgw_quant.data.massive import MassiveClient

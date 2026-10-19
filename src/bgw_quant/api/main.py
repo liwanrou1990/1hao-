@@ -13,16 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from ..calendar_utils import previous_trading_day
 from ..capital.tiers import admin_update_tiers
 from ..config import PROJECT_ROOT, get_settings
 from ..costs.model import CostModel, load_cost_profile
-from ..data.schema import Venue
 from ..execution.guard import ExecutionGuard
 from ..pipeline import Pipeline, default_window
 from ..reports.charts import bars_to_candles, markers_from_trades
 from ..reports.daily import generate_daily_report
-from ..training.session import TrainingSession, TrainingState
+from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])

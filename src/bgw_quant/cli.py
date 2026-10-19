@@ -8,7 +8,6 @@ from datetime import date
 
 import pandas as pd
 
-from .calendar_utils import previous_trading_day
 
 
 def _p(obj):

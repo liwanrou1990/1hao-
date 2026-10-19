@@ -1,7 +1,6 @@
 """阶段六/七：API 工作台、训练模式、执行安全。"""
 import os
 
-import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 

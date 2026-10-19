@@ -110,7 +110,6 @@ class CostModel:
         if notional_usd < self.p.min_tx_usd or ref_price <= 0:
             return Fill(side, ref_price, ref_price, 0, 0, 0, 0, 0, 0, 0, False, 0.0, False, "低于最小成交额")
         n_child = self.n_child_orders(notional_usd)
-        child_usd = notional_usd / n_child
         impact = self.impact_fraction(notional_usd)     # 冲击按总订单规模（拆单不降低总冲击，只增加 Gas）
         unver = self.is_unverifiable(notional_usd)
         fill_ratio = 1.0

@@ -34,7 +34,6 @@ def evaluate_symbol(bars: pd.DataFrame, cost: CostModel, capital_usd: float, cos
         wf = walk_forward_rule(bars, key, cost, capital_usd, train_days=train_days, test_days=test_days)
         if wf.oos_daily.empty:
             continue
-        trades: list[dict] = []
         m = performance_metrics(wf.oos_daily["net_return"], trades=None, capital_usd=capital_usd,
                                 total_cost_usd=float(wf.oos_daily["cost_usd"].sum()),
                                 hindsight_daily=wf.oos_daily["hindsight_net"])
