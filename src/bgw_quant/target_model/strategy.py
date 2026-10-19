@@ -41,6 +41,7 @@ class StrategyDayResult:
     liquidity_known: bool
     unverifiable: bool
     data_is_simulated: bool
+    unliquidated_usd: float = 0.0
     mode: str = "strategy_no_lookahead"
     disclaimer: str = STRATEGY_DISCLAIMER
 
@@ -110,7 +111,8 @@ def run_strategy_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, ta
             pending = None
         elif pending and pending.startswith("sell") and pos_entry is not None:
             reason = pending.split(":", 1)[1]
-            fill = batch_fill(bars, i, "sell", pos_entry.qty * close[i], cost, liq, cfg.batch_bars, "open", qty_to_sell=pos_entry.qty)
+            max_bars = (n - i) if reason.startswith("日终") else cfg.batch_bars     # 日终平仓可用全部剩余K线
+            fill = batch_fill(bars, i, "sell", pos_entry.qty * close[i], cost, liq, max_bars, "open", qty_to_sell=pos_entry.qty)
             if fill.fills and fill.qty > 0:
                 sold_ratio = min(1.0, fill.qty / pos_entry.qty)
                 sold_part = pos_entry.scaled(sold_ratio)
@@ -161,17 +163,24 @@ def run_strategy_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, ta
                 n_signals += 1
                 pending = "buy"
         i += 1
-    # 若循环结束仍持仓（极端情况），按最后一根收盘强制平仓
+    # 若收盘仍有未能卖出的仓位（流动性不足）：按最后一根收盘价扣估算卖出成本做估值，记为“未能平仓”并标记不可验证
+    unliquidated_usd = 0.0
     if pos_entry is not None:
-        fill = batch_fill(bars, n - 1, "sell", pos_entry.qty * close[-1], cost, liq, 1, "close", qty_to_sell=pos_entry.qty)
-        net = (fill.filled_usd - cand_gas(fill, cost) if fill.fills else 0.0) - pos_entry.filled_usd - entry_gas(pos_entry, cost)
+        est_px = close[-1] * (1 - side_cost - cost.impact_fraction(pos_entry.filled_usd))
+        net = pos_entry.qty * est_px - cost.p.gas_usd - pos_entry.filled_usd - entry_gas(pos_entry, cost)
+        unliquidated_usd = pos_entry.qty * close[-1]
         cum += net
-        trades.append(RoundTrip(len(trades) + 1, symbol, pos_entry, fill if fill.fills else pos_entry, pos_entry.filled_usd, pos_entry.qty,
-                                pos_entry.avg_exec, fill.avg_exec if fill.fills else 0.0, 0.0, pos_entry.cost_usd + fill.cost_usd, net,
-                                net / pos_entry.filled_usd, 0.0, 0.0, n - 1 - pos_entry.start_idx, cum, "", "日终强制平仓"))
+        mark = BatchFill(side="sell", requested_usd=unliquidated_usd)
+        from .execution import ChildFill
+        mark.fills.append(ChildFill(n - 1, str(bars["ts_ny"].iloc[-1]), float(close[-1]), float(est_px), float(pos_entry.qty * est_px),
+                                    float(pos_entry.qty), float(pos_entry.qty * (close[-1] - est_px) + cost.p.gas_usd)))
+        trades.append(RoundTrip(len(trades) + 1, symbol, pos_entry, mark, pos_entry.filled_usd, pos_entry.qty, pos_entry.avg_exec, est_px,
+                                pos_entry.qty * (close[-1] - pos_entry.fills[0].ref_price), pos_entry.cost_usd + mark.cost_usd, net,
+                                net / pos_entry.filled_usd, 0.0, 0.0, n - 1 - pos_entry.start_idx, cum, "", "日终未能全部平仓：流动性不足，按收盘估值（不可验证）"))
         cum_curve[-1] = cum
     curve = np.array(cum_curve)
     dd = float((np.maximum.accumulate(curve) - curve).max()) if n else 0.0
     return StrategyDayResult(symbol, day, capital_usd, target_return, target_usd, strat.params, trades, cum, cum / capital_usd,
                              cum >= target_usd - 1e-9, stopped, curve.tolist(), dd, n_signals, partial, liquidity_known,
-                             cost.is_unverifiable(max_size) or not liquidity_known, bool((bars["quality"].astype(int) & 128).any()))
+                             cost.is_unverifiable(max_size) or not liquidity_known or unliquidated_usd > 0,
+                             bool((bars["quality"].astype(int) & 128).any()), unliquidated_usd=unliquidated_usd)
