@@ -74,7 +74,7 @@ def target_attainment(daily_returns: pd.Series, tier: Tier, accrual_note: str = 
     simple_period = float(dr.tail(tier.period_days).sum()) if n >= tier.period_days else None
     compound_period = float((1 + dr.tail(tier.period_days)).prod() - 1) if n >= tier.period_days else None
     period_target_lo = lo * tier.period_days
-    return {"tier": tier.id, "target_daily_pct": [lo * 100, hi * 100], "period_days": tier.period_days,
+    return {"tier": tier.id, "target_daily_pct": [round(lo * 100, 4), round(hi * 100, 4)], "period_days": tier.period_days,
             "n_days": n, "attained_days": hit, "attainment_rate": hit / n,
             "mean_daily_ret_pct": float(dr.mean() * 100), "median_daily_ret_pct": float(dr.median() * 100),
             "period_simple_sum_pct": None if simple_period is None else simple_period * 100,
