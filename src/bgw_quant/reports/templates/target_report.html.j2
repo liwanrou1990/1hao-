@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 固定收益目标日报</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1280px}
+h1{font-size:21px}h2{font-size:17px;margin-top:24px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:15px;margin:14px 0 4px}
+table{border-collapse:collapse;font-size:12.5px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 6px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 多次交易累计实现固定日收益目标 · 日报</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }} · 仓位 ≤ {{ (cfg.position_fraction*100)|round(0) }}% 本金 · 止损 {{ cfg.stop_loss_pct }}% · 单笔目标净收益 {{ cfg.take_profit_net_pct }}% · 日亏损上限 {{ cfg.max_daily_loss_pct }}% · 参与率 {{ (cfg.participation_rate*100)|round(0) }}% · 分批 ≤ {{ cfg.batch_bars }} 根</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }} 正式验证需接入 Bitget Wallet 真实代币K线（配置密钥后运行 bgwq probe / ingest）。</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+{% if status.blockers %}<div class="banner bad"><b>阻塞项：</b><ul>{% for b in status.blockers[:6] %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endif %}
+<div class="banner warn"><b>固定收益是研究目标而非保证。</b>本报告分两部分并严格分开：
+<b>A 教学路径</b> = 已知完整走势后反向挑选的稳定小额交易（事后，不可复制）；<b>B 策略回测</b> = 不使用任何未来信息的实盘型策略（每根收盘决策、下根起分批成交，参数仅在训练窗内选择，绩效只报样本外）。
+档位问题：{{ status.tier_issues|join('；') }}。目标取值 target_mode={{ cfg.target_mode }}（档位区间{{ '下限' if cfg.target_mode=='lower' else cfg.target_mode }}）。</div>
+
+<h2>A1. 教学路径总览（各标的 × 本金）</h2>
+<table><tr><th>标的</th><th>本金</th><th>目标</th><th>目标(USD)</th><th>已实现净利润</th><th>收益率</th><th>交易次数</th><th>达标</th><th>达标时刻</th><th>资金利用率</th><th>累计曲线回撤</th><th>部分成交</th><th>可验证</th><th>未达标原因</th></tr>
+{% for r in summary %}{% if r.error %}<tr><td>{{ r.symbol }}</td><td>{{ r.capital_usd|num(0) }}</td><td colspan="12">{{ r.error }}</td></tr>{% else %}
+<tr><td>{{ r.symbol }}{% if not r.tradable %} <span class="tag">待验证</span>{% endif %}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ "%.3f%%"|format(r.target_pct) }}</td><td>{{ r.target_usd|num }}</td>
+<td class="{{ 'pos' if r.realized_net_usd>=0 else 'neg' }}">{{ r.realized_net_usd|num }}</td><td>{{ "%.3f%%"|format(r.realized_pct) }}</td><td>{{ r.n_trades }}</td>
+<td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.target_hit_ts[11:16] if r.target_hit_ts else '—' }}</td><td>{{ r.capital_utilization|pct(0) }}</td><td>{{ r.max_dd_usd|num }}</td><td>{{ r.partial_fills }}</td>
+<td class="{{ 'neg' if r.unverifiable else 'pos' }}">{{ '不可验证' if r.unverifiable else '可验证' }}</td><td style="text-align:left;font-size:11px">{{ r.reasons }}</td></tr>{% endif %}{% endfor %}</table>
+
+<h2>B. 策略回测（无未来信息，滚动样本外，连续多个交易日）</h2>
+<table><tr><th>标的</th><th>本金</th><th>目标/日</th><th>折数</th><th>OOS 天数</th><th>达标率</th><th>亏损日比例</th><th>日均净收益</th><th>日收益标准差</th><th>最大回撤(占本金)</th><th>最差日</th><th>笔/日</th><th>部分成交天</th><th>不可验证天</th><th>样本内达标率(对照)</th><th>最近一折参数</th></tr>
+{% for w in wf_rows %}{% if w.error %}<tr><td>{{ w.symbol }}</td><td>{{ w.capital_usd|num(0) }}</td><td colspan="14">{{ w.error }}</td></tr>{% else %}
+<tr><td>{{ w.symbol }}</td><td>{{ w.capital_usd|num(0) }}</td><td>{{ "%.3f%%"|format(w.target_pct) }}</td><td>{{ w.folds }}</td><td>{{ w.n_days }}</td><td class="{{ 'pos' if w.attainment_rate>=0.5 else 'neg' }}"><b>{{ w.attainment_rate|pct(0) }}</b></td><td>{{ w.losing_day_rate|pct(0) }}</td><td class="{{ 'pos' if w.mean_daily_return>=0 else 'neg' }}">{{ w.mean_daily_return|pct(3) }}</td><td>{{ w.std_daily_return|pct(3) }}</td><td>{{ w.max_drawdown_pct|pct(2) }}</td><td class="neg">{{ w.worst_day_return|pct(2) }}</td><td>{{ w.avg_trades_per_day|num(1) }}</td><td>{{ w.partial_fill_days }}</td><td>{{ w.unverifiable_days }}</td><td>{{ w.in_sample.attainment_rate|pct(0) if w.in_sample else '—' }}</td><td style="text-align:left;font-size:11px">{{ w.params_last }}</td></tr>{% endif %}{% endfor %}
+{% if not wf_rows %}<tr><td colspan="16">未运行（--no-walkforward）</td></tr>{% endif %}</table>
+<div class="muted">达标率 = 样本外交易日中“已实现净利润 ≥ 目标”的比例；策略在达标后停止新增交易、触及日亏损上限后停止。样本内达标率仅供对照。</div>
+
+<h2>A2. 逐笔教学明细（每标的，各本金）</h2>
+{% for e in per_symbol %}
+<h3>{{ e.symbol }} {% if not e.tradable %}<span class="tag">待验证</span>{% endif %} · <span class="tag">{{ e.source }}</span>{% if e.fallback_native %} <b class="neg">无代币K线，使用原生价格</b>{% endif %} · <a href="{{ e.chart }}">K线 + 全部买卖点 + 累计净利润曲线（可切换本金/模式）</a></h3>
+{% for en in e.entries %}{% set t=en.teaching %}
+<div><b>本金 {{ en.capital|num(0) }}（{{ en.label }}）</b>：目标 {{ t.target_usd|num }} USD，已实现 <span class="{{ 'pos' if t.realized_net_usd>=0 else 'neg' }}">{{ t.realized_net_usd|num }}</span>（{{ t.realized_net_return|pct(3) }}），{{ t.n_buys }} 买 / {{ t.n_sells }} 卖，<b class="{{ 'pos' if t.target_met else 'neg' }}">{{ '达标' if t.target_met else '未达标' }}</b>{% if t.target_hit_ts %} @ {{ t.target_hit_ts[11:16] }}{% endif %}
+{% if en.strategy %} · 同日策略回放（无未来信息）：<span class="{{ 'pos' if en.strategy.realized_net_usd>=0 else 'neg' }}">{{ en.strategy.realized_net_usd|num }}</span>（{{ en.strategy.trades|length }} 笔{% if en.strategy.stopped_reason %}，{{ en.strategy.stopped_reason }}{% endif %}）{% endif %}
+{% if t.reasons_not_met %}<div class="muted">未达标原因：{{ t.reasons_not_met|join('；') }}</div>{% endif %}</div>
+{% if t.trades %}<table><tr><th>#</th><th>买入</th><th>批</th><th>均价</th><th>卖出</th><th>批</th><th>均价</th><th>投入</th><th>数量</th><th>成本</th><th>净盈亏</th><th>净收益</th><th>累计</th><th>最大不利</th><th>持有</th><th>入场理由</th><th>出场理由</th></tr>
+{% for x in t.trades %}<tr><td>{{ x.seq }}</td><td>{{ x.entry.fills[0].ts_ny[11:16] }}</td><td>{{ x.entry.fills|length }}</td><td>{{ x.avg_entry|num(3) }}</td><td>{{ x.exit.fills[-1].ts_ny[11:16] }}</td><td>{{ x.exit.fills|length }}</td><td>{{ x.avg_exit|num(3) }}</td><td>{{ x.size_usd|num }}</td><td>{{ x.qty|num(4) }}</td><td>{{ x.cost_usd|num }}</td><td class="{{ 'pos' if x.net_pnl_usd>=0 else 'neg' }}">{{ x.net_pnl_usd|num }}</td><td>{{ x.net_ret|pct(3) }}</td><td>{{ x.cum_net_pnl_usd|num }}</td><td>{{ "%.2f%%"|format(x.mae_pct) }}</td><td>{{ x.hold_bars }}</td><td style="text-align:left">{{ x.reason_entry }}</td><td style="text-align:left">{{ x.reason_exit }}</td></tr>{% endfor %}</table>{% endif %}
+{% endfor %}{% endfor %}
+
+<h2>交易明细 CSV</h2><div><a href="{{ csv_name }}">{{ csv_name }}</a>（教学路径与策略回放全部逐笔记录，含批次、成本、净盈亏、累计）</div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

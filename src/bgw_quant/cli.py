@@ -106,6 +106,51 @@ def cmd_optimal_report(args):
     _p(generate_hindsight_report(pl, day, args.symbols, with_portfolio=not args.no_portfolio))
 
 
+def cmd_target(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    caps = [args.capital_usd] if args.capital_usd else [c["capital_usd"] for c in pl.target_capitals()]
+    for cap in caps:
+        try:
+            r = pl.target_teaching(args.symbol, day, cap, args.target_pct)
+        except (LookupError, ValueError) as e:
+            print(f"本金 {cap:,.0f}: {e}")
+            continue
+        print(f"\n[教学·事后] {args.symbol} {day} 本金 {cap:,.0f} 目标 {r.target_return:.3%}={r.target_usd:,.2f} USD → 已实现 {r.realized_net_usd:,.2f} "
+              f"({r.realized_net_return:+.3%}) {r.n_buys} 买/{r.n_sells} 卖 {'达标@'+r.target_hit_ts[11:16] if r.target_met else '未达标'}"
+              f"{'（不可验证）' if r.unverifiable else ''}")
+        for n in r.reasons_not_met + r.notes:
+            print("   -", n)
+        for t in r.trades:
+            print(f"   {t.seq:2d}. {t.entry.fills[0].ts_ny[11:16]} 买{len(t.entry.fills)}批@{t.avg_entry:.3f} → {t.exit.fills[-1].ts_ny[11:16]} 卖{len(t.exit.fills)}批@{t.avg_exit:.3f} "
+                  f"投入 {t.size_usd:,.0f} 净 {t.net_pnl_usd:+.2f} ({t.net_ret:+.3%}) 累计 {t.cum_net_pnl_usd:,.2f} 最大不利 {t.mae_pct:.2f}%")
+        s = pl.target_strategy_day(args.symbol, day, cap, target_pct=args.target_pct)
+        print(f"[策略·无未来信息] 同日回放：净 {s.realized_net_usd:,.2f} ({s.realized_net_return:+.3%}) {len(s.trades)} 笔 "
+              f"{'达标' if s.target_met else '未达标'} {s.stopped_reason or ''}")
+
+
+def cmd_target_backtest(args):
+    pl = _pipeline(args)
+    print(pl.plan.banner())
+    caps = [args.capital_usd] if args.capital_usd else pl.target_cfg.validation_capitals
+    for cap in caps:
+        wf = pl.target_walkforward(args.symbol, cap, args.target_pct, args.train_days, args.test_days)
+        st = wf.oos_stats
+        print(f"\n{args.symbol} 本金 {cap:,.0f} 目标 {wf.target_return:.3%} · 样本外 {st.n_days} 天 / {len(wf.folds)} 折")
+        print(f"  达标率 {st.attainment_rate:.0%} 亏损日 {st.losing_day_rate:.0%} 日均 {st.mean_daily_return:+.3%} 标准差 {st.std_daily_return:.3%} "
+              f"最大回撤 {st.max_drawdown_pct:.2%} 最差日 {st.worst_day_return:+.2%} 笔/日 {st.avg_trades_per_day:.1f} 部分成交天 {st.partial_fill_days} 不可验证天 {st.unverifiable_days}")
+        print(f"  样本内均值(对照)：{wf.in_sample_stats_mean}")
+        print(wf.oos_frame().to_string(index=False))
+
+
+def cmd_target_report(args):
+    from .reports.target_report import generate_target_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_target_report(pl, day, args.symbols, with_walkforward=not args.no_walkforward, wf_symbols=args.wf_symbols))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -147,6 +192,9 @@ def main(argv=None):
     p = sub.add_parser("report", help="生成日报"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--no-ml", action="store_true"); p.add_argument("--no-backtest", action="store_true"); p.set_defaults(f=cmd_report)
     p = sub.add_parser("optimal", help="事后最优路径：七档本金 × 最高收益/最少交易达标路径"); p.add_argument("symbol"); p.add_argument("--day"); p.set_defaults(f=cmd_optimal)
     p = sub.add_parser("optimal-report", help="生成事后最优日报（全部标的×七档+组合）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--no-portfolio", action="store_true"); p.set_defaults(f=cmd_optimal_report)
+    p = sub.add_parser("target", help="固定收益目标·多次交易：教学路径 + 同日策略回放"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-pct", type=float); p.set_defaults(f=cmd_target)
+    p = sub.add_parser("target-backtest", help="固定收益目标策略滚动样本外验证"); p.add_argument("symbol"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-pct", type=float); p.add_argument("--train-days", type=int, default=20); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_target_backtest)
+    p = sub.add_parser("target-report", help="固定收益目标日报（教学 + 样本外策略）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--no-walkforward", action="store_true"); p.set_defaults(f=cmd_target_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

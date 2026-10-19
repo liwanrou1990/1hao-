@@ -23,6 +23,10 @@ from .data.simulated import regime_for_day
 from .data.store import Store
 from .hindsight.optimal_path import OptimalPathResult, optimal_path
 from .hindsight.portfolio import PortfolioResult, portfolio_optimal
+from .target_model.config import load_target_config, target_for_capital
+from .target_model.strategy import StrategyDayResult, TargetSeekingStrategy, run_strategy_day
+from .target_model.teaching import TargetPathResult, teaching_path
+from .target_model.walkforward import TargetWFResult, walk_forward_target
 from .ml.predict import ai_signals_for_day
 from .ml.train import WalkForwardOutput, walk_forward_train
 from .replay.compare import ABComparison, run_ab
@@ -57,6 +61,7 @@ class Pipeline:
         self._bt_cache: dict[tuple, dict] = {}
         self._ab_cache: dict[tuple, ABComparison] = {}
         self._hs_cache: dict[tuple, object] = {}
+        self.target_cfg = load_target_config()
         self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
@@ -271,6 +276,79 @@ class Pipeline:
                                  "tradable": sym in self.symbols(tradable_only=True), "source": r.source})
             except LookupError:
                 continue
+        return pd.DataFrame(rows)
+
+    # ------------------------------------------------------------------ 固定收益目标 · 多次交易模型
+    def target_for(self, capital_usd: float, target_pct: float | None = None) -> tuple[float | None, str | None, str]:
+        if target_pct is not None:
+            return target_pct / 100, None, f"显式指定目标 {target_pct:.3f}%"
+        return target_for_capital(capital_usd, self.tiers, self.target_cfg.target_mode, self.target_cfg.overlap_rule)
+
+    def target_teaching(self, symbol: str, day: date, capital_usd: float, target_pct: float | None = None,
+                        venue: str = Venue.TOKEN) -> TargetPathResult:
+        tgt, tid, note = self.target_for(capital_usd, target_pct)
+        if tgt is None:
+            raise ValueError(note)
+        key = ("tt", symbol, day, round(capital_usd, 2), tgt, self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.hindsight_bars(symbol, day, venue)
+        if bars.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        res = teaching_path(bars, CostModel(self.profile), capital_usd, tgt, self.target_cfg, symbol=symbol, cost_profile=self.cost_profile_name)
+        res.notes.insert(0, note)
+        if bars.attrs.get("fallback_native"):
+            res.notes.insert(0, "警告：无代币成交K线，本结果使用原生股票价格")
+            res.unverifiable = True
+        self._hs_cache[key] = res
+        return res
+
+    def target_strategy_day(self, symbol: str, day: date, capital_usd: float, params: dict | None = None,
+                            target_pct: float | None = None, venue: str = Venue.TOKEN) -> StrategyDayResult:
+        tgt, _, _ = self.target_for(capital_usd, target_pct)
+        bars = self.hindsight_bars(symbol, day, venue)
+        strat = TargetSeekingStrategy(**params) if params else TargetSeekingStrategy()
+        return run_strategy_day(bars, CostModel(self.profile), capital_usd, tgt or 0.01, self.target_cfg, strat, symbol=symbol)
+
+    def target_walkforward(self, symbol: str, capital_usd: float, target_pct: float | None = None, train_days: int = 20,
+                           test_days: int = 5, venue: str = Venue.TOKEN) -> TargetWFResult:
+        tgt, _, _ = self.target_for(capital_usd, target_pct)
+        if tgt is None:
+            raise ValueError("本金无对应档位，请显式指定目标")
+        key = ("twf", symbol, round(capital_usd, 2), tgt, train_days, test_days, self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.bars(symbol, venue=venue)
+        if bars.empty:
+            bars = self.bars(symbol, venue=Venue.NATIVE)
+        res = walk_forward_target(bars, CostModel(self.profile), capital_usd, tgt, self.target_cfg, train_days, test_days)
+        self._hs_cache[key] = res
+        return res
+
+    def target_capitals(self) -> list[dict]:
+        """验证本金集合：七档中位 + 配置的重点验证规模（去重，按金额排序）。"""
+        caps = {}
+        for t in self.tiers.tiers:
+            caps[round(t.representative_capitals(("mid",))["mid"], 2)] = t.id
+        for c in self.target_cfg.validation_capitals:
+            caps.setdefault(float(c), "验证点")
+        return [{"capital_usd": c, "label": lbl} for c, lbl in sorted(caps.items())]
+
+    def target_summary(self, day: date, symbols: list[str] | None = None, capitals: list[float] | None = None) -> pd.DataFrame:
+        rows = []
+        caps = capitals or [c["capital_usd"] for c in self.target_capitals()]
+        for sym in symbols or self.symbols():
+            for cap in caps:
+                try:
+                    r = self.target_teaching(sym, day, cap)
+                except (LookupError, ValueError) as e:
+                    rows.append({"symbol": sym, "capital_usd": cap, "error": str(e)})
+                    continue
+                rows.append({"symbol": sym, "capital_usd": cap, "target_pct": r.target_return * 100, "target_usd": r.target_usd,
+                             "realized_net_usd": r.realized_net_usd, "realized_pct": r.realized_net_return * 100, "n_trades": r.n_buys,
+                             "target_met": r.target_met, "target_hit_ts": r.target_hit_ts, "capital_utilization": r.capital_utilization,
+                             "max_dd_usd": r.max_drawdown_usd, "partial_fills": r.partial_fills, "unverifiable": r.unverifiable,
+                             "reasons": "；".join(r.reasons_not_met), "tradable": sym in self.symbols(tradable_only=True), "source": r.source})
         return pd.DataFrame(rows)
 
     def status(self) -> dict:

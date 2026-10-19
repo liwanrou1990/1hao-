@@ -1,0 +1,39 @@
+# “多次交易 · 累计实现固定日收益目标 · 稳定性优先” 模型参数（管理员可调）
+# 目标取值：lower = 档位区间下限（默认，保守）；mid = 区间中点；upper = 上限。
+# 注：示例“10 万美元 → 0.98%”无法由当前档位表推导（10 万同时命中 T2 0.9–1.0% 与 T3 1.0–1.1%），
+#     如需精确目标，请在 tiers.yaml 中修改档位，或在命令/接口中显式指定 target_pct。
+target_mode: lower
+overlap_rule: first          # 本金命中多档时取编号最小的档位
+
+# 风险与仓位（不加杠杆，不超额使用本金）
+position_fraction: 0.5       # 单笔最大投入占本金比例
+stop_loss_pct: 0.5           # 单笔最大不利波动（相对平均入场价，毛值 %）
+take_profit_net_pct: 0.30    # 单笔目标净收益（扣除全部成本后，相对投入 %）
+max_hold_bars: 60            # 单笔最长持有K线数
+max_daily_loss_pct: 1.0      # 当日累计已实现亏损达到本金的该比例后停止新增交易
+max_trades_per_day: 60       # 买卖各≤该值；达标后立即停止，不强制凑够次数
+cooldown_bars: 2             # 平仓后至少间隔K线数
+batch_bars: 5                # 分批建仓/平仓最多跨越的K线数（每根受流动性参与率限制）
+participation_rate: 0.10     # 单根K线可成交金额占该根成交额的比例
+flat_before_close_bars: 5    # 收盘前不再开仓
+
+# 教学路径（已知完整走势）额外规则
+teaching:
+  require_local_low_bars: 5  # 入场必须是最近 N 根的局部低点（可教学的“低吸”）
+  min_edge_over_cost: 0.0    # 目标净收益之外的额外安全边际（%）
+
+# 实盘策略（无未来信息）候选参数网格（walk-forward 在训练窗内按稳定性目标选择）
+strategy_grid:
+  z_entry: [1.5, 2.0]
+  z_window: [30]
+  take_profit_net_pct: [0.3, 0.5]
+  stop_loss_pct: [0.5, 0.8]
+  position_fraction: [0.5]
+stability_objective:
+  w_attainment: 1.0          # 达标率权重
+  w_losing_days: 0.7         # 亏损日比例惩罚
+  w_drawdown: 20.0           # 最大回撤（占本金比例）惩罚
+  w_volatility: 10.0         # 日收益标准差惩罚
+
+# 重点验证的本金规模
+validation_capitals: [100000, 300000, 1000000, 10000000]
