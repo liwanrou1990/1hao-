@@ -151,6 +151,31 @@ def cmd_target_report(args):
     _p(generate_target_report(pl, day, args.symbols, with_walkforward=not args.no_walkforward, wf_symbols=args.wf_symbols))
 
 
+def cmd_simple(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    from .simple_sim.engine import DISCLAIMER
+    print(DISCLAIMER)
+    results = [pl.simple_day(args.symbol, day, args.capital_usd, args.target_usd)] if args.capital_usd else pl.simple_tiers(args.symbol, day)
+    for r in results:
+        print(f"\n{r.symbol} {r.day} 档位 {r.tier} 本金 {r.capital_usd:,.0f} 目标利润 {r.target_usd:,.2f} → 实际净利润 {r.realized_net_usd:,.2f} "
+              f"({r.realized_net_return:+.3%}) 买 {r.n_buys} 卖 {r.n_sells} 多 {r.n_long} 空 {r.n_short} 资金利用率 {r.capital_utilization:.0%} "
+              f"{'达标@'+r.target_hit_ts[11:16] if r.target_met else '未达标'}{'（不可验证）' if r.unverifiable else ''}")
+        for n in r.notes:
+            print("   -", n)
+        for t in r.trades:
+            print(f"   {t.seq:2d}. {'多' if t.direction=='long' else '空'} {t.open_fill.fills[0].ts_ny[11:16]}@{t.avg_open:.3f} → {t.close_fill.fills[-1].ts_ny[11:16]}@{t.avg_close:.3f} "
+                  f"投入 {t.size_usd:,.0f} 交易成本 {t.trading_cost_usd:.2f} 资金成本 {t.capital_cost_usd:.2f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}")
+
+
+def cmd_simple_report(args):
+    from .reports.simple_report import generate_simple_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_simple_report(pl, day, args.symbols))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -195,6 +220,8 @@ def main(argv=None):
     p = sub.add_parser("target", help="固定收益目标·多次交易：教学路径 + 同日策略回放"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-pct", type=float); p.set_defaults(f=cmd_target)
     p = sub.add_parser("target-backtest", help="固定收益目标策略滚动样本外验证"); p.add_argument("symbol"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-pct", type=float); p.add_argument("--train-days", type=int, default=20); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_target_backtest)
     p = sub.add_parser("target-report", help="固定收益目标日报（教学 + 样本外策略）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--no-walkforward", action="store_true"); p.set_defaults(f=cmd_target_report)
+    p = sub.add_parser("simple", help="简化版：昨日真实走势多空多次交易，累计净利润达档位目标即停"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-usd", type=float); p.set_defaults(f=cmd_simple)
+    p = sub.add_parser("simple-report", help="简单报告：各标的×档位 本金/目标/实际/次数/利用率/达标 + K线买卖点"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_simple_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

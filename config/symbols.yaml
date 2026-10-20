@@ -47,6 +47,12 @@ symbols:
     kind: common_stock
     tradable: true
 
+# 做空支持：Bitget Wallet RWA 代币为链上现货代币，官方接口未提供借券/保证金做空；
+# 默认全部 shortable=false，只有核实某品种确实存在可做空渠道（并填写 short_venue/short_borrow_rate_annual）后才允许做空模拟。
+short_support:
+  default_shortable: false
+  verified: {}        # 例： NVDA: {shortable: true, short_venue: "xxx", short_borrow_rate_annual: 0.05}
+
 # 官方 SDK 枚举中的发行商（data_source）只有 ondo / xstocks；"Reality" 未出现在官方枚举中，
 # 作为待确认发行商保留，只有 checkContractIsRwa 返回时才会标记。
 issuers_known: [ondo, xstocks]

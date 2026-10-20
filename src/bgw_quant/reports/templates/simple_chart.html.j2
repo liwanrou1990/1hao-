@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ symbol }} {{ day }} 多空教学模拟</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;color:#222}
+.banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin:8px 0}.bad{background:#f8d7da;border-color:#f1aeb5}
+table{border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{border:1px solid #ddd;padding:3px 7px;text-align:right}th{background:#f0f0f0}
+td:first-child,th:first-child{text-align:left}#chart{height:430px}#cum{height:150px}.pos{color:#2e7d32}.neg{color:#c62828}select{padding:4px 8px}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.kpi div{border:1px solid #ddd;border-radius:6px;padding:6px 10px;min-width:120px;font-size:12px}.kpi b{display:block;font-size:16px}</style></head><body>
+<h1 style="font-size:19px">{{ symbol }} · {{ day }} · 多空多次交易 · 累计净利润达标模拟（成本模型 {{ cost_profile }}）</h1>
+<div class="banner bad"><b>已知昨日完整走势的事后教学分析</b>：所有买卖点由程序在看过全天K线后反向选出，不是实盘预测。数据来源 <b>{{ source }}</b>（venue={{ venue }}）{% if simulated %} —— <b>SIMULATED 模拟数据，非正式验证</b>{% endif %}。时间轴为美东时间。</div>
+<div>本金档位：<select id="cap"></select></div>
+<div class="kpi" id="kpi"></div>
+<div id="chart"></div><div style="font-size:12px;color:#666">累计净利润（USD）</div><div id="cum"></div>
+<div id="notes" class="banner" style="display:none"></div>
+<table id="trades"></table>
+<script>
+const candles={{ candles_json|safe }}; const payload={{ payload_json|safe }};
+const sel=document.getElementById('cap'); payload.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.text=`${p.tier||''} ${p.capital_usd.toLocaleString()} USD · 目标 ${p.target_usd.toFixed(0)}`;sel.appendChild(o)});
+let cs, ln;
+function draw(){
+ const opts={layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},timeScale:{timeVisible:true,secondsVisible:false},localization:{locale:'zh-CN'}};
+ const chart=LightweightCharts.createChart(document.getElementById('chart'),opts);
+ cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+ cs.setData(candles.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close}))); chart.timeScale().fitContent();
+ const c2=LightweightCharts.createChart(document.getElementById('cum'),opts); ln=c2.addLineSeries({color:'#1565c0',lineWidth:2}); window._c2=c2; update();
+}
+function update(){
+ const r=payload[sel.value]; cs.setMarkers(r.markers); ln.setData(r.cum); window._c2.timeScale().fitContent();
+ const k=[['本金',r.capital_usd.toLocaleString()],['目标利润',r.target_usd.toFixed(2)+' ('+(r.target_return*100).toFixed(2)+'%)'],['实际净利润',r.realized_net_usd.toFixed(2)+' ('+(r.realized_net_return*100).toFixed(3)+'%)'],['买入/卖出次数',r.n_buys+' / '+r.n_sells],['做多/做空次数',r.n_long+' / '+r.n_short+(r.shortable?'':'（不可做空）')],['资金利用率',(r.capital_utilization*100).toFixed(0)+'% (均 '+(r.avg_utilization*100).toFixed(0)+'%)'],['交易成本/资金成本',r.trading_cost_usd.toFixed(2)+' / '+r.capital_cost_usd.toFixed(2)],['是否达标',(r.target_met?'<b class="pos">达标</b>':'<b class="neg">未达标</b>')+(r.target_hit_ts?' @ '+r.target_hit_ts.slice(11,16):'')]];
+ document.getElementById('kpi').innerHTML=k.map(x=>`<div>${x[0]}<b>${x[1]}</b></div>`).join('');
+ const n=document.getElementById('notes'); n.style.display=r.notes.length?'block':'none'; n.innerHTML=r.notes.join('<br>');
+ let h='<tr><th>#</th><th>方向</th><th>开仓(首批)</th><th>批</th><th>开仓均价</th><th>平仓(末批)</th><th>批</th><th>平仓均价</th><th>投入(USD)</th><th>数量</th><th>交易成本</th><th>资金成本</th><th>净盈亏</th><th>净收益</th><th>累计</th><th>最大不利</th><th>持有(根)</th></tr>';
+ r.trades.forEach(x=>{h+=`<tr><td>${x.seq}</td><td>${x.direction==='long'?'做多':'做空'}</td><td>${x.open_ts.slice(11,16)}</td><td>${x.open_fill.n_children}</td><td>${x.avg_open.toFixed(3)}</td><td>${x.close_ts.slice(11,16)}</td><td>${x.close_fill.n_children}</td><td>${x.avg_close.toFixed(3)}</td><td>${x.size_usd.toFixed(2)}</td><td>${x.qty.toFixed(4)}</td><td>${x.trading_cost_usd.toFixed(2)}</td><td>${x.capital_cost_usd.toFixed(2)}</td><td class="${x.net_pnl_usd>=0?'pos':'neg'}">${x.net_pnl_usd.toFixed(2)}</td><td>${(x.net_ret*100).toFixed(3)}%</td><td>${x.cum_net_pnl_usd.toFixed(2)}</td><td>${x.mae_pct.toFixed(2)}%</td><td>${x.hold_bars}</td></tr>`});
+ if(!r.trades.length) h+='<tr><td colspan="17">无交易</td></tr>';
+ document.getElementById('trades').innerHTML=h;
+}
+sel.onchange=update; (function wait(){ if(window.LightweightCharts) draw(); else setTimeout(wait,100); })();
+</script></body></html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 多空教学模拟报告</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1200px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}
+table{border-collapse:collapse;font-size:12.5px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 6px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 多空多次交易 · 累计净利润达标模拟报告</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }}（手续费 {{ cost.fee_bps }} bps、半价差 {{ cost.spread_bps }} bps、滑点 {{ cost.slippage_bps }} bps、Gas {{ cost.gas_usd }} USD/笔、冲击系数 {{ cost.impact_coeff }}）· 资金成本年化 {{ (cfg.capital_cost_annual*100)|round(1) }}% · 止损 {{ cfg.stop_loss_pct }}% · 日亏损上限 {{ cfg.max_daily_loss_pct }}% · 单笔最低净收益 {{ cfg.min_trade_net_pct }}% · 仓位 ≤ {{ (cfg.position_fraction*100)|round(0) }}% 本金 · 参与率 {{ (cfg.participation_rate*100)|round(0) }}%</div>
+<div class="banner bad"><b>已知昨日完整走势的事后教学分析，不是实盘预测，暂不执行真实资金交易。</b></div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }}<br>阻塞：{{ status.blockers|join('；') }}。配置 BGW_API_KEY/BGW_API_SECRET 后运行 <code>bgwq probe && bgwq ingest</code> 即可切换为真实代币K线。</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+<div class="banner warn">档位提示：{{ status.tier_issues|join('；') }}。目标取档位区间{{ '下限' if cfg.target_mode=='lower' else cfg.target_mode }}。做空仅用于已核实可做空的品种（当前默认全部不可做空）。</div>
+
+<h2>各标的 × 本金档位</h2>
+<table><tr><th>标的</th><th>档位</th><th>本金</th><th>目标利润</th><th>实际净利润</th><th>收益率</th><th>买入</th><th>卖出</th><th>做多</th><th>做空</th><th>资金利用率</th><th>交易成本</th><th>资金成本</th><th>达标</th><th>达标时刻</th><th>可验证</th><th>说明</th></tr>
+{% for r in rows %}<tr><td>{{ r.symbol }}</td><td>{{ r.tier }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_usd|num }}</td><td class="{{ 'pos' if r.realized_net_usd>=0 else 'neg' }}">{{ r.realized_net_usd|num }}</td><td>{{ r.realized_net_return|pct(3) }}</td><td>{{ r.n_buys }}</td><td>{{ r.n_sells }}</td><td>{{ r.n_long }}</td><td>{{ r.n_short }}</td><td>{{ r.capital_utilization|pct(0) }}</td><td>{{ r.trading_cost_usd|num }}</td><td>{{ r.capital_cost_usd|num }}</td><td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.target_hit_ts[11:16] if r.target_hit_ts else '—' }}</td><td class="{{ 'neg' if r.unverifiable else 'pos' }}">{{ '不可验证' if r.unverifiable else '可验证' }}</td><td style="text-align:left;font-size:11px">{{ r.notes|join('；') }}</td></tr>{% endfor %}</table>
+
+<h2>K线与买卖点</h2>
+<ul>{% for e in per_symbol %}<li>{{ e.symbol }}{% if not e.tradable %} <span class="tag">待验证</span>{% endif %} · <span class="tag">{{ e.source }}</span>{% if e.fallback_native %} <b class="neg">无代币K线，使用原生价格</b>{% endif %} · <a href="{{ e.chart }}">打开图表（可切换档位，标记全部买卖点与累计曲线）</a></li>{% endfor %}</ul>
+<div>逐笔明细 CSV：<a href="{{ csv_name }}">{{ csv_name }}</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

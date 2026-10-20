@@ -3,7 +3,22 @@
 > **V1 仅限研究、历史回测与模拟交易。** 不连接真钱钱包、不请求私钥、不自动签名或下单。
 > 每日 0.8%–2.2% 只是研究目标，**不是保证收益**；系统不会为了达标而捏造交易，达不到时会明确显示"未达标"。
 
-## 核心模型：多次交易 · 累计实现固定日收益目标 · 稳定性优先（`target_model/`）
+## 简化版（当前主入口）：昨日真实走势 · 多空多次交易 · 累计净利润达档位目标即停（`simple_sim/`）
+
+1. **数据优先级**：Bitget Wallet 官方 RWA 行情 API（`stockList/stockInfo/kline/transactionList`，HMAC 签名）→ 真实代币 1 分钟 K 线与成交额。配置 `.env` 中的 `BGW_API_KEY/BGW_API_SECRET` 后：`bgwq probe && bgwq ingest`。无密钥或主机不可达时退回明确标注的 SIMULATED 数据，所有报告标为**非正式验证**。
+2. **模拟规则**：按时间顺序，在看过全天 K 线后为每个入场点选出止损 0.5% 内、扣除手续费/价差/滑点/冲击/Gas/资金成本（年化 5%）后净收益 ≥ 0.1% 的平仓点；能补足剩余目标的取最早，否则取净收益最大；多空同时可行按最早平仓；不限次数、不强制凑数；单笔投入 ≤ 本金（不加杠杆、不加仓），分批成交受逐根流动性限制；累计净利润达目标即停；当日亏损达上限即停。
+3. **做空**：仅对 `config/symbols.yaml` 中 `short_support.verified` 核实为可做空的品种开放（链上现货代币默认不可做空），做空计提借券费。
+4. **输出**：本金、目标利润、实际净利润、买/卖次数、做多/做空次数、资金利用率、交易成本、资金成本、是否达标、未达标原因；K 线上标记全部分批买卖点与累计净利润曲线。
+
+```bash
+bgwq simple NVDA                     # 七档本金（中位）逐档模拟
+bgwq simple NVDA --capital-usd 100000 --target-usd 980
+bgwq simple-report                   # 全标的 × 七档 简单报告 + CSV + 可切换档位的 K 线图
+```
+工作台首个页签「多空教学模拟」；接口 `/api/simple/{symbol}`、`/api/simple-summary`、`POST /api/simple/report`。参数见 `config/simple_sim.yaml`。
+**这是已知昨日完整走势的事后教学分析，不是实盘预测，暂不执行真实资金交易。**
+
+## 固定收益目标 · 稳定性优先（`target_model/`，保留）
 
 以“稳定达标”而非“最大利润”为目标，严格分成两部分：
 
@@ -66,7 +81,7 @@ bgwq replay NVDA                           # 双模式复盘 + K 线图
 bgwq backtest NVDA && bgwq train-ml NVDA   # 样本外回测 / ML
 bgwq report                                # 中文日报 HTML + CSV
 bgwq serve                                 # http://127.0.0.1:8000 工作台
-pytest -q                                  # 64 项自动化测试
+pytest -q                                  # 69 项自动化测试
 ```
 
 详见 `docs/01_使用文档.md`。

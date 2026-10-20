@@ -23,6 +23,7 @@ from .data.simulated import regime_for_day
 from .data.store import Store
 from .hindsight.optimal_path import OptimalPathResult, optimal_path
 from .hindsight.portfolio import PortfolioResult, portfolio_optimal
+from .simple_sim.engine import SimpleSimResult, load_simple_config, simulate_day
 from .target_model.config import load_target_config, target_for_capital
 from .target_model.strategy import StrategyDayResult, TargetSeekingStrategy, run_strategy_day
 from .target_model.teaching import TargetPathResult, teaching_path
@@ -62,6 +63,7 @@ class Pipeline:
         self._ab_cache: dict[tuple, ABComparison] = {}
         self._hs_cache: dict[tuple, object] = {}
         self.target_cfg = load_target_config()
+        self.simple_cfg = load_simple_config()
         self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
@@ -350,6 +352,39 @@ class Pipeline:
                              "max_dd_usd": r.max_drawdown_usd, "partial_fills": r.partial_fills, "unverifiable": r.unverifiable,
                              "reasons": "；".join(r.reasons_not_met), "tradable": sym in self.symbols(tradable_only=True), "source": r.source})
         return pd.DataFrame(rows)
+
+    # ------------------------------------------------------------------ 简化版：多空多次交易 · 累计净利润达标（事后教学）
+    def simple_day(self, symbol: str, day: date, capital_usd: float, target_usd: float | None = None, tier: str | None = None,
+                   venue: str = Venue.TOKEN) -> SimpleSimResult:
+        if target_usd is None:
+            tgt, tier_id, note = target_for_capital(capital_usd, self.tiers, self.simple_cfg.target_mode, "first")
+            if tgt is None:
+                raise ValueError(note)
+            target_usd, tier = tgt * capital_usd, tier or tier_id
+        key = ("simple", symbol, day, round(capital_usd, 2), round(target_usd, 2), self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.hindsight_bars(symbol, day, venue)
+        if bars.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        res = simulate_day(bars, CostModel(self.profile), capital_usd, target_usd, self.simple_cfg, symbol=symbol, tier=tier)
+        if bars.attrs.get("fallback_native"):
+            res.notes.insert(0, "警告：无代币成交K线，本结果使用原生股票价格")
+            res.unverifiable = True
+        self._hs_cache[key] = res
+        return res
+
+    def simple_tiers(self, symbol: str, day: date, points: tuple[str, ...] = ("mid",), venue: str = Venue.TOKEN) -> list[SimpleSimResult]:
+        out = []
+        for t in self.tiers.tiers:
+            for pt, cap in t.representative_capitals(points).items():
+                lo, hi = t.target_daily_pct
+                pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
+                try:
+                    out.append(self.simple_day(symbol, day, cap, pct / 100 * cap, tier=f"{t.id}" + ("" if pt == "mid" else f"-{pt}"), venue=venue))
+                except LookupError:
+                    break
+        return out
 
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,

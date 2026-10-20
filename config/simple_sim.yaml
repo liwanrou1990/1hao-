@@ -1,0 +1,14 @@
+# 简化版：昨日真实走势 · 多空多次交易 · 累计净利润达到档位目标即停（事后教学分析，非实盘预测）
+position_fraction: 1.0        # 单笔最大投入占本金比例（不加杠杆、不加仓；≤1）
+stop_loss_pct: 0.5            # 单笔止损：相对入场均价的最大不利波动（%）
+max_daily_loss_pct: 2.0       # 当日累计亏损达到本金该比例后停止
+min_trade_net_pct: 0.10       # 单笔最低净收益（扣费后，相对投入，%）；低于此的机会不做
+max_hold_bars: 120            # 单笔最长持有K线数
+cooldown_bars: 1
+batch_bars: 5                 # 分批成交最多跨越的K线数（每根 ≤ 参与率 × 成交额）
+participation_rate: 0.10
+flat_before_close_bars: 5
+capital_cost_annual: 0.05     # 资金成本：年化 5%，按持仓时间计提（多空都计）
+short_borrow_rate_annual: 0.05  # 做空借券费（仅对 shortable 品种）
+direction_choice: earliest_exit   # 多空同时可行时的选择：earliest_exit（最早达到最低净收益）| best_net
+target_mode: lower            # 档位目标取值：lower|mid|upper

@@ -22,6 +22,7 @@ from ..reports.charts import bars_to_candles, markers_from_trades
 from ..reports.daily import generate_daily_report
 from ..reports.hindsight_report import generate_hindsight_report, path_markers
 from ..reports.target_report import cum_series, generate_target_report, roundtrip_markers
+from ..reports.simple_report import generate_simple_report, sim_markers
 from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
@@ -240,6 +241,51 @@ def hindsight_symbol(symbol: str, day: str | None = None, tier: str | None = Non
 def hindsight_report(day: str | None = None, symbols: list[str] | None = Query(default=None), with_portfolio: bool = True):
     d = _day(day)
     out = generate_hindsight_report(pl(), d, symbols, with_portfolio=with_portfolio)
+    root = pl().settings.resolve_path(pl().settings.report_dir)
+    out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
+    out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
+    return _clean(out)
+
+
+# ---------------------------------------------------------------- 简化版：多空多次交易 · 累计净利润达标
+@app.get("/api/simple/{symbol}")
+def simple_symbol(symbol: str, day: str | None = None, capital: float | None = None, target_usd: float | None = None):
+    d = _day(day, symbol)
+    p = pl()
+    bars = p.hindsight_bars(symbol, d)
+    if bars.empty:
+        raise HTTPException(404, "无数据")
+    try:
+        results = [p.simple_day(symbol, d, capital, target_usd)] if capital else p.simple_tiers(symbol, d)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return _clean({"symbol": symbol, "day": d, "source": str(bars["source"].iloc[0]), "venue": str(bars["venue"].iloc[0]),
+                   "simulated": bool((bars["quality"] & 128).any()), "fallback_native": bool(bars.attrs.get("fallback_native")),
+                   "candles": bars_to_candles(bars),
+                   "results": [{**r.to_dict(), "markers": sim_markers(r.trades, bars), "cum": cum_series(r.cum_curve, bars)} for r in results],
+                   "chart_url": f"/reports/charts/simple_{symbol}_{d}_{p.cost_profile_name}.html", "tier_issues": p.tiers.issues})
+
+
+@app.get("/api/simple-summary")
+def simple_summary(day: str | None = None):
+    d = _day(day)
+    p = pl()
+    rows = []
+    for sym in p.symbols():
+        try:
+            for r in p.simple_tiers(sym, d):
+                x = r.to_dict()
+                x.pop("trades"), x.pop("cum_curve")
+                rows.append(x)
+        except LookupError:
+            continue
+    return _clean({"day": d, "rows": rows, "formal": not p.plan.is_simulated})
+
+
+@app.post("/api/simple/report")
+def simple_report(day: str | None = None, symbols: list[str] | None = Query(default=None)):
+    d = _day(day)
+    out = generate_simple_report(pl(), d, symbols)
     root = pl().settings.resolve_path(pl().settings.report_dir)
     out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
     out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
