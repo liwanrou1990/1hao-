@@ -45,24 +45,28 @@ def test_constraints_and_stop_at_target(tok):
     assert len(r.cum_curve) == len(tok) and r.cum_curve[-1] == pytest.approx(r.realized_net_usd)
 
 
-def test_short_trades_only_when_allowed(tok):
+def _down_bars(n=120):
+    close = np.linspace(100, 96, n)
+    bars = pd.DataFrame({"ts": pd.date_range("2026-10-16 13:30", periods=n, freq="1min", tz="UTC"), "symbol": "X", "venue": "token",
+                         "source": "s", "quality": 0, "close": close, "amount": 1e7})
+    bars["open"] = bars["close"]; bars["high"] = bars["close"] * 1.0005; bars["low"] = bars["close"] * 0.9995
+    bars["ts_ny"] = bars["ts"].dt.tz_convert("America/New_York").dt.strftime("%Y-%m-%d %H:%M:%S")
+    return bars
+
+
+def test_short_trades_only_when_allowed():
     cfg = load_simple_config()
     cm = CostModel(load_cost_profile("token_dex_optimistic"))
-    # 构造持续下跌的一天：只有做空能赚钱
-    down = tok.copy()
-    f = np.linspace(1.0, 0.94, len(down))
-    for c in ["open", "high", "low", "close"]:
-        down[c] = down[c].to_numpy() * f
+    down = _down_bars()
     r_no = simulate_day(down, cm, 50_000, 500, cfg, allow_short=False)
     r_yes = simulate_day(down, cm, 50_000, 500, cfg, allow_short=True, short_borrow_annual=0.05)
-    assert r_no.n_short == 0
-    assert r_yes.n_short >= 1 and r_yes.realized_net_usd > r_no.realized_net_usd
+    assert r_no.n_short == 0 and r_no.n_long == 0 and not r_no.target_met       # 纯下跌日做多无机会
+    assert r_yes.n_short >= 1 and r_yes.realized_net_usd > r_no.realized_net_usd and r_yes.shortable
     for t in r_yes.trades:
-        if t.direction == "short":
-            assert t.avg_close < t.avg_open and t.capital_cost_usd > 0      # 做空需价格下跌且计提借券费
-            assert t.net_pnl_usd == pytest.approx(t.open_fill.filled_usd - t.close_fill.filled_usd
-                                                   - sum(cm.p.gas_usd * max(1, int(np.ceil(x.notional_usd / cm.p.max_tx_usd))) for x in t.open_fill.fills + t.close_fill.fills)
-                                                   - t.capital_cost_usd, rel=1e-6)
+        assert t.direction == "short" and t.avg_close < t.avg_open and t.capital_cost_usd > 0
+        assert t.qty == pytest.approx(t.close_fill.qty, rel=1e-6)                 # 买回数量恰好等于卖出数量
+        gas = sum(cm.p.gas_usd * max(1, int(np.ceil(x.notional_usd / cm.p.max_tx_usd))) for x in t.open_fill.fills + t.close_fill.fills)
+        assert t.net_pnl_usd == pytest.approx(t.open_fill.filled_usd - t.close_fill.filled_usd - gas - t.capital_cost_usd, rel=1e-6)
 
 
 def test_unmet_target_reported_honestly(tok):
