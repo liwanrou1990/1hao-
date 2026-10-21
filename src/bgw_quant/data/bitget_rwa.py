@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import base64
+import os
 import hashlib
 import hmac
 import json
@@ -143,6 +144,33 @@ class BitgetRwaClient:
         if side:
             body["side"] = side
         return self._post("transactionList", body).get("data", {}) or {}
+
+    # ---------- 只读可执行报价（订单模式价格查询，不创建/不提交订单） ----------
+    SWAP_PREFIX = "/bgw-pro/swapx/order"
+
+    def _post_path(self, path: str, body: dict[str, Any]) -> dict[str, Any]:
+        raw = json.dumps(body, separators=(",", ":"), ensure_ascii=False)
+        headers = signed_headers(path, raw, self.api_key, self.api_secret)
+        t0 = time.perf_counter()
+        resp = self._client.post(path, content=raw.encode("utf-8"), headers=headers)
+        self.call_log.append({"endpoint": path.rsplit("/", 1)[-1], "status_code": resp.status_code,
+                              "elapsed_s": round(time.perf_counter() - t0, 3), "ts": datetime.now(timezone.utc).isoformat()})
+        if resp.status_code in (401, 403):
+            raise PermissionError(f"{path}: HTTP {resp.status_code}: {resp.text[:200]}")
+        if resp.status_code == 429:
+            raise RuntimeError(f"{path}: HTTP 429 限频: {resp.text[:200]}")
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("status", 0) != 0:
+            raise RuntimeError(f"{path} 业务失败 status={data.get('status')}: {data.get('data')}")
+        return data
+
+    def executable_quote(self, from_chain: str, from_contract: str, from_amount: str, to_chain: str, to_contract: str,
+                         from_address: str) -> dict[str, Any]:
+        """getSwapPrice：按给定金额查询当下可执行的 swap 价格（只读）。绝不调用 makeSwapOrder / submitSwapOrder。"""
+        body = {"fromChain": from_chain, "fromContract": from_contract, "fromAmount": str(from_amount), "toChain": to_chain,
+                "toContract": to_contract, "fromAddress": from_address}
+        return self._post_path(f"{self.SWAP_PREFIX}/getSwapPrice", body).get("data", {}) or {}
 
     def check_contract_is_rwa(self, chain: str, contract: str) -> dict[str, Any]:
         return self._post("checkContractIsRwa", {"chain": chain, "contract": contract}).get("data", {}) or {}
@@ -303,6 +331,20 @@ class BitgetRwaClient:
                 except Exception as e:  # noqa: BLE001
                     rep["klines"].append({"ticker": t, "period": per, "ok": False, "error": str(e)})
                     rep["errors"].append(f"{t} {per}: {e}")
+        quote_addr = os.environ.get("BGW_QUOTE_ADDRESS", "")
+        quote_usdc = os.environ.get("BGW_QUOTE_STABLE_CONTRACT", "")
+        if quote_addr and quote_usdc:
+            for a in rep["assets"]:
+                c = next((x for x in a.get("contracts", []) if x.get("status") == "online"), None)
+                if not c:
+                    continue
+                try:
+                    q = self.executable_quote(c["chain"], quote_usdc, "1000", c["chain"], c["contract"], quote_addr)
+                    rep.setdefault("quotes", []).append({"ticker": a["ticker"], "ok": True, "quote": q})
+                except Exception as e:  # noqa: BLE001
+                    rep.setdefault("quotes", []).append({"ticker": a["ticker"], "ok": False, "error": str(e)[:200]})
+        else:
+            rep["quotes_note"] = "未配置 BGW_QUOTE_ADDRESS / BGW_QUOTE_STABLE_CONTRACT：跳过只读可执行报价（getSwapPrice）"
         rep["calls"] = self.call_log
         return rep
 

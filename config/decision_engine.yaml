@@ -5,7 +5,15 @@ risk:
   max_hold_bars: 60
   flat_before_close_bars: 5
   vol_target_daily: 0.02        # 波动率目标：实现日波动高于此按比例缩仓
+  max_intraday_drawdown_pct: 1.0   # 已实现累计曲线回撤超过本金该比例 → 当日熔断
+  max_leverage: 1.0             # 最大杠杆（不加杠杆）
+  anomaly_jump_pct: 3.0         # 单根 K 线 |涨跌| 超过该值 → 异常熔断，暂停 anomaly_pause_bars
+  anomaly_pause_bars: 15
+  data_gap_pause_bars: 5        # 数据缺口（时间戳不连续）后暂停的 K 线数
+  low_liquidity_min_tranche_usd: 500   # 可成交量低于此视为低流动性行情 → 暂停开仓
 execution:
+  latency_bars: 1               # 决策到首个子单成交的延迟（K 线数）：收盘决策 → 下一根开盘后再延迟 latency_bars-1 根
+  fill_rate: 0.95               # 实际成交率：每个子单名义金额按该比例成交（其余视为未成交）
   participation_rate: 0.10      # 单根 K 线可成交金额占成交额比例（真实盘口深度未知时的保守假设）
   batch_bars: 5                 # 分批成交跨越的 K 线数
   liquidity_lookback: 20        # 以过去 N 根成交额估计当下可成交量（因果）
@@ -23,8 +31,8 @@ grid:
   z_entry: [1.0, 2.0]           # 区间交易入场阈值
   tp_atr_mult: [1.0, 2.0]       # 止盈 = tp_atr_mult × ATR（扣费后净额）
   max_open: [4, 8]              # 并行仓位数（单笔 = 本金/并行数，再受流动性限制）
-  trend_thresh: [0.5]           # 趋势判定：(EMA快−EMA慢)/ATR 的阈值
-  edge_min_ratio: [1.2]         # 预期波动 / 往返成本 低于此 → 暂停
+  trend_thresh: [0.5, 1.0]      # 趋势判定：(EMA快−EMA慢)/ATR 的阈值
+  edge_min_ratio: [1.0, 1.5]    # 预期波动 / 往返成本 低于此 → 暂停
 objective:
   w_attainment: 1.0
   w_losing_days: 0.7

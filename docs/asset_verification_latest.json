@@ -1,0 +1,238 @@
+{
+  "ts": "2026-10-21T18:07:35.877392",
+  "api_error": "ProxyError: 403 Forbidden",
+  "rows": [
+    {
+      "ticker": "NVDA",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "SPY",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "SPCX",
+      "verification_status": "unverified",
+      "spot_long": false,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "资产身份/发行商/合约尚未通过官方 stockList/stockInfo 核实：在核实前不纳入可交易（既不判定支持，也不判定不支持）",
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "MU",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "QQQ",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "TSLA",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "MSFT",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "SNDK",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "INTC",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    },
+    {
+      "ticker": "META",
+      "verification_status": "unverified",
+      "spot_long": true,
+      "short": false,
+      "leverage": 1.0,
+      "order_types": [
+        "market_swap"
+      ],
+      "chain": null,
+      "contract": null,
+      "data_source": null,
+      "market_status": null,
+      "tx_min_buy_usd": null,
+      "tx_max_buy_usd": null,
+      "tx_max_sell_usd": null,
+      "notes": [
+        "官方 RWA 接口无借券/保证金做空；未登记可核实渠道 → 不做空",
+        "官方 RWA 接口无杠杆做多 → 不加杠杆",
+        "未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设"
+      ],
+      "api_raw": null
+    }
+  ],
+  "note": "官方 RWA 接口仅链上现货 swap（市价）；做空/杠杆需人工登记可核实渠道。api_error 非空时全部为“未验证”。"
+}

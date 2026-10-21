@@ -160,6 +160,16 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
     look = int(ex.get("liquidity_lookback", 20))
     rate_limit = int(ex.get("api_rate_limit_orders_per_min", 10))
     cap_cost_annual = float(ex.get("capital_cost_annual", 0.05))
+    latency = max(1, int(ex.get("latency_bars", 1)))
+    fill_rate = float(ex.get("fill_rate", 1.0))
+    max_dd_pct = float(risk.get("max_intraday_drawdown_pct", 1.0)) / 100
+    jump_pct = float(risk.get("anomaly_jump_pct", 3.0)) / 100
+    anomaly_pause = int(risk.get("anomaly_pause_bars", 15))
+    gap_pause = int(risk.get("data_gap_pause_bars", 5))
+    low_liq_min = float(risk.get("low_liquidity_min_tranche_usd", 500))
+    assert float(risk.get("max_leverage", 1.0)) <= 1.0, "V1 不允许杠杆"
+    ts_arr = pd.to_datetime(bars["ts"]).to_numpy()
+    paused_until = -1
     borrow = cap.short_borrow_rate_annual if cap.short else 0.0
     f = _features(bars, cfg.features)
     close, low, high = f["close"], bars["low"].to_numpy(float), bars["high"].to_numpy(float)
@@ -176,7 +186,7 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
     hit_ts = None
     last_open = -10**9
     orders_this_bar = 0
-    pending_entries: list[tuple[str, str, float]] = []      # (direction, mode, size) 下一根执行
+    pending_entries: list[tuple[str, str, float, int]] = []      # (direction, mode, size, due_idx) 延迟后执行
     pending_exits: list[tuple[Position, str]] = []
     partial = 0
     peak_dep = 0.0
@@ -222,13 +232,17 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
                 if done:
                     positions.remove(pos)
         pending_exits = []
-        # 2) 执行上一根决定的入场（受 API 限频）
-        for direction, mode, size in pending_entries:
+        # 2) 执行到期的入场（延迟 latency_bars，受 API 限频与成交率）
+        still_pending = []
+        for direction, mode, size, due in pending_entries:
+            if due > i:
+                still_pending.append((direction, mode, size, due))
+                continue
             if len(positions) >= max_concurrent_cap or orders_this_bar >= rate_limit:
                 pause_reasons["API限频/并行上限"] = pause_reasons.get("API限频/并行上限", 0) + 1
                 continue
             side = "buy" if direction == "long" else "sell"
-            fill = batch_fill(bars, i, side, size, cost, avail, batch, "open")
+            fill = batch_fill(bars, i, side, size * fill_rate, cost, avail, batch, "open")
             if not fill.fills or fill.filled_usd < max(cost.p.min_tx_usd, 0.005 * size):
                 pause_reasons["流动性不足未成交"] = pause_reasons.get("流动性不足未成交", 0) + 1
                 continue
@@ -242,13 +256,25 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
             mode_counts[mode] = mode_counts.get(mode, 0) + 1
             last_open = i
             i = max(i, fill.end_idx)      # 分批期间不再决策
-        pending_entries = []
+        pending_entries = still_pending
         dep = sum(p.fill.filled_usd for p in positions)
         deployed[i] = dep
         peak_dep = max(peak_dep, dep)
         curve[i] = cum
         if cum >= target_usd - 1e-9 and hit_ts is None:
             hit_ts = str(bars["ts_ny"].iloc[i])
+        # 2b) 熔断：异常跳变 / 数据缺口 / 日内回撤
+        if i > 0:
+            jump = abs(close[i] / close[i - 1] - 1)
+            gap_min = (ts_arr[i] - ts_arr[i - 1]) / np.timedelta64(1, "m")
+            if jump >= jump_pct:
+                paused_until = max(paused_until, i + anomaly_pause)
+                pause_reasons["异常跳变熔断"] = pause_reasons.get("异常跳变熔断", 0) + 1
+            elif gap_min > 1.5:
+                paused_until = max(paused_until, i + gap_pause)
+                pause_reasons["数据缺口暂停"] = pause_reasons.get("数据缺口暂停", 0) + 1
+        if stop is None and (np.max(curve[: i + 1]) - cum) >= max_dd_pct * capital_usd and np.max(curve[: i + 1]) > 0:
+            stop = "日内回撤熔断：累计净利润回撤超过上限，停止交易"
         # 3) 本根收盘决策（只用 ≤ i 的信息）
         atr_i, z_i, rv_i, tr_i = f["atr"][i], f["z"][i], f["rv"][i], f["trend"][i]
         # 3a) 出场判断
@@ -278,8 +304,10 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
                 stop = "累计净利润已达目标，停止开新仓"
             elif cum <= -float(risk.get("max_daily_loss_pct", 1.5)) / 100 * capital_usd:
                 stop = "触及当日亏损上限，暂停交易"
-        can_enter = stop is None and i <= n - 1 - flat_before and len(positions) < max_concurrent_cap and (i - last_open) >= 1 \
-            and np.isfinite(atr_i) and np.isfinite(z_i)
+        can_enter = stop is None and i > paused_until and i <= n - 1 - flat_before and len(positions) < max_concurrent_cap \
+            and (i - last_open) >= 1 and np.isfinite(atr_i) and np.isfinite(z_i)
+        if stop is None and i <= paused_until:
+            pause_reasons["熔断/缺口暂停中"] = pause_reasons.get("熔断/缺口暂停中", 0) + 1
         if can_enter:
             # 定仓
             trailing = float(np.nanmean(liq[max(0, i - look):i + 1])) if liquidity_known and i > 0 else np.inf
@@ -295,7 +323,9 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
             rt = cost.round_trip_fraction(size) + 2 * cost.p.gas_usd / max(size, 1.0)
             edge = exp_move / rt if rt > 0 else 0.0
             direction, mode = None, None
-            if size < max(cost.p.min_tx_usd, 0.002 * capital_usd):
+            if np.isfinite(trailing) and trailing * batch < low_liq_min:
+                pause_reasons["低流动性行情暂停"] = pause_reasons.get("低流动性行情暂停", 0) + 1
+            elif size < max(cost.p.min_tx_usd, 0.002 * capital_usd):
                 pause_reasons["流动性/容量不足"] = pause_reasons.get("流动性/容量不足", 0) + 1
             elif edge < params.edge_min_ratio:
                 pause_reasons["成本门槛高于预期波动"] = pause_reasons.get("成本门槛高于预期波动", 0) + 1
@@ -312,7 +342,7 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
             else:
                 pause_reasons["区间内等待极值"] = pause_reasons.get("区间内等待极值", 0) + 1
             if direction:
-                pending_entries.append((direction, mode, size))
+                pending_entries.append((direction, mode, size, i + latency))
         i += 1
     # 收盘仍未平的仓位：按最后收盘估值（标记不可验证）
     unliq = 0.0

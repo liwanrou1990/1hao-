@@ -116,3 +116,48 @@ def test_optimize_tier_structure_and_classification(cfg):
     assert "tags" in cls and "details" in cls and cls["round_trip_cost_pct"] > 0
     if not run.target_met:
         assert cls["tags"]
+
+
+def test_capability_three_state_and_unverified_tag():
+    from bgw_quant.decision.analysis import classify
+    unverified = capability_for("SPCX")
+    assert unverified.verification_status == "unverified" and not unverified.spot_long
+    unsupported = capability_for("NVDA", {"listed": False, "contracts": [], "stock_info": None})
+    assert unsupported.verification_status == "unsupported" and not unsupported.spot_long
+    verified = capability_for("SPCX", {"listed": True, "contracts": [{"chain": "sol", "contract": "C", "data_source": "ondo", "status": "online"}],
+                                       "stock_info": {"chain_assets": [{"contract": "C", "market_status": "open"}]}})
+    assert verified.verification_status == "verified" and verified.spot_long
+
+
+def test_engine_latency_fill_rate_and_anomaly_breaker(tok, cfg):
+    cm = CostModel(load_cost_profile("token_dex_optimistic"))
+    cap = ProductCapability("NVDA")
+    p = EngineParams(z_entry=1.0, tp_atr_mult=1.0, max_open=4, edge_min_ratio=0.5)
+    cfg2 = load_engine_config()
+    cfg2.execution = {**cfg2.execution, "latency_bars": 3, "fill_rate": 0.5}
+    r = run_engine_day(tok, cm, 100_000, 950, cfg2, p, cap)
+    for t in r.trades:
+        assert t.size_usd <= 100_000 / 4 * 0.5 + 1e-6            # 成交率 50% 生效
+    # 异常跳变熔断：人为制造一根 +5% 的 K 线
+    bars = tok.copy().reset_index(drop=True)
+    j = 120
+    for c in ["open", "high", "low", "close"]:
+        bars.loc[j:, c] = bars.loc[j:, c] * 1.05
+    r2 = run_engine_day(bars, cm, 100_000, 950, cfg2, p, cap)
+    assert r2.pause_reasons.get("异常跳变熔断", 0) >= 1
+    assert all(not (j < t.open_fill.start_idx <= j + int(cfg2.risk["anomaly_pause_bars"])) for t in r2.trades)
+
+
+def test_executable_quote_is_read_only():
+    import httpx
+    from bgw_quant.data.bitget_rwa import BitgetRwaClient
+    paths = []
+
+    def handler(req):
+        paths.append(req.url.path)
+        return httpx.Response(200, json={"status": 0, "data": {"toAmount": "7.5", "price": "133.2"}})
+    c = BitgetRwaClient(api_key="k", api_secret="s", transport=httpx.MockTransport(handler))
+    q = c.executable_quote("sol", "USDC", "1000", "sol", "NVDAx", "addr")
+    assert q["price"] == "133.2" and paths == ["/bgw-pro/swapx/order/getSwapPrice"]
+    assert not any("make" in p or "submit" in p for p in paths)
+    assert all("k" != v for e in c.call_log for v in e.values())    # 日志不含密钥

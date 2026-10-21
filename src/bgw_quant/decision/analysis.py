@@ -23,8 +23,10 @@ def classify(bars: pd.DataFrame, cost: CostModel, cap: ProductCapability, run: D
     size_ref = float(np.median([t.size_usd for t in run.trades])) if run.trades else min(run.capital_usd / max(1, run.params.max_open), per_batch if known else run.capital_usd)
     rt = cost.round_trip_fraction(size_ref)
     tags, details = [], []
-    if not cap.spot_long:
-        tags.append("产品不支持"); details.append("资产未经官方核对或不可交易")
+    if not cap.spot_long and cap.verification_status == "unsupported":
+        tags.append("产品不支持"); details.append("官方 stockList 不存在该 ticker")
+    elif not cap.spot_long:
+        tags.append("未验证"); details.append("资产身份与可交易渠道尚未通过官方 API 核实（无法在当前环境核实），未判定支持或不支持")
     if "short" not in cap.directions and run.pause_reasons.get("下跌趋势但产品不支持做空", 0) > 0:
         tags.append("产品不支持做空"); details.append(f"{run.pause_reasons['下跌趋势但产品不支持做空']} 根K线处于下跌趋势但无可核实做空渠道")
     if theoretical_usd < target_usd:

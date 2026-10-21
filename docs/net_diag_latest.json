@@ -1,0 +1,93 @@
+{
+  "ts_utc": "2026-10-21T18:07:33.524197+00:00",
+  "api_family": {
+    "bitget_wallet_tob_openapi": {
+      "base_url": "https://bopenapi.bgwapi.io",
+      "docs": "https://web3.bitget.com/zh-CN/docs/market/rwa",
+      "endpoints": [
+        "/bgw-pro/market/v3/rwa/stockList",
+        "/bgw-pro/market/v3/rwa/stockInfo",
+        "/bgw-pro/market/v3/rwa/kline",
+        "/bgw-pro/market/v3/rwa/transactionList",
+        "/bgw-pro/market/v3/rwa/checkContractIsRwa",
+        "/bgw-pro/swapx/order/getSwapPrice（只读可执行报价）",
+        "/bgw-pro/swapx/order/checkOrdersFee（只读费用）"
+      ],
+      "auth": "x-api-key / x-api-timestamp(ms) / x-api-signature = base64(HMAC-SHA256(secret, sortedJSON{apiPath, body, query…, x-api-key, x-api-timestamp}))",
+      "not_used": "Bitget 交易所 API（api.bitget.com，ACCESS-KEY/ACCESS-SIGN/ACCESS-PASSPHRASE）——与本系统无关，不混用"
+    }
+  },
+  "configured_base_url": "https://bopenapi.bgwapi.io",
+  "has_key": true,
+  "has_secret": true,
+  "proxy": {
+    "https_proxy_set": true,
+    "no_proxy": "localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-previ"
+  },
+  "dns": [
+    {
+      "host": "bopenapi.bgwapi.io",
+      "ok": false,
+      "error": "gaierror: [Errno -2] Name or service not known"
+    },
+    {
+      "host": "web3.bitget.com",
+      "ok": false,
+      "error": "gaierror: [Errno -2] Name or service not known"
+    },
+    {
+      "host": "api.massive.com",
+      "ok": false,
+      "error": "gaierror: [Errno -2] Name or service not known"
+    }
+  ],
+  "https": [
+    {
+      "host": "bopenapi.bgwapi.io",
+      "ok": false,
+      "error": "ProxyError: 403 Forbidden"
+    },
+    {
+      "host": "web3.bitget.com",
+      "ok": false,
+      "error": "ProxyError: 403 Forbidden"
+    },
+    {
+      "host": "api.massive.com",
+      "ok": false,
+      "error": "ProxyError: 403 Forbidden"
+    }
+  ],
+  "clock": {
+    "local_ms": 1792606054648,
+    "note": "签名时间戳为本机毫秒；若服务端返回时间戳过期错误需做 NTP 校时"
+  },
+  "rate_limit": {
+    "assumed_orders_per_min": 10,
+    "note": "官方未公开限频；客户端遇 429 退避重试，引擎按每分钟子单数限制"
+  },
+  "required_domains": [
+    {
+      "domain": "bopenapi.bgwapi.io",
+      "purpose": "Bitget Wallet ToB OpenAPI（行情/只读报价）",
+      "level": "必需"
+    },
+    {
+      "domain": "web3.bitget.com",
+      "purpose": "官方文档站",
+      "level": "建议"
+    },
+    {
+      "domain": "api.massive.com",
+      "purpose": "Massive 原生美股分钟线基准",
+      "level": "可选"
+    }
+  ],
+  "blocked_domains": [
+    "bopenapi.bgwapi.io",
+    "web3.bitget.com",
+    "api.massive.com"
+  ],
+  "conclusion": "以下域名在当前环境不可达（代理 CONNECT 被策略拒绝/DNS 无解析）：bopenapi.bgwapi.io, web3.bitget.com, api.massive.com。需在云环境 Network access 放行 bopenapi.bgwapi.io（建议同时放行文档站）",
+  "secrets_in_output": false
+}

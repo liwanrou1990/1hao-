@@ -31,6 +31,7 @@ class ProductCapability:
     tx_max_sell_usd: float | None = None
     tx_min_buy_usd: float | None = None
     verified_by_api: bool = False
+    verification_status: str = "unverified"     # verified | unverified | unsupported
     notes: list[str] = field(default_factory=list)
 
     @property
@@ -52,7 +53,8 @@ def capability_for(symbol: str, api_asset: dict[str, Any] | None = None) -> Prod
     cap = ProductCapability(symbol=symbol)
     if not sym_cfg.get("tradable", False):
         cap.spot_long = False
-        cap.notes.append("资产性质/发行商/合约未经官方核对，不纳入可交易")
+        cap.verification_status = "unverified"
+        cap.notes.append("资产身份/发行商/合约尚未通过官方 stockList/stockInfo 核实：在核实前不纳入可交易（既不判定支持，也不判定不支持）")
     ss = (cfg.get("short_support") or {})
     v = (ss.get("verified") or {}).get(symbol)
     if v and v.get("shortable"):
@@ -70,6 +72,9 @@ def capability_for(symbol: str, api_asset: dict[str, Any] | None = None) -> Prod
         cap.notes.append("官方 RWA 接口无杠杆做多 → 不加杠杆")
     if api_asset:
         cap.verified_by_api = True
+        cap.verification_status = "verified"
+        if api_asset.get("listed", True):
+            cap.spot_long = True            # API 核实上线 → 现货可买卖（以 stockInfo 市场状态为准）
         contracts = api_asset.get("contracts") or []
         online = [c for c in contracts if c.get("status") == "online"] or contracts
         if online:
@@ -86,7 +91,10 @@ def capability_for(symbol: str, api_asset: dict[str, Any] | None = None) -> Prod
                     pass
         if not api_asset.get("listed", True):
             cap.spot_long = False
-            cap.notes.append("官方 stockList 中不存在该 ticker")
+            cap.verification_status = "unsupported"
+            cap.notes.append("官方 stockList 中不存在该 ticker → 产品不支持")
+        elif cap.market_status in ("close", "closed", "paused"):
+            cap.notes.append(f"市场状态 {cap.market_status}：当前不可交易")
     else:
         cap.notes.append("未经 API 核实（SIMULATED 或未连接）：现货能力按配置假设")
     return cap

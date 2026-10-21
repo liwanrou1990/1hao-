@@ -226,6 +226,13 @@ def cmd_engine_report(args):
     _p(generate_engine_report(pl, day, args.symbols))
 
 
+def cmd_matrix_report(args):
+    from .reports.matrix_report import generate_matrix_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_matrix_report(pl, day, args.symbols))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -245,6 +252,57 @@ def cmd_verify_assets(args):
         print(f"阻塞：BGW_API_KEY={'已配置' if c.api_key else '缺失'}，BGW_API_SECRET={'已配置' if c.api_secret else '缺失'}；官方签名需要 Secret。")
         sys.exit(2)
     _p(c.verify_assets(args.symbols or ["NVDA", "SPCX", "TSLA"]))
+
+
+def cmd_verify_matrix(args):
+    """逐个品种核实：产品类型、状态、链/合约、现货/做空/杠杆支持、最小/最大订单；无法核实的标为“未验证”，不猜测。"""
+    import json as _json
+    from pathlib import Path
+    from .config import PROJECT_ROOT, research_symbols
+    from .data.bitget_rwa import BitgetRwaClient
+    from .decision.capability import capability_for
+    c = BitgetRwaClient()
+    syms = args.symbols or [x["ticker"] for x in research_symbols()]
+    api = {}
+    err = None
+    if c.has_credentials:
+        try:
+            api = {a["ticker"]: a for a in c.verify_assets(syms)}
+        except Exception as e:  # noqa: BLE001
+            err = f"{type(e).__name__}: {str(e)[:200]}"
+    else:
+        err = "缺少 BGW_API_KEY/BGW_API_SECRET"
+    rows = []
+    for sym in syms:
+        cap = capability_for(sym, api.get(sym))
+        rows.append({"ticker": sym, "verification_status": cap.verification_status, "spot_long": cap.spot_long, "short": cap.short,
+                     "leverage": cap.leverage_long, "order_types": cap.order_types, "chain": cap.chain, "contract": cap.contract,
+                     "data_source": cap.data_source, "market_status": cap.market_status, "tx_min_buy_usd": cap.tx_min_buy_usd,
+                     "tx_max_buy_usd": cap.tx_max_buy_usd, "tx_max_sell_usd": cap.tx_max_sell_usd, "notes": cap.notes,
+                     "api_raw": api.get(sym)})
+    rep = {"ts": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), "api_error": err, "rows": rows,
+           "note": "官方 RWA 接口仅链上现货 swap（市价）；做空/杠杆需人工登记可核实渠道。api_error 非空时全部为“未验证”。"}
+    out = Path(args.out) if args.out else PROJECT_ROOT / "docs" / "asset_verification_latest.json"
+    out.write_text(_json.dumps(rep, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    for r in rows:
+        print(f"{r['ticker']:5s} {r['verification_status']:11s} 现货多={r['spot_long']} 做空={r['short']} 杠杆={r['leverage']}x 链/合约={r['chain']}/{(r['contract'] or '—')[:10]} 状态={r['market_status']} 单笔买入上限={r['tx_max_buy_usd']}")
+    if err:
+        print("API 错误：", err)
+    print(f"报告已写入 {out}")
+
+
+def cmd_net_diag(args):
+    """网络/DNS/TLS/代理/时钟/签名/限频诊断与接口归属确认（不输出密钥）。"""
+    import json as _json
+    from pathlib import Path
+    from .config import PROJECT_ROOT
+    from .data.net_diag import run_diagnostics
+    rep = run_diagnostics()
+    out = Path(args.out) if args.out else PROJECT_ROOT / "docs" / "net_diag_latest.json"
+    out.write_text(_json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    _p({k: v for k, v in rep.items() if k != "api_family"})
+    print(f"报告已写入 {out}")
+    sys.exit(0 if not rep["blocked_domains"] else 3)
 
 
 def cmd_live_test(args):
@@ -277,6 +335,8 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("probe", help="探测 API 权限/历史跨度/频率/成本"); p.add_argument("--mode", default="auto"); p.set_defaults(f=cmd_probe)
     p = sub.add_parser("ingest", help="接入历史K线（live：官方 kline 多周期分页）"); p.add_argument("--symbols", nargs="*"); p.add_argument("--days", type=int, default=70); p.add_argument("--end"); p.add_argument("--periods", nargs="*", default=["1m"]); p.set_defaults(f=cmd_ingest)
+    p = sub.add_parser("verify-matrix", help="逐个品种核实产品类型/状态/链合约/方向支持/订单限制（无法核实=未验证）"); p.add_argument("--symbols", nargs="*"); p.add_argument("--out"); p.set_defaults(f=cmd_verify_matrix)
+    p = sub.add_parser("net-diag", help="网络/DNS/TLS/代理/时钟/限频诊断与接口归属确认"); p.add_argument("--out"); p.set_defaults(f=cmd_net_diag)
     p = sub.add_parser("live-test", help="Bitget RWA API 连接测试（只读）"); p.add_argument("--symbols", nargs="*"); p.add_argument("--day"); p.add_argument("--periods", nargs="*", default=["1m", "5m", "15m"]); p.add_argument("--out"); p.set_defaults(f=cmd_live_test)
     p = sub.add_parser("replay", help="双模式复盘"); p.add_argument("symbol"); p.add_argument("--day"); p.set_defaults(f=cmd_replay)
     p = sub.add_parser("backtest", help="规则策略 walk-forward"); p.add_argument("symbol"); p.add_argument("--train-days", type=int, default=20); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_backtest)
@@ -293,6 +353,7 @@ def main(argv=None):
     p = sub.add_parser("compare-report", help="各档位对比报告（A/B/C）+ CSV + K线图"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--wf-min-capital", type=float, default=175000); p.set_defaults(f=cmd_compare_report)
     p = sub.add_parser("engine", help="统一收益决策引擎：七档昨日因果复盘 + 滚动样本外 + 原因归类"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_engine)
     p = sub.add_parser("engine-report", help="决策引擎报告（默认 NVDA SPCX）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_engine_report)
+    p = sub.add_parser("matrix-report", help="70 组测试矩阵：A/B/C + 能力核实 + 原因 + 建议"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_matrix_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

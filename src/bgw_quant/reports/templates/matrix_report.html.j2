@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 70 组测试矩阵报告</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1360px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}
+table{border-collapse:collapse;font-size:11.5px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 4px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 70 组测试矩阵（品种 × 本金档位）· 成本模型 {{ cost_profile }}</h1>
+<div class="muted">生成 {{ generated_at }} · 手续费 {{ cost.fee_bps }} bps · 半价差 {{ cost.spread_bps }} bps · 滑点 {{ cost.slippage_bps }} bps · Gas {{ cost.gas_usd }} USD · 冲击系数 {{ cost.impact_coeff }} · 参与率 {{ (cfg.execution.participation_rate*100)|round(0) }}% · 延迟 {{ cfg.execution.latency_bars }} 根 · 成交率 {{ (cfg.execution.fill_rate*100)|round(0) }}% · 止损 {{ cfg.risk.stop_loss_pct }}% · 日亏损上限 {{ cfg.risk.max_daily_loss_pct }}% · 日内回撤熔断 {{ cfg.risk.max_intraday_drawdown_pct }}% · 最大杠杆 {{ cfg.risk.max_leverage }}x</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }} 阻塞：{{ status.blockers|join('；') }}。真实 K 线与只读可执行报价接入后需重跑本矩阵。</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+<div class="banner warn"><b>A</b> 理论最优（事后、不计流动性与冲击，纯参照）· <b>B</b> 事后可执行上限（看过全日、含流动性/冲击/成本约束，多笔并行）· <b>C</b> 因果引擎（无未来信息，参数来自昨日之前的滚动优化，含延迟/成交率/熔断）。<br>
+C 达标 <b>{{ n_met }}/{{ rows|length }}</b>，B 达标 <b>{{ n_b_met }}/{{ rows|length }}</b>。C 未达标原因分布：{% for k, v in tag_counts.items() %}<span class="tag">{{ k }} × {{ v }}</span> {% endfor %}。目标收益不是保证收益；未达标组合如实标注。</div>
+
+<h2>1. 逐项结果</h2>
+<table><tr><th>品种</th><th>档位</th><th>核实</th><th>方向</th><th>本金</th><th>目标净利润</th><th>A 理论</th><th>B 可执行上限</th><th>B 笔</th><th>B 达标</th><th>C 实际净利润</th><th>收益率</th><th>买入</th><th>卖出</th><th>做多</th><th>做空</th><th>胜率</th><th>交易成本</th><th>最大回撤</th><th>资金利用率</th><th>盘口容量(全日可成交)</th><th>容量/本金</th><th>C 达标</th><th>OOS 达标率</th><th>OOS 日均</th><th>未达标原因</th></tr>
+{% for r in rows %}<tr><td>{{ r.symbol }}</td><td>{{ r.tier }}</td><td>{{ {'verified':'已核实','unverified':'未验证','unsupported':'不支持'}[r.verification] }}</td><td>{{ r.directions }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_usd|num(0) }}</td><td>{{ r.theoretical_usd|num(0) }}</td><td class="{{ 'pos' if (r.b_exec_usd or 0)>=0 else 'neg' }}">{{ r.b_exec_usd|num(0) if r.b_exec_usd is not none else '—' }}</td><td>{{ r.b_exec_trades if r.b_exec_trades is not none else '—' }}</td><td class="{{ 'pos' if r.b_exec_met else 'neg' }}">{{ '是' if r.b_exec_met else '否' }}</td><td class="{{ 'pos' if r.net_usd>=0 else 'neg' }}">{{ r.net_usd|num }}</td><td>{{ "%.3f%%"|format(r.net_return_pct) }}</td><td>{{ r.n_buys }}</td><td>{{ r.n_sells }}</td><td>{{ r.n_long }}</td><td>{{ r.n_short }}</td><td>{{ r.win_rate|pct(0) if r.win_rate is not none else '—' }}</td><td>{{ r.trading_cost_usd|num }}</td><td>{{ r.max_dd_usd|num(0) }}</td><td>{{ r.avg_utilization|pct(0) }}</td><td>{{ r.day_liquidity_budget_usd|num(0) if r.day_liquidity_budget_usd else '未知' }}</td><td>{{ "%.1fx"|format(r.capacity_ratio) if r.capacity_ratio else '—' }}</td><td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.oos_attainment|pct(0) if r.oos_attainment is not none else '—' }}</td><td>{{ r.oos_mean_daily_return|pct(3) if r.oos_mean_daily_return is not none else '—' }}</td><td style="text-align:left">{{ r.tags }}</td></tr>{% endfor %}</table>
+
+<h2>2. 下一轮优化建议</h2>
+<ol>{% for s in suggestions %}<li>{{ s }}</li>{% endfor %}</ol>
+<div>CSV：<a href="{{ csv_name }}">{{ csv_name }}</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

@@ -25,6 +25,7 @@ from ..reports.target_report import cum_series, generate_target_report, roundtri
 from ..reports.simple_report import generate_simple_report, sim_markers
 from ..reports.compare_report import generate_compare_report
 from ..reports.engine_report import generate_engine_report
+from ..reports.matrix_report import generate_matrix_report
 from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
@@ -243,6 +244,16 @@ def hindsight_symbol(symbol: str, day: str | None = None, tier: str | None = Non
 def hindsight_report(day: str | None = None, symbols: list[str] | None = Query(default=None), with_portfolio: bool = True):
     d = _day(day)
     out = generate_hindsight_report(pl(), d, symbols, with_portfolio=with_portfolio)
+    root = pl().settings.resolve_path(pl().settings.report_dir)
+    out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
+    out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
+    return _clean(out)
+
+
+@app.post("/api/matrix/report")
+def matrix_report(day: str | None = None, symbols: list[str] | None = Query(default=None)):
+    d = _day(day)
+    out = generate_matrix_report(pl(), d, symbols)
     root = pl().settings.resolve_path(pl().settings.report_dir)
     out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
     out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
