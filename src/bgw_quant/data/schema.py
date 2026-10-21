@@ -42,6 +42,7 @@ BAR_COLUMNS = [
     "quality",       # QualityFlag bitmask
     "is_complete",
     "ingested_at",
+    "tf",            # 周期：1m / 5m / 15m …
 ]
 
 
@@ -91,5 +92,6 @@ def normalize_bars(df: pd.DataFrame, *, symbol: str, venue: str, source: str,
     out["quality"] = int(quality_extra)
     out["is_complete"] = df["is_complete"].astype(bool) if "is_complete" in df else True
     out["ingested_at"] = pd.Timestamp.now(tz="UTC")
+    out["tf"] = df["tf"].astype(str) if "tf" in df else "1m"
     out = out.sort_values("ts").reset_index(drop=True)
     return out[BAR_COLUMNS]

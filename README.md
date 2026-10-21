@@ -3,6 +3,17 @@
 > **V1 仅限研究、历史回测与模拟交易。** 不连接真钱钱包、不请求私钥、不自动签名或下单。
 > 每日 0.8%–2.2% 只是研究目标，**不是保证收益**；系统不会为了达标而捏造交易，达不到时会明确显示"未达标"。
 
+## 官方 RWA API 接入（live 优先）
+
+```bash
+cp .env.example .env            # 填 BGW_API_KEY / BGW_API_SECRET（官方签名 HMAC-SHA256 需要 Secret）；密钥只存本地，不进代码
+bgwq live-test --symbols NVDA SPCX TSLA      # 连接测试：网络 → stockList/stockInfo 核对代币/链/合约/发行商 → 1m/5m/15m K线分页；报告写入 docs/api_live_test_<day>.json
+bgwq verify-assets --symbols NVDA SPCX TSLA  # 仅核对资产
+bgwq ingest --symbols NVDA SPCX TSLA --days 30 --periods 1m 5m 15m   # 分页拉取历史并存 DuckDB（含 tf 列）
+bgwq compare-report --symbols NVDA SPCX --wf-symbols NVDA SPCX        # 用真实K线跑完整对比回测
+```
+live 模式以 Bitget 官方代币 K 线为准（Massive 原生基准可选）；只读行情接口，不含任何下单/转账/签名交易调用。
+
 ## 档位对比（当前主入口）：A 理论最优 vs B 多笔可执行 vs C 无未来信息滚动回测（`simple_sim/multi.py`）
 
 - **A 理论最优**：动态规划，单次全仓、不限次数、仅做多，只扣手续费/价差/滑点/Gas，不计流动性与冲击 —— 纯上限，不可执行。
@@ -94,7 +105,7 @@ bgwq replay NVDA                           # 双模式复盘 + K 线图
 bgwq backtest NVDA && bgwq train-ml NVDA   # 样本外回测 / ML
 bgwq report                                # 中文日报 HTML + CSV
 bgwq serve                                 # http://127.0.0.1:8000 工作台
-pytest -q                                  # 73 项自动化测试
+pytest -q                                  # 77 项自动化测试
 ```
 
 详见 `docs/01_使用文档.md`。

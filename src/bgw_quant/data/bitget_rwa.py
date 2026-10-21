@@ -187,6 +187,125 @@ class BitgetRwaClient:
             bars.loc[bars.index[-1], "quality"] |= int(QualityFlag.INCOMPLETE)
         return bars
 
+    PERIOD_MINUTES = {"1m": 1, "5m": 5, "15m": 15, "30m": 30, "1h": 60}
+    MAX_PAGE_SIZE = 500          # 官方未公开单次上限；探测时若返回少于请求数即视为到达上限或历史尽头
+
+    def kline_history(self, chain: str, contract: str, period: str, start: datetime, end: datetime,
+                      page_size: int | None = None, max_pages: int = 200) -> list[dict[str, Any]]:
+        """按需分页：从 end 往前翻页（end_time 秒），直到覆盖 start 或没有更早数据。去重并按时间升序。"""
+        if period not in self.PERIOD_MINUTES:
+            raise ValueError(f"仅支持 {list(self.PERIOD_MINUTES)}")
+        size = page_size or self.MAX_PAGE_SIZE
+        end_ts = int(end.timestamp())
+        start_ts = int(start.timestamp())
+        seen: dict[int, dict[str, Any]] = {}
+        for _ in range(max_pages):
+            rows = self.kline(chain, contract, period=period, size=size, end_time=end_ts)
+            if not rows:
+                break
+            ts_vals = []
+            for r in rows:
+                t = int(r["ts"])
+                t = t // 1000 if t > 1e12 else t
+                seen[t] = r
+                ts_vals.append(t)
+            oldest = min(ts_vals)
+            if oldest <= start_ts or len(rows) < size:
+                break
+            end_ts = oldest - 1
+        out = [dict(r, ts=t) for t, r in sorted(seen.items()) if start_ts <= t <= int(end.timestamp())]
+        return out
+
+    def fetch_bars(self, symbol: str, day: date, period: str = "1m", chain: str | None = None, contract: str | None = None) -> pd.DataFrame:
+        """获取某交易日（美东）的代币K线，period ∈ 1m/5m/15m…，自动分页；返回标准列并带 tf。"""
+        if not self.has_credentials:
+            raise PermissionError("缺少 BGW_API_KEY/BGW_API_SECRET，无法访问 Bitget RWA 行情")
+        cands = self.contracts_for(symbol)
+        if chain and contract:
+            cands = [c for c in cands if c.chain == chain and c.contract == contract]
+        cands = [c for c in cands if c.status == "online"] or cands
+        if not cands:
+            raise LookupError(f"{symbol} 在官方 stockList 中无可用合约")
+        c = cands[0]
+        start = datetime.combine(day, datetime.min.time()).replace(tzinfo=NY)
+        end = datetime.combine(day, datetime.max.time()).replace(tzinfo=NY)
+        rows = self.kline_history(c.chain, c.contract, period, start, end)
+        bars = self.kline_to_bars(rows, ticker=symbol, chain=c.chain, contract=c.contract, data_source=c.data_source)
+        if bars.empty:
+            return bars
+        bars["tf"] = period
+        return bars.reset_index(drop=True)
+
+    def verify_assets(self, tickers: list[str]) -> list[dict[str, Any]]:
+        """用 stockList + stockInfo 核对代币、链、合约、发行商与市场状态。"""
+        out = []
+        lst = {(x.get("ticker") or "").upper(): x for x in self.stock_list()}
+        for t in tickers:
+            item = lst.get(t.upper())
+            rec: dict[str, Any] = {"ticker": t, "listed": item is not None, "contracts": [], "stock_info": None, "error": None}
+            if item is None:
+                rec["error"] = "stockList 中不存在该 ticker"
+                out.append(rec)
+                continue
+            rec["name"], rec["status"] = item.get("name"), item.get("status")
+            for c in item.get("contracts", []) or []:
+                rec["contracts"].append({"chain": c.get("chain"), "contract": c.get("contract"), "symbol": c.get("symbol"),
+                                         "data_source": c.get("data_source"), "status": c.get("status"),
+                                         "issuer_known": c.get("data_source") in KNOWN_DATA_SOURCES})
+            try:
+                info = self.stock_info(ticker=t)
+                rec["stock_info"] = {"latest_price": info.get("latest_price"), "price_24h_change_ratio": info.get("price_24h_change_ratio"),
+                                     "chain_assets": [{k: a.get(k) for k in ("chain", "contract", "symbol", "data_source", "market_status",
+                                                                              "market_status_code", "tx_maximum_buy_usd", "tx_minimum_buy_usd",
+                                                                              "tx_maximum_sell_usd", "latest_price")}
+                                                      for a in (info.get("chain_assets") or [])]}
+            except Exception as e:  # noqa: BLE001
+                rec["error"] = f"stockInfo 失败: {e}"
+            out.append(rec)
+        return out
+
+    def live_test(self, tickers: list[str], day: date, periods: tuple[str, ...] = ("1m", "5m", "15m")) -> dict[str, Any]:
+        """连接测试：权限 → stockList 核对 → 各周期K线获取；记录每一步的错误与缺失。只读，不涉及任何交易接口。"""
+        from ..calendar_utils import regular_minute_index
+        rep: dict[str, Any] = {"base_url": self.base_url, "has_key": bool(self.api_key), "has_secret": bool(self.api_secret),
+                               "day": day.isoformat(), "steps": [], "assets": [], "klines": [], "errors": []}
+        # 0) 网络可达性（未签名请求，只看能否到达主机；预期 400/403 也算可达）
+        try:
+            resp = self._client.post(f"{RWA_PREFIX}/stockList", content=b"{}", headers={"Content-Type": "application/json"})
+            rep["steps"].append({"step": "network", "ok": True, "http_status": resp.status_code, "body_head": resp.text[:120]})
+        except Exception as e:  # noqa: BLE001
+            rep["steps"].append({"step": "network", "ok": False, "error": f"{type(e).__name__}: {e}"})
+            rep["errors"].append(f"网络不可达 {self.base_url}: {type(e).__name__}: {e}")
+        if not self.has_credentials:
+            missing = [n for n, v in (("BGW_API_KEY", self.api_key), ("BGW_API_SECRET", self.api_secret)) if not v]
+            rep["errors"].append(f"缺少 {', '.join(missing)}：官方签名 x-api-signature = base64(HMAC-SHA256(secret, payload))，没有 Secret 无法发起已签名请求")
+            return rep
+        try:
+            assets = self.verify_assets(tickers)
+            rep["assets"] = assets
+            rep["steps"].append({"step": "stockList/stockInfo", "ok": True})
+        except Exception as e:  # noqa: BLE001
+            rep["steps"].append({"step": "stockList/stockInfo", "ok": False, "error": str(e)})
+            rep["errors"].append(f"stockList: {e}")
+            return rep
+        expected_1m = len(regular_minute_index(day)) if True else None
+        for t in tickers:
+            for per in periods:
+                try:
+                    bars = self.fetch_bars(t, day, per)
+                    n = len(bars)
+                    exp = expected_1m // self.PERIOD_MINUTES[per] if expected_1m else None
+                    rep["klines"].append({"ticker": t, "period": per, "bars": n, "expected_regular_session": exp,
+                                          "first_ts": bars["ts_ny"].iloc[0] if n else None, "last_ts": bars["ts_ny"].iloc[-1] if n else None,
+                                          "has_volume": bool(n and bars["volume"].notna().any()),
+                                          "source": bars["source"].iloc[0] if n else None, "ok": n > 0,
+                                          "missing_note": None if (exp is None or n >= exp) else f"常规时段应有约 {exp} 根，实际 {n} 根"})
+                except Exception as e:  # noqa: BLE001
+                    rep["klines"].append({"ticker": t, "period": per, "ok": False, "error": str(e)})
+                    rep["errors"].append(f"{t} {per}: {e}")
+        rep["calls"] = self.call_log
+        return rep
+
     def fetch_minute_bars(self, symbol: str, day: date, chain: str | None = None, contract: str | None = None) -> pd.DataFrame:
         if not self.has_credentials:
             raise PermissionError("缺少 BGW_API_KEY/BGW_API_SECRET，无法访问 Bitget RWA 行情")
@@ -195,14 +314,7 @@ class BitgetRwaClient:
             cands = [c for c in cands if c.chain == chain and c.contract == contract]
         if not cands:
             raise LookupError(f"{symbol} 在官方 stockList 中无可用合约")
-        c = cands[0]
-        end_dt = datetime.combine(day, datetime.max.time()).replace(tzinfo=NY)
-        rows = self.kline(c.chain, c.contract, period="1m", size=1440, end_time=int(end_dt.timestamp()))
-        bars = self.kline_to_bars(rows, ticker=symbol, chain=c.chain, contract=c.contract, data_source=c.data_source)
-        if bars.empty:
-            return bars
-        ny_dates = bars["ts"].dt.tz_convert(NY).dt.date
-        return bars[ny_dates == day].reset_index(drop=True)
+        return self.fetch_bars(symbol, day, "1m", chain, contract)
 
     # ---------- 探测（权限、历史跨度、频率、成本） ----------
     def probe(self) -> ProbeResult:

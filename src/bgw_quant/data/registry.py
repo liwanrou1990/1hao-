@@ -41,12 +41,14 @@ def build_data_plan(force_mode: str | None = None, do_probe: bool = True) -> Dat
             if pb.blocked:
                 blockers.append(f"Bitget RWA 阻塞：{pb.detail}")
             if pm.blocked:
-                blockers.append(f"Massive 阻塞：{pm.detail}")
-            live_ok = pb.ok and pm.ok
+                blockers.append(f"Massive 基准不可用（可选）：{pm.detail}")
+            live_ok = pb.ok                       # 以 Bitget 官方代币行情为准；Massive 原生基准可选
+            native = mas if pm.ok else None
         else:
-            live_ok = bgw.has_credentials and mas.has_credentials
+            live_ok = bgw.has_credentials
+            native = mas if mas.has_credentials else None
         if live_ok:
-            return DataPlan("live", mas, bgw, probes, blockers)
+            return DataPlan("live", native, bgw, probes, blockers)
         if mode == "live":
             raise RuntimeError("强制 live 模式但数据源不可用：" + "; ".join(blockers))
     sim = SimulatedSource()

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS bars (
   symbol VARCHAR, venue VARCHAR, source VARCHAR, chain VARCHAR, contract VARCHAR,
   ts TIMESTAMPTZ, ts_ny VARCHAR,
   open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, volume DOUBLE, amount DOUBLE, txn DOUBLE,
-  quality INTEGER, is_complete BOOLEAN, ingested_at TIMESTAMPTZ
+  quality INTEGER, is_complete BOOLEAN, ingested_at TIMESTAMPTZ, tf VARCHAR DEFAULT '1m'
 );
 CREATE TABLE IF NOT EXISTS asset_registry (
   ticker VARCHAR, chain VARCHAR, contract VARCHAR, symbol VARCHAR, data_source VARCHAR, status VARCHAR,
@@ -54,26 +54,34 @@ class Store:
         for stmt in DDL.strip().split(";"):
             if stmt.strip():
                 self.con.execute(stmt)
+        cols = {r[1] for r in self.con.execute("PRAGMA table_info('bars')").fetchall()}
+        if "tf" not in cols:                                   # 旧库升级
+            self.con.execute("ALTER TABLE bars ADD COLUMN tf VARCHAR DEFAULT '1m'")
+            self.con.execute("UPDATE bars SET tf = '1m' WHERE tf IS NULL")
 
     # ----- bars -----
     def upsert_bars(self, bars: pd.DataFrame) -> int:
         if bars is None or bars.empty:
             return 0
-        df = bars[BAR_COLUMNS].copy()
+        df = bars.copy()
+        if "tf" not in df:
+            df["tf"] = "1m"
+        df = df[BAR_COLUMNS]
         with self._lock:
             self.con.register("new_bars", df)
             self.con.execute("""
                 DELETE FROM bars USING new_bars
                 WHERE bars.symbol = new_bars.symbol AND bars.venue = new_bars.venue AND bars.ts = new_bars.ts
+                  AND COALESCE(bars.tf, '1m') = new_bars.tf
             """)
-            self.con.execute("INSERT INTO bars SELECT * FROM new_bars")
+            self.con.execute(f"INSERT INTO bars ({', '.join(BAR_COLUMNS)}) SELECT {', '.join(BAR_COLUMNS)} FROM new_bars")
             self.con.unregister("new_bars")
         return len(df)
 
     def load_bars(self, symbol: str, start: date | None = None, end: date | None = None,
-                  venue: str = "native", complete_only: bool = True) -> pd.DataFrame:
-        q = "SELECT * FROM bars WHERE symbol = ? AND venue = ?"
-        params: list[Any] = [symbol, venue]
+                  venue: str = "native", complete_only: bool = True, tf: str = "1m") -> pd.DataFrame:
+        q = "SELECT * FROM bars WHERE symbol = ? AND venue = ? AND COALESCE(tf, '1m') = ?"
+        params: list[Any] = [symbol, venue, tf]
         if start:
             q += " AND CAST(ts_ny AS DATE) >= ?"
             params.append(start)
@@ -89,10 +97,11 @@ class Store:
             df["ts"] = pd.to_datetime(df["ts"], utc=True)
         return df
 
-    def available_days(self, symbol: str, venue: str = "native") -> list[date]:
+    def available_days(self, symbol: str, venue: str = "native", tf: str = "1m") -> list[date]:
         with self._lock:
             rows = self.con.execute(
-                "SELECT DISTINCT CAST(ts_ny AS DATE) d FROM bars WHERE symbol=? AND venue=? ORDER BY d", [symbol, venue]).fetchall()
+                "SELECT DISTINCT CAST(ts_ny AS DATE) d FROM bars WHERE symbol=? AND venue=? AND COALESCE(tf,'1m')=? ORDER BY d",
+                [symbol, venue, tf]).fetchall()
         return [r[0] for r in rows]
 
     def symbols(self) -> list[str]:
@@ -102,9 +111,9 @@ class Store:
     def sources_summary(self) -> pd.DataFrame:
         with self._lock:
             return self.con.execute("""
-                SELECT symbol, venue, source, COUNT(*) bars, MIN(ts_ny) first_ts, MAX(ts_ny) last_ts,
+                SELECT symbol, venue, source, COALESCE(tf,'1m') tf, COUNT(*) bars, MIN(ts_ny) first_ts, MAX(ts_ny) last_ts,
                        BOOL_OR(quality & 128 > 0) simulated
-                FROM bars GROUP BY 1,2,3 ORDER BY 1,2,3""").df()
+                FROM bars GROUP BY 1,2,3,4 ORDER BY 1,2,3,4""").df()
 
     # ----- generic json -----
     def save_json(self, table: str, **cols: Any) -> None:

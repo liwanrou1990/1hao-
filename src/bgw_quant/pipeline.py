@@ -71,33 +71,43 @@ class Pipeline:
     def symbols(self, tradable_only: bool = False) -> list[str]:
         return [s["ticker"] for s in research_symbols(tradable_only)]
 
-    def ingest(self, symbols: list[str] | None, start: date, end: date, with_token: bool = True) -> list[IngestSummary]:
+    def ingest(self, symbols: list[str] | None, start: date, end: date, with_token: bool = True,
+               periods: tuple[str, ...] = ("1m",)) -> list[IngestSummary]:
+        """接入历史K线。live 模式：代币 venue 来自 Bitget 官方 kline（多周期、分页），原生 venue 来自 Massive（可选）。"""
         out = []
         days = trading_days(start, end)
         for sym in symbols or self.symbols():
             for venue, src in ((Venue.NATIVE, self.plan.native_source), (Venue.TOKEN, self.plan.token_source)):
-                if venue == Venue.TOKEN and not with_token:
+                if src is None or (venue == Venue.TOKEN and not with_token):
                     continue
-                have = set(self.store.available_days(sym, venue))
-                n_bars, cov, src_name = 0, [], ""
-                for d in days:
-                    if d in have:
-                        continue
-                    try:
-                        if getattr(src, "is_simulated", False):
-                            bars = src.fetch_minute_bars(sym, d, venue=venue)
-                        else:
-                            bars = src.fetch_minute_bars(sym, d)
-                    except (PermissionError, LookupError) as e:
-                        self.plan.blockers.append(f"{sym} {venue} {d}: {e}")
-                        break
-                    bars = apply_quality_flags(bars)
-                    bars = research_ready(bars)
-                    n_bars += self.store.upsert_bars(bars)
-                    cov.append(coverage_report(bars, d))
-                    src_name = str(bars["source"].iloc[0]) if not bars.empty else src_name
-                out.append(IngestSummary(sym, venue, len(days), len(set(self.store.available_days(sym, venue)) & set(days)),
-                                         n_bars, src_name or getattr(src, "name", "?"), cov))
+                for per in (periods if venue == Venue.TOKEN else ("1m",)):
+                    have = set(self.store.available_days(sym, venue, per))
+                    n_bars, cov, src_name = 0, [], ""
+                    for d in days:
+                        if d in have:
+                            continue
+                        try:
+                            if getattr(src, "is_simulated", False):
+                                if per != "1m":
+                                    continue
+                                bars = src.fetch_minute_bars(sym, d, venue=venue)
+                            elif venue == Venue.TOKEN:
+                                bars = src.fetch_bars(sym, d, per)
+                            else:
+                                bars = src.fetch_minute_bars(sym, d)
+                        except (PermissionError, LookupError) as e:
+                            self.plan.blockers.append(f"{sym} {venue} {per} {d}: {e}")
+                            break
+                        except Exception as e:  # noqa: BLE001  —— API 错误如实记录，不中断其他标的
+                            self.plan.blockers.append(f"{sym} {venue} {per} {d}: API 错误 {e}")
+                            continue
+                        bars = apply_quality_flags(bars)
+                        bars = research_ready(bars)
+                        n_bars += self.store.upsert_bars(bars)
+                        cov.append(coverage_report(bars, d))
+                        src_name = str(bars["source"].iloc[0]) if not bars.empty else src_name
+                    out.append(IngestSummary(sym, f"{venue}:{per}", len(days), len(set(self.store.available_days(sym, venue, per)) & set(days)),
+                                             n_bars, src_name or getattr(src, "name", "?"), cov))
         return out
 
     def bars(self, symbol: str, start: date | None = None, end: date | None = None, venue: str = Venue.NATIVE) -> pd.DataFrame:
@@ -114,9 +124,11 @@ class Pipeline:
         rows = []
         for sym in self.symbols():
             b = self.day_bars(sym, day)
+            tb = self.day_bars(sym, day, Venue.TOKEN)
+            if b.empty and not tb.empty:
+                b = tb                      # live 模式无原生基准时用代币K线排名（来源列会显示）
             if b.empty:
                 continue
-            tb = self.day_bars(sym, day, Venue.TOKEN)
             rows.append({"symbol": sym, "open": float(b["open"].iloc[0]), "close": float(b["close"].iloc[-1]),
                          "high": float(b["high"].max()), "low": float(b["low"].min()),
                          "change_pct": float(b["close"].iloc[-1] / b["open"].iloc[0] - 1) * 100,

@@ -8,6 +8,8 @@ from datetime import date
 
 import pandas as pd
 
+from .calendar_utils import previous_trading_day
+
 
 
 def _p(obj):
@@ -36,7 +38,7 @@ def cmd_ingest(args):
     pl = _pipeline(args)
     start, end = default_window(args.days, _day(args.end))
     print(pl.plan.banner())
-    for s in pl.ingest(args.symbols, start, end):
+    for s in pl.ingest(args.symbols, start, end, periods=tuple(args.periods)):
         print(f"{s.symbol:5s} {s.venue:6s} 请求 {s.days_requested} 天 / 已有 {s.days_ingested} 天，新增 {s.bars} 根，来源 {s.source}")
     if pl.plan.blockers:
         print("阻塞项：", *pl.plan.blockers[:5], sep="\n - ")
@@ -215,12 +217,28 @@ def cmd_verify_assets(args):
     from .data.bitget_rwa import BitgetRwaClient
     c = BitgetRwaClient()
     if not c.has_credentials:
-        print("阻塞：未配置 BGW_API_KEY/BGW_API_SECRET，无法核对 SPCX 等标的的资产性质/发行商/合约。")
+        print(f"阻塞：BGW_API_KEY={'已配置' if c.api_key else '缺失'}，BGW_API_SECRET={'已配置' if c.api_secret else '缺失'}；官方签名需要 Secret。")
         sys.exit(2)
-    for sym in args.symbols or ["SPCX"]:
-        cs = c.contracts_for(sym)
-        info = c.stock_info(ticker=sym)
-        _p({"ticker": sym, "contracts": [x.__dict__ for x in cs], "stock_info": info})
+    _p(c.verify_assets(args.symbols or ["NVDA", "SPCX", "TSLA"]))
+
+
+def cmd_live_test(args):
+    """API 连接测试：权限 → stockList/stockInfo 核对 → 1m/5m/15m K线分页获取；输出 JSON 报告并写入 docs/。"""
+    import json as _json
+    from pathlib import Path
+    from .config import PROJECT_ROOT
+    from .data.bitget_rwa import BitgetRwaClient
+    c = BitgetRwaClient()
+    day = _day(args.day) or previous_trading_day(date.today())
+    rep = c.live_test(args.symbols or ["NVDA", "SPCX", "TSLA"], day, tuple(args.periods))
+    # 网络层错误也要捕获
+    rep["conclusion"] = ("连接测试通过" if rep.get("klines") and all(k.get("ok") for k in rep["klines"]) and not rep["errors"]
+                         else "连接测试未通过：" + "；".join(rep["errors"][:5] or ["无K线返回"]))
+    out = Path(args.out) if args.out else PROJECT_ROOT / "docs" / f"api_live_test_{day}.json"
+    out.write_text(_json.dumps(rep, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    _p({k: v for k, v in rep.items() if k != "calls"})
+    print(f"报告已写入 {out}")
+    sys.exit(0 if rep["conclusion"].startswith("连接测试通过") else 3)
 
 
 def _day(s):
@@ -233,7 +251,8 @@ def main(argv=None):
     ap.add_argument("--capital", type=float, default=10_000)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("probe", help="探测 API 权限/历史跨度/频率/成本"); p.add_argument("--mode", default="auto"); p.set_defaults(f=cmd_probe)
-    p = sub.add_parser("ingest", help="接入历史分钟K线"); p.add_argument("--symbols", nargs="*"); p.add_argument("--days", type=int, default=70); p.add_argument("--end"); p.set_defaults(f=cmd_ingest)
+    p = sub.add_parser("ingest", help="接入历史K线（live：官方 kline 多周期分页）"); p.add_argument("--symbols", nargs="*"); p.add_argument("--days", type=int, default=70); p.add_argument("--end"); p.add_argument("--periods", nargs="*", default=["1m"]); p.set_defaults(f=cmd_ingest)
+    p = sub.add_parser("live-test", help="Bitget RWA API 连接测试（只读）"); p.add_argument("--symbols", nargs="*"); p.add_argument("--day"); p.add_argument("--periods", nargs="*", default=["1m", "5m", "15m"]); p.add_argument("--out"); p.set_defaults(f=cmd_live_test)
     p = sub.add_parser("replay", help="双模式复盘"); p.add_argument("symbol"); p.add_argument("--day"); p.set_defaults(f=cmd_replay)
     p = sub.add_parser("backtest", help="规则策略 walk-forward"); p.add_argument("symbol"); p.add_argument("--train-days", type=int, default=20); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_backtest)
     p = sub.add_parser("train-ml", help="LightGBM walk-forward"); p.add_argument("symbol"); p.add_argument("--train-days", type=int, default=40); p.add_argument("--test-days", type=int, default=5); p.set_defaults(f=cmd_train_ml)
