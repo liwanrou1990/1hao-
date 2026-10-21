@@ -3,6 +3,19 @@
 > **V1 仅限研究、历史回测与模拟交易。** 不连接真钱钱包、不请求私钥、不自动签名或下单。
 > 每日 0.8%–2.2% 只是研究目标，**不是保证收益**；系统不会为了达标而捏造交易，达不到时会明确显示"未达标"。
 
+## 统一收益决策引擎（当前主入口，`decision/`）
+
+- **能力登记** `capability.py`：按官方 API（stockList/stockInfo）与人工核实登记每个品种支持的方向与订单类型。官方 RWA 接口只有链上现货买卖，无杠杆、无借券做空；引擎只在登记支持的方向内选择，现货卖出只用于平多，绝不冒充开空。
+- **因果引擎** `engine.py`：每根 K 线收盘后按趋势（EMA 差/ATR）、区间（z 分数）、波动（实现波动缩仓）、流动性（过去 20 根成交额 × 参与率 × 分批根数定仓）、成本门槛（预期波动/往返成本）自动选择 trend_long / trend_short / range_long / range_short / 暂停；多笔并行、共享流动性、API 限频（子单/分钟）、止损 0.5%、ATR 止盈、趋势跟踪止盈、日亏损上限、达标即停；成本含手续费/价差/滑点/冲击/Gas/资金成本/借券费。
+- **滚动优化** `optimize.py`：每个档位参数只在训练窗按稳定性目标选择，测试窗统计样本外达标率、亏损日比例、回撤、胜率、笔数、利用率；昨日复盘使用“昨日之前”选出的参数。
+- **原因归类** `analysis.py`：产品不支持 / 产品不支持做空 / 目标高于理论上限 / 成本过高 / 流动性不足 / 资金容量限制 / 策略不足 / 昨日达标但样本外不稳定。
+
+```bash
+bgwq engine NVDA --trades          # 七档：昨日因果复盘 + 样本外 + 原因归类 + 逐笔
+bgwq engine-report --symbols NVDA SPCX
+```
+工作台首个页签「决策引擎」；接口 `/api/engine/{symbol}`、`/api/engine-summary`、`POST /api/engine/report`；参数 `config/decision_engine.yaml`。
+
 ## 官方 RWA API 接入（live 优先）
 
 ```bash
@@ -105,7 +118,7 @@ bgwq replay NVDA                           # 双模式复盘 + K 线图
 bgwq backtest NVDA && bgwq train-ml NVDA   # 样本外回测 / ML
 bgwq report                                # 中文日报 HTML + CSV
 bgwq serve                                 # http://127.0.0.1:8000 工作台
-pytest -q                                  # 77 项自动化测试
+pytest -q                                  # 82 项自动化测试
 ```
 
 详见 `docs/01_使用文档.md`。

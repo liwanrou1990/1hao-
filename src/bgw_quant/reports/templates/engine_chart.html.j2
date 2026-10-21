@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ symbol }} {{ day }} 决策引擎</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;color:#222}
+.banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin:8px 0}.bad{background:#f8d7da;border-color:#f1aeb5}
+table{border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{border:1px solid #ddd;padding:3px 7px;text-align:right}th{background:#f0f0f0}
+td:first-child,th:first-child{text-align:left}#chart{height:430px}#cum{height:150px}.pos{color:#2e7d32}.neg{color:#c62828}select{padding:4px 8px}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.kpi div{border:1px solid #ddd;border-radius:6px;padding:6px 10px;min-width:130px;font-size:12px}.kpi b{display:block;font-size:16px}</style></head><body>
+<h1 style="font-size:19px">{{ symbol }} · {{ day }} · 统一收益决策引擎（因果）· 成本模型 {{ cost_profile }}</h1>
+<div class="banner bad">每根K线收盘决策、下一根起分批成交，不使用未来信息；参数来自“昨日之前”的滚动优化。数据来源 <b>{{ source }}</b>{% if simulated %} —— <b>SIMULATED，非正式验证</b>{% endif %}。时间轴为美东时间。</div>
+<div>档位：<select id="cap"></select> 买卖点：<select id="mode"><option value="run">引擎（因果）</option><option value="theo">A 理论最优（参照）</option></select></div>
+<div class="kpi" id="kpi"></div><div id="reasons" class="banner" style="display:none"></div>
+<div id="chart"></div><div style="font-size:12px;color:#666">累计已实现净利润（USD）</div><div id="cum"></div>
+<h3 style="font-size:14px">逐笔</h3><table id="trades"></table>
+<h3 style="font-size:14px">滚动样本外（逐日）</h3><table id="oos"></table>
+<script>
+const candles={{ candles_json|safe }}; const payload={{ payload_json|safe }};
+const sel=document.getElementById('cap'); payload.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.text=`${p.tier} · ${p.capital.toLocaleString()} USD · 目标 ${p.target.toFixed(0)}`;sel.appendChild(o)});
+let cs, ln;
+function draw(){
+ const opts={layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},timeScale:{timeVisible:true,secondsVisible:false},localization:{locale:'zh-CN'}};
+ const chart=LightweightCharts.createChart(document.getElementById('chart'),opts);
+ cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+ cs.setData(candles.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close}))); chart.timeScale().fitContent();
+ const c2=LightweightCharts.createChart(document.getElementById('cum'),opts); ln=c2.addLineSeries({color:'#1565c0',lineWidth:2}); window._c2=c2; update();
+}
+function update(){
+ const p=payload[sel.value]; const r=p.run, cl=p.classification, o=p.oos; const mode=document.getElementById('mode').value;
+ cs.setMarkers(mode==='run'?r.markers:p.theo.markers); ln.setData(r.cum); window._c2.timeScale().fitContent();
+ const k=[['目标利润',p.target.toFixed(2)],['实际净收益',r.realized_net_usd.toFixed(2)+' ('+(r.realized_net_return*100).toFixed(3)+'%)'],['交易 多/空',r.n_trades+' ('+r.n_long+'/'+r.n_short+')'],['胜率',r.win_rate==null?'—':(r.win_rate*100).toFixed(0)+'%'],['最大回撤',r.max_drawdown_usd.toFixed(2)],['资金利用率 峰/均',(r.peak_deployed_usd/p.capital*100).toFixed(0)+'% / '+(r.avg_deployed_usd/p.capital*100).toFixed(0)+'%'],['执行成本 / 资金成本',r.execution_cost_usd.toFixed(2)+' / '+r.funding_cost_usd.toFixed(2)],['A 理论参照',p.theo.profit.toFixed(2)+' ('+p.theo.n_trades+' 笔)'],['方向能力',r.capability.directions.join('/')||'无'],['参数',JSON.stringify(r.params)],['模式计数',JSON.stringify(r.mode_counts)],['暂停原因',JSON.stringify(r.pause_reasons)],['是否达标',(r.target_met?'<b class="pos">达标</b>':'<b class="neg">未达标</b>')+(r.target_hit_ts?' @ '+r.target_hit_ts.slice(11,16):'')],['样本外',o?`${o.n_days} 天 · 达标率 ${(o.attainment_rate*100).toFixed(0)}% · 日均 ${(o.mean_daily_return*100).toFixed(3)}% · 回撤 ${(o.max_drawdown_pct*100).toFixed(2)}%`:'—']];
+ document.getElementById('kpi').innerHTML=k.map(x=>`<div>${x[0]}<b style="font-size:13px">${x[1]}</b></div>`).join('');
+ const rs=document.getElementById('reasons'); rs.style.display=cl.tags.length?'block':'none'; rs.innerHTML='<b>原因归类：'+cl.tags.join('、')+'</b><br>'+cl.details.join('<br>');
+ let h='<tr><th>#</th><th>方向</th><th>模式</th><th>开仓</th><th>均价</th><th>平仓</th><th>均价</th><th>投入</th><th>执行成本</th><th>资金成本</th><th>净盈亏</th><th>净收益</th><th>累计</th><th>持有</th><th>出场原因</th></tr>';
+ r.trades.forEach(x=>{h+=`<tr><td>${x.seq}</td><td>${x.direction==='long'?'多':'空'}</td><td>${x.mode}</td><td>${x.open_ts.slice(11,16)}</td><td>${x.avg_open.toFixed(3)}</td><td>${x.close_ts.slice(11,16)}</td><td>${x.avg_close.toFixed(3)}</td><td>${x.size_usd.toFixed(0)}</td><td>${x.trading_cost_usd.toFixed(2)}</td><td>${x.funding_cost_usd.toFixed(2)}</td><td class="${x.net_pnl_usd>=0?'pos':'neg'}">${x.net_pnl_usd.toFixed(2)}</td><td>${(x.net_ret*100).toFixed(3)}%</td><td>${x.cum_net_pnl_usd.toFixed(2)}</td><td>${x.hold_bars}</td><td style="text-align:left">${x.reason_exit}</td></tr>`});
+ if(!r.trades.length) h+='<tr><td colspan="15">无交易（引擎暂停：见暂停原因）</td></tr>'; document.getElementById('trades').innerHTML=h;
+ let t='<tr><th>日期</th><th>净利润</th><th>收益率</th><th>达标</th><th>笔数</th><th>多/空</th><th>胜率</th><th>回撤</th><th>利用率</th><th>停止原因</th></tr>';
+ (o?o.days:[]).forEach(x=>{t+=`<tr><td>${x.day}</td><td class="${x.net_usd>=0?'pos':'neg'}">${x.net_usd.toFixed(2)}</td><td>${(x.net_return*100).toFixed(3)}%</td><td>${x.target_met?'达标':'未达标'}</td><td>${x.n_trades}</td><td>${x.n_long}/${x.n_short}</td><td>${x.win_rate==null?'—':(x.win_rate*100).toFixed(0)+'%'}</td><td>${x.max_dd_usd.toFixed(0)}</td><td>${(x.util*100).toFixed(0)}%</td><td style="text-align:left">${x.stop||''}</td></tr>`});
+ document.getElementById('oos').innerHTML=t;
+}
+sel.onchange=update; document.getElementById('mode').onchange=update; (function wait(){ if(window.LightweightCharts) draw(); else setTimeout(wait,100); })();
+</script></body></html>

@@ -201,6 +201,31 @@ def cmd_compare_report(args):
     _p(generate_compare_report(pl, day, args.symbols, wf_symbols=args.wf_symbols, wf_min_capital=args.wf_min_capital))
 
 
+def cmd_engine(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    cap = pl.capability(args.symbol)
+    print(f"品种能力 {args.symbol}: 方向={cap.directions} 杠杆={cap.leverage_long}x API核实={cap.verified_by_api} | " + "；".join(cap.notes))
+    for c in pl.engine_tiers(args.symbol, day):
+        r, th, cls, opt = c["run"], c["theoretical"], c["classification"], c["optimization"]
+        oos = f"OOS {opt.oos_stats.n_days}天 达标率 {opt.oos_stats.attainment_rate:.0%} 日均 {opt.oos_stats.mean_daily_return:+.3%} 回撤 {opt.oos_stats.max_drawdown_pct:.2%}" if opt else "OOS 历史不足"
+        print(f"\n{c['tier']} 本金 {c['capital_usd']:,.0f} 目标 {c['target_usd']:,.0f} | 实际 {r.realized_net_usd:,.2f} ({r.realized_net_return:+.3%}) 交易 {r.n_trades} 多/空 {r.n_long}/{r.n_short} "
+              f"胜率 {'—' if r.win_rate is None else f'{r.win_rate:.0%}'} 回撤 {r.max_drawdown_usd:,.0f} 利用率 {r.avg_deployed_usd / c['capital_usd']:.0%} 执行成本 {r.execution_cost_usd:,.2f} 资金成本 {r.funding_cost_usd:.2f} "
+              f"{'达标' if r.target_met else '未达标'} | A理论 {th.max_net_profit_usd:,.0f} | 参数 {r.params.to_dict()} | {oos}")
+        print("   原因:", "、".join(cls["tags"]) or "—", "|", "；".join(cls["details"]))
+        if args.trades:
+            for t in r.trades:
+                print(f"   {t.seq:2d}. {'多' if t.direction=='long' else '空'} {t.mode} {t.open_fill.fills[0].ts_ny[11:16]}@{t.avg_open:.3f} → {t.close_fill.fills[-1].ts_ny[11:16]}@{t.avg_close:.3f} 投入 {t.size_usd:,.0f} 净 {t.net_pnl_usd:+.2f} {t.reason_exit}")
+
+
+def cmd_engine_report(args):
+    from .reports.engine_report import generate_engine_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_engine_report(pl, day, args.symbols))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -266,6 +291,8 @@ def main(argv=None):
     p = sub.add_parser("simple-report", help="简单报告：各标的×档位 本金/目标/实际/次数/利用率/达标 + K线买卖点"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_simple_report)
     p = sub.add_parser("compare", help="档位对比：A理论最优 vs B多笔可执行 + 失败原因"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_compare)
     p = sub.add_parser("compare-report", help="各档位对比报告（A/B/C）+ CSV + K线图"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--wf-min-capital", type=float, default=175000); p.set_defaults(f=cmd_compare_report)
+    p = sub.add_parser("engine", help="统一收益决策引擎：七档昨日因果复盘 + 滚动样本外 + 原因归类"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_engine)
+    p = sub.add_parser("engine-report", help="决策引擎报告（默认 NVDA SPCX）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_engine_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

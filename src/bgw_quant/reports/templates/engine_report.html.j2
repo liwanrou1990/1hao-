@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 统一收益决策引擎报告</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1320px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}
+table{border-collapse:collapse;font-size:12px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 5px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 统一收益决策引擎（因果，多策略自动选择）· 各本金档位结果</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }}（手续费 {{ cost.fee_bps }} bps、半价差 {{ cost.spread_bps }} bps、滑点 {{ cost.slippage_bps }} bps、Gas {{ cost.gas_usd }} USD、冲击系数 {{ cost.impact_coeff }}）· 止损 {{ cfg.risk.stop_loss_pct }}% · 日亏损上限 {{ cfg.risk.max_daily_loss_pct }}% · 参与率 {{ (cfg.execution.participation_rate*100)|round(0) }}% · API 限频假设 {{ cfg.execution.api_rate_limit_orders_per_min }} 单/分 · 资金成本年化 {{ (cfg.execution.capital_cost_annual*100)|round(1) }}%</div>
+<div class="banner bad"><b>引擎每根K线收盘后决策、下一根起分批成交，不使用未来信息；昨日复盘使用“昨日之前”滚动选出的参数。</b>理论最优（A）仅作参照。目标收益不是保证收益；未达标组合如实标注并归类原因。方向只在 API/人工核实支持的集合内选择：官方 RWA 接口无杠杆、无借券做空，现货卖出只用于平多。</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }} 阻塞：{{ status.blockers|join('；') }}</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+<div class="banner warn">昨日达标：<b>{{ n_met }} / {{ rows|length }}</b>。未达标原因分布：{% for k, v in tag_counts.items() %}<span class="tag">{{ k }} × {{ v }}</span> {% endfor %}。档位提示：{{ status.tier_issues|join('；') }}</div>
+
+<h2>1. 各档位结果（昨日因果复盘 + 滚动样本外）</h2>
+<table><tr><th>标的</th><th>档位</th><th>本金</th><th>方向能力</th><th>API核实</th><th>目标收益</th><th>A 理论</th><th>实际净收益</th><th>收益率</th><th>交易次数</th><th>多/空</th><th>胜率</th><th>最大回撤</th><th>资金利用率</th><th>执行成本</th><th>资金成本</th><th>达标</th><th>OOS 天</th><th>OOS 达标率</th><th>OOS 日均</th><th>OOS 回撤</th><th>原因归类</th><th>说明</th></tr>
+{% for r in rows %}<tr><td>{{ r.symbol }}{% if not r.tradable %} <span class="tag">待验证</span>{% endif %}</td><td>{{ r.tier }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.directions }}</td><td>{{ '是' if r.verified_by_api else '否' }}</td><td>{{ r.target_usd|num(0) }}</td><td>{{ r.theoretical_usd|num(0) }}</td><td class="{{ 'pos' if r.net_usd>=0 else 'neg' }}">{{ r.net_usd|num }}</td><td>{{ "%.3f%%"|format(r.net_return_pct) }}</td><td>{{ r.n_trades }}</td><td>{{ r.n_long }}/{{ r.n_short }}</td><td>{{ r.win_rate|pct(0) if r.win_rate is not none else '—' }}</td><td>{{ r.max_dd_usd|num(0) }}</td><td>{{ r.avg_utilization|pct(0) }}</td><td>{{ r.exec_cost_usd|num }}</td><td>{{ r.funding_cost_usd|num }}</td><td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.oos_days }}</td><td class="{{ 'pos' if (r.oos_attainment or 0)>=0.5 else 'neg' }}">{{ r.oos_attainment|pct(0) if r.oos_attainment is not none else '—' }}</td><td>{{ r.oos_mean_daily_return|pct(3) if r.oos_mean_daily_return is not none else '—' }}</td><td>{{ r.oos_max_dd_pct|pct(2) if r.oos_max_dd_pct is not none else '—' }}</td><td style="text-align:left">{{ r.tags }}</td><td style="text-align:left;font-size:11px">{{ r.details }}</td></tr>{% endfor %}</table>
+
+<h2>2. 品种能力（API 核实 / 人工登记）</h2>
+<table><tr><th>标的</th><th>现货多</th><th>杠杆</th><th>做空</th><th>订单类型</th><th>发行商/链/合约</th><th>市场状态</th><th>单笔买入上限</th><th>API核实</th><th>说明</th></tr>
+{% for e in per_symbol %}{% set c=e.capability %}<tr><td>{{ e.symbol }}</td><td>{{ '是' if c.spot_long else '否' }}</td><td>{{ c.leverage_long }}x</td><td>{{ '是' if c.short else '否' }}</td><td>{{ c.order_types|join(', ') }}</td><td>{{ c.data_source or '—' }} / {{ c.chain or '—' }} / {{ (c.contract or '—')[:12] }}</td><td>{{ c.market_status or '—' }}</td><td>{{ c.tx_max_buy_usd|num(0) if c.tx_max_buy_usd else '—' }}</td><td>{{ '是' if c.verified_by_api else '否' }}</td><td style="text-align:left;font-size:11px">{{ c.notes|join('；') }}</td></tr>{% endfor %}</table>
+
+<h2>3. 图表与逐笔</h2>
+<ul>{% for e in per_symbol %}<li>{{ e.symbol }} · <span class="tag">{{ e.source }}</span> · <a href="{{ e.chart }}">K线买卖点 / 累计曲线 / 模式与暂停原因 / 样本外逐日（可切换档位）</a></li>{% endfor %}</ul>
+<div>逐笔 CSV：<a href="{{ csv_name }}">{{ csv_name }}</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

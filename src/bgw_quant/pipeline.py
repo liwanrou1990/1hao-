@@ -25,6 +25,10 @@ from .hindsight.optimal_path import OptimalPathResult, optimal_path
 from .hindsight.portfolio import PortfolioResult, portfolio_optimal
 from .simple_sim.engine import SimpleSimResult, load_simple_config, simulate_day
 from .simple_sim.multi import MultiResult, auto_search, failure_analysis, theoretical_optimum
+from .decision.analysis import classify as engine_classify
+from .decision.capability import ProductCapability, capability_for
+from .decision.engine import DayRun, EngineParams, load_engine_config, run_engine_day
+from .decision.optimize import TierOptimization, optimize_tier
 from .target_model.config import load_target_config, target_for_capital
 from .target_model.strategy import StrategyDayResult, TargetSeekingStrategy, run_strategy_day
 from .target_model.teaching import TargetPathResult, teaching_path
@@ -65,6 +69,8 @@ class Pipeline:
         self._hs_cache: dict[tuple, object] = {}
         self.target_cfg = load_target_config()
         self.simple_cfg = load_simple_config()
+        self.engine_cfg = load_engine_config()
+        self._caps: dict[str, ProductCapability] = {}
         self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
@@ -447,6 +453,74 @@ class Pipeline:
                              "round_trip_cost_pct": fa["round_trip_cost_pct"], "move_p90_pct": fa["move_p90_pct"],
                              "gap_to_target_usd": fa["gap_to_target_usd"], "unverifiable": ex.unverifiable,
                              "reasons": "；".join(fa["reasons"]), "tradable": sym in self.symbols(tradable_only=True)})
+        return pd.DataFrame(rows)
+
+    # ------------------------------------------------------------------ 统一收益决策引擎（因果）
+    def capability(self, symbol: str) -> ProductCapability:
+        if symbol not in self._caps:
+            api_asset = None
+            src = self.plan.token_source
+            if not self.plan.is_simulated and hasattr(src, "verify_assets"):
+                try:
+                    api_asset = src.verify_assets([symbol])[0]
+                except Exception as e:  # noqa: BLE001
+                    self.plan.blockers.append(f"{symbol} 能力核对失败: {e}")
+            self._caps[symbol] = capability_for(symbol, api_asset)
+        return self._caps[symbol]
+
+    def engine_tier(self, symbol: str, day: date, capital_usd: float, target_usd: float, tier: str | None = None,
+                    train_days: int = 20, test_days: int = 5, venue: str = Venue.TOKEN) -> dict:
+        key = ("eng", symbol, day, round(capital_usd, 2), round(target_usd, 2), self.cost_profile_name, train_days, test_days, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars_day = self.hindsight_bars(symbol, day, venue)
+        if bars_day.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        cap = self.capability(symbol)
+        cm = CostModel(self.profile)
+        hist = self.bars(symbol, venue=venue)
+        if hist.empty:
+            hist = self.bars(symbol, venue=Venue.NATIVE)
+        # 滚动优化只用昨日之前的交易日（昨日复盘不得使用昨日信息）
+        hist = hist[pd.to_datetime(hist["ts_ny"]).dt.date < day]
+        opt = optimize_tier(hist, cm, capital_usd, target_usd, self.engine_cfg, cap, train_days, test_days) if len(set(pd.to_datetime(hist["ts_ny"]).dt.date)) >= train_days + test_days + 1 else None
+        params = opt.final_params if opt else EngineParams()
+        run = run_engine_day(bars_day, cm, capital_usd, target_usd, self.engine_cfg, params, cap, symbol)
+        theo = theoretical_optimum(bars_day, self.profile, capital_usd, target_usd, symbol=symbol)
+        cls = engine_classify(bars_day, cm, cap, run, theo.max_net_profit_usd, target_usd, float(self.engine_cfg.execution.get("participation_rate", 0.1)),
+                              int(self.engine_cfg.execution.get("batch_bars", 5)), opt.oos_stats.attainment_rate if opt else None)
+        out = {"symbol": symbol, "day": str(day), "tier": tier, "capital_usd": capital_usd, "target_usd": target_usd, "capability": cap,
+               "run": run, "theoretical": theo, "optimization": opt, "classification": cls, "bars": bars_day}
+        self._hs_cache[key] = out
+        return out
+
+    def engine_tiers(self, symbol: str, day: date, points: tuple[str, ...] = ("mid",), **kw) -> list[dict]:
+        out = []
+        for t in self.tiers.tiers:
+            for pt, cap_usd in t.representative_capitals(points).items():
+                lo, hi = t.target_daily_pct
+                pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
+                try:
+                    out.append(self.engine_tier(symbol, day, cap_usd, pct / 100 * cap_usd, tier=t.id + ("" if pt == "mid" else f"-{pt}"), **kw))
+                except LookupError:
+                    break
+        return out
+
+    def engine_summary(self, day: date, symbols: list[str] | None = None) -> pd.DataFrame:
+        rows = []
+        for sym in symbols or self.symbols():
+            for c in self.engine_tiers(sym, day):
+                r, th, cls, opt, cap = c["run"], c["theoretical"], c["classification"], c["optimization"], c["capability"]
+                rows.append({"symbol": sym, "tier": c["tier"], "capital_usd": c["capital_usd"], "target_usd": c["target_usd"],
+                             "directions": "/".join(cap.directions) or "无", "verified_by_api": cap.verified_by_api,
+                             "theoretical_usd": th.max_net_profit_usd, "net_usd": r.realized_net_usd, "net_return_pct": r.realized_net_return * 100,
+                             "n_trades": r.n_trades, "n_long": r.n_long, "n_short": r.n_short, "win_rate": r.win_rate,
+                             "max_dd_usd": r.max_drawdown_usd, "avg_utilization": r.avg_deployed_usd / c["capital_usd"], "exec_cost_usd": r.execution_cost_usd,
+                             "funding_cost_usd": r.funding_cost_usd, "target_met": r.target_met, "params": r.params.to_dict(),
+                             "oos_attainment": opt.oos_stats.attainment_rate if opt else None, "oos_mean_daily_return": opt.oos_stats.mean_daily_return if opt else None,
+                             "oos_max_dd_pct": opt.oos_stats.max_drawdown_pct if opt else None, "oos_losing_day_rate": opt.oos_stats.losing_day_rate if opt else None,
+                             "oos_days": opt.oos_stats.n_days if opt else 0, "tags": "、".join(cls["tags"]), "details": "；".join(cls["details"]),
+                             "unverifiable": r.unverifiable, "tradable": sym in self.symbols(tradable_only=True)})
         return pd.DataFrame(rows)
 
     def status(self) -> dict:

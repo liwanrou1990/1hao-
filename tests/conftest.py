@@ -1,5 +1,12 @@
+import os
 import sys
 from pathlib import Path
+
+os.environ["BGWQ_DATA_MODE"] = "simulated"   # 测试不依赖本地 .env 中的密钥与网络
+os.environ.setdefault("BGW_API_KEY", "")
+os.environ.setdefault("BGW_API_SECRET", "")
+os.environ["BGW_API_KEY"] = ""
+os.environ["BGW_API_SECRET"] = ""
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))

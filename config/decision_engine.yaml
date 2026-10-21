@@ -1,0 +1,32 @@
+# 统一收益决策引擎（因果、无未来函数）参数。目标：各档位日净收益目标（0.8%–2.2%），不是保证收益。
+risk:
+  stop_loss_pct: 0.5            # 单笔止损（相对入场均价，毛值 %）
+  max_daily_loss_pct: 1.5       # 当日累计已实现亏损上限（占本金 %）→ 暂停交易
+  max_hold_bars: 60
+  flat_before_close_bars: 5
+  vol_target_daily: 0.02        # 波动率目标：实现日波动高于此按比例缩仓
+execution:
+  participation_rate: 0.10      # 单根 K 线可成交金额占成交额比例（真实盘口深度未知时的保守假设）
+  batch_bars: 5                 # 分批成交跨越的 K 线数
+  liquidity_lookback: 20        # 以过去 N 根成交额估计当下可成交量（因果）
+  api_rate_limit_orders_per_min: 10   # 官方未公开限频，保守假设；每根 K 线（1 分钟）新发子单数不超过此值
+  capital_cost_annual: 0.05     # 资金成本（年化，按持仓时间计提）
+  short_borrow_rate_annual: 0.05
+features:
+  ema_fast: 10
+  ema_slow: 30
+  atr_window: 14
+  z_window: 30
+  rv_window: 30
+# 参数网格：每个档位在训练窗内按稳定性目标选择，只在随后的测试窗评估
+grid:
+  z_entry: [1.0, 2.0]           # 区间交易入场阈值
+  tp_atr_mult: [1.0, 2.0]       # 止盈 = tp_atr_mult × ATR（扣费后净额）
+  max_open: [4, 8]              # 并行仓位数（单笔 = 本金/并行数，再受流动性限制）
+  trend_thresh: [0.5]           # 趋势判定：(EMA快−EMA慢)/ATR 的阈值
+  edge_min_ratio: [1.2]         # 预期波动 / 往返成本 低于此 → 暂停
+objective:
+  w_attainment: 1.0
+  w_losing_days: 0.7
+  w_drawdown: 20.0
+  w_volatility: 10.0
