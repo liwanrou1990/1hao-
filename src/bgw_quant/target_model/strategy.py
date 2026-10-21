@@ -58,12 +58,13 @@ class TargetSeekingStrategy:
     take_profit_net_pct: float = 0.5
     stop_loss_pct: float = 0.8
     position_fraction: float = 0.5
+    size_by_liquidity: bool = True     # 按最近 20 根成交额（因果）估算可成交量，自动缩小单笔金额
     name: str = "目标寻求低吸"
 
     @property
     def params(self) -> dict:
         return {"z_entry": self.z_entry, "z_window": self.z_window, "take_profit_net_pct": self.take_profit_net_pct,
-                "stop_loss_pct": self.stop_loss_pct, "position_fraction": self.position_fraction}
+                "stop_loss_pct": self.stop_loss_pct, "position_fraction": self.position_fraction, "size_by_liquidity": self.size_by_liquidity}
 
 
 def run_strategy_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, target_return: float, cfg: TargetModelConfig,
@@ -101,6 +102,9 @@ def run_strategy_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, ta
         # 1) 执行上一根收盘决定的动作（从本根开始分批）
         if pending == "buy" and pos_entry is None:
             notional = capital_usd * strat.position_fraction
+            if strat.size_by_liquidity and liquidity_known and i >= 1:
+                trailing = float(np.nanmean(liq[max(0, i - 20):i]))          # 只用过去K线的成交额估计
+                notional = min(notional, trailing * cfg.batch_bars)
             fill = batch_fill(bars, i, "buy", notional, cost, liq, cfg.batch_bars, "open")
             if fill.fills and fill.filled_usd >= max(cost.p.min_tx_usd, 0.01 * notional):
                 pos_entry = fill

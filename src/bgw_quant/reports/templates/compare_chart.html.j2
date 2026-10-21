@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ symbol }} {{ day }} 档位对比：理论最优 vs 可执行</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;color:#222}
+.banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin:8px 0}.bad{background:#f8d7da;border-color:#f1aeb5}
+table{border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{border:1px solid #ddd;padding:3px 7px;text-align:right}th{background:#f0f0f0}
+td:first-child,th:first-child{text-align:left}#chart{height:430px}#cum{height:150px}.pos{color:#2e7d32}.neg{color:#c62828}select{padding:4px 8px}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.kpi div{border:1px solid #ddd;border-radius:6px;padding:6px 10px;min-width:130px;font-size:12px}.kpi b{display:block;font-size:16px}</style></head><body>
+<h1 style="font-size:19px">{{ symbol }} · {{ day }} · 档位对比：A 理论最优 vs B 可执行模拟（成本模型 {{ cost_profile }}）</h1>
+<div class="banner bad"><b>已知昨日完整走势的事后教学分析，不是实盘预测。</b> A 理论最优：单次全仓、不限次数、仅做多、不计流动性与冲击（纯上限）；B 可执行：多笔分批并行、共享流动性预算、含冲击/Gas/资金成本、止损 0.5%、参数事后在小网格挑选。数据来源 <b>{{ source }}</b>{% if simulated %} —— <b>SIMULATED，非正式验证</b>{% endif %}。时间轴为美东时间。</div>
+<div>档位：<select id="cap"></select> 显示买卖点：<select id="mode"><option value="exec">B 可执行（全部分批买卖点）</option><option value="theo">A 理论最优</option></select></div>
+<div class="kpi" id="kpi"></div><div id="reasons" class="banner" style="display:none"></div>
+<div id="chart"></div><div style="font-size:12px;color:#666">B 累计已实现净利润（USD）</div><div id="cum"></div>
+<h3 style="font-size:14px">B 逐笔</h3><table id="trades"></table>
+<h3 style="font-size:14px">参数网格（事后挑选）</h3><table id="tried"></table>
+<script>
+const candles={{ candles_json|safe }}; const payload={{ payload_json|safe }};
+const sel=document.getElementById('cap'); payload.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.text=`${p.tier} · ${p.capital.toLocaleString()} USD · 目标 ${p.target.toFixed(0)}`;sel.appendChild(o)});
+let cs, ln;
+function draw(){
+ const opts={layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},timeScale:{timeVisible:true,secondsVisible:false},localization:{locale:'zh-CN'}};
+ const chart=LightweightCharts.createChart(document.getElementById('chart'),opts);
+ cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+ cs.setData(candles.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close}))); chart.timeScale().fitContent();
+ const c2=LightweightCharts.createChart(document.getElementById('cum'),opts); ln=c2.addLineSeries({color:'#1565c0',lineWidth:2}); window._c2=c2; update();
+}
+function update(){
+ const p=payload[sel.value]; const e=p.exec, a=p.analysis; const mode=document.getElementById('mode').value;
+ cs.setMarkers(mode==='exec'?e.markers:p.theo.markers); ln.setData(e.cum); window._c2.timeScale().fitContent();
+ const k=[['本金',p.capital.toLocaleString()],['目标利润',p.target.toFixed(2)],['A 理论最优',p.theo.profit.toFixed(2)+' ('+p.theo.n_trades+' 笔)'],['B 可执行净利润',e.realized_net_usd.toFixed(2)+' ('+(e.realized_net_return*100).toFixed(3)+'%)'],['B 笔数 多/空',e.n_trades+' ('+e.n_long+'/'+e.n_short+')'],['并行仓位/单笔计划',e.params.max_open+' / '+a.tranche_usd.toFixed(0)],['资金利用率 峰/均',(e.capital_utilization*100).toFixed(0)+'% / '+(e.avg_utilization*100).toFixed(0)+'%'],['流动性已用',isFinite(e.liquidity_used_ratio)?(e.liquidity_used_ratio*100).toFixed(0)+'%':'未知'],['往返成本 / 60根波动p90',a.round_trip_cost_pct.toFixed(2)+'% / '+a.move_p90_pct.toFixed(2)+'%'],['是否达标',(e.target_met?'<b class="pos">达标</b>':'<b class="neg">未达标</b>')+(e.target_hit_ts?' @ '+e.target_hit_ts.slice(11,16):'')]];
+ document.getElementById('kpi').innerHTML=k.map(x=>`<div>${x[0]}<b>${x[1]}</b></div>`).join('');
+ const rs=document.getElementById('reasons'); rs.style.display=a.reasons.length?'block':'none'; rs.innerHTML='<b>未达标原因：</b><br>'+a.reasons.join('<br>');
+ let h='<tr><th>#</th><th>方向</th><th>开仓</th><th>批</th><th>均价</th><th>平仓</th><th>批</th><th>均价</th><th>投入</th><th>数量</th><th>交易成本</th><th>资金成本</th><th>净盈亏</th><th>净收益</th><th>累计</th><th>最大不利</th><th>持有</th></tr>';
+ e.trades.forEach(x=>{h+=`<tr><td>${x.seq}</td><td>${x.direction==='long'?'多':'空'}</td><td>${x.open_ts.slice(11,16)}</td><td>${x.open_fill.n_children}</td><td>${x.avg_open.toFixed(3)}</td><td>${x.close_ts.slice(11,16)}</td><td>${x.close_fill.n_children}</td><td>${x.avg_close.toFixed(3)}</td><td>${x.size_usd.toFixed(0)}</td><td>${x.qty.toFixed(3)}</td><td>${x.trading_cost_usd.toFixed(2)}</td><td>${x.capital_cost_usd.toFixed(2)}</td><td class="${x.net_pnl_usd>=0?'pos':'neg'}">${x.net_pnl_usd.toFixed(2)}</td><td>${(x.net_ret*100).toFixed(3)}%</td><td>${x.cum_net_pnl_usd.toFixed(2)}</td><td>${x.mae_pct.toFixed(2)}%</td><td>${x.hold_bars}</td></tr>`});
+ if(!e.trades.length) h+='<tr><td colspan="17">无交易</td></tr>'; document.getElementById('trades').innerHTML=h;
+ let t='<tr><th>并行仓位</th><th>最低单笔净收益%</th><th>净利润</th><th>笔数</th><th>达标</th><th>平均利用率</th></tr>';
+ p.tried.forEach(x=>{t+=`<tr><td>${x.max_open}</td><td>${x.min_trade_net_pct}</td><td class="${x.realized_net_usd>=0?'pos':'neg'}">${x.realized_net_usd.toFixed(2)}</td><td>${x.n_trades}</td><td>${x.target_met?'是':'否'}</td><td>${(x.avg_utilization*100).toFixed(0)}%</td></tr>`}); document.getElementById('tried').innerHTML=t;
+}
+sel.onchange=update; document.getElementById('mode').onchange=update; (function wait(){ if(window.LightweightCharts) draw(); else setTimeout(wait,100); })();
+</script></body></html>

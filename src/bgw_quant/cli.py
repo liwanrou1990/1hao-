@@ -176,6 +176,29 @@ def cmd_simple_report(args):
     _p(generate_simple_report(pl, day, args.symbols))
 
 
+def cmd_compare(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    for c in pl.compare_tiers(args.symbol, day):
+        th, ex, fa = c["theoretical"], c["executable"], c["analysis"]
+        print(f"\n{args.symbol} {c['tier']} 本金 {c['capital_usd']:,.0f} 目标 {c['target_usd']:,.0f} | A理论 {th.max_net_profit_usd:,.0f} ({th.n_trades}笔{'，达标' if th.target_met else '，未达标'}) "
+              f"| B可执行 {ex.realized_net_usd:,.2f} ({ex.realized_net_return:+.3%}) {ex.n_trades}笔 多{ex.n_long}/空{ex.n_short} 并行{ex.params.max_open} 单笔计划 {fa['tranche_usd']:,.0f} "
+              f"利用率峰{ex.capital_utilization:.0%}/均{ex.avg_utilization:.0%} {'达标@'+ex.target_hit_ts[11:16] if ex.target_met else '未达标'}")
+        for r in fa["reasons"]:
+            print("   -", r)
+        if args.trades:
+            for t in ex.trades:
+                print(f"   {t.seq:2d}. {'多' if t.direction=='long' else '空'} {t.open_fill.fills[0].ts_ny[11:16]}@{t.avg_open:.3f} → {t.close_fill.fills[-1].ts_ny[11:16]}@{t.avg_close:.3f} 投入 {t.size_usd:,.0f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}")
+
+
+def cmd_compare_report(args):
+    from .reports.compare_report import generate_compare_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_compare_report(pl, day, args.symbols, wf_symbols=args.wf_symbols, wf_min_capital=args.wf_min_capital))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -222,6 +245,8 @@ def main(argv=None):
     p = sub.add_parser("target-report", help="固定收益目标日报（教学 + 样本外策略）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--no-walkforward", action="store_true"); p.set_defaults(f=cmd_target_report)
     p = sub.add_parser("simple", help="简化版：昨日真实走势多空多次交易，累计净利润达档位目标即停"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--capital-usd", type=float); p.add_argument("--target-usd", type=float); p.set_defaults(f=cmd_simple)
     p = sub.add_parser("simple-report", help="简单报告：各标的×档位 本金/目标/实际/次数/利用率/达标 + K线买卖点"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_simple_report)
+    p = sub.add_parser("compare", help="档位对比：A理论最优 vs B多笔可执行 + 失败原因"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_compare)
+    p = sub.add_parser("compare-report", help="各档位对比报告（A/B/C）+ CSV + K线图"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--wf-symbols", nargs="*"); p.add_argument("--wf-min-capital", type=float, default=175000); p.set_defaults(f=cmd_compare_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

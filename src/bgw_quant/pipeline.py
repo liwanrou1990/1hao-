@@ -24,6 +24,7 @@ from .data.store import Store
 from .hindsight.optimal_path import OptimalPathResult, optimal_path
 from .hindsight.portfolio import PortfolioResult, portfolio_optimal
 from .simple_sim.engine import SimpleSimResult, load_simple_config, simulate_day
+from .simple_sim.multi import MultiResult, auto_search, failure_analysis, theoretical_optimum
 from .target_model.config import load_target_config, target_for_capital
 from .target_model.strategy import StrategyDayResult, TargetSeekingStrategy, run_strategy_day
 from .target_model.teaching import TargetPathResult, teaching_path
@@ -385,6 +386,56 @@ class Pipeline:
                 except LookupError:
                     break
         return out
+
+    # ------------------------------------------------------------------ 档位对比：理论最优(A) vs 可执行模拟(B) + 失败原因
+    def compare_tier(self, symbol: str, day: date, capital_usd: float, target_usd: float, tier: str | None = None, venue: str = Venue.TOKEN) -> dict:
+        key = ("cmp", symbol, day, round(capital_usd, 2), round(target_usd, 2), self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.hindsight_bars(symbol, day, venue)
+        if bars.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        cm = CostModel(self.profile)
+        best, tried = auto_search(bars, cm, capital_usd, target_usd, self.simple_cfg, symbol=symbol, tier=tier)
+        theo = theoretical_optimum(bars, self.profile, capital_usd, target_usd, symbol=symbol)
+        fa = failure_analysis(bars, cm, capital_usd, target_usd, self.simple_cfg, theo, best)
+        if bars.attrs.get("fallback_native"):
+            best.notes.insert(0, "警告：无代币成交K线，使用原生股票价格")
+            best.unverifiable = True
+        out = {"symbol": symbol, "day": str(day), "tier": tier, "capital_usd": capital_usd, "target_usd": target_usd,
+               "theoretical": theo, "executable": best, "tried": tried, "analysis": fa, "bars": bars}
+        self._hs_cache[key] = out
+        return out
+
+    def compare_tiers(self, symbol: str, day: date, points: tuple[str, ...] = ("mid",), venue: str = Venue.TOKEN) -> list[dict]:
+        out = []
+        for t in self.tiers.tiers:
+            for pt, cap in t.representative_capitals(points).items():
+                lo, hi = t.target_daily_pct
+                pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
+                try:
+                    out.append(self.compare_tier(symbol, day, cap, pct / 100 * cap, tier=t.id + ("" if pt == "mid" else f"-{pt}"), venue=venue))
+                except LookupError:
+                    break
+        return out
+
+    def compare_summary(self, day: date, symbols: list[str] | None = None) -> pd.DataFrame:
+        rows = []
+        for sym in symbols or self.symbols():
+            for c in self.compare_tiers(sym, day):
+                th, ex, fa = c["theoretical"], c["executable"], c["analysis"]
+                rows.append({"symbol": sym, "tier": c["tier"], "capital_usd": c["capital_usd"], "target_usd": c["target_usd"],
+                             "theoretical_usd": th.max_net_profit_usd, "theoretical_trades": th.n_trades, "theoretical_met": th.target_met,
+                             "executable_usd": ex.realized_net_usd, "executable_return_pct": ex.realized_net_return * 100,
+                             "executable_trades": ex.n_trades, "n_long": ex.n_long, "n_short": ex.n_short, "max_open": ex.params.max_open,
+                             "min_trade_net_pct": ex.params.min_trade_net_pct, "tranche_usd": fa["tranche_usd"],
+                             "peak_utilization": ex.capital_utilization, "avg_utilization": ex.avg_utilization,
+                             "liquidity_used_ratio": ex.liquidity_used_ratio, "trading_cost_usd": ex.trading_cost_usd,
+                             "capital_cost_usd": ex.capital_cost_usd, "target_met": ex.target_met, "target_hit_ts": ex.target_hit_ts,
+                             "round_trip_cost_pct": fa["round_trip_cost_pct"], "move_p90_pct": fa["move_p90_pct"],
+                             "gap_to_target_usd": fa["gap_to_target_usd"], "unverifiable": ex.unverifiable,
+                             "reasons": "；".join(fa["reasons"]), "tradable": sym in self.symbols(tradable_only=True)})
+        return pd.DataFrame(rows)
 
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,

@@ -9,8 +9,9 @@ import Reports from './components/Reports'
 import Hindsight from './components/Hindsight'
 import Target from './components/Target'
 import Simple from './components/Simple'
+import Compare from './components/Compare'
 
-const TABS = ['多空教学模拟', '固定收益目标', '事后最优路径', '行情排名', '复盘与交易', '回测/本金容量', 'AI 信号', '训练模式', '日报']
+const TABS = ['档位对比', '多空教学模拟', '固定收益目标', '事后最优路径', '行情排名', '复盘与交易', '回测/本金容量', 'AI 信号', '训练模式', '日报']
 
 export default function App() {
   const [status, setStatus] = useState<any>(null)
@@ -35,15 +36,16 @@ export default function App() {
         日期 <select value={day} onChange={e => setDay(e.target.value)}>{[...days].reverse().map(d => <option key={d}>{d}</option>)}</select></span></nav>
     <main>
       {status.data_mode !== 'live' && <div className="banner">{status.banner} 阻塞项：{status.blockers?.slice(0, 2).join('；')}</div>}
-      {tab === 0 && <Simple symbol={symbol} day={day} />}
-      {tab === 1 && <Target symbol={symbol} day={day} />}
-      {tab === 2 && <Hindsight symbol={symbol} day={day} />}
-      {tab === 3 && <Rankings day={day} />}
-      {tab === 4 && <Replay symbol={symbol} day={day} />}
-      {tab === 5 && <Backtest symbol={symbol} />}
-      {tab === 6 && <AI symbol={symbol} day={day} />}
-      {tab === 7 && <Training symbol={symbol} day={day} />}
-      {tab === 8 && <Reports day={day} />}
+      {tab === 0 && <Compare symbol={symbol} day={day} />}
+      {tab === 1 && <Simple symbol={symbol} day={day} />}
+      {tab === 2 && <Target symbol={symbol} day={day} />}
+      {tab === 3 && <Hindsight symbol={symbol} day={day} />}
+      {tab === 4 && <Rankings day={day} />}
+      {tab === 5 && <Replay symbol={symbol} day={day} />}
+      {tab === 6 && <Backtest symbol={symbol} />}
+      {tab === 7 && <AI symbol={symbol} day={day} />}
+      {tab === 8 && <Training symbol={symbol} day={day} />}
+      {tab === 9 && <Reports day={day} />}
     </main>
   </>
 }

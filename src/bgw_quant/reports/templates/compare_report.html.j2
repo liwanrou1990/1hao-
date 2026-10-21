@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 各档位对比报告</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1300px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}
+table{border-collapse:collapse;font-size:12px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 5px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 各本金档位对比：A 理论最优 vs B 可执行模拟 vs C 无未来信息滚动回测</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }}（手续费 {{ cost.fee_bps }} bps、半价差 {{ cost.spread_bps }} bps、滑点 {{ cost.slippage_bps }} bps、Gas {{ cost.gas_usd }} USD/笔、冲击系数 {{ cost.impact_coeff }}、深度假设 {{ cost.depth_usd|num(0) }} USD）· 止损 {{ cfg.stop_loss_pct }}% · 日亏损上限 {{ cfg.max_daily_loss_pct }}% · 参与率 {{ (cfg.participation_rate*100)|round(0) }}% · 资金成本年化 {{ (cfg.capital_cost_annual*100)|round(1) }}%</div>
+<div class="banner bad"><b>A/B 为已知昨日完整走势的事后教学分析，不是实盘预测；C 为不使用未来信息的滚动样本外回测。</b> 未修改手续费、未虚构成交量、未忽略滑点、未填充盈利；达不到目标的组合如实标为未达标。</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }} 阻塞：{{ status.blockers|join('；') }}</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+<div class="banner warn">档位提示：{{ status.tier_issues|join('；') }}。B 达标组合：<b>{{ n_met }} / {{ rows|length }}</b>。</div>
+
+<h2>1. 全标的 × 七档总览（A 理论 vs B 可执行）</h2>
+<table><tr><th>标的</th><th>档位</th><th>本金</th><th>目标</th><th>A 理论最优</th><th>A 笔</th><th>A 达标</th><th>B 可执行净利润</th><th>B 收益率</th><th>B 笔(多/空)</th><th>并行仓位</th><th>单笔计划</th><th>利用率峰/均</th><th>流动性已用</th><th>往返成本</th><th>60根波动p90</th><th>B 达标</th><th>缺口</th><th>可验证</th><th>未达标原因</th></tr>
+{% for r in rows %}<tr><td>{{ r.symbol }}{% if not r.tradable %} <span class="tag">待验证</span>{% endif %}</td><td>{{ r.tier }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_usd|num(0) }}</td><td>{{ r.theoretical_usd|num(0) }}</td><td>{{ r.theoretical_trades }}</td><td class="{{ 'pos' if r.theoretical_met else 'neg' }}">{{ '是' if r.theoretical_met else '否' }}</td><td class="{{ 'pos' if r.executable_usd>=0 else 'neg' }}">{{ r.executable_usd|num }}</td><td>{{ "%.3f%%"|format(r.executable_return_pct) }}</td><td>{{ r.executable_trades }} ({{ r.n_long }}/{{ r.n_short }})</td><td>{{ r.max_open }}</td><td>{{ r.tranche_usd|num(0) }}</td><td>{{ r.peak_utilization|pct(0) }} / {{ r.avg_utilization|pct(0) }}</td><td>{{ r.liquidity_used_ratio|pct(0) if r.liquidity_used_ratio is not none else '未知' }}</td><td>{{ "%.2f%%"|format(r.round_trip_cost_pct) }}</td><td>{{ "%.2f%%"|format(r.move_p90_pct) }}</td><td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td>{{ r.gap_to_target_usd|num(0) }}</td><td class="{{ 'neg' if r.unverifiable else 'pos' }}">{{ '否' if r.unverifiable else '是' }}</td><td style="text-align:left;font-size:11px">{{ r.reasons }}</td></tr>{% endfor %}</table>
+
+<h2>2. C · 无未来信息滚动回测（大资金档位，策略：因果 z 分数低吸 + 按最近成交额自动缩仓；参数只在训练窗选择）</h2>
+<table><tr><th>标的</th><th>档位</th><th>本金</th><th>目标/日</th><th>折数</th><th>OOS 天</th><th>达标率</th><th>亏损日比例</th><th>日均净收益</th><th>标准差</th><th>最大回撤</th><th>最差日</th><th>笔/日</th><th>部分成交天</th><th>不可验证天</th><th>样本内达标率(对照)</th><th>最近一折参数</th></tr>
+{% for w in wf_rows %}{% if w.error %}<tr><td>{{ w.symbol }}</td><td>{{ w.tier }}</td><td>{{ w.capital_usd|num(0) }}</td><td colspan="14">{{ w.error }}</td></tr>{% else %}
+<tr><td>{{ w.symbol }}</td><td>{{ w.tier }}</td><td>{{ w.capital_usd|num(0) }}</td><td>{{ "%.2f%%"|format(w.target_pct) }}</td><td>{{ w.folds }}</td><td>{{ w.n_days }}</td><td class="{{ 'pos' if w.attainment_rate>=0.5 else 'neg' }}"><b>{{ w.attainment_rate|pct(0) }}</b></td><td>{{ w.losing_day_rate|pct(0) }}</td><td class="{{ 'pos' if w.mean_daily_return>=0 else 'neg' }}">{{ w.mean_daily_return|pct(3) }}</td><td>{{ w.std_daily_return|pct(3) }}</td><td>{{ w.max_drawdown_pct|pct(2) }}</td><td class="neg">{{ w.worst_day_return|pct(2) }}</td><td>{{ w.avg_trades_per_day|num(1) }}</td><td>{{ w.partial_fill_days }}</td><td>{{ w.unverifiable_days }}</td><td>{{ w.in_sample.attainment_rate|pct(0) if w.in_sample else '—' }}</td><td style="text-align:left;font-size:11px">{{ w.params_last }}</td></tr>{% endif %}{% endfor %}
+{% if not wf_rows %}<tr><td colspan="17">未运行（指定 --wf-symbols）</td></tr>{% endif %}</table>
+<div class="muted">C 的达标率反映“不看未来”时策略能否达到同样目标；若 A/B 达标而 C 不达标，说明达标依赖事后信息，不具备实盘参考价值。</div>
+
+<h2>3. 各标的图表与逐笔</h2>
+<ul>{% for e in per_symbol %}<li>{{ e.symbol }}{% if not e.tradable %} <span class="tag">待验证</span>{% endif %} · <span class="tag">{{ e.source }}</span>{% if e.fallback_native %} <b class="neg">无代币K线，使用原生价格</b>{% endif %} · <a href="{{ e.chart }}">K线买卖点图（可切换档位与 A/B，含参数网格与未达标原因）</a></li>{% endfor %}</ul>
+<div>逐笔 CSV（A 与 B）：<a href="{{ csv_name }}">{{ csv_name }}</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

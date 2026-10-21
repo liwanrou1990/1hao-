@@ -23,6 +23,7 @@ from ..reports.daily import generate_daily_report
 from ..reports.hindsight_report import generate_hindsight_report, path_markers
 from ..reports.target_report import cum_series, generate_target_report, roundtrip_markers
 from ..reports.simple_report import generate_simple_report, sim_markers
+from ..reports.compare_report import generate_compare_report
 from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
@@ -241,6 +242,44 @@ def hindsight_symbol(symbol: str, day: str | None = None, tier: str | None = Non
 def hindsight_report(day: str | None = None, symbols: list[str] | None = Query(default=None), with_portfolio: bool = True):
     d = _day(day)
     out = generate_hindsight_report(pl(), d, symbols, with_portfolio=with_portfolio)
+    root = pl().settings.resolve_path(pl().settings.report_dir)
+    out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
+    out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
+    return _clean(out)
+
+
+# ---------------------------------------------------------------- 档位对比：A 理论最优 vs B 可执行 + 失败原因
+@app.get("/api/compare/{symbol}")
+def compare_symbol(symbol: str, day: str | None = None):
+    d = _day(day, symbol)
+    p = pl()
+    bars = p.hindsight_bars(symbol, d)
+    if bars.empty:
+        raise HTTPException(404, "无数据")
+    comps = p.compare_tiers(symbol, d)
+    out = []
+    for c in comps:
+        ex, th = c["executable"], c["theoretical"]
+        out.append({"tier": c["tier"], "capital_usd": c["capital_usd"], "target_usd": c["target_usd"], "analysis": c["analysis"], "tried": c["tried"],
+                    "executable": {**ex.to_dict(), "markers": sim_markers(ex.trades, bars), "cum": cum_series(ex.cum_curve, bars)},
+                    "theoretical": {"profit": th.max_net_profit_usd, "n_trades": th.n_trades, "target_met": th.target_met,
+                                    "markers": path_markers(th.trades, bars, "A"), "trades": [t.to_dict() for t in th.trades], "notes": th.notes}})
+    return _clean({"symbol": symbol, "day": d, "source": str(bars["source"].iloc[0]), "simulated": bool((bars["quality"] & 128).any()),
+                   "fallback_native": bool(bars.attrs.get("fallback_native")), "candles": bars_to_candles(bars), "tiers": out,
+                   "chart_url": f"/reports/charts/compare_{symbol}_{d}_{p.cost_profile_name}.html"})
+
+
+@app.get("/api/compare-summary")
+def compare_summary(day: str | None = None):
+    d = _day(day)
+    p = pl()
+    return _clean({"day": d, "rows": p.compare_summary(d), "formal": not p.plan.is_simulated})
+
+
+@app.post("/api/compare/report")
+def compare_report(day: str | None = None, symbols: list[str] | None = Query(default=None), wf_symbols: list[str] | None = Query(default=None)):
+    d = _day(day)
+    out = generate_compare_report(pl(), d, symbols, wf_symbols=wf_symbols)
     root = pl().settings.resolve_path(pl().settings.report_dir)
     out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
     out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
