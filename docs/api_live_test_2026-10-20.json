@@ -1,20 +1,25 @@
 {
   "base_url": "https://bopenapi.bgwapi.io",
   "has_key": true,
-  "has_secret": false,
+  "has_secret": true,
   "day": "2026-10-20",
   "steps": [
     {
       "step": "network",
       "ok": false,
       "error": "ProxyError: 403 Forbidden"
+    },
+    {
+      "step": "stockList/stockInfo",
+      "ok": false,
+      "error": "403 Forbidden"
     }
   ],
   "assets": [],
   "klines": [],
   "errors": [
     "网络不可达 https://bopenapi.bgwapi.io: ProxyError: 403 Forbidden",
-    "缺少 BGW_API_SECRET：官方签名 x-api-signature = base64(HMAC-SHA256(secret, payload))，没有 Secret 无法发起已签名请求"
+    "stockList: 403 Forbidden"
   ],
-  "conclusion": "连接测试未通过：网络不可达 https://bopenapi.bgwapi.io: ProxyError: 403 Forbidden；缺少 BGW_API_SECRET：官方签名 x-api-signature = base64(HMAC-SHA256(secret, payload))，没有 Secret 无法发起已签名请求"
+  "conclusion": "连接测试未通过：网络不可达 https://bopenapi.bgwapi.io: ProxyError: 403 Forbidden；stockList: 403 Forbidden"
 }
