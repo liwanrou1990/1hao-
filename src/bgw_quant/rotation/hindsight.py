@@ -81,10 +81,13 @@ def universe_theoretical(assets: list[AssetDay], capital_usd: float) -> tuple[fl
 
 
 def asset_B(a: AssetDay, capital_usd: float, target_usd: float, participation_rate: float, tx_amount_per_bar=None) -> FeasibilityResult:
-    """单资产执行约束上限 B_a(c)。加密货币 1440 根 K 线时资金片上限收紧到 64（计算量），并在报告中注明。"""
-    grid = (1, 2, 4, 8, 16, 32, 64) if a.n > 800 else (1, 2, 4, 8, 16, 32, 64, 128, 256)
+    """单资产执行约束上限 B_a(c)。加密货币 1440 根 K 线时资金片上限收紧到 32、早停阈值 5%（计算量），报告中注明：
+    这使加密资产的 B 略偏保守（仍是事后上界的近似）。"""
+    crypto = a.n > 800
+    grid = (1, 2, 4, 8, 16, 32) if crypto else (1, 2, 4, 8, 16, 32, 64, 128, 256)
     return feasibility(a.bars, a.cost.p, capital_usd, target_usd, allow_short=a.cap.short, participation_rate=participation_rate,
-                       tx_amount_per_bar=tx_amount_per_bar, exec_cfg={"capital_cost_annual": 0.05}, symbol=a.symbol, tranche_grid=grid)
+                       tx_amount_per_bar=tx_amount_per_bar, exec_cfg={"capital_cost_annual": 0.05}, symbol=a.symbol, tranche_grid=grid,
+                       early_stop_gain=0.05 if crypto else 0.02)
 
 
 def universe_executable(assets: list[AssetDay], spec: StrategySpec, capital_usd: float, target_usd: float, participation_rate: float,
