@@ -264,6 +264,43 @@ class BitgetRwaClient:
         bars["tf"] = period
         return bars.reset_index(drop=True)
 
+    def fetch_transactions(self, symbol: str, day: date, max_pages: int = 200, chain: str | None = None, contract: str | None = None) -> pd.DataFrame:
+        """逐笔成交（transactionList 分页，向前翻直到早于该日）；用于按分钟聚合真实成交额作为流动性上限。"""
+        cands = self.contracts_for(symbol)
+        if chain and contract:
+            cands = [c for c in cands if c.chain == chain and c.contract == contract]
+        cands = [c for c in cands if c.status == "online"] or cands
+        if not cands:
+            raise LookupError(f"{symbol} 无合约")
+        c = cands[0]
+        start = datetime.combine(day, datetime.min.time()).replace(tzinfo=NY)
+        end = datetime.combine(day, datetime.max.time()).replace(tzinfo=NY)
+        rows: list[dict[str, Any]] = []
+        for page in range(1, max_pages + 1):
+            data = self.transaction_list(c.chain, c.contract, page=page, size=100)
+            lst = data.get("list") or []
+            if not lst:
+                break
+            rows += lst
+            ts_min = min(int(r["ts"]) for r in lst)
+            ts_min = ts_min // 1000 if ts_min > 1e12 else ts_min
+            if ts_min < int(start.timestamp()):
+                break
+        if not rows:
+            return pd.DataFrame()
+        df = pd.DataFrame(rows)
+        ts = pd.to_numeric(df["ts"])
+        unit = "ms" if ts.max() > 1e12 else "s"
+        df["ts"] = pd.to_datetime(ts, unit=unit, utc=True)
+        df = df[(df["ts"] >= start) & (df["ts"] <= end)].copy()
+        df["ts_ny"] = df["ts"].dt.tz_convert(NY).dt.strftime("%Y-%m-%d %H:%M:%S")
+        df["symbol"], df["chain"], df["contract"] = symbol, c.chain, c.contract
+        df["source"] = f"bitget_rwa:{c.data_source}"
+        df["ingested_at"] = pd.Timestamp.now(tz="UTC")
+        for col in ("price", "amount", "value"):
+            df[col] = pd.to_numeric(df.get(col), errors="coerce")
+        return df[["symbol", "chain", "contract", "ts", "ts_ny", "side", "price", "amount", "value", "tx_hash", "source", "ingested_at"]].sort_values("ts").reset_index(drop=True)
+
     def verify_assets(self, tickers: list[str]) -> list[dict[str, Any]]:
         """用 stockList + stockInfo 核对代币、链、合约、发行商与市场状态。"""
         out = []

@@ -20,6 +20,10 @@ CREATE TABLE IF NOT EXISTS bars (
   open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, volume DOUBLE, amount DOUBLE, txn DOUBLE,
   quality INTEGER, is_complete BOOLEAN, ingested_at TIMESTAMPTZ, tf VARCHAR DEFAULT '1m'
 );
+CREATE TABLE IF NOT EXISTS token_trades (
+  symbol VARCHAR, chain VARCHAR, contract VARCHAR, ts TIMESTAMPTZ, ts_ny VARCHAR, side VARCHAR, price DOUBLE, amount DOUBLE, value DOUBLE,
+  tx_hash VARCHAR, source VARCHAR, ingested_at TIMESTAMPTZ
+);
 CREATE TABLE IF NOT EXISTS asset_registry (
   ticker VARCHAR, chain VARCHAR, contract VARCHAR, symbol VARCHAR, data_source VARCHAR, status VARCHAR,
   verified BOOLEAN, verified_at TIMESTAMPTZ, note VARCHAR

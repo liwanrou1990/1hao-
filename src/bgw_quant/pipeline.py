@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from .backtest.report import evaluate_symbol, tier_attainment_table
@@ -26,6 +27,7 @@ from .hindsight.portfolio import PortfolioResult, portfolio_optimal
 from .simple_sim.engine import SimpleSimResult, load_simple_config, simulate_day
 from .simple_sim.multi import MultiResult, auto_search, failure_analysis, theoretical_optimum
 from .decision.analysis import classify as engine_classify
+from .hindsight.feasibility import FeasibilityResult, feasibility
 from .decision.capability import ProductCapability, capability_for
 from .decision.engine import DayRun, EngineParams, load_engine_config, run_engine_day
 from .decision.optimize import TierOptimization, optimize_tier
@@ -110,6 +112,16 @@ class Pipeline:
                         bars = apply_quality_flags(bars)
                         bars = research_ready(bars)
                         n_bars += self.store.upsert_bars(bars)
+                        if venue == Venue.TOKEN and per == "1m" and hasattr(src, "fetch_transactions"):
+                            try:
+                                tx = src.fetch_transactions(sym, d)
+                                if not tx.empty:
+                                    self.store.con.register("new_tx", tx)
+                                    self.store.con.execute("DELETE FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [sym, d])
+                                    self.store.con.execute("INSERT INTO token_trades SELECT * FROM new_tx")
+                                    self.store.con.unregister("new_tx")
+                            except Exception as e:  # noqa: BLE001
+                                self.plan.blockers.append(f"{sym} 逐笔成交 {d}: {e}")
                         cov.append(coverage_report(bars, d))
                         src_name = str(bars["source"].iloc[0]) if not bars.empty else src_name
                     out.append(IngestSummary(sym, f"{venue}:{per}", len(days), len(set(self.store.available_days(sym, venue, per)) & set(days)),
@@ -522,6 +534,52 @@ class Pipeline:
                              "oos_days": opt.oos_stats.n_days if opt else 0, "tags": "、".join(cls["tags"]), "details": "；".join(cls["details"]),
                              "unverifiable": r.unverifiable, "tradable": sym in self.symbols(tradable_only=True)})
         return pd.DataFrame(rows)
+
+    # ------------------------------------------------------------------ 历史可行性（事后：A 理论最大 / B 执行约束下最大可实现）
+    def tx_amount_per_bar(self, symbol: str, day: date) -> np.ndarray | None:
+        """若存储了逐笔成交（trades 表），按分钟聚合成交额作为流动性来源。"""
+        try:
+            df = self.store.query("SELECT ts_ny, value FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [symbol, day])
+        except Exception:  # noqa: BLE001
+            return None
+        if df.empty:
+            return None
+        bars = self.hindsight_bars(symbol, day)
+        minute = pd.to_datetime(df["ts_ny"]).dt.floor("min")
+        agg = df.groupby(minute)["value"].sum()
+        idx = pd.to_datetime(bars["ts_ny"]).dt.floor("min")
+        return agg.reindex(idx).fillna(0.0).to_numpy(float)
+
+    def feasibility_tier(self, symbol: str, day: date, capital_usd: float, target_usd: float, tier: str | None = None, venue: str = Venue.TOKEN) -> FeasibilityResult:
+        key = ("feas", symbol, day, round(capital_usd, 2), round(target_usd, 2), self.cost_profile_name, venue)
+        if key in self._hs_cache:
+            return self._hs_cache[key]
+        bars = self.hindsight_bars(symbol, day, venue)
+        if bars.empty:
+            raise LookupError(f"{symbol} {day} 无K线数据")
+        cap = self.capability(symbol)
+        r = feasibility(bars, self.profile, capital_usd, target_usd, allow_short=cap.short, borrow_annual=cap.short_borrow_rate_annual or 0.05,
+                        participation_rate=float(self.engine_cfg.execution.get("participation_rate", 0.1)),
+                        tx_amount_per_bar=self.tx_amount_per_bar(symbol, day),
+                        exec_cfg={"capital_cost_annual": float(self.engine_cfg.execution.get("capital_cost_annual", 0.05))}, symbol=symbol, tier=tier)
+        if cap.verification_status != "verified":
+            r.limits.insert(0, "品种未经官方 API 核实（当前环境无法核实）：以下为流水线验证结果")
+        if bars.attrs.get("fallback_native"):
+            r.limits.insert(0, "警告：无代币成交K线，使用原生股票价格")
+        self._hs_cache[key] = r
+        return r
+
+    def feasibility_tiers(self, symbol: str, day: date, points: tuple[str, ...] = ("mid",), venue: str = Venue.TOKEN) -> list[FeasibilityResult]:
+        out = []
+        for t in self.tiers.tiers:
+            for pt, cap_usd in t.representative_capitals(points).items():
+                lo, hi = t.target_daily_pct
+                pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
+                try:
+                    out.append(self.feasibility_tier(symbol, day, cap_usd, pct / 100 * cap_usd, tier=t.id + ("" if pt == "mid" else f"-{pt}"), venue=venue))
+                except LookupError:
+                    break
+        return out
 
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,

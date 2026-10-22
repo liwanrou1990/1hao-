@@ -233,6 +233,28 @@ def cmd_matrix_report(args):
     _p(generate_matrix_report(pl, day, args.symbols))
 
 
+def cmd_feasibility(args):
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day(args.symbol)
+    print(pl.plan.banner())
+    for r in pl.feasibility_tiers(args.symbol, day):
+        print(f"\n{r.tier} 本金 {r.capital_usd:,.0f} 目标 {r.target_usd:,.0f} | A理论最大 {r.theoretical_net_usd:,.0f} ({r.theoretical_trades}笔{'，达标' if r.theoretical_met else '，未达标'}) "
+              f"| B可实现最大 {r.executable_net_usd:,.2f} ({r.executable_return:+.3%}) 资金片{r.n_tranches} {r.n_trades}笔 多{r.n_long}/空{r.n_short} "
+              f"{'达标 需'+str(r.trades_to_target)+'笔@'+r.target_hit_ts[11:16] if r.executable_met else '未达标'} 峰值占用 {r.peak_deployed_usd / r.capital_usd:.0%} 流动性 {r.liquidity_source}")
+        for lim in r.limits:
+            print("   -", lim)
+        if args.trades:
+            for i, t in enumerate(r.trades, 1):
+                print(f"   {i:2d}. 片{t.tranche} {'多' if t.direction=='long' else '空'} {t.open_ts[11:16]}@{t.open_exec:.3f} → {t.close_ts[11:16]}@{t.close_exec:.3f} 投入 {t.size_usd:,.0f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}")
+
+
+def cmd_feasibility_report(args):
+    from .reports.feasibility_report import generate_feasibility_report
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    _p(generate_feasibility_report(pl, day, args.symbols))
+
+
 def cmd_tiers(args):
     from .capital.tiers import load_tiers
     cfg = load_tiers()
@@ -354,6 +376,8 @@ def main(argv=None):
     p = sub.add_parser("engine", help="统一收益决策引擎：七档昨日因果复盘 + 滚动样本外 + 原因归类"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_engine)
     p = sub.add_parser("engine-report", help="决策引擎报告（默认 NVDA SPCX）"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_engine_report)
     p = sub.add_parser("matrix-report", help="70 组测试矩阵：A/B/C + 能力核实 + 原因 + 建议"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_matrix_report)
+    p = sub.add_parser("feasibility", help="历史可行性：A 理论最大 / B 执行约束下最大可实现 / 达标所需笔数 / 完整买卖点"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_feasibility)
+    p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

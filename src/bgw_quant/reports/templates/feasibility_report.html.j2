@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 历史可行性报告</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1320px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:14px;margin:12px 0 4px}
+table{border-collapse:collapse;font-size:12px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 5px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 历史可行性：指定日收益率在已知完整行情下是否存在可实现路径</h1>
+<div class="muted">生成 {{ generated_at }} · 成本模型 {{ cost_profile }}（手续费 {{ cost.fee_bps }} bps、半价差 {{ cost.spread_bps }} bps、滑点 {{ cost.slippage_bps }} bps、Gas {{ cost.gas_usd }} USD、冲击系数 {{ cost.impact_coeff }}、深度 {{ cost.depth_usd|num(0) }}）· 参与率 {{ (participation*100)|round(0) }}% · 全部成交以该根 K 线收盘价为基准（不假设高低点可任意顺序成交）</div>
+<div class="banner bad"><b>事后结果：以下路径在看过昨日完整走势后反向求解，不代表未来可复制收益。</b> A = 理论最大净收益（无流动性/冲击约束）；B = 执行约束下最大可实现净收益（时间顺序、逐根成交量上限、共享流动性、资金片、成本、资金成本、做空仅限登记支持品种）。</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ status.banner }} 真实逐笔/K线接入被阻塞：{{ status.blockers|join('；') }}。接入后重跑本报告。</div>{% else %}<div class="banner ok">{{ status.banner }}</div>{% endif %}
+<div class="banner warn">数学可达（A）：<b>{{ n_a }}/{{ rows|length }}</b> · 执行可达（B）：<b>{{ n_b }}/{{ rows|length }}</b>。档位提示：{{ status.tier_issues|join('；') }}</div>
+
+<h2>1. 各档位结果</h2>
+<table><tr><th>品种</th><th>档位</th><th>本金</th><th>目标</th><th>方向</th><th>流动性来源</th><th>A 理论最大</th><th>A 笔</th><th>A 达标</th><th>B 可实现最大</th><th>B 收益率</th><th>资金片</th><th>B 笔(多/空)</th><th>达标所需笔数</th><th>达标时刻</th><th>峰值占用</th><th>流动性已用</th><th>成本</th><th>B 达标</th><th>限制说明</th></tr>
+{% for r in rows %}<tr><td>{{ r.symbol }}</td><td>{{ r.tier }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_usd|num(0) }}</td><td>{{ r.directions|join('/') }}</td><td>{{ r.liquidity_source }}</td><td>{{ r.theoretical_net_usd|num(0) }}</td><td>{{ r.theoretical_trades }}</td><td class="{{ 'pos' if r.theoretical_met else 'neg' }}">{{ '是' if r.theoretical_met else '否' }}</td><td class="{{ 'pos' if r.executable_net_usd>=0 else 'neg' }}">{{ r.executable_net_usd|num(0) }}</td><td>{{ r.executable_return|pct(3) }}</td><td>{{ r.n_tranches }}</td><td>{{ r.n_trades }} ({{ r.n_long }}/{{ r.n_short }})</td><td>{{ r.trades_to_target if r.trades_to_target else '—' }}</td><td>{{ r.target_hit_ts[11:16] if r.target_hit_ts else '—' }}</td><td>{{ (r.peak_deployed_usd / r.capital_usd)|pct(0) }}</td><td>{{ r.liquidity_used_ratio|pct(0) if r.liquidity_used_ratio is not none else '未知' }}</td><td>{{ r.cost_usd|num(0) }}</td><td class="{{ 'pos' if r.executable_met else 'neg' }}"><b>{{ '达标' if r.executable_met else '未达标' }}</b></td><td style="text-align:left;font-size:11px">{{ r.limits|join('；') }}</td></tr>{% endfor %}</table>
+
+<h2>2. 图表与完整买卖点</h2>
+<ul>{% for e in per_symbol %}<li>{{ e.symbol }} · <span class="tag">{{ e.source }}</span> · 方向 {{ e.capability.directions|join('/') or '无' }} · <a href="{{ e.chart }}">K 线 + 全部买卖点 + 累计曲线 + 至多 k 笔最优曲线（可切换档位）</a></li>{% endfor %}</ul>
+<div>逐笔 CSV：<a href="{{ csv_name }}">{{ csv_name }}</a>（资金片、方向、开/平仓 K 线与时间、参考价/成交价、投入、数量、成本、净盈亏、累计）</div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

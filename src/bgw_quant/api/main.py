@@ -26,6 +26,7 @@ from ..reports.simple_report import generate_simple_report, sim_markers
 from ..reports.compare_report import generate_compare_report
 from ..reports.engine_report import generate_engine_report
 from ..reports.matrix_report import generate_matrix_report
+from ..reports.feasibility_report import cum_series as feas_cum, feas_markers, generate_feasibility_report
 from ..training.session import TrainingSession
 
 app = FastAPI(title="Bitget Wallet 美股代币化 AI 量化复盘与交易员训练系统", version="0.1.0")
@@ -244,6 +245,30 @@ def hindsight_symbol(symbol: str, day: str | None = None, tier: str | None = Non
 def hindsight_report(day: str | None = None, symbols: list[str] | None = Query(default=None), with_portfolio: bool = True):
     d = _day(day)
     out = generate_hindsight_report(pl(), d, symbols, with_portfolio=with_portfolio)
+    root = pl().settings.resolve_path(pl().settings.report_dir)
+    out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
+    out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
+    return _clean(out)
+
+
+@app.get("/api/feasibility/{symbol}")
+def feasibility_symbol(symbol: str, day: str | None = None):
+    d = _day(day, symbol)
+    p = pl()
+    bars = p.hindsight_bars(symbol, d)
+    if bars.empty:
+        raise HTTPException(404, "无数据")
+    res = p.feasibility_tiers(symbol, d)
+    return _clean({"symbol": symbol, "day": d, "source": str(bars["source"].iloc[0]), "simulated": bool((bars["quality"] & 128).any()),
+                   "capability": p.capability(symbol).to_dict(), "candles": bars_to_candles(bars),
+                   "tiers": [{**r.to_dict(), "markers": feas_markers(r.trades, bars), "cum": feas_cum(r.trades, bars)} for r in res],
+                   "chart_url": f"/reports/charts/feasibility_{symbol}_{d}_{p.cost_profile_name}.html"})
+
+
+@app.post("/api/feasibility/report")
+def feasibility_report(day: str | None = None, symbols: list[str] | None = Query(default=None)):
+    d = _day(day)
+    out = generate_feasibility_report(pl(), d, symbols)
     root = pl().settings.resolve_path(pl().settings.report_dir)
     out["html_url"] = "/reports/" + str(Path(out["html"]).relative_to(root))
     out["csv_url"] = "/reports/" + str(Path(out["csv"]).relative_to(root))
