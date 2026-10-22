@@ -43,11 +43,38 @@ _ROT_CFG: dict = {}
 _SPECS: dict[str, StrategySpec] = {}
 
 
+_BOOL_KEYS = ("target_met", "post_target_stop", "unverifiable", "data_is_simulated")
+_NUM_KEYS = ("realized_net_usd", "realized_net_return", "max_drawdown_usd", "peak_deployed_usd", "avg_deployed_usd", "flat_ratio",
+             "execution_cost_usd", "funding_cost_usd", "post_target_net_usd", "win_rate")
+
+
+def _json_default(o):
+    if isinstance(o, np.generic):
+        return o.item()
+    return str(o)
+
+
+def _norm(d: dict) -> dict:
+    """缓存读出的摘要：把早期以字符串形式落盘的 numpy 布尔/数值还原（"True"/"False" → bool）。"""
+    for k in _BOOL_KEYS:
+        v = d.get(k)
+        if isinstance(v, str):
+            d[k] = v.strip().lower() == "true"
+    for k in _NUM_KEYS:
+        v = d.get(k)
+        if isinstance(v, str):
+            try:
+                d[k] = float(v)
+            except ValueError:
+                d[k] = None
+    return d
+
+
 def _summary_of(run: RotDayRun) -> dict:
     d = run.to_dict()
     d.pop("trades", None)
     d["switches"] = [s if isinstance(s, dict) else s.__dict__ for s in d.get("switches", [])]
-    return d
+    return json.loads(json.dumps(d, ensure_ascii=False, default=_json_default))
 
 
 def _c_worker(task: tuple) -> tuple[tuple, dict, list[dict]]:
@@ -162,7 +189,7 @@ class RotationBacktest:
 
     def _cached_runs(self) -> dict[str, dict]:
         df = self.con.execute("SELECT cache_key, summary_json FROM rot_runs WHERE cost_profile = ?", [self.plan.cost_profile]).df()
-        return {k: json.loads(v) for k, v in zip(df["cache_key"], df["summary_json"])}
+        return {k: _norm(json.loads(v)) for k, v in zip(df["cache_key"], df["summary_json"])}
 
     def run_c(self, progress=None) -> int:
         have = self._cached_runs()
@@ -351,7 +378,7 @@ class RotationBacktest:
         df = self.con.execute("SELECT summary_json, trades_json FROM rot_runs WHERE cache_key = ?", [k]).df()
         if df.empty:
             raise LookupError(k)
-        return json.loads(df["summary_json"].iloc[0]), json.loads(df["trades_json"].iloc[0])
+        return _norm(json.loads(df["summary_json"].iloc[0])), json.loads(df["trades_json"].iloc[0])
 
 
 def _ab_group_worker(tasks: list[tuple]) -> list[tuple[tuple, dict]]:
