@@ -265,6 +265,56 @@ def feasibility_symbol(symbol: str, day: str | None = None):
                    "chart_url": f"/reports/charts/feasibility_{symbol}_{d}_{p.cost_profile_name}.html"})
 
 
+@app.get("/api/rotation/specs")
+def rotation_specs():
+    return [s.__dict__ | {"universe": list(s.universe)} for s in pl().rotation_specs()]
+
+
+@app.get("/api/rotation/day")
+def rotation_day(strategy: str, day: str | None = None, tier: str | None = None):
+    """单日因果轮动结果（C）：strategy 为策略键（如 E:cross_rotation），tier 省略时输出七档。"""
+    p = pl()
+    d = date.fromisoformat(day) if day else p.latest_day()
+    specs = {s.key: s for s in p.rotation_specs()}
+    if strategy not in specs:
+        raise HTTPException(404, f"未知策略 {strategy}")
+    out = []
+    for t in p.tiers.tiers:
+        if tier and t.id != tier:
+            continue
+        cap = t.representative_capitals(("mid",))["mid"]
+        lo, hi = t.target_daily_pct
+        r = p.rotation_day(specs[strategy], d, cap, (lo + hi) / 2 / 100 * cap)
+        dd = r.to_dict(); dd["tier"] = t.id; dd["curve"] = None
+        for tr in dd["trades"]:
+            tr.pop("open_children", None); tr.pop("close_children", None)
+        out.append(dd)
+    return {"banner": p.plan.banner(), "results": out}
+
+
+@app.get("/api/rotation/summary")
+def rotation_summary():
+    """最近一次 rotation-backtest 的排名与逐日 OOS（读取 reports_out/rotation 下最新 CSV）。"""
+    p = pl()
+    d = p.settings.resolve_path(p.settings.report_dir) / "rotation"
+    files = sorted(d.glob(f"rotation_ranking_*_{p.cost_profile_name}.csv")) if d.exists() else []
+    if not files:
+        return {"ranking": [], "oos": [], "note": "尚未运行 bgwq rotation-backtest"}
+    rk = pd.read_csv(files[-1]).fillna("")
+    oos_f = Path(str(files[-1]).replace("rotation_ranking_", "rotation_oos_"))
+    oos = pd.read_csv(oos_f).fillna("") if oos_f.exists() else pd.DataFrame()
+    html = sorted(d.glob(f"rotation_report_*_{p.cost_profile_name}.html"))
+    return {"ranking": rk.to_dict("records"), "oos": oos.to_dict("records"), "report_url": f"/reports/rotation/{html[-1].name}" if html else None, "banner": p.plan.banner()}
+
+
+@app.post("/api/rotation/report")
+def rotation_report(end: str | None = None, test_days: int | None = None, train_days: int | None = None):
+    from ..reports.rotation_report import generate_rotation_report
+    p = pl()
+    d = date.fromisoformat(end) if end else p.latest_day()
+    return generate_rotation_report(p, d, test_days, train_days)
+
+
 @app.post("/api/feasibility/report")
 def feasibility_report(day: str | None = None, symbols: list[str] | None = Query(default=None)):
     d = _day(day)

@@ -282,7 +282,7 @@ def run_engine_day(bars: pd.DataFrame, cost: CostModel, capital_usd: float, targ
             px = close[i]
             unreal = (pos.fill.qty * px * (1 - side_cost - cost.impact_fraction(pos.fill.filled_usd)) - pos.fill.filled_usd) if pos.direction == "long" \
                 else (pos.fill.filled_usd - pos.fill.qty * px * (1 + side_cost + cost.impact_fraction(pos.fill.filled_usd)))
-            adverse = (px / pos.fill.avg_exec - 1) if pos.direction == "long" else (1 - px / pos.fill.avg_exec)
+            adverse = (px / pos.fill.avg_ref - 1) if pos.direction == "long" else (1 - px / pos.fill.avg_ref)   # 相对参考价（不含成本）
             pos.peak = max(pos.peak, px) if pos.direction == "long" else min(pos.peak, px)
             trail = (pos.peak - px) / pos.peak if pos.direction == "long" else (px - pos.peak) / pos.peak
             held = i - pos.entry_idx

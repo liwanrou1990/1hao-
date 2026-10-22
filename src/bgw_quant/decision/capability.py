@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..config import load_yaml
+from ..config import asset_meta, load_yaml
 
 
 @dataclass
@@ -49,8 +49,11 @@ class ProductCapability:
 
 def capability_for(symbol: str, api_asset: dict[str, Any] | None = None) -> ProductCapability:
     cfg = load_yaml("symbols.yaml")
-    sym_cfg = next((s for s in cfg.get("symbols", []) if s["ticker"] == symbol), {})
+    sym_cfg = asset_meta(symbol)          # 股票代币或加密货币（crypto_symbols）
     cap = ProductCapability(symbol=symbol)
+    if sym_cfg.get("asset_class") == "crypto":
+        cap.order_types = ["wallet_swap"]
+        cap.notes.append("加密货币：钱包内现货 swap；交易所永续合约可做空但本系统未接入，未登记核实渠道前不做空")
     if not sym_cfg.get("tradable", False):
         cap.spot_long = False
         cap.verification_status = "unverified"

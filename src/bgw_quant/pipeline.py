@@ -15,8 +15,8 @@ from .backtest.stress import run_stress
 from .calendar_utils import previous_trading_day, trading_days
 from .capital.capacity import capacity_table
 from .capital.tiers import load_tiers
-from .config import get_settings, research_symbols
-from .costs.model import CostModel, load_cost_profile
+from .config import asset_class_of, get_settings, research_symbols
+from .costs.model import CostModel, load_cost_profile, profile_for_asset
 from .data.quality import apply_quality_flags, coverage_report, research_ready
 from .data.registry import DataPlan, build_data_plan
 from .data.schema import Venue
@@ -31,6 +31,9 @@ from .hindsight.feasibility import FeasibilityResult, feasibility
 from .decision.capability import ProductCapability, capability_for
 from .decision.engine import DayRun, EngineParams, load_engine_config, run_engine_day
 from .decision.optimize import TierOptimization, optimize_tier
+from .rotation.engine import RotDayRun, RotParams, load_rotation_config, run_rotation_day
+from .rotation.strategies import StrategySpec, build_specs
+from .rotation.universe import AssetDay, make_asset_day
 from .target_model.config import load_target_config, target_for_capital
 from .target_model.strategy import StrategyDayResult, TargetSeekingStrategy, run_strategy_day
 from .target_model.teaching import TargetPathResult, teaching_path
@@ -73,11 +76,48 @@ class Pipeline:
         self.simple_cfg = load_simple_config()
         self.engine_cfg = load_engine_config()
         self._caps: dict[str, ProductCapability] = {}
+        self._profile_cache: dict[str, object] = {self.cost_profile_name: self.profile}
         self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
-    def symbols(self, tradable_only: bool = False) -> list[str]:
-        return [s["ticker"] for s in research_symbols(tradable_only)]
+    def symbols(self, tradable_only: bool = False, asset_class: str | None = "stock") -> list[str]:
+        return [s["ticker"] for s in research_symbols(tradable_only, asset_class)]
+
+    def crypto_symbols(self, tradable_only: bool = False) -> list[str]:
+        return self.symbols(tradable_only, "crypto")
+
+    def all_symbols(self, tradable_only: bool = False) -> list[str]:
+        return self.symbols(tradable_only, None)
+
+    def profile_for(self, symbol: str):
+        """按资产类别返回成本档（加密货币映射到 crypto_spot 档）。"""
+        name = profile_for_asset(self.cost_profile_name, asset_class_of(symbol))
+        if name not in self._profile_cache:
+            self._profile_cache[name] = load_cost_profile(name)
+        return self._profile_cache[name]
+
+    def ingest_crypto(self, symbols: list[str] | None, start: date, end: date) -> list[IngestSummary]:
+        """接入加密货币 24 小时 1 分钟 K 线（自然日，America/New_York）。live=Bitget 公开现货；否则 SIMULATED。"""
+        out = []
+        src = self.plan.crypto_source
+        days = [d.date() for d in pd.date_range(start, end, freq="D")]
+        for sym in symbols or self.crypto_symbols():
+            have = set(self.store.available_days(sym, Venue.TOKEN, "1m"))
+            n_bars, cov = 0, []
+            for d in days:
+                if d in have:
+                    continue
+                try:
+                    bars = src.fetch_crypto_day(sym, d) if getattr(src, "is_simulated", False) else src.fetch_day(sym, d, "1m")
+                except Exception as e:  # noqa: BLE001
+                    self.plan.blockers.append(f"{sym} crypto {d}: {e}")
+                    continue
+                bars = apply_quality_flags(bars)
+                bars = research_ready(bars)
+                n_bars += self.store.upsert_bars(bars)
+                cov.append({"day": d.isoformat(), "bars": int(len(bars)), "simulated": bool(getattr(src, "is_simulated", False))})
+            out.append(IngestSummary(sym, "crypto", len(days), len(cov) + len(have & set(days)), n_bars, getattr(src, "name", "?"), cov))
+        return out
 
     def ingest(self, symbols: list[str] | None, start: date, end: date, with_token: bool = True,
                periods: tuple[str, ...] = ("1m",)) -> list[IngestSummary]:
@@ -558,7 +598,7 @@ class Pipeline:
         if bars.empty:
             raise LookupError(f"{symbol} {day} 无K线数据")
         cap = self.capability(symbol)
-        r = feasibility(bars, self.profile, capital_usd, target_usd, allow_short=cap.short, borrow_annual=cap.short_borrow_rate_annual or 0.05,
+        r = feasibility(bars, self.profile_for(symbol), capital_usd, target_usd, allow_short=cap.short, borrow_annual=cap.short_borrow_rate_annual or 0.05,
                         participation_rate=float(self.engine_cfg.execution.get("participation_rate", 0.1)),
                         tx_amount_per_bar=self.tx_amount_per_bar(symbol, day),
                         exec_cfg={"capital_cost_annual": float(self.engine_cfg.execution.get("capital_cost_annual", 0.05))}, symbol=symbol, tier=tier)
@@ -580,6 +620,33 @@ class Pipeline:
                 except LookupError:
                     break
         return out
+
+    # ------------------------------------------------------------------ 跨市场轮动（C 因果模型）
+    def asset_day(self, symbol: str, day: date, weight: float = 1.0) -> AssetDay | None:
+        bars = self.hindsight_bars(symbol, day)
+        if bars.empty:
+            return None
+        return make_asset_day(symbol, bars, self.profile_for(symbol), self.capability(symbol), day, weight)
+
+    def rotation_specs(self, stocks: list[str] | None = None, cryptos: list[str] | None = None) -> list[StrategySpec]:
+        rc = load_rotation_config()
+        return build_specs(stocks or self.symbols(tradable_only=True), cryptos or self.crypto_symbols(tradable_only=True),
+                           int(rc.get("max_assets_rotation", 2)))
+
+    def rotation_day(self, spec: StrategySpec, day: date, capital_usd: float, target_usd: float, params: RotParams | None = None) -> RotDayRun:
+        assets = []
+        syms = list(spec.universe)
+        w = 1.0 / len(syms) if (not spec.rotation and len(syms) > 1) else 1.0
+        for s in syms:
+            a = self.asset_day(s, day, w)
+            if a is not None:
+                assets.append(a)
+        if not assets:
+            raise LookupError(f"{spec.key} {day} 资产池无数据")
+        if not spec.rotation and len(assets) > 1:        # 组合均分：缺数据的资产不占权重
+            for a in assets:
+                a.weight = 1.0 / len(assets)
+        return run_rotation_day(assets, spec, capital_usd, target_usd, self.engine_cfg, params or RotParams(), str(day), load_rotation_config())
 
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,

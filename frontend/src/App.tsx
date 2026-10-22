@@ -11,8 +11,9 @@ import Target from './components/Target'
 import Simple from './components/Simple'
 import Compare from './components/Compare'
 import Engine from './components/Engine'
+import Rotation from './components/Rotation'
 
-const TABS = ['决策引擎', '档位对比', '多空教学模拟', '固定收益目标', '事后最优路径', '行情排名', '复盘与交易', '回测/本金容量', 'AI 信号', '训练模式', '日报']
+const TABS = ['跨市场轮动', '决策引擎', '档位对比', '多空教学模拟', '固定收益目标', '事后最优路径', '行情排名', '复盘与交易', '回测/本金容量', 'AI 信号', '训练模式', '日报']
 
 export default function App() {
   const [status, setStatus] = useState<any>(null)
@@ -37,17 +38,18 @@ export default function App() {
         日期 <select value={day} onChange={e => setDay(e.target.value)}>{[...days].reverse().map(d => <option key={d}>{d}</option>)}</select></span></nav>
     <main>
       {status.data_mode !== 'live' && <div className="banner">{status.banner} 阻塞项：{status.blockers?.slice(0, 2).join('；')}</div>}
-      {tab === 0 && <Engine symbol={symbol} day={day} />}
-      {tab === 1 && <Compare symbol={symbol} day={day} />}
-      {tab === 2 && <Simple symbol={symbol} day={day} />}
-      {tab === 3 && <Target symbol={symbol} day={day} />}
-      {tab === 4 && <Hindsight symbol={symbol} day={day} />}
-      {tab === 5 && <Rankings day={day} />}
-      {tab === 6 && <Replay symbol={symbol} day={day} />}
-      {tab === 7 && <Backtest symbol={symbol} />}
-      {tab === 8 && <AI symbol={symbol} day={day} />}
-      {tab === 9 && <Training symbol={symbol} day={day} />}
-      {tab === 10 && <Reports day={day} />}
+      {tab === 0 && <Rotation day={day} />}
+      {tab === 1 && <Engine symbol={symbol} day={day} />}
+      {tab === 2 && <Compare symbol={symbol} day={day} />}
+      {tab === 3 && <Simple symbol={symbol} day={day} />}
+      {tab === 4 && <Target symbol={symbol} day={day} />}
+      {tab === 5 && <Hindsight symbol={symbol} day={day} />}
+      {tab === 6 && <Rankings day={day} />}
+      {tab === 7 && <Replay symbol={symbol} day={day} />}
+      {tab === 8 && <Backtest symbol={symbol} />}
+      {tab === 9 && <AI symbol={symbol} day={day} />}
+      {tab === 10 && <Training symbol={symbol} day={day} />}
+      {tab === 11 && <Reports day={day} />}
     </main>
   </>
 }

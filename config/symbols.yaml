@@ -47,11 +47,50 @@ symbols:
     kind: common_stock
     tradable: true
 
+# ---- 加密货币（Bitget Wallet 内可 swap 的主流现货；24 小时交易；asset_class=crypto）----
+# 身份/渠道同样需要官方核实；此处 tradable=true 仅表示纳入研究池，不是交易许可。
+# 行情来源优先级：Bitget 交易所公开 K 线（api.bitget.com，无需密钥）→ 不可达时标注 SIMULATED。
+crypto_symbols:
+  - ticker: BTC
+    name: Bitcoin
+    kind: crypto
+    asset_class: crypto
+    tradable: true
+    quote: USDT
+    public_symbol: BTCUSDT
+    cost_profile: crypto_spot
+  - ticker: ETH
+    name: Ethereum
+    kind: crypto
+    asset_class: crypto
+    tradable: true
+    quote: USDT
+    public_symbol: ETHUSDT
+    cost_profile: crypto_spot
+  - ticker: SOL
+    name: Solana
+    kind: crypto
+    asset_class: crypto
+    tradable: true
+    quote: USDT
+    public_symbol: SOLUSDT
+    cost_profile: crypto_spot
+  - ticker: HYPE
+    name: Hyperliquid
+    kind: crypto
+    asset_class: crypto
+    tradable: true
+    quote: USDT
+    public_symbol: HYPEUSDT
+    cost_profile: crypto_spot
+    notes: "Bitget 现货是否有 HYPE/USDT 需核实；钱包内 swap 深度未知"
+
 # 做空支持：Bitget Wallet RWA 代币为链上现货代币，官方接口未提供借券/保证金做空；
 # 默认全部 shortable=false，只有核实某品种确实存在可做空渠道（并填写 short_venue/short_borrow_rate_annual）后才允许做空模拟。
 short_support:
   default_shortable: false
   verified: {}        # 例： NVDA: {shortable: true, short_venue: "xxx", short_borrow_rate_annual: 0.05}
+                      # 加密货币：Bitget 交易所有永续合约可做空，但本系统只接入钱包现货 swap；未登记核实渠道前同样不做空
 
 # 官方 SDK 枚举中的发行商（data_source）只有 ondo / xstocks；"Reality" 未出现在官方枚举中，
 # 作为待确认发行商保留，只有 checkContractIsRwa 返回时才会标记。

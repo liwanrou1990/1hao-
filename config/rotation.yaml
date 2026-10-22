@@ -1,0 +1,21 @@
+# 跨市场动态轮动引擎参数（因果 C 模型）。目标收益不是保证收益。
+post_target_edge_mult: 1.5     # 达标后新机会的成本门槛倍数（更严格）
+post_target_size_mult: 0.5     # 达标后仓位倍数
+post_target_giveback: 0.25     # 达标后累计净利润跌破 目标×(1−该值) → 停止开新仓（回吐保护）
+expected_hold_bars: 20         # 打分时的预期持有 K 线数（风险项）
+pwin_prior_n: 4                # 当日相对胜率的先验伪样本数（先验 0.5）
+max_assets_rotation: 2         # 轮动策略同时持有的最大资产数
+# 多日样本外回测：参数只用测试日之前的训练日选择
+train_days: 5
+test_days: 15
+grid:
+  z_entry: [1.0, 2.0]
+  tp_atr_mult: [1.0, 2.0]
+  max_open: [4, 8]
+  min_risk_ratio: [0.0]
+  switch_cost_mult: [1.0]
+objective:
+  w_attainment: 1.0
+  w_losing_days: 0.7
+  w_drawdown: 20.0
+  w_volatility: 10.0

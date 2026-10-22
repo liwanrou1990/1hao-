@@ -5,6 +5,7 @@ import argparse
 import json
 import sys
 from datetime import date
+from pathlib import Path
 
 import pandas as pd
 
@@ -248,6 +249,78 @@ def cmd_feasibility(args):
                 print(f"   {i:2d}. 片{t.tranche} {'多' if t.direction=='long' else '空'} {t.open_ts[11:16]}@{t.open_exec:.3f} → {t.close_ts[11:16]}@{t.close_exec:.3f} 投入 {t.size_usd:,.0f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}")
 
 
+def cmd_key_audit(args):
+    """密钥审计：泄露扫描 + 未知值字段识别（输入只来自环境变量；输出不含任何密钥）。"""
+    from .data.key_audit import run_key_audit
+    rep = run_key_audit()
+    if args.out:
+        import json as _json
+        Path(args.out).write_text(_json.dumps(rep, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    _p(rep)
+
+
+def cmd_rotation(args):
+    """单日：六类策略 × 七档的因果轮动结果（C），可选同时输出 A/B 对照。"""
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    specs = {s.key: s for s in pl.rotation_specs()}
+    keys = args.strategies or list(specs)
+    rows = []
+    for key in keys:
+        spec = specs[key]
+        for t in pl.tiers.tiers:
+            cap = t.representative_capitals(("mid",))["mid"]
+            lo, hi = t.target_daily_pct
+            tgt = (lo + hi) / 2 / 100 * cap
+            r = pl.rotation_day(spec, day, cap, tgt)
+            row = {"strategy": key, "tier": t.id, "capital_usd": cap, "target_usd": tgt, "C_net_usd": round(r.realized_net_usd, 2),
+                   "C_met": r.target_met, "n_trades": r.n_trades, "n_switches": r.n_switches, "path": "→".join(r.path), "stop": r.stop_reason,
+                   "flat_ratio": round(r.flat_ratio, 3), "simulated": r.data_is_simulated}
+            if args.ab:
+                from .rotation.hindsight import universe_ab
+                assets = [a for a in (pl.asset_day(s, day) for s in spec.universe) if a is not None]
+                ab = universe_ab(assets, spec, cap, tgt, str(day), pl.participation_rate)
+                row.update({"A_theoretical_usd": round(ab.theoretical_net_usd, 2), "B_executable_usd": round(ab.executable_net_usd, 2), "B_alloc": ab.executable_alloc})
+            rows.append(row)
+            if args.trades:
+                for tr in r.trades:
+                    _p({k: tr.to_dict()[k] for k in ("seq", "symbol", "direction", "mode", "open_ts", "close_ts", "size_usd", "net_pnl_usd", "reason_exit")})
+    _p(rows)
+
+
+def cmd_rotation_backtest(args):
+    """多日时间顺序样本外回测（C）+ A/B 对照 + 排名；结果缓存可续跑。"""
+    from .rotation.backtest import RotationBacktest
+    pl = _pipeline(args)
+    end = date.fromisoformat(args.end) if args.end else pl.latest_day()
+    bt = RotationBacktest(pl, end_day=end, test_days=args.test_days, train_days=args.train_days, workers=args.workers, cache_path=args.cache)
+    info = bt.prepare()
+    print(f"数据：{info['n_assets_loaded']} 资产日；缺失 {len(info['missing'])}；日期 {info['days'][0]}…{info['days'][-1]}", flush=True)
+    if not args.skip_c:
+        n = bt.run_c(progress=lambda d, n: print(f"C 运行 {d}/{n}", flush=True))
+        print(f"C 新增运行 {n}", flush=True)
+    if not args.skip_ab:
+        n = bt.run_ab(progress=lambda d, n: print(f"A/B 运行 {d}/{n}", flush=True))
+        print(f"A/B 新增运行 {n}", flush=True)
+    oos = bt.oos_table()
+    rk = bt.ranking(oos)
+    out_dir = pl.settings.resolve_path(pl.settings.report_dir) / "rotation"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    tag = f"{bt.test_days[0]}_{bt.test_days[-1]}_{pl.cost_profile_name}"
+    oos.to_csv(out_dir / f"rotation_oos_{tag}.csv", index=False)
+    rk.to_csv(out_dir / f"rotation_ranking_{tag}.csv", index=False)
+    bt.trades_frame(oos).to_csv(out_dir / f"rotation_trades_{tag}.csv", index=False)
+    _p({"oos_rows": len(oos), "ranking_rows": len(rk), "files": [str(out_dir / f"rotation_{x}_{tag}.csv") for x in ("oos", "ranking", "trades")],
+        "top_by_tier": rk[rk["rank_in_tier"] == 1][["tier", "strategy", "attainment", "mean_net_pct", "losing_day_rate", "score"]].to_dict("records") if not rk.empty else []})
+
+
+def cmd_rotation_report(args):
+    from .reports.rotation_report import generate_rotation_report
+    pl = _pipeline(args)
+    end = date.fromisoformat(args.end) if args.end else pl.latest_day()
+    _p(generate_rotation_report(pl, end, args.test_days, args.train_days, workers=args.workers, cache_path=args.cache))
+
+
 def cmd_feasibility_report(args):
     from .reports.feasibility_report import generate_feasibility_report
     pl = _pipeline(args)
@@ -378,6 +451,10 @@ def main(argv=None):
     p = sub.add_parser("matrix-report", help="70 组测试矩阵：A/B/C + 能力核实 + 原因 + 建议"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_matrix_report)
     p = sub.add_parser("feasibility", help="历史可行性：A 理论最大 / B 执行约束下最大可实现 / 达标所需笔数 / 完整买卖点"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_feasibility)
     p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
+    p = sub.add_parser("key-audit", help="密钥审计：泄露扫描、未知 32 位值字段识别（BGWQ_AUDIT_VALUE 环境变量输入，不输出密钥）"); p.add_argument("--out"); p.set_defaults(f=cmd_key_audit)
+    p = sub.add_parser("rotation", help="跨市场轮动（因果 C）：六类策略 × 七档 单日结果，--ab 同时输出事后 A/B 对照"); p.add_argument("--day"); p.add_argument("--strategies", nargs="*"); p.add_argument("--ab", action="store_true"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_rotation)
+    p = sub.add_parser("rotation-backtest", help="多日时间顺序样本外回测 + A/B 对照 + 六类策略排名（可续跑）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--skip-c", action="store_true"); p.add_argument("--skip-ab", action="store_true"); p.add_argument("--cache", help="结果缓存 DuckDB 路径（默认 data_store/rotation_cache.duckdb）"); p.set_defaults(f=cmd_rotation_backtest)
+    p = sub.add_parser("rotation-report", help="跨市场轮动综合报告（排名、A/B/C、切换路径、逐笔 CSV、图表）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--cache"); p.set_defaults(f=cmd_rotation_report)
     p = sub.add_parser("tiers", help="查看本金档位及问题标记"); p.set_defaults(f=cmd_tiers)
     p = sub.add_parser("verify-assets", help="官方接口核对资产性质/发行商/合约"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_verify_assets)
     p = sub.add_parser("serve", help="启动 FastAPI 工作台"); p.add_argument("--host", default="127.0.0.1"); p.add_argument("--port", type=int, default=8000); p.set_defaults(f=cmd_serve)

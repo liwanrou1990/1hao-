@@ -26,6 +26,7 @@ REQUIRED_DOMAINS = [
     ("bopenapi.bgwapi.io", "Bitget Wallet ToB OpenAPI（行情/只读报价）", "必需"),
     ("web3.bitget.com", "官方文档站", "建议"),
     ("api.massive.com", "Massive 原生美股分钟线基准", "可选"),
+    ("api.bitget.com", "Bitget 交易所公开现货 K 线（BTC/ETH/SOL/HYPE 行情，无需密钥；仅行情，不含交易）", "加密货币行情必需"),
 ]
 
 
@@ -62,6 +63,6 @@ def run_diagnostics() -> dict[str, Any]:
     rep["blocked_domains"] = blocked
     rep["conclusion"] = ("网络可达" if not blocked else
                          f"以下域名在当前环境不可达（代理 CONNECT 被策略拒绝/DNS 无解析）：{', '.join(blocked)}。需在云环境 Network access 放行 "
-                         f"{', '.join(d for d, _, lvl in REQUIRED_DOMAINS if lvl == '必需')}（建议同时放行文档站）")
+                         f"{', '.join(d for d, _, lvl in REQUIRED_DOMAINS if '必需' in lvl)}（建议同时放行文档站）")
     rep["secrets_in_output"] = False
     return rep

@@ -31,6 +31,10 @@ BASE_DAILY_VOL = {  # 年化波动率近似
     "NVDA": 0.45, "SPY": 0.15, "SPCX": 0.60, "MU": 0.55, "QQQ": 0.20,
     "TSLA": 0.60, "MSFT": 0.25, "SNDK": 0.65, "INTC": 0.45, "META": 0.40,
 }
+# 加密货币（24 小时；价格为量级参考，不代表真实报价）
+CRYPTO_BASE_PRICES = {"BTC": 110000.0, "ETH": 3900.0, "SOL": 190.0, "HYPE": 45.0}
+CRYPTO_ANN_VOL = {"BTC": 0.50, "ETH": 0.65, "SOL": 0.90, "HYPE": 1.10}
+CRYPTO_ADV_USD = {"BTC": 1.5e9, "ETH": 8.0e8, "SOL": 4.0e8, "HYPE": 1.0e8}   # 单一交易所量级的日成交额（钱包内可触达深度未知）
 BASE_ADV_SHARES = {  # 日均成交股数（量级）
     "NVDA": 2.0e8, "SPY": 7.0e7, "SPCX": 5.0e6, "MU": 2.5e7, "QQQ": 4.0e7,
     "TSLA": 9.0e7, "MSFT": 2.0e7, "SNDK": 6.0e6, "INTC": 8.0e7, "META": 1.2e7,
@@ -143,6 +147,71 @@ class SimulatedSource:
                               chain="sim" if venue == Venue.TOKEN else None,
                               contract="SIMULATED" if venue == Venue.TOKEN else None, quality_extra=q)
         bars.attrs["regime"] = reg
+        return bars
+
+    # ----- 加密货币：24 小时（America/New_York 自然日），任意日期 -----
+    def _crypto_open_price(self, symbol: str, day: date, anchor: date) -> float:
+        key = (symbol, day, "crypto")
+        if key in self._price_cache:
+            return self._price_cache[key]
+        price = self.start_price_override.get(symbol, CRYPTO_BASE_PRICES.get(symbol, 100.0))
+        d = anchor
+        while d < day:
+            rng = np.random.default_rng(_seed(symbol, d, "crypto_daily"))
+            vol_d = CRYPTO_ANN_VOL.get(symbol, 0.8) / np.sqrt(365)
+            reg = regime_for_day(symbol, d)
+            drift = {"trend_up": 0.3, "trend_down": -0.3}.get(reg, 0.0) * vol_d
+            mult = {"high_vol": 1.8, "quiet": 0.5}.get(reg, 1.0)
+            price *= float(np.exp(drift + rng.normal(0, vol_d * mult)))
+            d = d + pd.Timedelta(days=1).to_pytimedelta()
+        self._price_cache[key] = price
+        return price
+
+    def fetch_crypto_day(self, symbol: str, day: date, anchor: date | None = None) -> pd.DataFrame:
+        """生成某 America/New_York 自然日的 1440 根 1 分钟加密货币 K 线（SIMULATED）。"""
+        from .crypto import crypto_day_bounds_utc
+
+        anchor = anchor or (day - pd.Timedelta(days=180).to_pytimedelta())
+        start, end = crypto_day_bounds_utc(day)
+        idx = pd.date_range(start, end - pd.Timedelta(minutes=1), freq="1min", tz="UTC")
+        n = len(idx)
+        rng = np.random.default_rng(_seed(symbol, day, "crypto"))
+        reg = regime_for_day(symbol, day)
+        p0 = self._crypto_open_price(symbol, day, anchor)
+        ann_vol = CRYPTO_ANN_VOL.get(symbol, 0.8) * {"high_vol": 1.8, "quiet": 0.5}.get(reg, 1.0)
+        minute_vol = ann_vol / np.sqrt(365 * 1440)
+        t = np.linspace(0, 1, n)
+        # 24 小时活跃度：美股时段（NY 09:30–16:00 ≈ t 0.40–0.67）与亚洲早盘略高
+        act = 0.7 + 0.8 * np.exp(-((t - 0.55) ** 2) / 0.02) + 0.3 * np.exp(-((t - 0.1) ** 2) / 0.02)
+        drift = {"trend_up": 1.0, "trend_down": -1.0}.get(reg, 0.0) * minute_vol * 0.02
+        eps = rng.standard_t(df=3, size=n) / np.sqrt(3)
+        r = drift + minute_vol * act * eps
+        if reg == "mean_revert":
+            level = np.zeros(n)
+            for i in range(1, n):
+                level[i] = level[i - 1] * 0.985 + r[i]
+            logp = np.log(p0) + level
+        else:
+            logp = np.log(p0) + np.cumsum(r)
+        close = np.exp(logp)
+        open_ = np.concatenate([[p0], close[:-1]])
+        intra = np.abs(rng.normal(0, minute_vol * act * 0.8, size=n)) * close
+        high = np.maximum(open_, close) + intra
+        low = np.minimum(open_, close) - intra * rng.uniform(0.3, 1.0, size=n)
+        adv = CRYPTO_ADV_USD.get(symbol, 1e8)
+        amount = np.maximum(1.0, (adv / n) * act * rng.lognormal(0, 0.6, size=n))
+        df = pd.DataFrame({"ts": idx, "open": open_, "high": high, "low": low, "close": close})
+        df["amount"] = amount
+        df["volume"] = amount / close
+        df["txn"] = (amount / 2000).round()
+        if self.params.gap_prob > 0:
+            drop = rng.random(n) < self.params.gap_prob * 0.5
+            drop[0] = drop[-1] = False
+            df = df[~drop]
+        bars = normalize_bars(df, symbol=symbol, venue=Venue.TOKEN, source=str(DataSourceTag.SIMULATED) + ":crypto",
+                              chain="sim", contract="SIMULATED", quality_extra=int(QualityFlag.SIMULATED))
+        bars.attrs["regime"] = reg
+        bars.attrs["asset_class"] = "crypto"
         return bars
 
     def probe(self) -> ProbeResult:

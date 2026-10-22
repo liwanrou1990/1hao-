@@ -1,0 +1,30 @@
+{
+  "env_file_present": true,
+  "env_file_gitignored": true,
+  "has_key": true,
+  "has_secret": true,
+  "key_fingerprint": "167c2f6ba234",
+  "secret_fingerprint": "2f983efe919a",
+  "old_secret_fingerprints": [
+    "8203022e4085"
+  ],
+  "leak_tracked_files": [],
+  "leak_git_history": [],
+  "leak_files_scan": [],
+  "unknown_value": {
+    "length": 32,
+    "is_hex": true,
+    "hash_relation": null,
+    "candidates": [
+      "Bitget Wallet ToB 商户/项目标识（appId/projectId，32 位十六进制常见）——非签名字段",
+      "某些平台的 MD5 形式口令/校验值",
+      "不是 Bitget 交易所 API Key（交易所 key 以 bg_ 前缀、secret 为 64 位）",
+      "不是 Massive/Polygon Key（含大小写字母）"
+    ],
+    "conclusion": "未能与本地任何密钥建立哈希关系；格式不匹配 x-api-key(16) / secret(40)。最可能是 Bitget Wallet 控制台中的商户/项目标识（不参与签名），本系统任何接口都不需要它；在确认用途前不存储。"
+  },
+  "rotation_required": true,
+  "rotation_reason": "API Secret 曾以明文出现在对话/聊天渠道（聊天记录不受本仓库控制），按最小权限原则应在 Bitget Wallet 控制台重置并更新本地 .env",
+  "secrets_in_output": false,
+  "clean": true
+}

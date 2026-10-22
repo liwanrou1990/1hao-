@@ -60,11 +60,26 @@ def save_yaml(name: str, payload: dict[str, Any]) -> Path:
     return path
 
 
-def research_symbols(tradable_only: bool = False) -> list[dict[str, Any]]:
-    syms = load_yaml("symbols.yaml").get("symbols", [])
+def research_symbols(tradable_only: bool = False, asset_class: str | None = "stock") -> list[dict[str, Any]]:
+    """研究标的。asset_class: "stock"（默认，保持旧行为）| "crypto" | None（全部）。"""
+    cfg = load_yaml("symbols.yaml")
+    stocks = [{**s, "asset_class": s.get("asset_class", "stock")} for s in cfg.get("symbols", [])]
+    crypto = [{**s, "asset_class": "crypto"} for s in cfg.get("crypto_symbols", [])]
+    syms = {"stock": stocks, "crypto": crypto}.get(asset_class, stocks + crypto) if asset_class else stocks + crypto
     if tradable_only:
         syms = [s for s in syms if s.get("tradable", False)]
     return syms
+
+
+def asset_meta(symbol: str) -> dict[str, Any]:
+    for s in research_symbols(asset_class=None):
+        if s["ticker"] == symbol:
+            return s
+    return {"ticker": symbol, "asset_class": "stock", "tradable": False}
+
+
+def asset_class_of(symbol: str) -> str:
+    return str(asset_meta(symbol).get("asset_class", "stock"))
 
 
 def env_flag(name: str, default: str = "") -> str:

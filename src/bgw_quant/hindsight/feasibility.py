@@ -161,7 +161,7 @@ def _materialize(bars, pairs, pi, dirs, S, cost, cfg, borrow, tranche_id) -> lis
 
 def feasibility(bars: pd.DataFrame, profile: CostProfile, capital_usd: float, target_usd: float, *, allow_short: bool = False,
                 borrow_annual: float = 0.05, participation_rate: float = 0.10, tranche_grid=(1, 2, 4, 8, 16, 32, 64, 128, 256),
-                min_tranche_usd: float = 1000.0,
+                min_tranche_usd: float = 1000.0, early_stop_gain: float = 0.02,
                 tx_amount_per_bar: np.ndarray | None = None, exec_cfg: dict | None = None, symbol: str | None = None,
                 tier: str | None = None) -> FeasibilityResult:
     bars = bars.reset_index(drop=True)
@@ -202,8 +202,13 @@ def feasibility(bars: pd.DataFrame, profile: CostProfile, capital_usd: float, ta
                 avail[x.sell_idx] = max(0.0, avail[x.sell_idx] - x.size_usd)
             trades += tr
             total += float(bk[-1])
-        if total > best_total:
+        improved = total > best_total
+        prev_best = best_total
+        if improved:
             best_total, best = total, (k, trades, avail)
+        # 早停：资金片翻倍后增益低于 early_stop_gain → 更多资金片不再划算（节省 1440 根加密 K 线上的计算）
+        if k > 1 and prev_best > 0 and (not improved or total <= prev_best * (1 + early_stop_gain)):
+            break
     k_best, trades, avail_best = best if best else (1, [], liq.copy())
     trades.sort(key=lambda t: (t.sell_idx, t.buy_idx, t.tranche))
     cum, hit_ts, hit_n = 0.0, None, None

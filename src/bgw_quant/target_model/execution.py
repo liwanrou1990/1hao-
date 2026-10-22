@@ -43,6 +43,12 @@ class BatchFill:
         return sum(f.cost_usd for f in self.fills)
 
     @property
+    def avg_ref(self) -> float:
+        """成交量加权参考价（不含价差/滑点/冲击）：止损应相对参考价衡量，否则成本本身会触发止损。"""
+        q = self.qty
+        return sum(f.qty * f.ref_price for f in self.fills) / q if q > 0 else 0.0
+
+    @property
     def start_idx(self) -> int:
         return self.fills[0].idx if self.fills else -1
 

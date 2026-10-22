@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>跨市场动态轮动回测报告 {{ period }}</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1400px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:14px;margin:12px 0 4px}
+table{border-collapse:collapse;font-size:12px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 5px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}
+.best{background:#e8f5e9}</style></head><body>
+<h1>跨市场动态资产轮动 · 多日时间顺序样本外回测 · {{ period }}</h1>
+<div class="muted">生成 {{ generated_at }} · 成本档 {{ cost_profile }}（股票代币）/ {{ crypto_profile }}（加密货币）· 测试日 {{ n_test_days }} 天 · 训练窗 {{ train_days }} 天（参数与事前选股只用测试日之前的数据）· 资产池：股票 {{ stocks|join('/') }}；加密 {{ cryptos|join('/') }}</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ banner }} 本报告全部基于 <b>SIMULATED</b> 模拟行情（Bitget 官方 RWA API 与 Bitget 公开现货 K 线在当前环境均被网络策略拒绝）。放行域名后重跑 <code>bgwq ingest</code>/<code>bgwq rotation-backtest</code> 即可得到真实行情版本。</div>{% else %}<div class="banner ok">{{ banner }}</div>{% endif %}
+<div class="banner warn"><b>三套模型严格分开：</b>A = 历史事后理论最优（全知者可在资产间任意切换、不限流动性）；B = 历史流动性约束上限（真实成交量参与率、手续费/价差/滑点/冲击/Gas、收盘价成交；事后）；C = 无未来信息的因果轮动模型（每分钟只用已产生的数据，下一分钟起分批成交，参数由之前交易日选择）。<b>A/B 是“历史上可以赚到的利润”的上界，不是可提前执行的策略；只有 C 才是“真实交易中有可能实现的利润”的估计。</b>所有结果均不构成收益承诺。</div>
+
+<h2>1. 综合排名（按档位；得分 = 达标率 − 0.7×亏损日比例 − 20×多日回撤/本金 − 10×日收益率标准差）</h2>
+{% for tier, rows in ranking_by_tier.items() %}
+<h3>{{ tier }} · 本金 {{ rows[0].capital_usd|num(0) }} · 日目标 {{ rows[0].target_usd|num(0) }} USD（{{ (rows[0].target_usd / rows[0].capital_usd)|pct(2) }}）</h3>
+<table><tr><th>名次</th><th>策略</th><th>族</th><th>C 达标率</th><th>C 日均净收益</th><th>C 日均收益率</th><th>亏损日比例</th><th>最差日</th><th>多日回撤</th><th>日均笔数</th><th>日均切换</th><th>最大连亏</th><th>日均成本</th><th>空仓时间</th><th>A 达标率</th><th>B 达标率</th><th>A 日均</th><th>B 日均</th><th>得分</th><th>不可验证天数</th></tr>
+{% for r in rows %}<tr class="{{ 'best' if r.rank_in_tier == 1 else '' }}"><td>{{ r.rank_in_tier }}</td><td>{{ r.name }}</td><td>{{ r.family }}</td><td class="{{ 'pos' if r.attainment > 0 else 'neg' }}"><b>{{ r.attainment|pct(0) }}</b></td><td class="{{ 'pos' if r.mean_net_usd >= 0 else 'neg' }}">{{ r.mean_net_usd|num(0) }}</td><td>{{ r.mean_net_pct|round(3) }}%</td><td>{{ r.losing_day_rate|pct(0) }}</td><td>{{ r.worst_day_pct|round(3) }}%</td><td>{{ r.multi_day_dd_usd|num(0) }}</td><td>{{ r.mean_trades|round(1) }}</td><td>{{ r.mean_switches|round(1) }}</td><td>{{ r.max_consec_losses }}</td><td>{{ r.mean_exec_cost|num(0) }}</td><td>{{ r.flat_ratio|pct(0) }}</td><td>{{ r.A_attainment|pct(0) if r.A_attainment is not none else '—' }}</td><td>{{ r.B_attainment|pct(0) if r.B_attainment is not none else '—' }}</td><td>{{ r.A_mean_usd|num(0) if r.A_mean_usd is not none else '—' }}</td><td>{{ r.B_mean_usd|num(0) if r.B_mean_usd is not none else '—' }}</td><td>{{ r.score|round(3) }}</td><td>{{ r.unverifiable_days }}</td></tr>{% endfor %}</table>
+{% endfor %}
+
+<h2>2. 六类策略族对比（跨档位平均）</h2>
+<table><tr><th>策略族</th><th>说明</th><th>C 达标率</th><th>C 日均收益率</th><th>亏损日比例</th><th>日均笔数</th><th>日均切换</th><th>A 达标率</th><th>B 达标率</th><th>评估数（档位×天）</th></tr>
+{% for f in family_rows %}<tr><td>{{ f.family }}</td><td>{{ f.desc }}</td><td class="{{ 'pos' if f.attainment > 0 else 'neg' }}"><b>{{ f.attainment|pct(1) }}</b></td><td>{{ f.mean_net_pct|round(3) }}%</td><td>{{ f.losing_day_rate|pct(0) }}</td><td>{{ f.mean_trades|round(1) }}</td><td>{{ f.mean_switches|round(1) }}</td><td>{{ f.A_attainment|pct(0) }}</td><td>{{ f.B_attainment|pct(0) }}</td><td>{{ f.n }}</td></tr>{% endfor %}</table>
+
+<h2>3. 各档位适用范围、限制与失败原因</h2>
+<table><tr><th>档位</th><th>最优候选（C）</th><th>C 达标率</th><th>A 达标率（上界）</th><th>B 达标率（上界）</th><th>主要失败原因（所有策略×天的分布）</th><th>适用范围与限制</th></tr>
+{% for t in tier_rows %}<tr><td>{{ t.tier }}</td><td>{{ t.best }}</td><td class="{{ 'pos' if t.attainment > 0 else 'neg' }}"><b>{{ t.attainment|pct(0) }}</b></td><td>{{ t.A_attainment|pct(0) }}</td><td>{{ t.B_attainment|pct(0) }}</td><td style="text-align:left">{{ t.reasons }}</td><td style="text-align:left;font-size:11px">{{ t.scope }}</td></tr>{% endfor %}</table>
+
+<h2>4. 最优候选逐日明细（每档位第 1 名）</h2>
+{% for d in details %}
+<h3>{{ d.tier }} · {{ d.name }}</h3>
+<table><tr><th>日期</th><th>A 理论</th><th>B 可执行</th><th>B 分配</th><th>C 净收益</th><th>C 收益率</th><th>C 达标</th><th>达标时刻</th><th>笔数(多/空)</th><th>切换</th><th>路径</th><th>胜率</th><th>日内回撤</th><th>峰值占用</th><th>成本</th><th>达标后交易/盈亏</th><th>停止原因</th><th>原因</th><th>图</th></tr>
+{% for r in d.rows %}<tr><td>{{ r.day }}</td><td>{{ r.A_theoretical_usd|num(0) if r.A_theoretical_usd is not none else '—' }}</td><td>{{ r.B_executable_usd|num(0) if r.B_executable_usd is not none else '—' }}</td><td style="text-align:left;font-size:10px">{{ r.B_alloc }}</td><td class="{{ 'pos' if r.C_net_usd >= 0 else 'neg' }}">{{ r.C_net_usd|num(0) }}</td><td>{{ r.C_net_pct|round(3) }}%</td><td class="{{ 'pos' if r.C_met else 'neg' }}"><b>{{ '达标' if r.C_met else '未达标' }}</b></td><td>{{ r.C_hit_ts[11:16] if r.C_hit_ts else '—' }}</td><td>{{ r.n_trades }} ({{ r.n_long }}/{{ r.n_short }})</td><td>{{ r.n_switches }}</td><td style="text-align:left;font-size:10px">{{ r.path[:120] }}</td><td>{{ r.win_rate|pct(0) if r.win_rate is not none else '—' }}</td><td>{{ r.max_dd_usd|num(0) }}</td><td>{{ (r.peak_deployed_usd / r.capital_usd)|pct(0) }}</td><td>{{ r.exec_cost_usd|num(0) }}</td><td>{{ r.post_target_trades }} / {{ r.post_target_net_usd|num(0) }}</td><td style="text-align:left;font-size:10px">{{ r.stop_reason or '' }}</td><td style="text-align:left;font-size:10px">{{ r.reason }}</td><td>{% if r.chart %}<a href="{{ r.chart }}">K线</a>{% endif %}</td></tr>{% endfor %}</table>
+{% endfor %}
+
+<h2>5. 审计与口径</h2>
+<ul>
+<li><b>未来信息审计：</b>A/B 的 DP 在整条当日价格序列上求最优区间集合，属于事后量——单元测试通过“抬高尾盘价格”验证 A 随之变化，而 C 在改动时刻之前的决策完全不变（tests/test_rotation.py）。B 不得解释为可提前执行的策略。</li>
+<li><b>C 的时间顺序：</b>每分钟收盘后决策，下一分钟起分批成交（延迟 {{ latency }} 根、成交率 {{ fill_rate }}、单根成交 ≤ 参与率 {{ participation }} × 实际成交额、API 限频）；参数与“事前选股/选币”只用测试日之前 {{ train_days }} 个交易日。</li>
+<li><b>方向：</b>所有资产仅现货做多（官方 RWA 接口与钱包 swap 无可核实做空渠道）；达标后进入再评估模式（更高门槛、减半仓位、回吐保护），不假设利润已锁定。</li>
+<li><b>成本：</b>每笔含手续费/价差/滑点/冲击/Gas/资金成本；未修改费率、未虚构成交量、未忽略滑点；未达标如实列出原因。</li>
+<li><b>数据：</b>{{ data_note }}</li>
+</ul>
+<div>文件：<a href="{{ files.oos }}">逐日 OOS CSV</a> · <a href="{{ files.ranking }}">排名 CSV</a> · <a href="{{ files.trades }}">逐笔 CSV（含时间、价格、数量、成本、原因）</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

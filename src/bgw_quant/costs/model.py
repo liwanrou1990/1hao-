@@ -52,6 +52,13 @@ def load_cost_profile(name: str | None = None) -> CostProfile:
     return CostProfile(name=name, **{k: v for k, v in p.items()})
 
 
+def profile_for_asset(base_profile: str, asset_class: str) -> str:
+    """按资产类别映射成本档：股票代币沿用所选档；加密货币映射到 costs.yaml profile_map 指定档。"""
+    cfg = load_yaml("costs.yaml")
+    m = (cfg.get("profile_map") or {}).get(base_profile) or {}
+    return str(m.get(asset_class, base_profile))
+
+
 @dataclass(slots=True)
 class Fill:
     side: str
