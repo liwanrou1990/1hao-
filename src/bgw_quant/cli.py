@@ -288,6 +288,11 @@ def cmd_playbook_daily(args):
             pl.ingest_crypto(None, day, day)
         except Exception as e:  # noqa: BLE001
             print(f"接入失败（继续用已有数据）：{e}")
+    syms = args.symbols or (pl.symbols(tradable_only=True) + pl.crypto_symbols(tradable_only=True))
+    prov = pl.data_provenance(day, syms)
+    print("数据来源：" + "；".join(f"{k}:{'缺失' if not v.get('available') else ('SIMULATED' if v['simulated'] else v['source'])}" for k, v in prov.items()), flush=True)
+    if args.require_real:
+        pl.require_real(day, syms)                   # 任一资产为 SIMULATED/缺失 → 终止，不生成报告
     _p(generate_playbook_report(pl, day, args.symbols, workers=args.workers, single_assets=not args.cross_only))
 
 
@@ -485,7 +490,7 @@ def main(argv=None):
     p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
     p = sub.add_parser("key-audit", help="密钥审计：泄露扫描、未知 32 位值字段识别（BGWQ_AUDIT_VALUE 环境变量输入，不输出密钥）"); p.add_argument("--out"); p.set_defaults(f=cmd_key_audit)
     p = sub.add_parser("playbook", help="历史盈利路径模板（事后）：七档 × 跨资产/单资产，完整流水"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--mode", default="cross"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_playbook)
-    p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.set_defaults(f=cmd_playbook_daily)
+    p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.add_argument("--require-real", action="store_true", help="严格模式：任一资产非真实行情则终止，绝不用 SIMULATED 冒充"); p.set_defaults(f=cmd_playbook_daily)
     p = sub.add_parser("rotation", help="跨市场轮动（因果 C）：六类策略 × 七档 单日结果，--ab 同时输出事后 A/B 对照"); p.add_argument("--day"); p.add_argument("--strategies", nargs="*"); p.add_argument("--ab", action="store_true"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_rotation)
     p = sub.add_parser("rotation-backtest", help="多日时间顺序样本外回测 + A/B 对照 + 六类策略排名（可续跑）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--skip-c", action="store_true"); p.add_argument("--skip-ab", action="store_true"); p.add_argument("--cache", help="结果缓存 DuckDB 路径（默认 data_store/rotation_cache.duckdb）"); p.set_defaults(f=cmd_rotation_backtest)
     p = sub.add_parser("rotation-report", help="跨市场轮动综合报告（排名、A/B/C、切换路径、逐笔 CSV、图表）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--cache"); p.set_defaults(f=cmd_rotation_report)

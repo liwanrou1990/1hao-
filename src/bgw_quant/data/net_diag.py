@@ -26,7 +26,7 @@ REQUIRED_DOMAINS = [
     ("bopenapi.bgwapi.io", "Bitget Wallet ToB OpenAPI（行情/只读报价）", "必需"),
     ("web3.bitget.com", "官方文档站", "建议"),
     ("api.massive.com", "Massive 原生美股分钟线基准", "可选"),
-    ("api.bitget.com", "Bitget 交易所公开现货 K 线（BTC/ETH/SOL/HYPE 行情，无需密钥；仅行情，不含交易）", "加密货币行情必需"),
+    ("api.bitget.com", "Bitget 交易所公开接口（/api/v2/spot/market/history-candles K 线、fills-history 逐笔成交、orderbook 深度快照；无需密钥；仅行情）", "加密货币行情必需"),
 ]
 
 

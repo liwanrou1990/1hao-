@@ -73,8 +73,8 @@ class BitgetSpotPublicClient:
         if not rows:
             raise LookupError(f"{symbol} {day} 公开接口无 K 线")
         df = pd.DataFrame(rows, columns=["ts", "open", "high", "low", "close", "volume", "amount", "quote_amount"][: len(rows[0])])
-        df["ts"] = pd.to_datetime(pd.to_numeric(df["ts"]), unit="ms", utc=True)
-        df = df[(df["ts"] >= start) & (df["ts"] < end)].drop_duplicates("ts").sort_values("ts")
+        df["ts"] = pd.to_datetime(pd.to_numeric(df["ts"]), unit="ms", utc=True).dt.floor({"1m": "min", "5m": "5min", "15m": "15min", "1h": "h"}[period])
+        df = df[(df["ts"] >= start) & (df["ts"] < end)].drop_duplicates("ts", keep="last").sort_values("ts")
         for c in ("open", "high", "low", "close", "volume"):
             df[c] = pd.to_numeric(df[c], errors="coerce")
         df["amount"] = pd.to_numeric(df.get("quote_amount", df.get("amount")), errors="coerce")
@@ -82,6 +82,61 @@ class BitgetSpotPublicClient:
         bars = normalize_bars(df, symbol=symbol, venue=Venue.TOKEN, source=f"{SOURCE_TAG}:{pub}", chain=None, contract=None)
         bars.attrs["asset_class"] = "crypto"
         return bars
+
+    # ---- 历史成交（逐笔）：GET /api/v2/spot/market/fills-history（公开，无需密钥；官方保留约 90 天，每页 ≤ 1000）
+    def fills_history(self, public_symbol: str, start_ms: int, end_ms: int, limit: int = 1000) -> list[dict]:
+        d = self._get("/api/v2/spot/market/fills-history", {"symbol": public_symbol, "startTime": str(start_ms), "endTime": str(end_ms), "limit": str(limit)})
+        return d.get("data") or []
+
+    def fetch_trades(self, symbol: str, day: date) -> pd.DataFrame:
+        """某 America/New_York 自然日的逐笔成交（向前分页）→ DataFrame[ts, ts_ny, price, size, value, side]，用于逐分钟流动性。"""
+        meta = asset_meta(symbol)
+        pub = meta.get("public_symbol") or f"{symbol}USDT"
+        start, end = crypto_day_bounds_utc(day)
+        start_ms, end_ms = int(start.timestamp() * 1000), int(end.timestamp() * 1000)
+        rows: list[dict] = []
+        cur_end = end_ms
+        for _ in range(400):                         # 最多 40 万笔
+            page = self.fills_history(pub, start_ms, cur_end)
+            if not page:
+                break
+            rows += page
+            oldest = min(int(r["ts"]) for r in page)
+            if oldest <= start_ms or len(page) < 1000:
+                break
+            cur_end = oldest - 1
+        cols = ["symbol", "chain", "contract", "ts", "ts_ny", "side", "price", "amount", "value", "tx_hash", "source", "ingested_at"]
+        if not rows:
+            return pd.DataFrame(columns=cols)
+        df = pd.DataFrame(rows)
+        df["ts"] = pd.to_datetime(pd.to_numeric(df["ts"]), unit="ms", utc=True)
+        df = df[(df["ts"] >= start) & (df["ts"] < end)].drop_duplicates(subset=["tradeId"] if "tradeId" in df else None)
+        df["price"] = pd.to_numeric(df["price"], errors="coerce")
+        df["size"] = pd.to_numeric(df["size"], errors="coerce")
+        df["value"] = df["price"] * df["size"]
+        df["ts_ny"] = df["ts"].dt.tz_convert("America/New_York").dt.strftime("%Y-%m-%d %H:%M:%S")
+        df["symbol"], df["source"] = symbol, f"{SOURCE_TAG}:{pub}:fills"
+        df["chain"], df["contract"] = "cex_spot", pub
+        df["amount"] = df["size"]
+        df["tx_hash"] = df["tradeId"].astype(str) if "tradeId" in df else None
+        df["ingested_at"] = pd.Timestamp.now(tz="UTC")
+        return df[cols].sort_values("ts").reset_index(drop=True)
+
+    # ---- 深度快照：GET /api/v2/spot/market/orderbook（只有当前快照，无历史深度；用于校准 depth_usd / 单笔冲击假设）
+    def orderbook(self, symbol: str, limit: int = 150) -> dict:
+        meta = asset_meta(symbol)
+        pub = meta.get("public_symbol") or f"{symbol}USDT"
+        d = self._get("/api/v2/spot/market/orderbook", {"symbol": pub, "type": "step0", "limit": str(limit)})
+        data = d.get("data") or {}
+        bids = [(float(p), float(q)) for p, q in data.get("bids", [])]
+        asks = [(float(p), float(q)) for p, q in data.get("asks", [])]
+        mid = (bids[0][0] + asks[0][0]) / 2 if bids and asks else None
+        out = {"symbol": symbol, "ts": data.get("ts"), "mid": mid, "spread_bps": ((asks[0][0] - bids[0][0]) / mid * 1e4) if mid else None}
+        for bp in (10, 25, 50, 100):                 # 距中价 bp 内的可成交金额（双边）
+            if mid:
+                lo, hi = mid * (1 - bp / 1e4), mid * (1 + bp / 1e4)
+                out[f"depth_usd_{bp}bp"] = sum(p * q for p, q in bids if p >= lo) + sum(p * q for p, q in asks if p <= hi)
+        return out
 
     def probe(self) -> ProbeResult:
         try:

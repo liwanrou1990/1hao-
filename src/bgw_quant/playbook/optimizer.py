@@ -45,6 +45,7 @@ class PlaybookTrade:
     qty: float
     cost_usd: float
     funding_usd: float
+    gas_usd: float
     mae_pct: float
     mae_usd: float
     net_pnl_usd: float
@@ -262,7 +263,7 @@ def _solve(pres: list[_Pre], capital: float, k: int, lam: float, cap_cost: float
             f = float(fund[b, h - 1])
             trade_cost = size * c + qty * ps * c + gas            # 入场成本 + 出场成本 + Gas（价格内成本按比例折算）
             trades.append(PlaybookTrade(0, t_id + 1, pr.asset.symbol, pr.asset.asset_class, "short" if short else "long", int(b), int(s),
-                                        pr.ts[b], pb, entry, pr.ts[s], ps, exit_, size, qty, float(trade_cost), f, mae, size * mae, net,
+                                        pr.ts[b], pb, entry, pr.ts[s], ps, exit_, size, qty, float(trade_cost), f, float(gas), mae, size * mae, net,
                                         net / size if size else 0.0, int(h)))
             avail[i][b] = max(0.0, avail[i][b] - size)
             avail[i][s] = max(0.0, avail[i][s] - size)
@@ -304,18 +305,33 @@ def _merge_same_interval(trades: list[PlaybookTrade]) -> list[PlaybookTrade]:
             g.entry_price = (g.entry_price * g.size_usd + t.entry_price * t.size_usd) / tot
             g.exit_price = (g.exit_price * g.size_usd + t.exit_price * t.size_usd) / tot
             g.size_usd, g.qty = tot, g.qty + t.qty
-            g.cost_usd += t.cost_usd; g.funding_usd += t.funding_usd; g.net_pnl_usd += t.net_pnl_usd
+            g.cost_usd += t.cost_usd; g.funding_usd += t.funding_usd; g.gas_usd += t.gas_usd; g.net_pnl_usd += t.net_pnl_usd
             g.mae_usd += t.mae_usd; g.net_ret = g.net_pnl_usd / g.size_usd
         else:
             groups[key] = PlaybookTrade(**t.to_dict())
     return list(groups.values())
 
 
-def _truncate_to_target(trades: list[PlaybookTrade], target: float) -> tuple[list[PlaybookTrade], str | None]:
-    """按平仓时间排序并截断到首次达标（之后的交易不做）。"""
+def _scale_trade(t: PlaybookTrade, ratio: float) -> None:
+    """把一笔交易的仓位按比例缩小（Gas 固定，其余线性）。"""
+    t.size_usd *= ratio; t.qty *= ratio; t.mae_usd *= ratio; t.funding_usd *= ratio
+    t.cost_usd = (t.cost_usd - t.gas_usd) * ratio + t.gas_usd
+    t.net_pnl_usd = (t.net_pnl_usd + t.gas_usd) * ratio - t.gas_usd
+    t.net_ret = t.net_pnl_usd / t.size_usd if t.size_usd else 0.0
+
+
+def _truncate_to_target(trades: list[PlaybookTrade], target: float, min_tx_usd: float = 1.0, buffer: float = 0.002) -> tuple[list[PlaybookTrade], str | None]:
+    """按平仓时间排序并截断到首次达标（之后的交易不做）；最后一笔按需要缩小仓位，使累计净收益 ≈ 目标×(1+buffer)，
+    不多承担不必要的仓位与风险（审计：T1 目标 24 不再输出 76）。"""
     tr = sorted(_merge_same_interval(trades), key=lambda t: (t.exit_grid, t.entry_grid, t.tranche))
     cum, out, hit = 0.0, [], None
+    goal = target * (1 + buffer)
     for t in tr:
+        need = goal - cum
+        if t.net_pnl_usd > need > 0:
+            ratio = (need + t.gas_usd) / (t.net_pnl_usd + t.gas_usd)
+            if t.size_usd * ratio >= min_tx_usd and 0 < ratio < 1:
+                _scale_trade(t, ratio)
         cum += t.net_pnl_usd
         t.cum_net_pnl_usd = cum
         out.append(t)
@@ -337,11 +353,41 @@ def _finalize_order(trades: list[PlaybookTrade]) -> list[PlaybookTrade]:
     return tr
 
 
+def _binding_constraints(pres: list[_Pre], trades: list[PlaybookTrade], capital: float, target: float, participation: float, cap_cost: float) -> list[str]:
+    """不可达时的真实限制因素：流动性预算、无流动性上限时的理论最大、成本占比、资金占用。"""
+    out = []
+    budget = sum(float(np.sum(np.where(np.isfinite(pr.liq), pr.liq, 0.0))) for pr in pres)
+    used = sum(2 * t.size_usd for t in trades)
+    out.append(f"流动性：参与率 {participation:.0%} 下资产池全日可成交 {budget:,.0f} USD（已用 {used / budget:.0%}）；本金 {capital:,.0f} 需要往返成交 ≥ {2 * capital:,.0f} USD 才能满仓一次")
+    # 无流动性上限（但仍含成本）的理论最大：单片全仓
+    inf_liq = [np.full_like(pr.liq, np.inf) for pr in pres]
+    best = np.full((GRID_MINUTES, pres[0].hold.shape[1]), -np.inf)
+    for pr, av in zip(pres, inf_liq):
+        pi_l, pi_s, S, c, fund, gas = _asset_bands(pr, av, capital, cap_cost)
+        best = np.maximum(best, pi_l)
+        if pi_s is not None:
+            best = np.maximum(best, pi_s)
+    theo, _ = _dp_band(best)
+    out.append(f"若不限流动性（仍扣全部成本、单片全仓）理论最大净收益约 {theo:,.0f} USD → " + ("目标在数学上可达，瓶颈是盘口容量/冲击" if theo >= target else "即使不限流动性也不达标，瓶颈是行情本身与成本"))
+    cost = sum(t.cost_usd + t.funding_usd for t in trades)
+    gross = sum(t.net_pnl_usd for t in trades) + cost
+    if gross > 0:
+        out.append(f"成本：路径毛利 {gross:,.0f} USD 中成本 {cost:,.0f} USD（{cost / gross:.0%}）")
+    peak = 0.0
+    if trades:
+        dep = np.zeros(GRID_MINUTES)
+        for t in trades:
+            dep[t.entry_grid:t.exit_grid + 1] += t.size_usd
+        peak = float(dep.max())
+    out.append(f"资金占用：峰值 {peak:,.0f} USD（{peak / capital:.0%} 本金）；低于 100% 说明同一时刻可成交量不足以用满本金，而不是资金不够")
+    return out
+
+
 # ----------------------------------------------------------------------------- 主入口
 def optimize_playbook(assets: list[AssetDay], capital_usd: float, target_usd: float, day: str, *, mode: str = "cross", tier: str | None = None,
-                      participation: float = 0.10, tx_amount: dict | None = None, k_grid=(1, 2, 4, 8, 16, 32),
+                      participation: float = 0.10, tx_amount: dict | None = None, k_grid=(1, 2, 4, 8, 16, 32, 64, 128, 256),
                       lam_grid=(0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0), weights: dict | None = None, cap_cost_annual: float = 0.05, min_tranche_usd: float = 500.0,
-                      early_stop_gain: float = 0.02, max_hold_min: int = 240) -> PlaybookResult:
+                      early_stop_gain: float = 0.02, max_hold_min: int = 480) -> PlaybookResult:
     from .universe_time import grid_ny_strings
 
     weights = weights or {}
@@ -380,8 +426,9 @@ def optimize_playbook(assets: list[AssetDay], capital_usd: float, target_usd: fl
                 best_lam, best_tr = lam, tr
             else:
                 break
+        min_tx = max(pr.asset.cost.p.min_tx_usd for pr in pres)
         for lam, tr in ((best_lam, best_tr), (0.0, tr0)):
-            cut, hit = _truncate_to_target([PlaybookTrade(**t.to_dict()) for t in tr], target_usd)
+            cut, hit = _truncate_to_target([PlaybookTrade(**t.to_dict()) for t in tr], target_usd, min_tx)
             m = _metrics(cut, pres, weights)
             candidates.append({"k": k, "lam": round(lam, 4), "net_usd": float(sum(t.net_pnl_usd for t in cut)), "n_trades": len(cut), "hit_ts": hit,
                                "max_drawdown_usd": m["max_drawdown_usd"], "sum_mae_usd": m["sum_mae_usd"], "cost_usd": m["cost_usd"],
@@ -396,6 +443,7 @@ def optimize_playbook(assets: list[AssetDay], capital_usd: float, target_usd: fl
         eq, met, hit, k_used, lam_used = m["equity"], False, None, best_max_k, 0.0
         if max_achievable < target_usd:
             limits.append(f"目标 {target_usd:,.0f} USD 在真实成本与流动性约束下不可达：事后最高可实现净收益 {max_achievable:,.0f} USD，缺口 {target_usd - max_achievable:,.0f} USD")
+            limits += _binding_constraints(pres, trades, capital_usd, target_usd, participation, cap_cost_annual)
     m = _metrics(trades, pres, weights)
     # 切换次数：按平仓时间顺序相邻交易资产不同
     sw = sum(1 for a, b in zip(trades, trades[1:]) if a.symbol != b.symbol)

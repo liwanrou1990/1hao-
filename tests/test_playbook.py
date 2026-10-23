@@ -58,6 +58,7 @@ def test_target_first_then_min_risk_and_truncation(assets):
     r = optimize_playbook(assets, 60_000, 540, str(SAMPLE_DAY), tier="T2")
     if r.target_met:
         assert r.trades[-1].reaches_target and r.trades[-1].cum_net_pnl_usd >= 540 - 1e-9
+        assert r.net_usd <= 540 * 1.002 + 1e-6 or r.trades[-1].size_usd <= 1.0 + 1e-9   # 最后一笔按需缩仓：不多赚、不多担风险
         assert all(not t.reaches_target for t in r.trades[:-1])                           # 首次达标即截断
         assert r.time_to_target_ts == r.trades[-1].exit_ts
         assert r.max_achievable_net_usd >= r.net_usd - 1e-6                             # 最高可实现 ≥ 模板净收益
@@ -90,3 +91,13 @@ def test_no_tradable_direction_means_no_trades():
     spcx = _asset("SPCX", apply_quality_flags(src.fetch_minute_bars("SPCX", SAMPLE_DAY, venue="token")))
     r = optimize_playbook([spcx], 60_000, 540, str(SAMPLE_DAY))
     assert r.n_trades == 0 and not r.target_met and r.limits
+
+
+def test_small_target_scales_last_trade(assets):
+    """审计：T1 目标 24 不应输出 76——首笔已超目标时按比例缩小仓位。"""
+    r = optimize_playbook(assets, 3_000, 24, str(SAMPLE_DAY), tier="T1", k_grid=(1, 2, 4))
+    assert r.target_met
+    assert 24 - 1e-6 <= r.net_usd <= 24 * 1.002 + 1e-6
+    assert r.peak_deployed_usd < 3_000                                   # 不再满仓
+    t = r.trades[-1]
+    assert t.cost_usd >= t.gas_usd and t.net_ret == pytest.approx(t.net_pnl_usd / t.size_usd)

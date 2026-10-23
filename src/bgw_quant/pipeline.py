@@ -120,6 +120,16 @@ class Pipeline:
                 bars = apply_quality_flags(bars)
                 bars = research_ready(bars)
                 n_bars += self.store.upsert_bars(bars)
+                if hasattr(src, "fetch_trades"):                  # live：逐笔成交 → token_trades（逐分钟流动性来源）
+                    try:
+                        tx = src.fetch_trades(sym, d)
+                        if not tx.empty:
+                            self.store.con.register("new_tx", tx)
+                            self.store.con.execute("DELETE FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [sym, d])
+                            self.store.con.execute("INSERT INTO token_trades SELECT * FROM new_tx")
+                            self.store.con.unregister("new_tx")
+                    except Exception as e:  # noqa: BLE001
+                        self.plan.blockers.append(f"{sym} fills {d}: {e}")
                 cov.append({"day": d.isoformat(), "bars": int(len(bars)), "simulated": bool(getattr(src, "is_simulated", False))})
             out.append(IngestSummary(sym, "crypto", len(days), len(cov) + len(have & set(days)), n_bars, getattr(src, "name", "?"), cov))
         return out
@@ -627,6 +637,29 @@ class Pipeline:
         return out
 
     # ------------------------------------------------------------------ 跨市场轮动（C 因果模型）
+    def data_provenance(self, day: date, symbols: list[str]) -> dict:
+        """各资产当日数据来源与真实性（source、是否 SIMULATED、K 线数、逐笔成交数）。"""
+        out = {}
+        for s in symbols:
+            b = self.hindsight_bars(s, day)
+            if b.empty:
+                out[s] = {"available": False}
+                continue
+            sim = bool((b["quality"].astype(int) & 128).any())
+            try:
+                ntx = int(self.store.query("SELECT COUNT(*) AS n FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [s, day])["n"].iloc[0])
+            except Exception:  # noqa: BLE001
+                ntx = 0
+            out[s] = {"available": True, "source": str(b["source"].iloc[0]), "simulated": sim, "bars": int(len(b)), "trades": ntx}
+        return out
+
+    def require_real(self, day: date, symbols: list[str]) -> None:
+        """严格模式：任一资产当日数据为 SIMULATED 或缺失 → 抛错，绝不用模拟数据冒充真实行情。"""
+        prov = self.data_provenance(day, symbols)
+        bad = [s for s, v in prov.items() if (not v.get("available")) or v.get("simulated")]
+        if bad:
+            raise RuntimeError(f"{day} 以下资产没有真实行情（缺失或 SIMULATED）：{', '.join(bad)}。网络放行 api.bitget.com / bopenapi.bgwapi.io 后执行 ingest。阻塞：{'; '.join(self.plan.blockers[:3])}")
+
     def asset_day(self, symbol: str, day: date, weight: float = 1.0) -> AssetDay | None:
         bars = self.hindsight_bars(symbol, day)
         if bars.empty:
@@ -665,7 +698,7 @@ class Pipeline:
         tx = {a.symbol: self.tx_amount_per_bar(a.symbol, day) for a in assets}
         return optimize_playbook(assets, capital_usd, target_usd, day.isoformat(), mode=mode, tier=tier, participation=self.participation_rate,
                                  tx_amount={k: v for k, v in tx.items() if v is not None}, weights=self.playbook_cfg.get("weights"),
-                                 max_hold_min=int(self.playbook_cfg.get("max_hold_min", 240)))
+                                 max_hold_min=int(self.playbook_cfg.get("max_hold_min", 480)), k_grid=tuple(self.playbook_cfg.get("k_grid", (1, 2, 4, 8, 16, 32, 64, 128, 256))))
 
     def playbook_tiers(self, day: date, symbols: list[str] | None = None, mode: str = "cross") -> list:
         out = []

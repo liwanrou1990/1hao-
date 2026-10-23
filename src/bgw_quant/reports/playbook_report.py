@@ -22,7 +22,7 @@ _env.filters["pct"] = _pct
 _env.filters["num"] = _num
 
 LEDGER_COLUMNS = ["day", "tier", "capital_usd", "target_usd", "mode", "no", "symbol", "asset_class", "direction", "entry_ts", "entry_price", "exit_ts",
-                  "exit_price", "size_usd", "qty", "cost_usd", "funding_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd",
+                  "exit_price", "size_usd", "qty", "cost_usd", "funding_usd", "gas_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd",
                   "reaches_target", "n_trades_total", "target_met"]
 
 _ASSETS: dict = {}
@@ -33,7 +33,7 @@ def _worker(task: tuple) -> tuple[tuple, dict]:
     tier, cap, tgt, mode = task
     assets = list(_ASSETS.values()) if mode == "cross" else [_ASSETS[mode.split(":", 1)[1]]]
     r = optimize_playbook(assets, cap, tgt, _CFG["day"], mode=mode, tier=tier, participation=_CFG["participation"], tx_amount=_CFG.get("tx_amount"),
-                          weights=_CFG.get("weights"), max_hold_min=_CFG.get("max_hold_min", 240))
+                          weights=_CFG.get("weights"), max_hold_min=_CFG.get("max_hold_min", 480), k_grid=tuple(_CFG.get("k_grid", (1, 2, 4, 8, 16, 32, 64, 128, 256))))
     d = r.to_dict()
     d["equity_curve"] = r.equity_curve
     return task, d
@@ -44,7 +44,7 @@ def ledger_rows(day: str, tier: str, mode: str, r: dict) -> list[dict]:
     for t in r["trades"]:
         out.append({"day": day, "tier": tier, "capital_usd": r["capital_usd"], "target_usd": r["target_usd"], "mode": mode, **{k: t[k] for k in
                     ("no", "symbol", "asset_class", "direction", "entry_ts", "entry_price", "exit_ts", "exit_price", "size_usd", "qty", "cost_usd",
-                     "funding_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd", "reaches_target")},
+                     "funding_usd", "gas_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd", "reaches_target")},
                     "n_trades_total": r["n_trades"], "target_met": r["target_met"]})
     return out
 
@@ -107,7 +107,8 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
     tx = {s: pipeline.tx_amount_per_bar(s, day) for s in assets}
     _ASSETS = assets
     _CFG = {"day": day.isoformat(), "participation": pipeline.participation_rate, "tx_amount": {k: v for k, v in tx.items() if v is not None},
-            "weights": (pipeline.playbook_cfg or {}).get("weights"), "max_hold_min": (pipeline.playbook_cfg or {}).get("max_hold_min", 240)}
+            "weights": (pipeline.playbook_cfg or {}).get("weights"), "max_hold_min": (pipeline.playbook_cfg or {}).get("max_hold_min", 480),
+            "k_grid": (pipeline.playbook_cfg or {}).get("k_grid", [1, 2, 4, 8, 16, 32, 64, 128, 256])}
     tiers = []
     for t in pipeline.tiers.tiers:
         cap = t.representative_capitals(("mid",))["mid"]
