@@ -637,6 +637,19 @@ class Pipeline:
         return out
 
     # ------------------------------------------------------------------ 跨市场轮动（C 因果模型）
+    def import_offline(self, root: str | None = None, day: date | None = None) -> list[dict]:
+        """离线导入 data_in/<SYMBOL>/<day>/{kline,trades,depth}.csv（真实历史数据，绕过网络限制）。"""
+        from .data.offline_import import import_dir
+        return import_dir(self.store, root or self.settings.resolve_path("data_in"), day)
+
+    def verify_playbook(self, result, day: date) -> dict:
+        """对模板逐笔校验成交条件并分级（SIMULATED / REAL_HISTORICAL / EXECUTION_ESTIMATED）。"""
+        from .playbook.verify import verify_trades
+        assets = {s: a for s in result.universe if (a := self.asset_day(s, day)) is not None}
+        trades = {s: self.store.trades_for_day(s, day) for s in assets}
+        depth = {s: self.store.depth_for_day(s, day) for s in assets}
+        return verify_trades([t.to_dict() for t in result.trades], assets, self.participation_rate, trades, depth).to_dict()
+
     def data_provenance(self, day: date, symbols: list[str]) -> dict:
         """各资产当日数据来源与真实性（source、是否 SIMULATED、K 线数、逐笔成交数）。"""
         out = {}
@@ -650,7 +663,12 @@ class Pipeline:
                 ntx = int(self.store.query("SELECT COUNT(*) AS n FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [s, day])["n"].iloc[0])
             except Exception:  # noqa: BLE001
                 ntx = 0
-            out[s] = {"available": True, "source": str(b["source"].iloc[0]), "simulated": sim, "bars": int(len(b)), "trades": ntx}
+            try:
+                ndp = int(self.store.query("SELECT COUNT(*) AS n FROM depth_snapshots WHERE symbol=? AND CAST(ts_ny AS DATE)=?", [s, day])["n"].iloc[0])
+            except Exception:  # noqa: BLE001
+                ndp = 0
+            out[s] = {"available": True, "source": str(b["source"].iloc[0]), "simulated": sim, "bars": int(len(b)), "trades": ntx, "depth_snapshots": ndp,
+                      "status": "SIMULATED" if sim else ("REAL_HISTORICAL" if (ntx > 0 and ndp >= 0.9 * len(b)) else "EXECUTION_ESTIMATED")}
         return out
 
     def require_real(self, day: date, symbols: list[str]) -> None:

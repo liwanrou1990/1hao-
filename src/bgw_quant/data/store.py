@@ -24,6 +24,11 @@ CREATE TABLE IF NOT EXISTS token_trades (
   symbol VARCHAR, chain VARCHAR, contract VARCHAR, ts TIMESTAMPTZ, ts_ny VARCHAR, side VARCHAR, price DOUBLE, amount DOUBLE, value DOUBLE,
   tx_hash VARCHAR, source VARCHAR, ingested_at TIMESTAMPTZ
 );
+CREATE TABLE IF NOT EXISTS depth_snapshots (
+  symbol VARCHAR, ts TIMESTAMPTZ, ts_ny VARCHAR, mid DOUBLE, spread_bps DOUBLE,
+  bid_usd_10bp DOUBLE, ask_usd_10bp DOUBLE, bid_usd_25bp DOUBLE, ask_usd_25bp DOUBLE, bid_usd_50bp DOUBLE, ask_usd_50bp DOUBLE,
+  bid_usd_100bp DOUBLE, ask_usd_100bp DOUBLE, levels INTEGER, source VARCHAR, ingested_at TIMESTAMPTZ
+);
 CREATE TABLE IF NOT EXISTS asset_registry (
   ticker VARCHAR, chain VARCHAR, contract VARCHAR, symbol VARCHAR, data_source VARCHAR, status VARCHAR,
   verified BOOLEAN, verified_at TIMESTAMPTZ, note VARCHAR
@@ -118,6 +123,38 @@ class Store:
                 SELECT symbol, venue, source, COALESCE(tf,'1m') tf, COUNT(*) bars, MIN(ts_ny) first_ts, MAX(ts_ny) last_ts,
                        BOOL_OR(quality & 128 > 0) simulated
                 FROM bars GROUP BY 1,2,3,4 ORDER BY 1,2,3,4""").df()
+
+    # ----- depth snapshots -----
+    def upsert_depth(self, df: pd.DataFrame) -> int:
+        if df is None or df.empty:
+            return 0
+        cols = ["symbol", "ts", "ts_ny", "mid", "spread_bps", "bid_usd_10bp", "ask_usd_10bp", "bid_usd_25bp", "ask_usd_25bp", "bid_usd_50bp", "ask_usd_50bp",
+                "bid_usd_100bp", "ask_usd_100bp", "levels", "source", "ingested_at"]
+        d = df.copy()
+        for c in cols:
+            if c not in d:
+                d[c] = None
+        d = d[cols]
+        with self._lock:
+            self.con.register("new_depth", d)
+            self.con.execute("DELETE FROM depth_snapshots USING new_depth WHERE depth_snapshots.symbol = new_depth.symbol AND depth_snapshots.ts = new_depth.ts")
+            self.con.execute(f"INSERT INTO depth_snapshots ({', '.join(cols)}) SELECT {', '.join(cols)} FROM new_depth")
+            self.con.unregister("new_depth")
+        return len(d)
+
+    def depth_for_day(self, symbol: str, day: date) -> pd.DataFrame:
+        with self._lock:
+            df = self.con.execute("SELECT * FROM depth_snapshots WHERE symbol=? AND CAST(ts_ny AS DATE)=? ORDER BY ts", [symbol, day]).df()
+        if not df.empty:
+            df["ts"] = pd.to_datetime(df["ts"], utc=True)
+        return df
+
+    def trades_for_day(self, symbol: str, day: date) -> pd.DataFrame:
+        with self._lock:
+            df = self.con.execute("SELECT * FROM token_trades WHERE symbol=? AND CAST(ts_ny AS DATE)=? ORDER BY ts", [symbol, day]).df()
+        if not df.empty:
+            df["ts"] = pd.to_datetime(df["ts"], utc=True)
+        return df
 
     # ----- generic json -----
     def save_json(self, table: str, **cols: Any) -> None:

@@ -14,3 +14,4 @@ build/
 dist/
 .ruff_cache/
 models_out/
+data_in/

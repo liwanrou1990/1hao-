@@ -29,6 +29,13 @@ _ASSETS: dict = {}
 _CFG: dict = {}
 
 
+def _verify(pipeline, r: dict, assets: dict, day: date) -> dict:
+    from ..playbook.verify import verify_trades
+    trades = {s: pipeline.store.trades_for_day(s, day) for s in assets}
+    depth = {s: pipeline.store.depth_for_day(s, day) for s in assets}
+    return verify_trades(r["trades"], assets, pipeline.participation_rate, trades, depth).to_dict()
+
+
 def _worker(task: tuple) -> tuple[tuple, dict]:
     tier, cap, tgt, mode = task
     assets = list(_ASSETS.values()) if mode == "cross" else [_ASSETS[mode.split(":", 1)[1]]]
@@ -127,9 +134,12 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
     out_dir.mkdir(parents=True, exist_ok=True)
     charts_dir = pipeline.settings.resolve_path(pipeline.settings.report_dir) / "charts"
     prof = pipeline.cost_profile_name
-    rows, ledger, single_matrix = [], [], {}
+    rows, ledger, single_matrix, checks_rows = [], [], {}, []
     for tier, cap, tgt in tiers:
         r = results[(tier, "cross")]
+        v = _verify(pipeline, r, assets, day)
+        r["verification"] = {k: v[k] for k in v if k != "checks"}
+        checks_rows += [{"tier": tier, "mode": "cross", **c} for c in v["checks"]]
         fn = f"playbook_{tier}_{day}_{prof}.html"
         render_playbook_chart(pipeline, r, assets, charts_dir / fn, "跨资产模板")
         rows.append({**r, "mode_name": "跨资产（可切换）", "chart": f"../../charts/{fn}"})
@@ -148,13 +158,21 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
         single_matrix[tier] = cells
         if best_single:
             _, s, rs = best_single
+            v = _verify(pipeline, rs, {s: assets[s]}, day)
+            rs["verification"] = {k: v[k] for k in v if k != "checks"}
+            checks_rows += [{"tier": tier, "mode": f"single:{s}", **c} for c in v["checks"]]
             fn = f"playbook_{tier}_{s}_{day}_{prof}.html"
             render_playbook_chart(pipeline, rs, assets, charts_dir / fn, f"单资产模板 {s}")
             rows.append({**rs, "mode_name": f"单资产最佳 {s}", "chart": f"../../charts/{fn}"})
     csv_name = f"playbook_ledger_{day}_{prof}.csv"
     pd.DataFrame(ledger, columns=LEDGER_COLUMNS).to_csv(out_dir / csv_name, index=False)
+    checks_name = f"playbook_checks_{day}_{prof}.csv"
+    pd.DataFrame(checks_rows).to_csv(out_dir / checks_name, index=False)
+    statuses = sorted({r["verification"]["status"] for r in rows})
+    overall = "SIMULATED" if "SIMULATED" in statuses else ("EXECUTION_ESTIMATED" if "EXECUTION_ESTIMATED" in statuses else "REAL_HISTORICAL")
+    prov = pipeline.data_provenance(day, list(assets))
     json_name = f"playbook_{day}_{prof}.json"
-    summary = {"day": day.isoformat(), "cost_profile": prof, "formal_validation": not pipeline.plan.is_simulated and pipeline.plan.crypto_mode == "live",
+    summary = {"day": day.isoformat(), "cost_profile": prof, "formal_validation": overall == "REAL_HISTORICAL", "validation_status": overall, "provenance": prov,
                "tiers": [{k: v for k, v in r.items() if k not in ("trades", "equity_curve", "candidates")} for r in rows]}
     (out_dir / json_name).write_text(json.dumps(summary, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
     html = _env.get_template("playbook_report.html.j2").render(
@@ -162,10 +180,13 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
         crypto_profile=profile_for_asset(prof, "crypto"), participation=f"{pipeline.participation_rate:.0%}", max_hold=_CFG["max_hold_min"],
         stocks=[s for s in assets if assets[s].asset_class == "stock"], cryptos=[s for s in assets if assets[s].asset_class == "crypto"],
         formal=summary["formal_validation"], banner=pipeline.plan.banner(), rows=rows, all_symbols=list(assets), single_matrix=single_matrix,
+        status=overall, provenance=prov, checks_name=checks_name,
         data_note=("数据：SIMULATED 模拟行情，流动性来源为 K 线成交额；真实行情接入后以官方逐笔成交为流动性来源" if pipeline.plan.is_simulated else "数据：官方行情"),
-        files={"csv": csv_name, "json": json_name})
+        files={"csv": csv_name, "json": json_name, "checks": checks_name})
     out = out_dir / f"playbook_report_{day}_{prof}.html"
     out.write_text(html, encoding="utf-8")
-    return {"html": str(out), "csv": str(out_dir / csv_name), "json": str(out_dir / json_name), "day": day.isoformat(), "formal_validation": summary["formal_validation"],
+    return {"html": str(out), "csv": str(out_dir / csv_name), "checks_csv": str(out_dir / checks_name), "json": str(out_dir / json_name), "day": day.isoformat(),
+            "validation_status": overall, "formal_validation": summary["formal_validation"],
             "tiers": [{"tier": r["tier"], "mode": r["mode_name"], "target_met": r["target_met"], "net_usd": round(r["net_usd"], 2), "max_achievable_net_usd": round(r["max_achievable_net_usd"], 2),
-                       "n_trades": r["n_trades"], "n_switches": r["n_switches"], "assets": r["assets_used"], "max_drawdown_usd": round(r["max_drawdown_usd"], 2)} for r in rows]}
+                       "n_trades": r["n_trades"], "n_switches": r["n_switches"], "assets": r["assets_used"], "max_drawdown_usd": round(r["max_drawdown_usd"], 2),
+                       "status": r["verification"]["status"], "checks_ok": f"{r['verification']['n_ok']}/{r['verification']['n_trades']}"} for r in rows]}

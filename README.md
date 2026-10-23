@@ -10,12 +10,14 @@
 > **事后模板 ≠ 可执行策略**：可执行（无未来信息）见决策引擎与轮动回测（C 模型）。目标不可达时输出最高可实现净收益与缺口，不伪造达标。
 
 ```bash
-bgwq playbook-daily                       # 每日：昨天（或 --day）七档 × 跨资产 + 单资产模板 → 流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON
+bgwq import-dir --day 2026-10-22          # 离线导入真实数据 data_in/<SYMBOL>/<day>/{kline,trades,depth}.csv（见 docs/11；脚本 scripts/fetch_bitget_public.py）
+bgwq playbook-daily --require-real        # 每日：昨天（或 --day）七档 × 跨资产 + 单资产模板 → 流水 CSV + 逐笔校验 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON；严格模式拒绝 SIMULATED
 bgwq playbook --day 2026-10-22 --trades   # 终端查看七档跨资产模板与完整流水（--mode single:NVDA 单资产）
 # 每日自动：crontab 例  30 7 * * 2-6  cd /path && .venv/bin/bgwq playbook-daily >> logs/playbook.log 2>&1
 ```
 - 目标函数：先“累计净收益 ≥ 目标”，再最小化风险 R = 最大回撤(逐分钟盯市) + 0.5×Σ单笔最大不利波动 + 成本 + 每笔罚金；区间得分 = 净利润 − λ×最大不利波动，λ 几何递增至不再达标；按出场时间截断到首次达标。
 - 输出：资产、方向、入场/出场时间与价格、仓位金额、数量、成本、单笔净利润、累计净利润、笔数、达标时刻、切换次数、最大回撤、最高可实现净收益与缺口；图表在真实 K 线上标注全部买卖点并展示资金收益曲线。
+- 结果分级 SIMULATED / EXECUTION_ESTIMATED / REAL_HISTORICAL，逐笔校验成交量、深度、时间顺序、成交价（不用高低点）、手续费与滑点（`playbook/verify.py`）。
 - 接口：`GET /api/playbook?day=&mode=cross|single:NVDA`、`POST /api/playbook/report`、`GET /api/playbook/latest`；参数 `config/playbook.yaml`；输出 `reports_out/playbook/<day>/`。
 
 ## 跨市场动态资产轮动（股票代币 × BTC/ETH/SOL/HYPE）：A / B / C 三套模型 + 六类策略排名（当前阶段主入口）
