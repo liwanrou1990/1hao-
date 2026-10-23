@@ -168,9 +168,12 @@ def _asset_bands(pr: _Pre, avail: np.ndarray, size_cap: float, cap_cost: float):
     """带状净利润（多/空）、投入 S、单边成本比例 c（冲击按资金片规模计算，保守）。"""
     cost = pr.asset.cost
     H = pr.hold.shape[1]
-    S = np.minimum(size_cap, np.minimum(avail[:, None], _shift_band(avail, H)))
-    S = np.where(np.isnan(S) | (S < cost.p.min_tx_usd) | np.isnan(pr.p[:, None]) | np.isnan(pr.p_s), 0.0, S)
     c = cost.proportional_side_cost() + cost.impact_fraction(size_cap)
+    # 出场侧真实成交额 = 数量 × 出场价 = S × p_s / (p_b(1+c))（多头）；要求它 ≤ 出场分钟可用量 → S ≤ avail_s × p_b(1+c)/p_s
+    with np.errstate(invalid="ignore", divide="ignore"):
+        exit_scale = pr.p[:, None] * (1 + c) / pr.p_s
+    S = np.minimum(size_cap, np.minimum(avail[:, None], _shift_band(avail, H) * exit_scale))
+    S = np.where(np.isnan(S) | (S < cost.p.min_tx_usd) | np.isnan(pr.p[:, None]) | np.isnan(pr.p_s), 0.0, S)
     gas = 2 * cost.p.gas_usd * max(1, math.ceil(size_cap / cost.p.max_tx_usd))
     fund = S * cap_cost * pr.hold / BARS_PER_YEAR
     with np.errstate(invalid="ignore", divide="ignore"):
@@ -266,7 +269,7 @@ def _solve(pres: list[_Pre], capital: float, k: int, lam: float, cap_cost: float
                                         pr.ts[b], pb, entry, pr.ts[s], ps, exit_, size, qty, float(trade_cost), f, float(gas), mae, size * mae, net,
                                         net / size if size else 0.0, int(h)))
             avail[i][b] = max(0.0, avail[i][b] - size)
-            avail[i][s] = max(0.0, avail[i][s] - size)
+            avail[i][s] = max(0.0, avail[i][s] - qty * ps)        # 出场侧按真实成交额（数量×出场价）占用
     return trades
 
 
