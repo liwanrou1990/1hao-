@@ -265,6 +265,43 @@ def feasibility_symbol(symbol: str, day: str | None = None):
                    "chart_url": f"/reports/charts/feasibility_{symbol}_{d}_{p.cost_profile_name}.html"})
 
 
+@app.get("/api/playbook")
+def playbook(day: str | None = None, mode: str = "cross", tier: str | None = None):
+    """历史盈利路径模板（事后）：七档 × 跨资产或 single:<symbol>。"""
+    p = pl()
+    d = date.fromisoformat(day) if day else p.latest_day()
+    out = []
+    for r in p.playbook_tiers(d, None, mode):
+        if tier and r.tier != tier:
+            continue
+        dd = r.to_dict(); dd["candidates"] = None
+        out.append(dd)
+    return {"banner": p.plan.banner(), "results": out}
+
+
+@app.post("/api/playbook/report")
+def playbook_report(day: str | None = None, cross_only: bool = False):
+    from ..reports.playbook_report import generate_playbook_report
+    p = pl()
+    d = date.fromisoformat(day) if day else p.latest_day()
+    return generate_playbook_report(p, d, single_assets=not cross_only)
+
+
+@app.get("/api/playbook/latest")
+def playbook_latest():
+    p = pl()
+    d = p.settings.resolve_path(p.settings.report_dir) / "playbook"
+    days = sorted(x for x in d.glob("*") if x.is_dir()) if d.exists() else []
+    if not days:
+        return {"note": "尚未运行 bgwq playbook-daily"}
+    js = sorted(days[-1].glob(f"playbook_*_{p.cost_profile_name}.json"))
+    if not js:
+        return {"note": "无 JSON 摘要"}
+    data = json.loads(js[-1].read_text(encoding="utf-8"))
+    data["report_url"] = f"/reports/playbook/{days[-1].name}/" + js[-1].name.replace(".json", ".html").replace("playbook_", "playbook_report_")
+    return data
+
+
 @app.get("/api/rotation/specs")
 def rotation_specs():
     return [s.__dict__ | {"universe": list(s.universe)} for s in pl().rotation_specs()]

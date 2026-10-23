@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} 盈利路径模板</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:20px;color:#222;max-width:1400px}
+h1{font-size:21px}h2{font-size:17px;margin-top:22px;border-left:4px solid #1565c0;padding-left:8px}h3{font-size:14px;margin:12px 0 4px}
+table{border-collapse:collapse;font-size:12px;margin:6px 0;width:100%}th,td{border:1px solid #ddd;padding:3px 5px;text-align:right}th{background:#f3f3f3}
+td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-radius:6px;margin:10px 0;border:1px solid}
+.warn{background:#fff3cd;border-color:#ffe69c}.ok{background:#d1e7dd;border-color:#a3cfbb}.bad{background:#f8d7da;border-color:#f1aeb5}
+.pos{color:#2e7d32}.neg{color:#c62828}.muted{color:#777;font-size:12px}.tag{display:inline-block;padding:1px 6px;border-radius:4px;background:#eee;font-size:11px}</style></head><body>
+<h1>{{ day }} · 历史盈利路径模板：昨天怎样交易能够达到各档位净收益目标</h1>
+<div class="muted">生成 {{ generated_at }} · 成本档 {{ cost_profile }}（股票代币）/ {{ crypto_profile }}（加密货币）· 参与率 {{ participation }} · 最长持有 {{ max_hold }} 分钟 · 资产池：股票 {{ stocks|join('/') }}；加密 {{ cryptos|join('/') }}</div>
+{% if not formal %}<div class="banner bad"><b>非正式验证：</b>{{ banner }} 本报告基于 <b>SIMULATED</b> 模拟行情（真实行情接口在当前环境被网络策略拒绝）。放行域名后重跑 <code>bgwq playbook-daily</code> 即得真实行情版本。</div>{% else %}<div class="banner ok">{{ banner }}</div>{% endif %}
+<div class="banner warn"><b>严格区分：</b>本页全部为“已知完整走势的事后最优模板”，用于研究昨天怎样交易能盈利；“当时不知道未来的可执行策略”见决策引擎/轮动回测（C 模型）。事后模板收益不是实盘可保证收益。目标函数：先满足累计净收益 ≥ 目标，再最小化风险（最大回撤 + 0.5×Σ最大不利波动 + 成本 + 每笔罚金）；目标不可达时输出最高可实现净收益与缺口，不伪造达标。</div>
+
+<h2>1. 各档位模板总览</h2>
+<table><tr><th>档位</th><th>本金</th><th>目标</th><th>模板</th><th>达标</th><th>净收益</th><th>收益率</th><th>最高可实现</th><th>缺口</th><th>笔数(多/空)</th><th>切换</th><th>资产</th><th>资金片</th><th>λ</th><th>最大回撤</th><th>Σ不利波动</th><th>成本</th><th>达标时刻</th><th>峰值占用</th><th>流动性占用</th><th>图/流水</th></tr>
+{% for r in rows %}<tr><td>{{ r.tier }}</td><td>{{ r.capital_usd|num(0) }}</td><td>{{ r.target_usd|num(0) }}</td><td>{{ r.mode_name }}</td><td class="{{ 'pos' if r.target_met else 'neg' }}"><b>{{ '达标' if r.target_met else '未达标' }}</b></td><td class="{{ 'pos' if r.net_usd >= 0 else 'neg' }}">{{ r.net_usd|num(0) }}</td><td>{{ r.net_return|pct(3) }}</td><td>{{ r.max_achievable_net_usd|num(0) }}</td><td>{{ r.gap_usd|num(0) }}</td><td>{{ r.n_trades }} ({{ r.n_long }}/{{ r.n_short }})</td><td>{{ r.n_switches }}</td><td style="text-align:left;font-size:10px">{{ r.assets_used|join('/') }}</td><td>{{ r.n_tranches }}</td><td>{{ r.lam }}</td><td>{{ r.max_drawdown_usd|num(0) }}</td><td>{{ r.sum_mae_usd|num(0) }}</td><td>{{ r.cost_usd|num(0) }}</td><td>{{ r.time_to_target_ts[11:16] if r.time_to_target_ts else '—' }}</td><td>{{ (r.peak_deployed_usd / r.capital_usd)|pct(0) }}</td><td>{{ r.liquidity_used_ratio|pct(1) if r.liquidity_used_ratio is not none else '未知' }}</td><td><a href="{{ r.chart }}">图</a></td></tr>{% endfor %}</table>
+
+<h2>2. 单资产模板对比（每档位各资产独立求解）</h2>
+<table><tr><th>档位</th>{% for s in all_symbols %}<th>{{ s }}</th>{% endfor %}</tr>
+{% for tier, cells in single_matrix.items() %}<tr><td>{{ tier }}</td>{% for s in all_symbols %}{% set c = cells.get(s) %}<td class="{{ 'pos' if c and c.target_met else 'neg' }}" title="{{ c.note if c else '' }}">{% if c %}{{ '达标' if c.target_met else '未达标' }}<br><span class="muted">{{ c.net_usd|num(0) }} / {{ c.n_trades }}笔</span>{% else %}—{% endif %}</td>{% endfor %}</tr>{% endfor %}</table>
+<div class="muted">单元格：达标状态 / 净收益 / 笔数（未达标时净收益为该资产最高可实现值）。</div>
+
+<h2>3. 口径与限制</h2>
+<ul>
+<li>候选交易：任一资产 [入场分钟, 出场分钟] 区间，成交价 = 收盘价 ± （手续费 + 半价差 + 滑点 + 冲击），另扣 Gas、资金成本（年化 5%）、做空借券费；冲击按资金片规模计算（保守）；现货无资金费率。</li>
+<li>流动性：每分钟可成交 ≤ 参与率 × 该分钟实际成交额（优先逐笔成交聚合），多片共享，不重复使用；资金片内同一时刻只持一仓，总占用 ≤ 本金；不加杠杆。</li>
+<li>方向：仅在能力登记支持的方向内（当前全部仅做多：无可核实做空渠道）。</li>
+<li>搜索：资金片 k ∈ {1,2,4,8,16,32}；区间得分 = 净利润 − λ×最大不利波动(USD)，λ 几何递增至不再达标；路径按出场时间截断到首次达标；多候选中取风险 R 最小者。</li>
+<li>{{ data_note }}</li>
+</ul>
+<div>文件：<a href="{{ files.csv }}">全部档位交易流水 CSV</a> · <a href="{{ files.json }}">JSON 摘要</a></div>
+<div class="banner ok">执行安全：research_only · 未连接钱包 · 未请求私钥 · 未签名 · 未下单。</div>
+</body></html>

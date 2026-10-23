@@ -259,6 +259,38 @@ def cmd_key_audit(args):
     _p(rep)
 
 
+def cmd_playbook(args):
+    """历史盈利路径模板（事后）：七档 × 跨资产（或 --mode single:NVDA），输出流水。默认 day = 最近一个有数据的交易日。"""
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    print(pl.plan.banner())
+    for r in pl.playbook_tiers(day, args.symbols, args.mode):
+        print(f"\n{r.tier} 本金 {r.capital_usd:,.0f} 目标 {r.target_usd:,.0f} | {'达标' if r.target_met else '未达标'} 净 {r.net_usd:,.2f} ({r.net_return:+.3%}) "
+              f"最高可实现 {r.max_achievable_net_usd:,.0f} 缺口 {r.gap_usd:,.0f} | {r.n_trades} 笔 多{r.n_long}/空{r.n_short} 切换 {r.n_switches} 资产 {'/'.join(r.assets_used)} "
+              f"| 资金片 {r.n_tranches} λ {r.lam} 回撤 {r.max_drawdown_usd:,.0f} Σ不利 {r.sum_mae_usd:,.0f} 成本 {r.cost_usd:,.0f} 达标时刻 {r.time_to_target_ts or '—'}")
+        for lim in r.limits:
+            print("   -", lim)
+        if args.trades:
+            for t in r.trades:
+                print(f"   {t.no:3d}. {t.symbol:5s} {'多' if t.direction == 'long' else '空'} {t.entry_ts[11:16]}@{t.entry_price:.4f} → {t.exit_ts[11:16]}@{t.exit_price:.4f} "
+                      f"仓位 {t.size_usd:,.0f} 成本 {t.cost_usd:.2f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}{' ★达标' if t.reaches_target else ''}")
+
+
+def cmd_playbook_daily(args):
+    """每日自动生成：以昨天（或 --day）完整行情为基础生成七档盈利打法模板、流水 CSV、图表、HTML/JSON。"""
+    from .reports.playbook_report import generate_playbook_report
+    from .calendar_utils import previous_trading_day
+    pl = _pipeline(args)
+    day = _day(args.day) or previous_trading_day(date.today())
+    if not args.no_ingest:
+        try:
+            pl.ingest(None, day, day, with_token=True)
+            pl.ingest_crypto(None, day, day)
+        except Exception as e:  # noqa: BLE001
+            print(f"接入失败（继续用已有数据）：{e}")
+    _p(generate_playbook_report(pl, day, args.symbols, workers=args.workers, single_assets=not args.cross_only))
+
+
 def cmd_rotation(args):
     """单日：六类策略 × 七档的因果轮动结果（C），可选同时输出 A/B 对照。"""
     pl = _pipeline(args)
@@ -452,6 +484,8 @@ def main(argv=None):
     p = sub.add_parser("feasibility", help="历史可行性：A 理论最大 / B 执行约束下最大可实现 / 达标所需笔数 / 完整买卖点"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_feasibility)
     p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
     p = sub.add_parser("key-audit", help="密钥审计：泄露扫描、未知 32 位值字段识别（BGWQ_AUDIT_VALUE 环境变量输入，不输出密钥）"); p.add_argument("--out"); p.set_defaults(f=cmd_key_audit)
+    p = sub.add_parser("playbook", help="历史盈利路径模板（事后）：七档 × 跨资产/单资产，完整流水"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--mode", default="cross"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_playbook)
+    p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.set_defaults(f=cmd_playbook_daily)
     p = sub.add_parser("rotation", help="跨市场轮动（因果 C）：六类策略 × 七档 单日结果，--ab 同时输出事后 A/B 对照"); p.add_argument("--day"); p.add_argument("--strategies", nargs="*"); p.add_argument("--ab", action="store_true"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_rotation)
     p = sub.add_parser("rotation-backtest", help="多日时间顺序样本外回测 + A/B 对照 + 六类策略排名（可续跑）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--skip-c", action="store_true"); p.add_argument("--skip-ab", action="store_true"); p.add_argument("--cache", help="结果缓存 DuckDB 路径（默认 data_store/rotation_cache.duckdb）"); p.set_defaults(f=cmd_rotation_backtest)
     p = sub.add_parser("rotation-report", help="跨市场轮动综合报告（排名、A/B/C、切换路径、逐笔 CSV、图表）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--cache"); p.set_defaults(f=cmd_rotation_report)

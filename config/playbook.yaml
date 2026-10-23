@@ -1,0 +1,7 @@
+# 历史盈利路径模板（事后，不预测未来）参数
+max_hold_min: 240            # 单笔最长持有分钟数（带状区间上限）
+weights:                     # 风险目标 R = w_drawdown×最大回撤 + w_mae×Σ最大不利波动 + w_cost×成本 + per_trade_penalty_usd×笔数
+  w_drawdown: 1.0
+  w_mae: 0.5
+  w_cost: 1.0
+  per_trade_penalty_usd: 1.0

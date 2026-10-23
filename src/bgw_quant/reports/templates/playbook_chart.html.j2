@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ day }} {{ tier }} 盈利路径模板</title>
+<script src="vendor/lightweight-charts.standalone.production.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.min.js';document.head.appendChild(s)"></script>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:16px;color:#222}
+.banner{background:#fff3cd;border:1px solid #ffe69c;padding:8px 12px;border-radius:6px;margin:8px 0}.bad{background:#f8d7da;border-color:#f1aeb5}
+table{border-collapse:collapse;font-size:12px;margin:8px 0}th,td{border:1px solid #ddd;padding:3px 6px;text-align:right}th{background:#f0f0f0}
+td:first-child,th:first-child{text-align:left}#chart{height:430px}#eq{height:170px}.pos{color:#2e7d32}.neg{color:#c62828}select{padding:4px 8px}
+.kpi{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.kpi div{border:1px solid #ddd;border-radius:6px;padding:6px 10px;min-width:120px;font-size:12px}.kpi b{display:block;font-size:14px}</style></head><body>
+<h1 style="font-size:18px">{{ day }} · {{ tier }} · 本金 {{ "{:,.0f}".format(capital) }} USD · 目标 {{ "{:,.0f}".format(target) }} USD · {{ mode_name }}</h1>
+<div class="banner bad"><b>事后最优模板：</b>在已知 {{ day }} 完整走势后反向求解，不是当时可执行的策略，不代表未来可复制收益。{% if simulated %} <b>当前为 SIMULATED 模拟行情，非正式验证。</b>{% endif %} 成交价 = 该分钟收盘价 ± 成本（不假设高低点成交）；时间轴为美东时间。</div>
+<div class="kpi">{% for k, v in kpis %}<div>{{ k }}<b>{{ v }}</b></div>{% endfor %}</div>
+<div>资产：<select id="asset"></select> <span id="src" style="font-size:12px;color:#666"></span></div>
+<div id="chart"></div><div style="font-size:12px;color:#666">资金收益曲线（逐分钟盯市：已实现 + 未实现，USD）</div><div id="eq"></div>
+<h3 style="font-size:14px">完整交易流水（按出场时间）</h3>
+<table><tr><th>#</th><th>资产</th><th>方向</th><th>入场时间</th><th>入场价</th><th>出场时间</th><th>出场价</th><th>仓位金额</th><th>数量</th><th>成本</th><th>资金成本</th><th>最大不利</th><th>单笔净利润</th><th>净收益率</th><th>持有(分)</th><th>累计净利润</th><th>达标</th></tr>
+{% for t in trades %}<tr><td>{{ t.no }}</td><td>{{ t.symbol }}</td><td>{{ '做多' if t.direction == 'long' else '做空' }}</td><td>{{ t.entry_ts[11:16] }}</td><td>{{ '%.4f'|format(t.entry_price) }}</td><td>{{ t.exit_ts[11:16] }}</td><td>{{ '%.4f'|format(t.exit_price) }}</td><td>{{ '{:,.0f}'.format(t.size_usd) }}</td><td>{{ '%.4f'|format(t.qty) }}</td><td>{{ '%.2f'|format(t.cost_usd) }}</td><td>{{ '%.2f'|format(t.funding_usd) }}</td><td>{{ '%.3f'|format(t.mae_pct * 100) }}%</td><td class="{{ 'pos' if t.net_pnl_usd >= 0 else 'neg' }}">{{ '%.2f'|format(t.net_pnl_usd) }}</td><td>{{ '%.3f'|format(t.net_ret * 100) }}%</td><td>{{ t.hold_min }}</td><td>{{ '%.2f'|format(t.cum_net_pnl_usd) }}</td><td>{{ '★' if t.reaches_target else '' }}</td></tr>{% endfor %}
+{% if not trades %}<tr><td colspan="17">无可行交易</td></tr>{% endif %}</table>
+{% if limits %}<div class="banner"><b>限制：</b><br>{{ limits|join('<br>') }}</div>{% endif %}
+<script>
+const assets={{ assets_json|safe }}; const eq={{ eq_json|safe }};
+const sel=document.getElementById('asset'); Object.keys(assets).forEach(k=>{const o=document.createElement('option');o.value=k;o.text=k+' ('+assets[k].n_trades+' 笔)';sel.appendChild(o)});
+let chart, cs;
+function draw(){
+ const opts={layout:{background:{color:'#fff'},textColor:'#333'},grid:{vertLines:{color:'#eee'},horzLines:{color:'#eee'}},timeScale:{timeVisible:true,secondsVisible:false},localization:{locale:'zh-CN'}};
+ chart=LightweightCharts.createChart(document.getElementById('chart'),opts);
+ cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+ const c2=LightweightCharts.createChart(document.getElementById('eq'),opts); const ln=c2.addAreaSeries({lineColor:'#1565c0',topColor:'rgba(21,101,192,0.25)',bottomColor:'rgba(21,101,192,0.02)',lineWidth:2}); ln.setData(eq); c2.timeScale().fitContent();
+ update();
+}
+function update(){ const a=assets[sel.value]; cs.setData(a.candles); cs.setMarkers(a.markers); chart.timeScale().fitContent(); document.getElementById('src').innerText='来源 '+a.source; }
+sel.onchange=update; (function wait(){ if(window.LightweightCharts) draw(); else setTimeout(wait,100); })();
+</script></body></html>

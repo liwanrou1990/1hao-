@@ -77,6 +77,11 @@ class Pipeline:
         self.engine_cfg = load_engine_config()
         self._caps: dict[str, ProductCapability] = {}
         self._profile_cache: dict[str, object] = {self.cost_profile_name: self.profile}
+        try:
+            from .config import load_yaml as _ly
+            self.playbook_cfg = _ly("playbook.yaml")
+        except FileNotFoundError:
+            self.playbook_cfg = {}
         self.participation_rate = float(load_yaml_participation())
 
     # ------------------------------------------------------------------ 数据
@@ -647,6 +652,29 @@ class Pipeline:
             for a in assets:
                 a.weight = 1.0 / len(assets)
         return run_rotation_day(assets, spec, capital_usd, target_usd, self.engine_cfg, params or RotParams(), str(day), load_rotation_config())
+
+    # ------------------------------------------------------------------ 历史盈利路径模板（事后）
+    def playbook_tier(self, day: date, capital_usd: float, target_usd: float, symbols: list[str] | None = None, tier: str | None = None, mode: str = "cross"):
+        from .playbook.optimizer import optimize_playbook
+        syms = symbols or (self.symbols(tradable_only=True) + self.crypto_symbols(tradable_only=True))
+        if mode.startswith("single:"):
+            syms = [mode.split(":", 1)[1]]
+        assets = [a for a in (self.asset_day(s, day) for s in syms) if a is not None and a.cap.directions]
+        if not assets:
+            raise LookupError(f"{day} 无可交易资产数据")
+        tx = {a.symbol: self.tx_amount_per_bar(a.symbol, day) for a in assets}
+        return optimize_playbook(assets, capital_usd, target_usd, day.isoformat(), mode=mode, tier=tier, participation=self.participation_rate,
+                                 tx_amount={k: v for k, v in tx.items() if v is not None}, weights=self.playbook_cfg.get("weights"),
+                                 max_hold_min=int(self.playbook_cfg.get("max_hold_min", 240)))
+
+    def playbook_tiers(self, day: date, symbols: list[str] | None = None, mode: str = "cross") -> list:
+        out = []
+        for t in self.tiers.tiers:
+            cap = t.representative_capitals(("mid",))["mid"]
+            lo, hi = t.target_daily_pct
+            pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
+            out.append(self.playbook_tier(day, cap, pct / 100 * cap, symbols, t.id, mode))
+        return out
 
     def status(self) -> dict:
         return {"data_mode": self.plan.mode, "banner": self.plan.banner(), "blockers": self.plan.blockers,
