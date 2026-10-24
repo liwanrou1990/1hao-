@@ -642,6 +642,22 @@ class Pipeline:
         from .data.offline_import import import_dir
         return import_dir(self.store, root or self.settings.resolve_path("data_in"), day)
 
+    def depth_caps(self, symbol: str, day: date, bars: pd.DataFrame, bp: int = 25, window_min: int = 5) -> dict | None:
+        """每根 K 线的订单簿容量（买用 ask、卖用 bid，距中价 bp 内，±窗口内快照中位数）；无快照 → None。"""
+        dp = self.store.depth_for_day(symbol, day)
+        if dp.empty:
+            return None
+        dts = pd.to_datetime(dp["ts_ny"])
+        bar_ts = pd.to_datetime(bars["ts_ny"])
+        buy = np.full(len(bars), np.inf); sell = np.full(len(bars), np.inf); cov = 0
+        for i, t in enumerate(bar_ts):
+            near = dp[(dts - t).abs() <= pd.Timedelta(minutes=window_min)]
+            if not near.empty:
+                buy[i] = float(pd.to_numeric(near[f"ask_usd_{bp}bp"], errors="coerce").median())
+                sell[i] = float(pd.to_numeric(near[f"bid_usd_{bp}bp"], errors="coerce").median())
+                cov += 1
+        return {"buy": buy, "sell": sell, "coverage": cov / max(1, len(bars))}
+
     def verify_playbook(self, result, day: date) -> dict:
         """对模板逐笔校验成交条件并分级（SIMULATED / REAL_HISTORICAL / EXECUTION_ESTIMATED）。"""
         from .playbook.verify import verify_trades
@@ -679,8 +695,14 @@ class Pipeline:
             raise RuntimeError(f"{day} 以下资产没有真实行情（缺失或 SIMULATED）：{', '.join(bad)}。网络放行 api.bitget.com / bopenapi.bgwapi.io 后执行 ingest。阻塞：{'; '.join(self.plan.blockers[:3])}")
 
     def asset_day(self, symbol: str, day: date, weight: float = 1.0) -> AssetDay | None:
-        bars = self.hindsight_bars(symbol, day)
+        """事后路径/轮动用的资产日数据：只接受代币/现货成交数据（venue=token），绝不回退到原生股价。"""
+        bars = self.day_bars(symbol, day, Venue.TOKEN)
         if bars.empty:
+            return None
+        from .data.venue_check import source_matches_venue
+        ok, note = source_matches_venue(symbol, str(bars["source"].iloc[0]), bars["chain"].iloc[0], bars["contract"].iloc[0])
+        if not ok:
+            self.plan.blockers.append(f"{symbol} {day}: 数据与登记场所不匹配，已排除：{note}")
             return None
         return make_asset_day(symbol, bars, self.profile_for(symbol), self.capability(symbol), day, weight)
 
@@ -714,8 +736,9 @@ class Pipeline:
         if not assets:
             raise LookupError(f"{day} 无可交易资产数据")
         tx = {a.symbol: self.tx_amount_per_bar(a.symbol, day) for a in assets}
+        depth = {a.symbol: d for a in assets if (d := self.depth_caps(a.symbol, day, a.bars)) is not None}
         return optimize_playbook(assets, capital_usd, target_usd, day.isoformat(), mode=mode, tier=tier, participation=self.participation_rate,
-                                 tx_amount={k: v for k, v in tx.items() if v is not None}, weights=self.playbook_cfg.get("weights"),
+                                 tx_amount={k: v for k, v in tx.items() if v is not None}, depth_caps=depth, weights=self.playbook_cfg.get("weights"),
                                  max_hold_min=int(self.playbook_cfg.get("max_hold_min", 480)), k_grid=tuple(self.playbook_cfg.get("k_grid", (1, 2, 4, 8, 16, 32, 64, 128, 256))))
 
     def playbook_tiers(self, day: date, symbols: list[str] | None = None, mode: str = "cross") -> list:

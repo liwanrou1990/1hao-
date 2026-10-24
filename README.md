@@ -10,7 +10,8 @@
 > **事后模板 ≠ 可执行策略**：可执行（无未来信息）见决策引擎与轮动回测（C 模型）。目标不可达时输出最高可实现净收益与缺口，不伪造达标。
 
 ```bash
-bgwq import-dir --day 2026-10-22          # 离线导入真实数据 data_in/<SYMBOL>/<day>/{kline,trades,depth}.csv（见 docs/11；脚本 scripts/fetch_bitget_public.py）
+bgwq import-dir --day 2026-10-22          # 离线导入真实数据：Bitget 官方下载中心 https://www.bitget.com/data-download 的 zip/csv 放到 data_in/<SYMBOL>/<day>/（见 docs/11、12）
+bgwq venue-check --day 2026-10-22         # 场所/标识/链/计价币矩阵 + 库内数据是否与登记场所匹配（xStocks/Ondo/Reality ≠ 交易所现货）
 bgwq playbook-daily --require-real        # 每日：昨天（或 --day）七档 × 跨资产 + 单资产模板 → 流水 CSV + 逐笔校验 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON；严格模式拒绝 SIMULATED
 bgwq playbook --day 2026-10-22 --trades   # 终端查看七档跨资产模板与完整流水（--mode single:NVDA 单资产）
 # 每日自动：crontab 例  30 7 * * 2-6  cd /path && .venv/bin/bgwq playbook-daily >> logs/playbook.log 2>&1

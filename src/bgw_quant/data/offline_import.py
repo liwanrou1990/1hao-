@@ -32,13 +32,29 @@ def _read_any(path: str | Path) -> pd.DataFrame:
     path = Path(path)
     if path.suffix.lower() == ".zip":
         with zipfile.ZipFile(path) as z:
-            inner = [n for n in z.namelist() if n.lower().endswith((".csv", ".json", ".txt"))]
+            inner = [n for n in z.namelist() if n.lower().endswith((".csv", ".json", ".txt")) and not n.startswith("__MACOSX")]
             if not inner:
                 raise ValueError(f"{path} 内无 csv/json")
-            with z.open(inner[0]) as f:
-                return _read_any_buffer(f, inner[0])
+            frames = []
+            for n in inner:                                   # 下载中心的 zip 可能按小时/按天拆成多个文件：全部拼接
+                with z.open(n) as f:
+                    frames.append(_read_any_buffer(f, n))
+            return pd.concat(frames, ignore_index=True) if len(frames) > 1 else frames[0]
     with open(path, "rb") as f:
         return _read_any_buffer(f, path.name)
+
+
+def detect_kind(path: str | Path) -> str:
+    """按列名自动识别文件类型：kline（含 open/high/low/close）、depth（bids/asks 或 asks[i].price 或 bid_usd_*）、trades（价格+数量）。"""
+    df = _norm_cols(_read_any(path).head(5))
+    cols = set(df.columns)
+    if {"open", "high", "low", "close"} <= cols or {"o", "h", "l", "c"} <= cols:
+        return "kline"
+    if ("bids" in cols and "asks" in cols) or any(re.fullmatch(r"asks\[\d+\]\.price", c) for c in cols) or "bid_usd_10bp" in cols:
+        return "depth"
+    if ("price" in cols or "p" in cols or "px" in cols) and (cols & {"size", "amount", "qty", "quantity", "q", "vol", "volume"}):
+        return "trades"
+    raise ValueError(f"{path}: 无法识别类型；列：{sorted(cols)[:15]}")
 
 
 def _read_any_buffer(f, name: str) -> pd.DataFrame:
@@ -91,7 +107,7 @@ def _pick(df: pd.DataFrame, names: tuple[str, ...], column_map: dict | None, key
 
 
 # ----------------------------------------------------------------------------- K 线
-def parse_kline_csv(path: str | Path, symbol: str, column_map: dict | None = None, tf: str = "1m") -> pd.DataFrame:
+def parse_kline_csv(path: str | Path, symbol: str, column_map: dict | None = None, tf: str = "1m", chain: str | None = None, contract: str | None = None) -> pd.DataFrame:
     df = _norm_cols(_read_any(path))
     ts_col = _pick(df, _TS_CANDIDATES, column_map, "ts")
     if ts_col is None:
@@ -112,7 +128,7 @@ def parse_kline_csv(path: str | Path, symbol: str, column_map: dict | None = Non
         out["amount"] = out["volume"] * (out["open"] + out["close"]) / 2
     out["tf"] = tf
     out = out.dropna(subset=["ts", "close"]).drop_duplicates("ts", keep="last").sort_values("ts")
-    bars = normalize_bars(out, symbol=symbol, venue=Venue.TOKEN, source=f"{SOURCE_PREFIX}:{Path(path).name}")
+    bars = normalize_bars(out, symbol=symbol, venue=Venue.TOKEN, source=f"{SOURCE_PREFIX}:{Path(path).name}", chain=chain, contract=contract)
     return research_ready(apply_quality_flags(bars))
 
 
@@ -196,9 +212,14 @@ def parse_depth_csv(path: str | Path, symbol: str, column_map: dict | None = Non
 
 
 # ----------------------------------------------------------------------------- 导入
-def import_file(store, kind: str, path: str | Path, symbol: str, column_map: dict | None = None, tf: str = "1m") -> dict:
+def import_file(store, kind: str, path: str | Path, symbol: str, column_map: dict | None = None, tf: str = "1m", chain: str | None = None, contract: str | None = None) -> dict:
+    from ..config import asset_class_of
+    if kind == "auto":
+        kind = detect_kind(path)
+    if kind == "kline" and asset_class_of(symbol) == "stock" and not (chain and contract):
+        raise ValueError(f"{symbol} 是代币化美股：导入 K 线必须声明 --chain 与 --contract（xStocks/Ondo/Reality 各链代币不同），禁止用普通美股行情冒充")
     if kind == "kline":
-        bars = parse_kline_csv(path, symbol, column_map, tf)
+        bars = parse_kline_csv(path, symbol, column_map, tf, chain, contract)
         n = store.upsert_bars(bars)
         days = sorted(set(pd.to_datetime(bars["ts_ny"]).dt.date)) if len(bars) else []
         return {"kind": kind, "symbol": symbol, "rows": n, "days": [d.isoformat() for d in days], "source": f"{SOURCE_PREFIX}:{Path(path).name}",
@@ -224,7 +245,8 @@ def import_file(store, kind: str, path: str | Path, symbol: str, column_map: dic
 
 
 def import_dir(store, root: str | Path, day: date | None = None) -> list[dict]:
-    """扫描 data_in/<SYMBOL>/<YYYY-MM-DD>/{kline,trades,depth}.(csv|json|zip) 并导入；day 指定时只导入该日。"""
+    """扫描 data_in/<SYMBOL>/<YYYY-MM-DD>/ 下全部文件并导入：文件名以 kline/trades/depth 开头时按名识别，否则按列自动识别；
+    代币化美股需在同目录放 meta.json {"chain": "...", "contract": "..."}（或文件名含 chain）；day 指定时只导入该日。"""
     root = Path(root)
     out = []
     if not root.exists():
@@ -237,10 +259,13 @@ def import_dir(store, root: str | Path, day: date | None = None) -> list[dict]:
                 continue
             if day and d != day:
                 continue
-            for kind in ("kline", "trades", "depth"):
-                for f in sorted(day_dir.glob(f"{kind}.*")):
-                    try:
-                        out.append(import_file(store, kind, f, sym_dir.name.upper()) | {"file": str(f)})
-                    except Exception as e:  # noqa: BLE001
-                        out.append({"kind": kind, "symbol": sym_dir.name.upper(), "file": str(f), "error": str(e)})
+            meta = {}
+            if (day_dir / "meta.json").exists():
+                meta = json.loads((day_dir / "meta.json").read_text(encoding="utf-8"))
+            for f in sorted(p for p in day_dir.iterdir() if p.is_file() and p.suffix.lower() in (".csv", ".json", ".zip", ".txt") and p.name != "meta.json"):
+                kind = next((k for k in ("kline", "trades", "depth") if f.name.lower().startswith(k)), "auto")
+                try:
+                    out.append(import_file(store, kind, f, sym_dir.name.upper(), chain=meta.get("chain"), contract=meta.get("contract")) | {"file": str(f)})
+                except Exception as e:  # noqa: BLE001
+                    out.append({"kind": kind, "symbol": sym_dir.name.upper(), "file": str(f), "error": str(e)})
     return out

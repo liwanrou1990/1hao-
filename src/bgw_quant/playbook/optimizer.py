@@ -131,16 +131,19 @@ class _Pre:
     asset: AssetDay
     p: np.ndarray            # 网格收盘价（缺失 NaN）
     p_s: np.ndarray          # 带状：p[b+h]
-    liq: np.ndarray          # 网格可用量（缺失 0）
+    liq: np.ndarray          # 网格可用量（参与率×成交额；缺失 0）
     liq_src: str
     mae_l: np.ndarray        # 带状最大不利波动比例（多）
     mae_s: np.ndarray | None
     hold: np.ndarray         # 带状持有分钟数
     ts: np.ndarray           # 网格美东时间字符串
+    depth_buy: np.ndarray | None = None    # 网格：买入侧（ask）订单簿容量，无快照为 inf
+    depth_sell: np.ndarray | None = None   # 卖出侧（bid）
 
 
-def _precompute(assets: list[AssetDay], participation: float, tx_amount: dict | None, H: int, grid_ny: list[str]) -> list[_Pre]:
+def _precompute(assets: list[AssetDay], participation: float, tx_amount: dict | None, H: int, grid_ny: list[str], depth_caps: dict | None = None) -> list[_Pre]:
     out = []
+    depth_caps = depth_caps or {}
     hold = np.broadcast_to(np.arange(1, H + 1, dtype=float)[None, :], (GRID_MINUTES, H))
     for a in assets:
         if a.n < 2 or not a.cap.directions:
@@ -160,19 +163,26 @@ def _precompute(assets: list[AssetDay], participation: float, tx_amount: dict | 
                 rM = np.maximum.accumulate(np.nan_to_num(_shift_band(high, H), nan=-np.inf), axis=1)
                 mae_s = np.maximum(0.0, (rM - p[:, None]) / p[:, None])
                 mae_s = np.where(np.isfinite(mae_s), mae_s, 0.0)
-        out.append(_Pre(a, p, p_s, liq, src, mae_l, mae_s, np.asarray(hold), np.asarray(grid_ny)))
+        pre = _Pre(a, p, p_s, liq, src, mae_l, mae_s, np.asarray(hold), np.asarray(grid_ny))
+        dc = depth_caps.get(a.symbol)
+        if dc is not None:
+            pre.depth_buy, pre.depth_sell = _to_grid(a, dc["buy"], np.inf), _to_grid(a, dc["sell"], np.inf)
+        out.append(pre)
     return out
 
 
-def _asset_bands(pr: _Pre, avail: np.ndarray, size_cap: float, cap_cost: float):
-    """带状净利润（多/空）、投入 S、单边成本比例 c（冲击按资金片规模计算，保守）。"""
+def _asset_bands(pr: _Pre, avail: np.ndarray, size_cap: float, cap_cost: float, avail_buy: np.ndarray | None = None, avail_sell: np.ndarray | None = None):
+    """带状净利润（多/空）、投入 S、单边成本比例 c（冲击按资金片规模计算，保守）。
+    约束：入场分钟 S ≤ 参与率×成交额 且 ≤ 买入侧订单簿容量；出场分钟 真实出场名义额 ≤ 参与率×成交额 且 ≤ 卖出侧容量（多头；空头方向相反）。"""
     cost = pr.asset.cost
     H = pr.hold.shape[1]
     c = cost.proportional_side_cost() + cost.impact_fraction(size_cap)
     # 出场侧真实成交额 = 数量 × 出场价 = S × p_s / (p_b(1+c))（多头）；要求它 ≤ 出场分钟可用量 → S ≤ avail_s × p_b(1+c)/p_s
     with np.errstate(invalid="ignore", divide="ignore"):
         exit_scale = pr.p[:, None] * (1 + c) / pr.p_s
-    S = np.minimum(size_cap, np.minimum(avail[:, None], _shift_band(avail, H) * exit_scale))
+    entry_cap = avail if avail_buy is None else np.minimum(avail, avail_buy)
+    exit_cap = avail if avail_sell is None else np.minimum(avail, avail_sell)
+    S = np.minimum(size_cap, np.minimum(entry_cap[:, None], _shift_band(exit_cap, H) * exit_scale))
     S = np.where(np.isnan(S) | (S < cost.p.min_tx_usd) | np.isnan(pr.p[:, None]) | np.isnan(pr.p_s), 0.0, S)
     gas = 2 * cost.p.gas_usd * max(1, math.ceil(size_cap / cost.p.max_tx_usd))
     fund = S * cap_cost * pr.hold / BARS_PER_YEAR
@@ -221,6 +231,8 @@ def _dp_band(band: np.ndarray) -> tuple[float, list[tuple[int, int]]]:
 # ----------------------------------------------------------------------------- 一次路径求解（固定 k、λ）
 def _solve(pres: list[_Pre], capital: float, k: int, lam: float, cap_cost: float) -> list[PlaybookTrade]:
     avail = [pr.liq.copy() for pr in pres]
+    avail_buy = [pr.depth_buy.copy() if pr.depth_buy is not None else None for pr in pres]
+    avail_sell = [pr.depth_sell.copy() if pr.depth_sell is not None else None for pr in pres]
     trades: list[PlaybookTrade] = []
     size_cap = capital / k
     H = pres[0].hold.shape[1]
@@ -230,7 +242,7 @@ def _solve(pres: list[_Pre], capital: float, k: int, lam: float, cap_cost: float
         direc = np.zeros((GRID_MINUTES, H), dtype=np.int8)
         cache = []
         for i, pr in enumerate(pres):
-            pi_l, pi_s, S, c, fund, gas = _asset_bands(pr, avail[i], size_cap, cap_cost)
+            pi_l, pi_s, S, c, fund, gas = _asset_bands(pr, avail[i], size_cap, cap_cost, avail_buy[i], avail_sell[i])
             cache.append((pi_l, pi_s, S, c, fund, gas))
             sc = pi_l - lam * S * pr.mae_l
             m = sc > best
@@ -270,6 +282,10 @@ def _solve(pres: list[_Pre], capital: float, k: int, lam: float, cap_cost: float
                                         net / size if size else 0.0, int(h)))
             avail[i][b] = max(0.0, avail[i][b] - size)
             avail[i][s] = max(0.0, avail[i][s] - qty * ps)        # 出场侧按真实成交额（数量×出场价）占用
+            if avail_buy[i] is not None:                          # 订单簿容量按方向占用：多头入场吃 ask、出场吃 bid；空头相反
+                eb, xs = (avail_buy[i], avail_sell[i]) if not short else (avail_sell[i], avail_buy[i])
+                eb[b] = max(0.0, eb[b] - size)
+                xs[s] = max(0.0, xs[s] - qty * ps)
     return trades
 
 
@@ -388,13 +404,13 @@ def _binding_constraints(pres: list[_Pre], trades: list[PlaybookTrade], capital:
 
 # ----------------------------------------------------------------------------- 主入口
 def optimize_playbook(assets: list[AssetDay], capital_usd: float, target_usd: float, day: str, *, mode: str = "cross", tier: str | None = None,
-                      participation: float = 0.10, tx_amount: dict | None = None, k_grid=(1, 2, 4, 8, 16, 32, 64, 128, 256),
+                      participation: float = 0.10, tx_amount: dict | None = None, depth_caps: dict | None = None, k_grid=(1, 2, 4, 8, 16, 32, 64, 128, 256),
                       lam_grid=(0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0), weights: dict | None = None, cap_cost_annual: float = 0.05, min_tranche_usd: float = 500.0,
                       early_stop_gain: float = 0.02, max_hold_min: int = 480) -> PlaybookResult:
     from .universe_time import grid_ny_strings
 
     weights = weights or {}
-    pres = _precompute(assets, participation, tx_amount, int(max_hold_min), grid_ny_strings(day))
+    pres = _precompute(assets, participation, tx_amount, int(max_hold_min), grid_ny_strings(day), depth_caps)
     limits: list[str] = []
     sources = {a.symbol: a.source for a in assets}
     liq_srcs = {pr.asset.symbol: pr.liq_src for pr in pres}
@@ -463,6 +479,8 @@ def optimize_playbook(assets: list[AssetDay], capital_usd: float, target_usd: fl
     if any(a.cap.short for a in assets) is False:
         limits.append("仅做多：资产池内无登记核实的做空渠道（现货卖出只用于平多）")
     limits.append("资金费率：现货无资金费率；做空借券费与资金成本已按年化计提")
+    nd = [pr.asset.symbol for pr in pres if pr.depth_buy is not None]
+    limits.append(("订单簿容量约束已启用（买吃 ask / 卖吃 bid，距中价 25bp）：" + ", ".join(nd)) if nd else "无盘口深度快照：成交能力仅按参与率×成交额估算（EXECUTION_ESTIMATED 口径）")
     net = float(sum(t.net_pnl_usd for t in trades))
     return PlaybookResult(day, tier, capital_usd, target_usd, mode, [a.symbol for a in assets], met, net, net / capital_usd if capital_usd else 0.0,
                           trades, len(trades), sum(t.direction == "long" for t in trades), sum(t.direction == "short" for t in trades), sw,

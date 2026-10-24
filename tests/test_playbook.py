@@ -101,3 +101,19 @@ def test_small_target_scales_last_trade(assets):
     assert r.peak_deployed_usd < 3_000                                   # 不再满仓
     t = r.trades[-1]
     assert t.cost_usd >= t.gas_usd and t.net_ret == pytest.approx(t.net_pnl_usd / t.size_usd)
+
+
+def test_depth_caps_bound_each_fill(assets):
+    """订单簿容量约束：给定每分钟买侧/卖侧容量，每笔入场投入 ≤ 买侧容量，出场名义额 ≤ 卖侧容量。"""
+    import numpy as np
+    sol = next(a for a in assets if a.symbol == "SOL")
+    cap_buy, cap_sell = 2_000.0, 1_500.0
+    depth = {"SOL": {"buy": np.full(sol.n, cap_buy), "sell": np.full(sol.n, cap_sell), "coverage": 1.0}}
+    r = optimize_playbook([sol], 60_000, 540, str(SAMPLE_DAY), mode="single:SOL", tier="T2", depth_caps=depth, k_grid=(1, 4, 16))
+    assert r.trades, "有容量约束时仍应有可行交易"
+    for t in r.trades:
+        assert t.size_usd <= cap_buy + 1e-6
+        assert t.qty * t.exit_ref <= cap_sell + 1e-6
+    assert any("订单簿容量约束已启用" in x for x in r.limits)
+    r0 = optimize_playbook([sol], 60_000, 540, str(SAMPLE_DAY), mode="single:SOL", tier="T2", k_grid=(1, 4, 16))
+    assert r0.max_achievable_net_usd >= r.max_achievable_net_usd - 1e-6          # 加约束不会提高上限

@@ -9,7 +9,7 @@ td:first-child,th:first-child{text-align:left}.banner{padding:10px 12px;border-r
 <div class="muted">生成 {{ generated_at }} · 成本档 {{ cost_profile }}（股票代币）/ {{ crypto_profile }}（加密货币）· 参与率 {{ participation }} · 最长持有 {{ max_hold }} 分钟 · 资产池：股票 {{ stocks|join('/') }}；加密 {{ cryptos|join('/') }}</div>
 {% if status == 'SIMULATED' %}<div class="banner bad"><b>结果分级：SIMULATED。</b>{{ banner }} 本报告基于模拟行情，所有校验只验证模型内部一致性，不代表真实可成交。真实数据：放行域名后 <code>bgwq playbook-daily --require-real</code>，或把 Bitget 公开接口/第三方导出的 CSV 放到 <code>data_in/&lt;SYMBOL&gt;/{{ day }}/</code> 后重跑。</div>
 {% elif status == 'EXECUTION_ESTIMATED' %}<div class="banner warn"><b>结果分级：EXECUTION_ESTIMATED（真实 K 线，成交估算）。</b> 缺少完整逐笔成交或历史盘口深度，成交量/深度约束按 K 线成交额与成本模型估算；深度未校验的交易在校验表中标注。</div>
-{% else %}<div class="banner ok"><b>结果分级：REAL_HISTORICAL。</b> 真实 K 线 + 逐笔成交 + 盘口深度快照（覆盖 ≥90% 分钟）；每笔成交量与深度均已校验。</div>{% endif %}
+{% else %}<div class="banner ok"><b>结果分级：REAL_HISTORICAL。</b> 真实 K 线 + 逐笔成交 + 盘口深度快照（覆盖 ≥90% 分钟）；每笔成交量与深度均已校验。<b>这只是事后可成交性验证，不代表发生过真实成交，也不是实盘收益。</b></div>{% endif %}
 <table><tr><th>资产</th><th>来源</th><th>分级</th><th>K 线</th><th>逐笔成交</th><th>深度快照</th></tr>{% for s, v in provenance.items() %}<tr><td>{{ s }}</td><td style="text-align:left;font-size:10px">{{ v.source if v.available else '缺失' }}</td><td>{{ v.status if v.available else '—' }}</td><td>{{ v.bars if v.available else 0 }}</td><td>{{ v.trades if v.available else 0 }}</td><td>{{ v.depth_snapshots if v.available else 0 }}</td></tr>{% endfor %}</table>
 <div class="banner warn"><b>严格区分：</b>本页全部为“已知完整走势的事后最优模板”，用于研究昨天怎样交易能盈利；“当时不知道未来的可执行策略”见决策引擎/轮动回测（C 模型）。事后模板收益不是实盘可保证收益。目标函数：先满足累计净收益 ≥ 目标，再最小化风险（最大回撤 + 0.5×Σ最大不利波动 + 成本 + 每笔罚金）；目标不可达时输出最高可实现净收益与缺口，不伪造达标。</div>
 

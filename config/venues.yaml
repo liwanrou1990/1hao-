@@ -1,0 +1,55 @@
+# 交易场所登记：每个研究资产“在哪里成交、用什么标识、什么链、什么计价币、历史数据来自哪里”。
+# 规则：代币化美股的成交数据只能来自对应链上代币（Bitget Wallet RWA 接口或同链合约的链上成交导出），
+#       绝不能用普通美股行情（Massive/交易所股价）或 Bitget 交易所现货数据冒充；加密货币价格来自 Bitget 交易所现货，
+#       成交渠道若假设为钱包内 swap，则结果最多只能是 EXECUTION_ESTIMATED。
+# verification: unverified = 未经官方接口/区块浏览器核实（本环境无网络）；来源字段给出公开资料出处（2026-10-24 检索）。
+venues:
+  bitget_spot:
+    name: Bitget 交易所现货
+    kind: cex_spot
+    quote: USDT
+    data: "公开接口 api.bitget.com /api/v2/spot/market/*；官方历史数据下载中心 https://www.bitget.com/data-download（现货 K 线/成交/深度）"
+    trading: 现货买卖（无借币做空；合约另计，本系统不接入）
+  bgw_rwa_xstocks:
+    name: Bitget Wallet · xStocks（Backed 发行）
+    kind: onchain_token
+    chains: [solana, ethereum, arbitrum, bnb, optimism, mantle, ink, hyperevm]
+    quote: USDC/USDT（链上 DEX 聚合成交）
+    data: "Bitget Wallet ToB OpenAPI kline/transactionList（按 chain+contract）；或同链合约的链上成交导出"
+    trading: 钱包内现货 swap 买卖（无做空）
+  bgw_rwa_ondo:
+    name: Bitget Wallet · Ondo Global Markets
+    kind: onchain_token
+    chains: [ethereum, bnb, solana, hyperevm]
+    quote: USDC/USDT
+    data: "同上；ondo 报价 K 线无成交量字段（NO_VOLUME_FIELD）→ 流动性只能来自 transactionList"
+    trading: 钱包内现货 swap 买卖（无做空）
+  bgw_rwa_reality:
+    name: Bitget Wallet · Reality（rTokens）
+    kind: onchain_token
+    chains: [arbitrum, morph]
+    quote: USDT/USDC
+    data: "官方 RWA SDK 枚举 data_source 仅 ondo/xstocks，Reality 未出现在枚举中 → 待官方接口确认"
+    trading: 钱包内现货 swap 买卖（无做空）；发行方与 Bitget 为关联方
+assets:
+  BTC:  {venue: bitget_spot, identifier: BTCUSDT, quote: USDT, exec_assumption: "钱包内 swap（成交能力按交易所现货估算）", verification: unverified}
+  ETH:  {venue: bitget_spot, identifier: ETHUSDT, quote: USDT, exec_assumption: "同上", verification: unverified}
+  SOL:  {venue: bitget_spot, identifier: SOLUSDT, quote: USDT, exec_assumption: "同上", verification: unverified}
+  HYPE: {venue: bitget_spot, identifier: HYPEUSDT, quote: USDT, exec_assumption: "同上；Bitget 现货是否有 HYPE/USDT 需核实", verification: unverified}
+  NVDA:
+    candidates:
+      - {venue: bgw_rwa_xstocks, token: NVDAx, chain: solana, contract: Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh, source: "coinbase/solflare/rwa.xyz 检索"}
+      - {venue: bgw_rwa_xstocks, token: NVDAx, chain: ethereum, contract: "0xc845b2894dBddd03858fd2D643B4eF725fE0849d", source: etherscan}
+      - {venue: bgw_rwa_ondo, token: NVDAon, chain: ethereum, contract: "0x2D1F7226Bd1F780AF6B9A49DCC0aE00E8Df4bDEE", source: etherscan/coinbase}
+      - {venue: bgw_rwa_ondo, token: NVDAon, chain: bnb, contract: "0xA9eE28C80f960B889dFbd1902055218cBa016F75", source: coinbase}
+      - {venue: bgw_rwa_reality, token: rNVDA, chain: arbitrum/morph, contract: null, source: "新闻稿，合约未核实"}
+    verification: unverified
+  TSLA: {candidates: [{venue: bgw_rwa_xstocks, token: TSLAx}, {venue: bgw_rwa_ondo, token: TSLAon}, {venue: bgw_rwa_reality, token: rTSLA}], verification: unverified}
+  SPY:  {candidates: [{venue: bgw_rwa_xstocks, token: SPYx}, {venue: bgw_rwa_ondo, token: SPYon}, {venue: bgw_rwa_reality, token: rSPY}], verification: unverified}
+  QQQ:  {candidates: [{venue: bgw_rwa_xstocks, token: QQQx}, {venue: bgw_rwa_ondo, token: QQQon}, {venue: bgw_rwa_reality, token: rQQQ}], verification: unverified}
+  MU:   {candidates: [{venue: bgw_rwa_xstocks, token: MUx}, {venue: bgw_rwa_ondo, token: MUon}], verification: unverified}
+  MSFT: {candidates: [{venue: bgw_rwa_xstocks, token: MSFTx}, {venue: bgw_rwa_ondo, token: MSFTon}], verification: unverified}
+  SNDK: {candidates: [{venue: bgw_rwa_ondo, token: SNDKon}], verification: unverified}
+  INTC: {candidates: [{venue: bgw_rwa_xstocks, token: INTCx}, {venue: bgw_rwa_ondo, token: INTCon}], verification: unverified}
+  META: {candidates: [{venue: bgw_rwa_xstocks, token: METAx}, {venue: bgw_rwa_ondo, token: METAon}], verification: unverified}
+  SPCX: {candidates: [{venue: bgw_rwa_ondo, token: SPCXon}], verification: unverified, tradable: false}

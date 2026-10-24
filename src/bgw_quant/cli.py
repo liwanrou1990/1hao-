@@ -276,12 +276,19 @@ def cmd_playbook(args):
                       f"仓位 {t.size_usd:,.0f} 成本 {t.cost_usd:.2f} 净 {t.net_pnl_usd:+.2f} 累计 {t.cum_net_pnl_usd:,.2f}{' ★达标' if t.reaches_target else ''}")
 
 
+def cmd_venue_check(args):
+    """场所/标识/链/计价币/数据来源矩阵 + 库内数据是否与登记场所匹配（禁止混用普通美股行情与代币成交）。"""
+    from .data.venue_check import venue_matrix
+    pl = _pipeline(args)
+    _p(venue_matrix(pl, _day(args.day) or pl.latest_day()))
+
+
 def cmd_import_csv(args):
     """离线导入真实历史数据：--kind kline|trades|depth --symbol BTC --file path [--map ts=open_time,open=o,...]"""
     from .data.offline_import import import_file
     pl = _pipeline(args)
     cmap = dict(kv.split("=", 1) for kv in (args.map or "").split(",") if "=" in kv) or None
-    _p(import_file(pl.store, args.kind, args.file, args.symbol.upper(), cmap, args.tf))
+    _p(import_file(pl.store, args.kind, args.file, args.symbol.upper(), cmap, args.tf, chain=args.chain, contract=args.contract))
 
 
 def cmd_import_dir(args):
@@ -507,7 +514,8 @@ def main(argv=None):
     p = sub.add_parser("feasibility", help="历史可行性：A 理论最大 / B 执行约束下最大可实现 / 达标所需笔数 / 完整买卖点"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_feasibility)
     p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
     p = sub.add_parser("key-audit", help="密钥审计：泄露扫描、未知 32 位值字段识别（BGWQ_AUDIT_VALUE 环境变量输入，不输出密钥）"); p.add_argument("--out"); p.set_defaults(f=cmd_key_audit)
-    p = sub.add_parser("import-csv", help="离线导入真实历史 K 线/逐笔成交/盘口深度 CSV（绕过网络限制）"); p.add_argument("--kind", required=True, choices=["kline", "trades", "depth"]); p.add_argument("--symbol", required=True); p.add_argument("--file", required=True); p.add_argument("--map"); p.add_argument("--tf", default="1m"); p.set_defaults(f=cmd_import_csv)
+    p = sub.add_parser("import-csv", help="离线导入真实历史 K 线/逐笔成交/盘口深度 CSV（Bitget 下载中心/公开接口导出/Tardis/通用）"); p.add_argument("--kind", default="auto", choices=["auto", "kline", "trades", "depth"]); p.add_argument("--symbol", required=True); p.add_argument("--file", required=True); p.add_argument("--map"); p.add_argument("--tf", default="1m"); p.add_argument("--chain", help="代币化美股必填：链（solana/ethereum/bnb/arbitrum…）"); p.add_argument("--contract", help="代币化美股必填：代币合约/mint"); p.set_defaults(f=cmd_import_csv)
+    p = sub.add_parser("venue-check", help="交易场所与数据匹配检查：xStocks/Ondo/Reality vs Bitget 交易所现货"); p.add_argument("--day"); p.set_defaults(f=cmd_venue_check)
     p = sub.add_parser("import-dir", help="扫描 data_in/<SYMBOL>/<day>/ 批量导入"); p.add_argument("--root"); p.add_argument("--day"); p.set_defaults(f=cmd_import_dir)
     p = sub.add_parser("playbook", help="历史盈利路径模板（事后）：七档 × 跨资产/单资产，完整流水"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--mode", default="cross"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_playbook)
     p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.add_argument("--require-real", action="store_true", help="严格模式：任一资产非真实行情则终止，绝不用 SIMULATED 冒充"); p.set_defaults(f=cmd_playbook_daily)

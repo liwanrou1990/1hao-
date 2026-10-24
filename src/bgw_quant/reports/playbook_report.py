@@ -22,8 +22,9 @@ _env.filters["pct"] = _pct
 _env.filters["num"] = _num
 
 LEDGER_COLUMNS = ["day", "tier", "capital_usd", "target_usd", "mode", "no", "symbol", "asset_class", "direction", "entry_ts", "entry_price", "exit_ts",
-                  "exit_price", "size_usd", "qty", "cost_usd", "funding_usd", "gas_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd",
-                  "reaches_target", "n_trades_total", "target_met"]
+                  "exit_price", "size_usd", "qty", "exit_notional_usd", "cost_usd", "funding_usd", "gas_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd",
+                  "reaches_target", "n_trades_total", "target_met",
+                  "entry_minute_amount_usd", "exit_minute_amount_usd", "entry_liquidity_ratio", "exit_liquidity_ratio", "depth_checked", "depth_ok", "check_ok", "check_notes"]
 
 _ASSETS: dict = {}
 _CFG: dict = {}
@@ -46,14 +47,41 @@ def _worker(task: tuple) -> tuple[tuple, dict]:
     return task, d
 
 
-def ledger_rows(day: str, tier: str, mode: str, r: dict) -> list[dict]:
+def ledger_rows(day: str, tier: str, mode: str, r: dict, checks: list[dict] | None = None, assets: dict | None = None) -> list[dict]:
     out = []
+    ck = {c["no"]: c for c in (checks or [])}
     for t in r["trades"]:
+        c = ck.get(t["no"], {})
+        a = (assets or {}).get(t["symbol"])
+        ea = xa = None
+        if a is not None:
+            bi, si = int(a.bar_at_grid[t["entry_grid"]]), int(a.bar_at_grid[t["exit_grid"]])
+            amt = a.bars["amount"].to_numpy(float)
+            ea, xa = (float(amt[bi]) if bi >= 0 else None), (float(amt[si]) if si >= 0 else None)
         out.append({"day": day, "tier": tier, "capital_usd": r["capital_usd"], "target_usd": r["target_usd"], "mode": mode, **{k: t[k] for k in
                     ("no", "symbol", "asset_class", "direction", "entry_ts", "entry_price", "exit_ts", "exit_price", "size_usd", "qty", "cost_usd",
                      "funding_usd", "gas_usd", "mae_pct", "net_pnl_usd", "net_ret", "hold_min", "cum_net_pnl_usd", "reaches_target")},
-                    "n_trades_total": r["n_trades"], "target_met": r["target_met"]})
+                    "exit_notional_usd": t["qty"] * t["exit_ref"], "n_trades_total": r["n_trades"], "target_met": r["target_met"],
+                    "entry_minute_amount_usd": ea, "exit_minute_amount_usd": xa, "entry_liquidity_ratio": c.get("volume_ratio_entry"), "exit_liquidity_ratio": c.get("volume_ratio_exit"),
+                    "depth_checked": c.get("depth_checked"), "depth_ok": c.get("depth_ok"), "check_ok": c.get("ok"), "check_notes": "；".join(c.get("notes") or [])})
     return out
+
+
+def _attach_liquidity(trades: list[dict], checks: list[dict], assets: dict) -> list[dict]:
+    """把逐笔校验的流动性字段并入交易字典（供图表页逐笔表显示）。"""
+    ck = {c["no"]: c for c in checks}
+    for t in trades:
+        c = ck.get(t["no"], {})
+        a = assets.get(t["symbol"])
+        if a is not None:
+            bi, si = int(a.bar_at_grid[t["entry_grid"]]), int(a.bar_at_grid[t["exit_grid"]])
+            amt = a.bars["amount"].to_numpy(float)
+            t["entry_minute_amount_usd"] = float(amt[bi]) if bi >= 0 else None
+            t["exit_minute_amount_usd"] = float(amt[si]) if si >= 0 else None
+        t["exit_notional_usd"] = t["qty"] * t["exit_ref"]
+        t["entry_liquidity_ratio"], t["exit_liquidity_ratio"] = c.get("volume_ratio_entry"), c.get("volume_ratio_exit")
+        t["depth_checked"], t["depth_ok"], t["check_ok"] = c.get("depth_checked"), c.get("depth_ok"), c.get("ok")
+    return trades
 
 
 def _markers(trades: list[dict], bars: pd.DataFrame, a, symbol: str) -> list[dict]:
@@ -140,10 +168,11 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
         v = _verify(pipeline, r, assets, day)
         r["verification"] = {k: v[k] for k in v if k != "checks"}
         checks_rows += [{"tier": tier, "mode": "cross", **c} for c in v["checks"]]
+        r["trades"] = _attach_liquidity(r["trades"], v["checks"], assets)
         fn = f"playbook_{tier}_{day}_{prof}.html"
         render_playbook_chart(pipeline, r, assets, charts_dir / fn, "跨资产模板")
         rows.append({**r, "mode_name": "跨资产（可切换）", "chart": f"../../charts/{fn}"})
-        ledger += ledger_rows(day.isoformat(), tier, "cross", r)
+        ledger += ledger_rows(day.isoformat(), tier, "cross", r, v["checks"], assets)
         cells = {}
         best_single = None
         for s in assets:
@@ -151,7 +180,7 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
             if not rs:
                 continue
             cells[s] = {"target_met": rs["target_met"], "net_usd": rs["net_usd"], "n_trades": rs["n_trades"], "note": "；".join(rs["limits"][:1])}
-            ledger += ledger_rows(day.isoformat(), tier, f"single:{s}", rs)
+            ledger += ledger_rows(day.isoformat(), tier, f"single:{s}", rs, None, {s: assets[s]})
             key = (rs["target_met"], -rs["risk_score_usd"] if rs["target_met"] else rs["net_usd"])
             if best_single is None or key > best_single[0]:
                 best_single = (key, s, rs)
@@ -161,6 +190,7 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
             v = _verify(pipeline, rs, {s: assets[s]}, day)
             rs["verification"] = {k: v[k] for k in v if k != "checks"}
             checks_rows += [{"tier": tier, "mode": f"single:{s}", **c} for c in v["checks"]]
+            rs["trades"] = _attach_liquidity(rs["trades"], v["checks"], {s: assets[s]})
             fn = f"playbook_{tier}_{s}_{day}_{prof}.html"
             render_playbook_chart(pipeline, rs, assets, charts_dir / fn, f"单资产模板 {s}")
             rows.append({**rs, "mode_name": f"单资产最佳 {s}", "chart": f"../../charts/{fn}"})
