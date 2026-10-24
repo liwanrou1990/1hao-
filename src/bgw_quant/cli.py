@@ -7,6 +7,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from .config import PROJECT_ROOT
+
 import pandas as pd
 
 from .calendar_utils import previous_trading_day
@@ -288,7 +290,10 @@ def cmd_import_csv(args):
     from .data.offline_import import import_file
     pl = _pipeline(args)
     cmap = dict(kv.split("=", 1) for kv in (args.map or "").split(",") if "=" in kv) or None
-    _p(import_file(pl.store, args.kind, args.file, args.symbol.upper(), cmap, args.tf, chain=args.chain, contract=args.contract))
+    chain, contract = args.chain, args.contract
+    if args.venue == "bitget_spot" and args.pair:
+        chain, contract = "cex_spot", args.pair
+    _p(import_file(pl.store, args.kind, args.file, args.symbol.upper(), cmap, args.tf, chain=chain, contract=contract))
 
 
 def cmd_import_dir(args):
@@ -296,6 +301,51 @@ def cmd_import_dir(args):
     pl = _pipeline(args)
     out = pl.import_offline(args.root, _day(args.day))
     _p(out if out else {"note": f"{args.root or 'data_in'} 下无可导入文件"})
+
+
+def cmd_data_status(args):
+    """数据完整性与分级：来源、时间范围、K 线数/应有数、缺口、逐笔成交、深度覆盖、场所匹配（不含模拟数据提级）。"""
+    import json as _json
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    syms = args.symbols or pl.all_symbols(tradable_only=True)
+    rows = pl.data_status(day, syms)
+    out = PROJECT_ROOT / "reports_out" / "playbook" / day.isoformat()
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"data_status_{day}.json").write_text(_json.dumps(rows, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    for r in rows:
+        if not r.get("available"):
+            print(f"{r['symbol']:5s} 缺失（应有 {r['expected_bars']} 根）")
+        else:
+            print(f"{r['symbol']:5s} {r['status']:19s} {r['source'][:38]:38s} 场所={r['chain']}/{str(r['contract'])[:10]} K线 {r['bars']}/{r['expected_bars']}({r['coverage']:.0%}) 缺口 {r['gaps']} 逐笔 {r['trades']}（{r['trade_minutes']} 分钟） 深度 {r['depth_snapshots']}（{r['depth_minutes']} 分钟） 匹配={r['venue_match']}")
+    print(f"已写入 {out / f'data_status_{day}.json'}")
+
+
+def cmd_playbook_sensitivity(args):
+    """参与率敏感性：对各档位（默认全部）在多个参与率上限下重算跨资产模板，输出 CSV/Markdown。"""
+    pl = _pipeline(args)
+    day = _day(args.day) or pl.latest_day()
+    syms = args.symbols or (pl.symbols(tradable_only=True) + pl.crypto_symbols(tradable_only=True))
+    prov = pl.data_provenance(day, syms)
+    level = "SIMULATED" if any(v.get("simulated") for v in prov.values()) else ("EXECUTION_ESTIMATED" if any(v.get("status") == "EXECUTION_ESTIMATED" for v in prov.values()) else "REAL_HISTORICAL")
+    rows = []
+    for part in args.participations:
+        for r in pl.playbook_tiers(day, syms, "cross", participation=part, tiers=args.tiers):
+            rows.append({"day": str(day), "level": level, "participation": part, "tier": r.tier, "capital_usd": r.capital_usd, "target_usd": r.target_usd,
+                         "target_met": r.target_met, "net_usd": round(r.net_usd, 2), "max_achievable_net_usd": round(r.max_achievable_net_usd, 2), "gap_usd": round(r.gap_usd, 2),
+                         "n_trades": r.n_trades, "n_switches": r.n_switches, "n_tranches": r.n_tranches, "max_drawdown_usd": round(r.max_drawdown_usd, 2),
+                         "cost_usd": round(r.cost_usd, 2), "peak_deployed_pct": round(r.peak_deployed_usd / r.capital_usd, 4), "liquidity_used_ratio": r.liquidity_used_ratio,
+                         "limits": "；".join(r.limits[:2])})
+            print(f"p={part:.0%} {r.tier} met={r.target_met} net={r.net_usd:,.0f} max={r.max_achievable_net_usd:,.0f} n={r.n_trades} dd={r.max_drawdown_usd:,.0f}", flush=True)
+    df = pd.DataFrame(rows)
+    out = PROJECT_ROOT / "reports_out" / "playbook" / day.isoformat() / level
+    out.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out / f"playbook_sensitivity_{day}_{pl.cost_profile_name}.csv", index=False)
+    md = [f"# {day} 参与率敏感性（{level}，跨资产模板）", "", "| 参与率 | 档位 | 目标 | 达标 | 净收益 | 最高可实现 | 笔数 | 切换 | 回撤 | 成本 | 峰值占用 |", "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for r in rows:
+        md.append(f"| {r['participation']:.0%} | {r['tier']} | {r['target_usd']:,.0f} | {'是' if r['target_met'] else '否'} | {r['net_usd']:,.0f} | {r['max_achievable_net_usd']:,.0f} | {r['n_trades']} | {r['n_switches']} | {r['max_drawdown_usd']:,.0f} | {r['cost_usd']:,.0f} | {r['peak_deployed_pct']:.0%} |")
+    (out / f"playbook_sensitivity_{day}_{pl.cost_profile_name}.md").write_text("\n".join(md), encoding="utf-8")
+    print(f"已写入 {out}")
 
 
 def cmd_playbook_daily(args):
@@ -318,7 +368,7 @@ def cmd_playbook_daily(args):
     print("数据来源：" + "；".join(f"{k}:{'缺失' if not v.get('available') else ('SIMULATED' if v['simulated'] else v['source'])}" for k, v in prov.items()), flush=True)
     if args.require_real:
         pl.require_real(day, syms)                   # 任一资产为 SIMULATED/缺失 → 终止，不生成报告
-    _p(generate_playbook_report(pl, day, args.symbols, workers=args.workers, single_assets=not args.cross_only))
+    _p(generate_playbook_report(pl, day, args.symbols, workers=args.workers, single_assets=not args.cross_only, participation=args.participation))
 
 
 def cmd_rotation(args):
@@ -514,11 +564,13 @@ def main(argv=None):
     p = sub.add_parser("feasibility", help="历史可行性：A 理论最大 / B 执行约束下最大可实现 / 达标所需笔数 / 完整买卖点"); p.add_argument("symbol"); p.add_argument("--day"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_feasibility)
     p = sub.add_parser("feasibility-report", help="历史可行性报告（全标的 × 七档）+ CSV + 图表"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_feasibility_report)
     p = sub.add_parser("key-audit", help="密钥审计：泄露扫描、未知 32 位值字段识别（BGWQ_AUDIT_VALUE 环境变量输入，不输出密钥）"); p.add_argument("--out"); p.set_defaults(f=cmd_key_audit)
-    p = sub.add_parser("import-csv", help="离线导入真实历史 K 线/逐笔成交/盘口深度 CSV（Bitget 下载中心/公开接口导出/Tardis/通用）"); p.add_argument("--kind", default="auto", choices=["auto", "kline", "trades", "depth"]); p.add_argument("--symbol", required=True); p.add_argument("--file", required=True); p.add_argument("--map"); p.add_argument("--tf", default="1m"); p.add_argument("--chain", help="代币化美股必填：链（solana/ethereum/bnb/arbitrum…）"); p.add_argument("--contract", help="代币化美股必填：代币合约/mint"); p.set_defaults(f=cmd_import_csv)
+    p = sub.add_parser("import-csv", help="离线导入真实历史 K 线/逐笔成交/盘口深度 CSV（Bitget 下载中心/公开接口导出/Tardis/通用）"); p.add_argument("--kind", default="auto", choices=["auto", "kline", "trades", "depth"]); p.add_argument("--symbol", required=True); p.add_argument("--file", required=True); p.add_argument("--map"); p.add_argument("--tf", default="1m"); p.add_argument("--chain", help="链上代币：链（solana/ethereum/bnb/arbitrum…）"); p.add_argument("--contract", help="链上代币：合约/mint"); p.add_argument("--venue", choices=["bitget_spot", "onchain"], help="代币化美股场所：bitget_spot（rToken 现货，配 --pair）或 onchain（配 --chain/--contract）"); p.add_argument("--pair", help="交易所现货交易对，如 rNVDAUSDT"); p.set_defaults(f=cmd_import_csv)
     p = sub.add_parser("venue-check", help="交易场所与数据匹配检查：xStocks/Ondo/Reality vs Bitget 交易所现货"); p.add_argument("--day"); p.set_defaults(f=cmd_venue_check)
     p = sub.add_parser("import-dir", help="扫描 data_in/<SYMBOL>/<day>/ 批量导入"); p.add_argument("--root"); p.add_argument("--day"); p.set_defaults(f=cmd_import_dir)
     p = sub.add_parser("playbook", help="历史盈利路径模板（事后）：七档 × 跨资产/单资产，完整流水"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--mode", default="cross"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_playbook)
-    p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.add_argument("--require-real", action="store_true", help="严格模式：任一资产非真实行情则终止，绝不用 SIMULATED 冒充"); p.set_defaults(f=cmd_playbook_daily)
+    p = sub.add_parser("playbook-daily", help="每日自动生成昨天的盈利打法模板：流水 CSV + K 线买卖点图 + 收益曲线 + HTML/JSON"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--workers", type=int, default=4); p.add_argument("--no-ingest", action="store_true"); p.add_argument("--cross-only", action="store_true"); p.add_argument("--require-real", action="store_true", help="严格模式：任一资产非真实行情则终止，绝不用 SIMULATED 冒充"); p.add_argument("--participation", type=float, help="参与率上限（默认 costs.yaml participation_rate=0.10）"); p.set_defaults(f=cmd_playbook_daily)
+    p = sub.add_parser("data-status", help="数据完整性与分级：来源/时间范围/K 线覆盖/缺口/逐笔/深度/场所匹配"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.set_defaults(f=cmd_data_status)
+    p = sub.add_parser("playbook-sensitivity", help="参与率敏感性（1%/5%/10%）：各档位跨资产模板重算"); p.add_argument("--day"); p.add_argument("--symbols", nargs="*"); p.add_argument("--tiers", nargs="*"); p.add_argument("--participations", nargs="*", type=float, default=[0.01, 0.05, 0.10]); p.set_defaults(f=cmd_playbook_sensitivity)
     p = sub.add_parser("rotation", help="跨市场轮动（因果 C）：六类策略 × 七档 单日结果，--ab 同时输出事后 A/B 对照"); p.add_argument("--day"); p.add_argument("--strategies", nargs="*"); p.add_argument("--ab", action="store_true"); p.add_argument("--trades", action="store_true"); p.set_defaults(f=cmd_rotation)
     p = sub.add_parser("rotation-backtest", help="多日时间顺序样本外回测 + A/B 对照 + 六类策略排名（可续跑）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--skip-c", action="store_true"); p.add_argument("--skip-ab", action="store_true"); p.add_argument("--cache", help="结果缓存 DuckDB 路径（默认 data_store/rotation_cache.duckdb）"); p.set_defaults(f=cmd_rotation_backtest)
     p = sub.add_parser("rotation-report", help="跨市场轮动综合报告（排名、A/B/C、切换路径、逐笔 CSV、图表）"); p.add_argument("--end"); p.add_argument("--test-days", type=int); p.add_argument("--train-days", type=int); p.add_argument("--workers", type=int, default=4); p.add_argument("--cache"); p.set_defaults(f=cmd_rotation_report)

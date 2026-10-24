@@ -687,6 +687,32 @@ class Pipeline:
                       "status": "SIMULATED" if sim else ("REAL_HISTORICAL" if (ntx > 0 and ndp >= 0.9 * len(b)) else "EXECUTION_ESTIMATED")}
         return out
 
+    def data_status(self, day: date, symbols: list[str]) -> list[dict]:
+        """每资产当日数据完整性：来源、时间范围、K 线数/应有数、缺口、逐笔成交数与覆盖分钟、深度快照数与覆盖、分级。"""
+        from .calendar_utils import is_trading_day, regular_minute_index
+        from .data.venue_check import source_matches_venue
+        out = []
+        for s in symbols:
+            b = self.day_bars(s, day, Venue.TOKEN)
+            ac = asset_class_of(s)
+            expected = 1440 if ac == "crypto" else (len(regular_minute_index(day)) if is_trading_day(day) else 0)
+            row = {"symbol": s, "asset_class": ac, "day": day.isoformat(), "expected_bars": expected}
+            if b.empty:
+                out.append(row | {"available": False, "status": "缺失"}); continue
+            q = b["quality"].astype(int)
+            sim = bool((q & 128).any())
+            tx = self.store.trades_for_day(s, day)
+            dp = self.store.depth_for_day(s, day)
+            tx_minutes = int(pd.to_datetime(tx["ts_ny"]).dt.floor("min").nunique()) if not tx.empty else 0
+            dp_minutes = int(pd.to_datetime(dp["ts_ny"]).dt.floor("min").nunique()) if not dp.empty else 0
+            ok, note = source_matches_venue(s, str(b["source"].iloc[0]), b["chain"].iloc[0], b["contract"].iloc[0])
+            level = "SIMULATED" if sim else ("REAL_HISTORICAL" if (tx_minutes >= 0.9 * len(b) and dp_minutes >= 0.9 * len(b)) else "EXECUTION_ESTIMATED")
+            out.append(row | {"available": True, "source": str(b["source"].iloc[0]), "chain": b["chain"].iloc[0], "contract": b["contract"].iloc[0],
+                              "ts_first": str(b["ts_ny"].iloc[0]), "ts_last": str(b["ts_ny"].iloc[-1]), "bars": int(len(b)), "coverage": round(len(b) / expected, 4) if expected else None,
+                              "gaps": int((q & 1 > 0).sum()), "no_volume": bool(b["amount"].isna().all()), "trades": int(len(tx)), "trade_minutes": tx_minutes,
+                              "depth_snapshots": int(len(dp)), "depth_minutes": dp_minutes, "venue_match": ok, "venue_note": note, "simulated": sim, "status": level})
+        return out
+
     def require_real(self, day: date, symbols: list[str]) -> None:
         """严格模式：任一资产当日数据为 SIMULATED 或缺失 → 抛错，绝不用模拟数据冒充真实行情。"""
         prov = self.data_provenance(day, symbols)
@@ -727,7 +753,8 @@ class Pipeline:
         return run_rotation_day(assets, spec, capital_usd, target_usd, self.engine_cfg, params or RotParams(), str(day), load_rotation_config())
 
     # ------------------------------------------------------------------ 历史盈利路径模板（事后）
-    def playbook_tier(self, day: date, capital_usd: float, target_usd: float, symbols: list[str] | None = None, tier: str | None = None, mode: str = "cross"):
+    def playbook_tier(self, day: date, capital_usd: float, target_usd: float, symbols: list[str] | None = None, tier: str | None = None, mode: str = "cross",
+                      participation: float | None = None):
         from .playbook.optimizer import optimize_playbook
         syms = symbols or (self.symbols(tradable_only=True) + self.crypto_symbols(tradable_only=True))
         if mode.startswith("single:"):
@@ -737,17 +764,19 @@ class Pipeline:
             raise LookupError(f"{day} 无可交易资产数据")
         tx = {a.symbol: self.tx_amount_per_bar(a.symbol, day) for a in assets}
         depth = {a.symbol: d for a in assets if (d := self.depth_caps(a.symbol, day, a.bars)) is not None}
-        return optimize_playbook(assets, capital_usd, target_usd, day.isoformat(), mode=mode, tier=tier, participation=self.participation_rate,
+        return optimize_playbook(assets, capital_usd, target_usd, day.isoformat(), mode=mode, tier=tier, participation=participation or self.participation_rate,
                                  tx_amount={k: v for k, v in tx.items() if v is not None}, depth_caps=depth, weights=self.playbook_cfg.get("weights"),
                                  max_hold_min=int(self.playbook_cfg.get("max_hold_min", 480)), k_grid=tuple(self.playbook_cfg.get("k_grid", (1, 2, 4, 8, 16, 32, 64, 128, 256))))
 
-    def playbook_tiers(self, day: date, symbols: list[str] | None = None, mode: str = "cross") -> list:
+    def playbook_tiers(self, day: date, symbols: list[str] | None = None, mode: str = "cross", participation: float | None = None, tiers: list[str] | None = None) -> list:
         out = []
         for t in self.tiers.tiers:
+            if tiers and t.id not in tiers:
+                continue
             cap = t.representative_capitals(("mid",))["mid"]
             lo, hi = t.target_daily_pct
             pct = {"lower": lo, "mid": (lo + hi) / 2, "upper": hi}.get(self.simple_cfg.target_mode, lo)
-            out.append(self.playbook_tier(day, cap, pct / 100 * cap, symbols, t.id, mode))
+            out.append(self.playbook_tier(day, cap, pct / 100 * cap, symbols, t.id, mode, participation))
         return out
 
     def status(self) -> dict:

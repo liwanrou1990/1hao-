@@ -40,7 +40,8 @@ def _verify(pipeline, r: dict, assets: dict, day: date) -> dict:
 def _worker(task: tuple) -> tuple[tuple, dict]:
     tier, cap, tgt, mode = task
     assets = list(_ASSETS.values()) if mode == "cross" else [_ASSETS[mode.split(":", 1)[1]]]
-    r = optimize_playbook(assets, cap, tgt, _CFG["day"], mode=mode, tier=tier, participation=_CFG["participation"], tx_amount=_CFG.get("tx_amount"),
+    depth = {s: _CFG["depth"][s] for s in (a.symbol for a in assets) if s in _CFG.get("depth", {})}
+    r = optimize_playbook(assets, cap, tgt, _CFG["day"], mode=mode, tier=tier, participation=_CFG["participation"], tx_amount=_CFG.get("tx_amount"), depth_caps=depth,
                           weights=_CFG.get("weights"), max_hold_min=_CFG.get("max_hold_min", 480), k_grid=tuple(_CFG.get("k_grid", (1, 2, 4, 8, 16, 32, 64, 128, 256))))
     d = r.to_dict()
     d["equity_curve"] = r.equity_curve
@@ -128,7 +129,7 @@ def render_playbook_chart(pipeline, r: dict, assets: dict, out_path: Path, mode_
 
 
 def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = None, workers: int = 4, out_dir: Path | None = None,
-                             single_assets: bool = True) -> dict:
+                             single_assets: bool = True, participation: float | None = None) -> dict:
     """生成某日（默认昨天）七档模板：跨资产 + 单资产；流水 CSV、图表、HTML、JSON。"""
     global _ASSETS, _CFG
     syms = symbols or (pipeline.symbols(tradable_only=True) + pipeline.crypto_symbols(tradable_only=True))
@@ -140,8 +141,10 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
     if not assets:
         raise LookupError(f"{day} 无任何可交易资产数据")
     tx = {s: pipeline.tx_amount_per_bar(s, day) for s in assets}
+    depth = {s: d for s in assets if (d := pipeline.depth_caps(s, day, assets[s].bars)) is not None}
+    part = float(participation or pipeline.participation_rate)
     _ASSETS = assets
-    _CFG = {"day": day.isoformat(), "participation": pipeline.participation_rate, "tx_amount": {k: v for k, v in tx.items() if v is not None},
+    _CFG = {"day": day.isoformat(), "participation": part, "tx_amount": {k: v for k, v in tx.items() if v is not None}, "depth": depth,
             "weights": (pipeline.playbook_cfg or {}).get("weights"), "max_hold_min": (pipeline.playbook_cfg or {}).get("max_hold_min", 480),
             "k_grid": (pipeline.playbook_cfg or {}).get("k_grid", [1, 2, 4, 8, 16, 32, 64, 128, 256])}
     tiers = []
@@ -158,10 +161,12 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
     with ctx.Pool(workers) as pool:
         for task, d in pool.imap_unordered(_worker, tasks):
             results[(task[0], task[3])] = d
-    out_dir = out_dir or (pipeline.settings.resolve_path(pipeline.settings.report_dir) / "playbook" / day.isoformat())
+    prov0 = pipeline.data_provenance(day, list(assets))
+    level0 = "SIMULATED" if any(v.get("simulated") for v in prov0.values()) else ("EXECUTION_ESTIMATED" if any(v.get("status") == "EXECUTION_ESTIMATED" for v in prov0.values()) else "REAL_HISTORICAL")
+    out_dir = out_dir or (pipeline.settings.resolve_path(pipeline.settings.report_dir) / "playbook" / day.isoformat() / level0)
     out_dir.mkdir(parents=True, exist_ok=True)
     charts_dir = pipeline.settings.resolve_path(pipeline.settings.report_dir) / "charts"
-    prof = pipeline.cost_profile_name
+    prof = pipeline.cost_profile_name + (f"_p{int(round(part * 100))}" if abs(part - pipeline.participation_rate) > 1e-12 else "")
     rows, ledger, single_matrix, checks_rows = [], [], {}, []
     for tier, cap, tgt in tiers:
         r = results[(tier, "cross")]
@@ -169,9 +174,9 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
         r["verification"] = {k: v[k] for k in v if k != "checks"}
         checks_rows += [{"tier": tier, "mode": "cross", **c} for c in v["checks"]]
         r["trades"] = _attach_liquidity(r["trades"], v["checks"], assets)
-        fn = f"playbook_{tier}_{day}_{prof}.html"
+        fn = f"playbook_{tier}_{day}_{level0}_{prof}.html"
         render_playbook_chart(pipeline, r, assets, charts_dir / fn, "跨资产模板")
-        rows.append({**r, "mode_name": "跨资产（可切换）", "chart": f"../../charts/{fn}"})
+        rows.append({**r, "mode_name": "跨资产（可切换）", "chart": f"../../../charts/{fn}"})
         ledger += ledger_rows(day.isoformat(), tier, "cross", r, v["checks"], assets)
         cells = {}
         best_single = None
@@ -191,9 +196,9 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
             rs["verification"] = {k: v[k] for k in v if k != "checks"}
             checks_rows += [{"tier": tier, "mode": f"single:{s}", **c} for c in v["checks"]]
             rs["trades"] = _attach_liquidity(rs["trades"], v["checks"], {s: assets[s]})
-            fn = f"playbook_{tier}_{s}_{day}_{prof}.html"
+            fn = f"playbook_{tier}_{s}_{day}_{level0}_{prof}.html"
             render_playbook_chart(pipeline, rs, assets, charts_dir / fn, f"单资产模板 {s}")
-            rows.append({**rs, "mode_name": f"单资产最佳 {s}", "chart": f"../../charts/{fn}"})
+            rows.append({**rs, "mode_name": f"单资产最佳 {s}", "chart": f"../../../charts/{fn}"})
     csv_name = f"playbook_ledger_{day}_{prof}.csv"
     pd.DataFrame(ledger, columns=LEDGER_COLUMNS).to_csv(out_dir / csv_name, index=False)
     checks_name = f"playbook_checks_{day}_{prof}.csv"
@@ -212,11 +217,43 @@ def generate_playbook_report(pipeline, day: date, symbols: list[str] | None = No
         formal=summary["formal_validation"], banner=pipeline.plan.banner(), rows=rows, all_symbols=list(assets), single_matrix=single_matrix,
         status=overall, provenance=prov, checks_name=checks_name,
         data_note=("数据：SIMULATED 模拟行情，流动性来源为 K 线成交额；真实行情接入后以官方逐笔成交为流动性来源" if pipeline.plan.is_simulated else "数据：官方行情"),
-        files={"csv": csv_name, "json": json_name, "checks": checks_name})
+        files={"csv": csv_name, "json": json_name, "checks": checks_name}, participation_rate=part)
     out = out_dir / f"playbook_report_{day}_{prof}.html"
     out.write_text(html, encoding="utf-8")
+    write_comparison(pipeline, day)
     return {"html": str(out), "csv": str(out_dir / csv_name), "checks_csv": str(out_dir / checks_name), "json": str(out_dir / json_name), "day": day.isoformat(),
             "validation_status": overall, "formal_validation": summary["formal_validation"],
             "tiers": [{"tier": r["tier"], "mode": r["mode_name"], "target_met": r["target_met"], "net_usd": round(r["net_usd"], 2), "max_achievable_net_usd": round(r["max_achievable_net_usd"], 2),
                        "n_trades": r["n_trades"], "n_switches": r["n_switches"], "assets": r["assets_used"], "max_drawdown_usd": round(r["max_drawdown_usd"], 2),
                        "status": r["verification"]["status"], "checks_ok": f"{r['verification']['n_ok']}/{r['verification']['n_trades']}"} for r in rows]}
+
+
+def write_comparison(pipeline, day: date) -> dict:
+    """三组对比：同一日已有的 SIMULATED / EXECUTION_ESTIMATED / REAL_HISTORICAL 运行结果并排（缺的一组明确写“无数据”，不得提级）。"""
+    base = pipeline.settings.resolve_path(pipeline.settings.report_dir) / "playbook" / day.isoformat()
+    levels = ["SIMULATED", "EXECUTION_ESTIMATED", "REAL_HISTORICAL"]
+    table: dict[str, dict] = {}
+    for lv in levels:
+        js = sorted((base / lv).glob(f"playbook_{day}_{pipeline.cost_profile_name}.json")) if (base / lv).exists() else []
+        if not js:
+            continue
+        d = json.loads(js[-1].read_text(encoding="utf-8"))
+        for r in d["tiers"]:
+            if r["mode_name"].startswith("跨资产"):
+                table.setdefault(r["tier"], {})[lv] = {"target_met": r["target_met"], "net_usd": r["net_usd"], "max_achievable_net_usd": r["max_achievable_net_usd"],
+                                                        "n_trades": r["n_trades"], "max_drawdown_usd": r["max_drawdown_usd"], "cost_usd": r["cost_usd"],
+                                                        "checks": f"{r['verification']['n_ok']}/{r['verification']['n_trades']}", "status": r["verification"]["status"]}
+    lines = [f"# {day} 三组对比（跨资产模板）", "", "| 档位 | SIMULATED | EXECUTION_ESTIMATED | REAL_HISTORICAL |", "|---|---|---|---|"]
+    tiers = [t.id for t in pipeline.tiers.tiers]
+    for tier in tiers:
+        cells = []
+        for lv in levels:
+            c = table.get(tier, {}).get(lv)
+            cells.append("无数据（未导入该级别的真实数据，不提级）" if not c else
+                         f"{'达标' if c['target_met'] else '未达标'} 净 {c['net_usd']:,.0f} / 最高 {c['max_achievable_net_usd']:,.0f} · {c['n_trades']} 笔 · 回撤 {c['max_drawdown_usd']:,.0f} · 校验 {c['checks']}")
+        lines.append(f"| {tier} | " + " | ".join(cells) + " |")
+    lines += ["", "说明：三组分别为模拟行情最佳路径、真实价格下的估算成交路径、真实成交与深度数据支持的事后可成交性路径；缺少数据时不得提高验证等级；任一级别都不代表发生过真实成交。"]
+    base.mkdir(parents=True, exist_ok=True)
+    (base / f"playbook_compare_{day}.md").write_text("\n".join(lines), encoding="utf-8")
+    (base / f"playbook_compare_{day}.json").write_text(json.dumps({"day": day.isoformat(), "levels": levels, "tiers": table}, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    return table

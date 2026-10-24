@@ -294,11 +294,13 @@ def playbook_latest():
     days = sorted(x for x in d.glob("*") if x.is_dir()) if d.exists() else []
     if not days:
         return {"note": "尚未运行 bgwq playbook-daily"}
-    js = sorted(days[-1].glob(f"playbook_*_{p.cost_profile_name}.json"))
+    js = sorted(days[-1].glob(f"*/playbook_*_{p.cost_profile_name}.json"))
     if not js:
         return {"note": "无 JSON 摘要"}
     data = json.loads(js[-1].read_text(encoding="utf-8"))
-    data["report_url"] = f"/reports/playbook/{days[-1].name}/" + js[-1].name.replace(".json", ".html").replace("playbook_", "playbook_report_")
+    data["report_url"] = f"/reports/playbook/{days[-1].name}/{js[-1].parent.name}/" + js[-1].name.replace(".json", ".html").replace("playbook_", "playbook_report_")
+    cmp_ = days[-1] / f"playbook_compare_{days[-1].name}.json"
+    data["comparison"] = json.loads(cmp_.read_text(encoding="utf-8")) if cmp_.exists() else None
     return data
 
 

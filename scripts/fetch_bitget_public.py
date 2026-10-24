@@ -72,9 +72,25 @@ def main():
     a = ap.parse_args()
     s_ms, e_ms = ny_day_bounds_ms(a.day)
     for sym in a.symbols:
-        short = sym.replace("USDT", "")
+        # rToken：传 rNVDA 时自动尝试交易对候选 rNVDAUSDT / RNVDAUSDT（Bitget 公开 API symbol 格式待核实）
+        cands = [sym] if sym.upper().endswith("USDT") else [sym + "USDT", sym.upper() + "USDT"]
+        short = sym.replace("USDT", "").replace("usdt", "")
+        if short.lower().startswith("r") and short[1:].isupper():
+            short = short[1:]                      # rNVDA → 目录 NVDA；meta.json 记录场所
         d = os.path.join(a.out, short, a.day); os.makedirs(d, exist_ok=True)
-        k = fetch_kline(sym, s_ms, e_ms)
+        k, used = [], None
+        for c in cands:
+            try:
+                k = fetch_kline(c, s_ms, e_ms); used = c
+                if k: break
+            except Exception as e:  # noqa: BLE001
+                print(c, "失败:", e, flush=True)
+        if used is None:
+            print(sym, "无可用交易对", flush=True); continue
+        sym = used
+        if short != sym.replace("USDT", ""):
+            with open(os.path.join(d, "meta.json"), "w") as f:
+                json.dump({"venue": "bitget_spot", "pair": sym, "source": "bitget public api"}, f)
         with open(os.path.join(d, "kline.csv"), "w", newline="") as f:
             w = csv.writer(f); w.writerow(["ts_ms", "open", "high", "low", "close", "volume", "amount", "usdt_volume"]); w.writerows(k)
         print(sym, "kline", len(k), flush=True)

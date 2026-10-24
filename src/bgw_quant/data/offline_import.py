@@ -217,7 +217,8 @@ def import_file(store, kind: str, path: str | Path, symbol: str, column_map: dic
     if kind == "auto":
         kind = detect_kind(path)
     if kind == "kline" and asset_class_of(symbol) == "stock" and not (chain and contract):
-        raise ValueError(f"{symbol} 是代币化美股：导入 K 线必须声明 --chain 与 --contract（xStocks/Ondo/Reality 各链代币不同），禁止用普通美股行情冒充")
+        raise ValueError(f"{symbol} 是代币化美股：导入 K 线必须声明场所标识——交易所 rToken 现货：--venue bitget_spot --pair rNVDAUSDT（即 chain=cex_spot, contract=交易对）；"
+                         f"链上代币：--chain solana --contract <mint>。禁止用普通美股行情冒充")
     if kind == "kline":
         bars = parse_kline_csv(path, symbol, column_map, tf, chain, contract)
         n = store.upsert_bars(bars)
@@ -262,6 +263,8 @@ def import_dir(store, root: str | Path, day: date | None = None) -> list[dict]:
             meta = {}
             if (day_dir / "meta.json").exists():
                 meta = json.loads((day_dir / "meta.json").read_text(encoding="utf-8"))
+                if meta.get("venue") == "bitget_spot" and meta.get("pair"):
+                    meta = {**meta, "chain": "cex_spot", "contract": meta["pair"]}
             for f in sorted(p for p in day_dir.iterdir() if p.is_file() and p.suffix.lower() in (".csv", ".json", ".zip", ".txt") and p.name != "meta.json"):
                 kind = next((k for k in ("kline", "trades", "depth") if f.name.lower().startswith(k)), "auto")
                 try:

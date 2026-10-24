@@ -27,8 +27,10 @@ def source_matches_venue(symbol: str, source: str, chain: str | None, contract: 
         return False, f"来源 {source} 不是代币/现货成交数据（疑似普通股价或未知来源）"
     if str(source).startswith("massive"):
         return False, "Massive 原生股价不得作为代币成交数据"
-    if ac == "stock" and str(source).startswith("REAL_HISTORICAL:csv") and not (chain and contract):
-        return False, "代币化美股的 CSV 导入必须声明 chain 与 contract（--chain/--contract），否则无法确认是哪条链上的哪个代币"
+    if ac == "stock" and str(source).startswith(("REAL_HISTORICAL:csv", "bitget_spot_public")) and not (chain and contract):
+        return False, "代币化美股的数据必须声明场所标识：交易所 rToken 现货用 --venue bitget_spot --pair rNVDAUSDT；链上代币用 --chain/--contract"
+    if ac == "stock" and chain == "cex_spot":
+        return True, f"Bitget 交易所 rToken 现货交易对 {contract}"
     if ac == "crypto" and str(source).startswith("bitget_spot_public"):
         return True, "交易所现货价格；成交渠道若为钱包 swap 则为成交估算"
     return True, "相容"

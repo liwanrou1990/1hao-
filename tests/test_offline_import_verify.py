@@ -120,3 +120,24 @@ def test_verify_flags_violations():
     v = verify_trades([bad], {"BTC": a}, 0.10)
     ck = v.checks[0]
     assert not ck.volume_ok and not ck.no_high_low_fill_ok and not ck.cost_ok and v.status == "SIMULATED"
+
+
+def test_comparison_never_upgrades_missing_levels(tmp_path, monkeypatch):
+    """三组对比：只有 SIMULATED 结果时，另外两组必须显示“无数据”，不得提级。"""
+    import json as _json
+    monkeypatch.setenv("BGWQ_DB_PATH", str(tmp_path / "x.duckdb"))
+    monkeypatch.setenv("BGWQ_REPORT_DIR", str(tmp_path / "rep"))
+    from bgw_quant.config import get_settings
+    get_settings.cache_clear()
+    from bgw_quant.pipeline import Pipeline
+    from bgw_quant.reports.playbook_report import write_comparison
+    pl = Pipeline(probe=False)
+    d = (tmp_path / "rep" / "playbook" / DAY.isoformat() / "SIMULATED"); d.mkdir(parents=True)
+    fake = {"tiers": [{"tier": "T1", "mode_name": "跨资产（可切换）", "target_met": True, "net_usd": 24.0, "max_achievable_net_usd": 100.0, "n_trades": 1,
+                       "max_drawdown_usd": 4.0, "cost_usd": 4.0, "verification": {"n_ok": 1, "n_trades": 1, "status": "SIMULATED"}}]}
+    (d / f"playbook_{DAY}_{pl.cost_profile_name}.json").write_text(_json.dumps(fake), encoding="utf-8")
+    table = write_comparison(pl, DAY)
+    assert set(table["T1"]) == {"SIMULATED"}
+    md = (tmp_path / "rep" / "playbook" / DAY.isoformat() / f"playbook_compare_{DAY}.md").read_text(encoding="utf-8")
+    assert md.count("无数据") >= 2 and "不得提高验证等级" in md
+    get_settings.cache_clear()
