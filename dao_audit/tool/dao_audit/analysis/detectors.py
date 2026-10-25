@@ -264,6 +264,19 @@ def _has_sound_governance(c: ContractDef) -> bool:
     return bool(_SNAPSHOT_SIG_RE.search(c.body_masked)) and bool(_TIMELOCK_RE.search(c.body_masked))
 
 
+# A Timelock's job is to make arbitrary calls, but the SAFE pattern gates each
+# call by a per-operation queued-hash check AND an elapsed-delay check (plus an
+# admin gate). That is constrained, not over-privileged.
+_QUEUED_HASH_RE = re.compile(r"(queuedTransactions\s*\[|queued\s*\[|_timestamps\s*\[|"
+                             r"isOperationReady|_operationState|timestamps\s*\[)", re.I)
+_DELAY_CHECK_RE = re.compile(r"(>=\s*eta|getBlockTimestamp\(\)\s*>=|block\.timestamp\s*>=|"
+                             r"isOperationReady|getTimestamp\s*\()", re.I)
+
+
+def _is_timelock_exec(fn: FunctionDef) -> bool:
+    return bool(_QUEUED_HASH_RE.search(fn.body)) and bool(_DELAY_CHECK_RE.search(fn.body))
+
+
 def _call_has_dynamic_data(body: str, call_m) -> bool:
     """True if the low-level call passes a variable (not empty/constant) as data.
     Masking turns string/hex literals into spaces, so an identifier inside the
@@ -307,8 +320,9 @@ def detect_over_privileged_treasury(su: SourceUnit) -> List[Finding]:
                 continue  # e.g. to.call{value:v}("") with empty/constant data
             # arbitrary call bridge. Is it constrained?
             local_allow = bool(_ALLOWLIST_RE.search(fn.body))
-            if ((has_allowlist or local_allow) and has_cap) or sound_gov:
-                continue  # allowlist+cap, or governed by snapshot+timelock -> mitigated
+            if ((has_allowlist or local_allow) and has_cap) or sound_gov or _is_timelock_exec(fn):
+                continue  # allowlist+cap, snapshot+timelock, or a constrained
+                          # timelock (admin + queued-hash + elapsed delay) -> mitigated
             # partial mitigation lowers confidence / raises FP
             if has_allowlist or local_allow:
                 conf, fp, fpr = 0.6, "medium", "存在目标白名单但未见额度上限，残余过度授权风险。"

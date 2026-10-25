@@ -150,3 +150,16 @@ def test_fundflow_markdown_passes_render_flow():
     }
     md = FF.to_markdown(fake)
     assert "5000000" in md and "PASS" in md
+
+
+# --- precision on real, battle-tested public governance contracts ----------
+def test_real_audited_contracts_have_no_false_positives():
+    """Compound GovernorAlpha/Bravo/Timelock and OZ TimelockController mitigate
+    VULN-1..4 by design; the detector must NOT false-positive on them."""
+    import glob
+    real = glob.glob(str(ROOT / "samples/real/*.sol"))
+    assert real, "real sample contracts present"
+    for f in real:
+        su = parse_source(f)
+        ids = sorted({x.rule_id for x in run_detectors(su)})
+        assert ids == [], f"false positive on audited real contract {f}: {ids}"

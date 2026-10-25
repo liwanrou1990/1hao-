@@ -20,6 +20,7 @@ authorized_paths:
   - "contracts/fixed"
   - "contracts/mocks"
   - "contracts/imported"     # 导入的授权真实合约
+  - "samples/real"            # 公开开源治理合约（只读静态分析）
 
 # 本地测试链白名单：任何链上交互只允许指向以下主机。
 # 拒绝一切主网/公网 RPC，确保不向主网发送交易、不接触真实资产。
