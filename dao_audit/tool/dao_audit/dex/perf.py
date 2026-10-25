@@ -46,6 +46,36 @@ from .quotes import block_number, best_univ3_quote, best_slipstream_quote
 GROSS_FLOOR_BPS = 50.0
 
 
+def flag_decision(gross_bps, has_quote: bool, has_deferred: bool,
+                  pair_insufficient: bool, floor_bps: float = GROSS_FLOOR_BPS):
+    """Pure, testable Tier-1 flagging rule (safe UPPER BOUND).
+
+    Returns (flagged: bool, status: str, reason: str). A pair is flagged when it
+    cannot be PROVEN unprofitable:
+      - data insufficient (no usable round-trip quote, or a deferred venue we
+        could not price) -> flag + INSUFFICIENT_DATA, never "no arb" (一.5);
+      - exact best gross >= -floor -> flag (near/above breakeven);
+      - else gross << -floor across ALL venues -> safely dropped.
+
+    Safe-upper-bound proof: net_usd = size*(gross_bps - mev_bps - flash_bps)/1e4
+    - gas_usd - fail_usd. A path is profitable at SOME size only if its
+    net-margin (gross_bps - mev_bps - flash_bps) > 0 at that size; since price
+    impact only grows with size, that margin is MAXIMAL at the smallest size, so
+    gross_bps there exceeds the (positive) mev_bps+flash_bps, i.e. gross_bps > 0
+    > -floor. Evaluating Tier-1 at the smallest capital size therefore flags
+    every path that could be net-positive at ANY size -> no profitable path is
+    dropped. The floor<0 adds margin for gas amortization / estimate error."""
+    if pair_insufficient:
+        return True, "INSUFFICIENT_DATA", "无可成交闭环报价（买/卖腿缺失）→ 数据不足，保留重验，不判定无套利"
+    if has_deferred:
+        return True, "OK", "存在未入批量 venue，无法证伪 → 保守保留交 Tier-2"
+    if gross_bps is None:
+        return True, "INSUFFICIENT_DATA", "无闭环毛收益可算 → 数据不足，保留重验"
+    if gross_bps >= -floor_bps:
+        return True, "OK", f"闭环毛收益 {gross_bps}bps >= -{floor_bps}bps（近/超盈亏平衡）→ 候选"
+    return False, "OK", f"闭环毛收益 {gross_bps}bps << -{floor_bps}bps（全 venue、最小size）→ 安全过滤"
+
+
 def _cl_venues(chain_cfg: dict):
     """Concentrated-liquidity venues (shared quoter ABI)."""
     return [v for v in chain_cfg["venues"] if v["type"] in ("univ3", "slipstream")]
@@ -110,7 +140,13 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
                size_usd: float, gross_floor_bps: float = GROSS_FLOOR_BPS,
                block: Optional[int] = None) -> dict:
     """Fast candidate discovery: exact best round trip per pair via two batched
-    Multicall eth_calls. Flags a provable superset of the baseline candidates."""
+    Multicall eth_calls. Flags a provable superset of the baseline candidates.
+
+    Pass the SMALLEST capital size as `size_usd`: round-trip gross_bps is maximal
+    at the smallest size (price impact only grows with size), so flagging on the
+    smallest-size gross is a safe UPPER BOUND across all sizes — see
+    `flag_decision` for the proof. A pair that cannot form a round trip (no buy
+    or no sell quote) is marked INSUFFICIENT_DATA and kept, never read as no-arb."""
     rpc = chain_cfg["rpc"]
     blk = block if block is not None else block_number(rpc)
     if blk is None:
@@ -161,6 +197,18 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
                 "error": "sell batch failed: %s" % bsell.error, "candidates": [],
                 "best_roundtrip_by_pair": {}, "data_status": "INSUFFICIENT_DATA"}
 
+    # per-pair quote availability: did the pair get ANY usable buy / sell quote?
+    # (within a successful batch, a None inner = that param reverted / no pool =
+    # normal sparsity; a pair with ZERO usable buy OR sell quotes cannot form a
+    # round trip -> data insufficient, must NOT be read as "no arb".)
+    has_buy = {}
+    for m, a in zip(buy_meta, ba.amounts):
+        has_buy[m["pair"]] = has_buy.get(m["pair"], False) or (a is not None)
+    has_sell = {}
+    if bsell is not None:
+        for m, a in zip(sell_meta, bsell.amounts):
+            has_sell[m["pair"]] = has_sell.get(m["pair"], False) or (a is not None)
+
     # best round trip per pair
     best_rt = {}  # pair -> {gross_bps, buy_venue, sell_venue, quote_out, amt_q}
     if bsell is not None:
@@ -175,9 +223,9 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
                     "buy_param": m["buy_param"], "sell_venue": m["sell_venue"],
                     "sell_param": m["sell_param"], "quote_out": out, "amt_q": m["amt_q"]}
 
-    # Tier-1 now batches EVERY on-chain venue type (univ3/slipstream/solidly),
-    # so there is no deferred venue: the best round trip above is exact across
-    # all venues, and the candidate set is an EXACT superset of the baseline's.
+    # Tier-1 batches EVERY on-chain venue type (univ3/slipstream/solidly), so
+    # there is no deferred venue: the best round trip above is exact across all
+    # venues, and the candidate set is an EXACT superset of the baseline's.
     deferred = [v["name"] for v in chain_cfg["venues"]
                 if v["type"] not in ("univ3", "slipstream", "solidly")]
     pair_names = [f"{b}/{q}" for (b, q) in pairs
@@ -185,24 +233,21 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
 
     candidates = []
     filter_log = []  # one entry per pair: flagged? why?
+    n_insufficient = 0
     for pair in pair_names:
         v = best_rt.get(pair)
         gross = v["gross_bps"] if v else None
-        near = gross is not None and gross >= -gross_floor_bps
-        has_deferred = bool(deferred)
-        flagged = near or has_deferred or v is None  # can't rule out => keep
-        if near:
-            reason = f"闭环毛收益 {gross}bps >= -{gross_floor_bps}bps（近/超盈亏平衡）→ 候选"
-        elif has_deferred:
-            reason = f"存在未入批量 venue {deferred}，无法证伪 → 保守保留交 Tier-2"
-        elif v is None:
-            reason = "无可执行报价，无法判定 → 保守保留交 Tier-2"
-        else:
-            reason = f"闭环毛收益 {gross}bps << -{gross_floor_bps}bps（全 venue）→ 过滤丢弃"
+        # insufficient when the pair couldn't form a round trip (no buy or no sell)
+        pair_insuf = not (has_buy.get(pair, False) and has_sell.get(pair, False))
+        flagged, status, reason = flag_decision(gross, v is not None, bool(deferred),
+                                                 pair_insuf, gross_floor_bps)
+        if status == "INSUFFICIENT_DATA":
+            n_insufficient += 1
         filter_log.append({"pair": pair, "flagged": flagged, "gross_bps": gross,
-                           "deferred_venues": deferred, "reason": reason})
+                           "status": status, "deferred_venues": deferred, "reason": reason})
         if flagged:
-            entry = {"pair": pair, "flag_reason": reason, "deferred_venues": deferred}
+            entry = {"pair": pair, "flag_reason": reason, "status": status,
+                     "deferred_venues": deferred}
             if v:
                 entry.update(v)
             candidates.append(entry)
@@ -213,7 +258,7 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
     return {"chain": chain, "block": blk, "latency_ms": round(lat, 1),
             "rpc_calls": rpc_calls, "n_inner_quotes": n_inner, "ok": True, "error": None,
             "size_usd": size_usd, "gross_floor_bps": gross_floor_bps,
-            "deferred_venues": deferred,
+            "deferred_venues": deferred, "pairs_insufficient": n_insufficient,
             "candidates": candidates, "best_roundtrip_by_pair": best_rt,
             "filter_log": filter_log, "data_status": "OK",
             "note": ("Tier-1 候选=全 venue(univ3+slipstream+solidly) 最优闭环毛收益 >= -%.0fbps"
@@ -221,6 +266,67 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
                      "Tier-1 已覆盖全部链上 venue 类型，故候选集为基准(scan_chain)候选集的真超集——"
                      "提速不漏任何正净收益路径。精确净收益由 Tier-2（全成本+完整双腿 fork）判定。"
                      % gross_floor_bps)}
+
+
+def verify_tier1_detection(cfg: dict, chain: str, eth_price: float = 3000.0) -> dict:
+    """Empirical safe-upper-bound check (一.1,一.3,一.4): run the authoritative
+    full `scan_chain` once (it pins a block), then Tier-1 at the SAME block and
+    the smallest size, and verify (a) the per-pair best round-trip gross agrees
+    between the two constructions, and (b) EVERY pair the full scan finds with
+    positive gross (the only way net can be positive) is flagged by Tier-1. A
+    missed positive-gross pair would be a real detection hole."""
+    from . import scan as _scan
+    ccfg = cfg["chains"][chain]
+    pairs = [tuple(p) for p in cfg.get("pairs", {}).get(chain, [])]
+    fee_tiers = cfg.get("fee_tiers", [100, 500, 3000])
+    tick_spacings = cfg.get("tick_spacings", [1, 50, 100, 200, 2000])
+    sizes = cfg.get("capital_sizes", [1000])
+    ref_size = min(sizes)
+    costs = cfg.get("costs", {})
+    min_net = float(cfg.get("min_net_usd", 1))
+
+    rows = _scan.scan_chain(chain, ccfg, pairs, fee_tiers, tick_spacings, sizes,
+                            costs, eth_price, min_net)
+    blk = rows[0]["block"] if rows else None
+    if blk is None:
+        return {"chain": chain, "block": None, "data_status": "INSUFFICIENT_DATA",
+                "note": "full scan 无区块 → 数据不足，不下结论"}
+    t1 = tier1_scan(chain, ccfg, pairs, fee_tiers, tick_spacings, ref_size, block=blk)
+    flagged = {c["pair"] for c in t1.get("candidates", [])}
+
+    comparisons = []
+    missed = []
+    pos_gross_pairs = 0
+    for r in rows:
+        pair = r["pair"]
+        # full scan's best gross at the smallest size (its sizes are ordered)
+        full_small = next((s for s in r.get("sizes", [])
+                           if s.get("size_usd") == ref_size and s.get("status") != "NO_QUOTE"), None)
+        full_gross_bps = (full_small["gross_usd"] / ref_size * 1e4) if full_small else None
+        # full scan positive gross at ANY size?
+        pos_any = any(s.get("gross_usd", 0) and s["gross_usd"] > 0
+                      for s in r.get("sizes", []) if s.get("status") != "NO_QUOTE")
+        if pos_any:
+            pos_gross_pairs += 1
+            if pair not in flagged:
+                missed.append(pair)
+        t1_gross = (t1["best_roundtrip_by_pair"].get(pair) or {}).get("gross_bps")
+        comparisons.append({"pair": pair, "full_gross_bps@min":
+                            round(full_gross_bps, 3) if full_gross_bps is not None else None,
+                            "tier1_gross_bps@min": t1_gross,
+                            "full_positive_gross_any_size": pos_any,
+                            "tier1_flagged": pair in flagged})
+    return {"chain": chain, "block": blk, "ref_size_usd": ref_size,
+            "pairs": len(rows), "positive_gross_pairs": pos_gross_pairs,
+            "tier1_flagged_pairs": len(flagged),
+            "missed_positive_gross": missed,
+            "detection_rate": (None if pos_gross_pairs == 0
+                               else round(1 - len(missed) / pos_gross_pairs, 4)),
+            "comparisons": comparisons, "data_status": "OK",
+            "note": ("在同一区块、最小本金下对比 Tier-1 与权威全扫描：任何全扫描见到正毛收益的交易对"
+                     "都必须被 Tier-1 标记（missed 应为空）。真实市场正毛收益对通常为 0，故检出率的"
+                     "严格保证由 flag_decision 的安全上界证明 + 单测、以及等价校验共同给出；本项为实链"
+                     "交叉验证两种构造的每对毛收益一致。")}
 
 
 def profile_full_scan(cfg: dict, chain: str, eth_price: float = 3000.0) -> dict:

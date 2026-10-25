@@ -537,6 +537,24 @@ def cmd_dex_acceptance(args):
     return 0
 
 
+def cmd_dex_verify_tier1(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    chain = args.chain
+    print(f"Tier-1 安全上界实链交叉验证: chain={chain}（运行全扫描+同区块Tier-1，可能较慢）...")
+    rep = DEXPERF.verify_tier1_detection(cfg, chain, eth_price=float(args.eth_price))
+    (out_dir / f"dex_verify_tier1_{chain}.json").write_text(
+        json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  block={rep.get('block')} 交易对={rep.get('pairs')} "
+          f"正毛收益对={rep.get('positive_gross_pairs')} Tier-1标记={rep.get('tier1_flagged_pairs')}")
+    print(f"  漏检(正毛收益未标记)={rep.get('missed_positive_gross')} 检出率={rep.get('detection_rate')}")
+    for c in rep.get("comparisons", []):
+        print(f"  {c['pair']:12} full={c['full_gross_bps@min']}bps tier1={c['tier1_gross_bps@min']}bps "
+              f"flagged={c['tier1_flagged']}")
+    return 0
+
+
 def cmd_dex_profile(args):
     import json
     root, cfg = _dex_cfg(args)
@@ -754,6 +772,12 @@ def build_parser() -> argparse.ArgumentParser:
     dpr.add_argument("--chain", default="base")
     dpr.add_argument("--eth-price", default=3000.0, help="归因用固定ETH计价(避免DefiLlama波动)")
     dpr.set_defaults(func=cmd_dex_profile)
+
+    dv = sub.add_parser("dex-verify-tier1", help="Tier-1安全上界实链交叉验证(全扫描vs同区块Tier-1,检出率)")
+    dv.add_argument("--config", default=None)
+    dv.add_argument("--chain", default="base")
+    dv.add_argument("--eth-price", default=3000.0)
+    dv.set_defaults(func=cmd_dex_verify_tier1)
     return p
 
 

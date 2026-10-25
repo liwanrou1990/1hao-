@@ -110,10 +110,13 @@ def _fast_round(con, cfg, trig, bn_ms_total, size_usd, tier2_bar,
     total_wall = 0.0
     n_pairs = n_pos_spread = n_pos_net = 0
     any_ok = False
+    # evaluate Tier-1 at the SMALLEST size (gross_bps is maximal there) so the
+    # flag is a safe upper bound across every configured capital size.
+    ref_size = min([size_usd] + list(cfg.get("capital_sizes", [])))
     for chain, (tb, rpc) in trig.items():
         ccfg = cfg["chains"][chain]
         pairs = [tuple(p) for p in cfg.get("pairs", {}).get(chain, [])]
-        t1 = perf.tier1_scan(chain, ccfg, pairs, fee_tiers, tick_spacings, size_usd, block=tb)
+        t1 = perf.tier1_scan(chain, ccfg, pairs, fee_tiers, tick_spacings, ref_size, block=tb)
         total_wall += t1.get("latency_ms", 0.0)
         if t1.get("data_status") != "OK":
             con.execute("INSERT INTO failures VALUES(?,?,?)",
@@ -122,11 +125,11 @@ def _fast_round(con, cfg, trig, bn_ms_total, size_usd, tier2_bar,
         any_ok = True
         for pair, v in t1["best_roundtrip_by_pair"].items():
             n_pairs += 1
-            gross_usd = v["gross_bps"] / 1e4 * size_usd
+            gross_usd = v["gross_bps"] / 1e4 * ref_size
             if gross_usd > 0:
                 n_pos_spread += 1
             con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
-                        (scan_id, chain, tb, pair, size_usd, round(gross_usd, 4),
+                        (scan_id, chain, tb, pair, ref_size, round(gross_usd, 4),
                          None, None, 0, _now()))  # level 0 = Tier-1 gross only
         # Tier-2 precise (full cost + all sizes) ONLY when exact gross clears the
         # bar (default 0: a profitable trade needs gross>0), and at most once per
