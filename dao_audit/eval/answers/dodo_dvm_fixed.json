@@ -1,0 +1,3 @@
+{"case":"dodo_dvm_fixed","project":"dodo","kind":"fixed","is_chain_case":false,"truth":[],
+ "evidence":{"repo":"https://github.com/DODOEX/contractV2","commit":"01c544780291a5acc3e2be4980493e63065fb200",
+   "rationale":"init now guarded by require(!_DVM_INITIALIZED_); engine should NOT flag VULN-1 -> any VULN-1 here is a fixed-version false positive"}}

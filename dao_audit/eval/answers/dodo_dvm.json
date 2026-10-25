@@ -1,0 +1,6 @@
+{"case":"dodo_dvm","project":"dodo","kind":"vulnerable","is_chain_case":false,
+ "truth":[{"vuln":"VULN-1","contract":"DVM","function":"init","line":[24,60],"treasury_risk":true,
+   "governance_relation":"external init 无一次性守卫/无访问控制,可重复初始化覆盖基础/报价 token 后抽走储备"}],
+ "evidence":{"repo":"https://github.com/DODOEX/contractV2","vuln_commit":"94ba7fbd21adddcc7ecdcea467dd8efd961098ec",
+   "fixed_commit":"01c544780291a5acc3e2be4980493e63065fb200","incident_date":"2021-03-08",
+   "reports":["https://rekt.news/dodo-rekt","https://blog.peckshield.com/2021/03/09/DODO/"]}}
