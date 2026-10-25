@@ -434,14 +434,49 @@ def _per_chain_stats(con):
         avg_wall = con.execute(
             "SELECT AVG(wall_ms) FROM scans WHERE id IN "
             "(SELECT scan_id FROM chain_rounds WHERE chain=?)", (chain,)).fetchone()[0]
+        # observed block interval from consecutive observed_at timestamps
+        ts = [row[0] for row in con.execute(
+            "SELECT observed_at FROM blocks WHERE chain=? ORDER BY block", (chain,)).fetchall()]
+        block_ms = None
+        if len(ts) >= 2:
+            try:
+                deltas = []
+                for a, b in zip(ts, ts[1:]):
+                    da = datetime.fromisoformat(a); db = datetime.fromisoformat(b)
+                    deltas.append((db - da).total_seconds() * 1000)
+                # divide by observed-block gaps so interval ~ true block time
+                gaps = []
+                blks = [row[0] for row in con.execute(
+                    "SELECT block FROM blocks WHERE chain=? ORDER BY block", (chain,)).fetchall()]
+                for (a, b), d in zip(zip(blks, blks[1:]), deltas):
+                    if b - a > 0:
+                        gaps.append(d / (b - a))
+                block_ms = round(sum(gaps) / len(gaps), 0) if gaps else None
+            except Exception:
+                block_ms = None
+        ceiling = (round(min(1.0, block_ms / avg_wall), 3)
+                   if block_ms and avg_wall else None)
+        # 三类归因 (二.3): 区块未观察 / 池状态更新未捕捉 / 机会(检出)
+        flagged_obs = con.execute(
+            "SELECT COUNT(*) FROM opportunities WHERE chain=? AND level=0 AND gross_usd>0", (chain,)).fetchone()[0]
+        stale_obs = con.execute(
+            "SELECT COUNT(*) FROM chain_rounds WHERE chain=? AND staleness_blocks>0", (chain,)).fetchone()[0]
         out.append({
             "chain": chain, "window_block_span": span, "scanned_blocks": nrec,
             "missed_blocks": missed, "missed_block_ratio": missed_ratio,
             "avg_staleness_blocks": round(st[0], 2) if st[0] is not None else None,
             "max_staleness_blocks": st[1], "staleness_samples": st[2],
             "avg_compute_ms": round(avg_wall, 1) if avg_wall is not None else None,
-            "note": ("missed_block_ratio 高=扫描速度跟不上该链出块节奏；staleness_blocks=扫描"
-                     "期间链前进的区块数（报价过期程度）。缺 tip 读数时为 None，不臆测。")})
+            "block_interval_ms_est": block_ms,
+            "coverage_ceiling_est": ceiling,
+            "attribution": {
+                "blocks_unobserved": missed,            # 区块未观察(扫描慢于出块)
+                "observed_with_state_lag": stale_obs,    # 池状态更新未在当块捕捉(扫描期链已前进)
+                "observed_positive_gross_flags": flagged_obs,  # 已观察区块上检出的正毛收益(机会)
+            },
+            "note": ("missed_block_ratio 高=扫描慢于出块；coverage_ceiling_est≈block_interval/scan_wall "
+                     "为理论上限(受网络RTT限制)。三类归因：区块未观察(missed)、已观察但扫描期链前进"
+                     "导致池状态未在当块捕捉(observed_with_state_lag)、已观察区块上机会检出数。缺数据→None不臆测。")})
     return out
 
 
@@ -484,14 +519,23 @@ def acceptance_markdown(rep: dict) -> str:
         L.append(f"| {lf['chain']} | {lf['pair']} | {lf['size_usd']:,} | "
                  f"{lf['max_consecutive_positive_scans']} | {lf['samples']} |")
     L += ["", "## 各链扫描覆盖与报价时效（真实记录推导）", "",
-          "| 链 | 窗口区块跨度 | 已扫描区块 | 漏扫区块 | 漏块率 | 平均过期(区块) | 最大过期 | 平均计算(ms) |",
-          "|----|--------------|------------|----------|--------|----------------|----------|--------------|"]
+          "| 链 | 窗口区块跨度 | 已扫描区块 | 漏扫区块 | 漏块率 | 平均过期(区块) | 最大过期 | 平均计算(ms) | 出块间隔(ms) | 覆盖上限 |",
+          "|----|--------------|------------|----------|--------|----------------|----------|--------------|--------------|----------|"]
     for c in rep.get("per_chain_stats", []):
         L.append(f"| {c['chain']} | {c['window_block_span']} | {c['scanned_blocks']} | "
                  f"{c['missed_blocks']} | {c['missed_block_ratio']} | {c['avg_staleness_blocks']} | "
-                 f"{c['max_staleness_blocks']} | {c['avg_compute_ms']} |")
-    L += ["", "> 漏块率高=单次扫描跟不上该链出块节奏（应收窄 venue/pair/size 或靠 Tier-1 批量提速）；"
-          "过期区块数=扫描期间链前进的区块数。两者均由持久化记录推导，非估计。",
+                 f"{c['max_staleness_blocks']} | {c['avg_compute_ms']} | {c.get('block_interval_ms_est')} | "
+                 f"{c.get('coverage_ceiling_est')} |")
+    L += ["", "### 漏块三类归因（二.3，真实记录）", "",
+          "| 链 | 区块未观察 | 已观察但池状态有滞后 | 已观察区块检出正毛收益 |",
+          "|----|------------|----------------------|------------------------|"]
+    for c in rep.get("per_chain_stats", []):
+        a = c.get("attribution", {})
+        L.append(f"| {c['chain']} | {a.get('blocks_unobserved')} | {a.get('observed_with_state_lag')} | "
+                 f"{a.get('observed_positive_gross_flags')} |")
+    L += ["", "> 漏块率高=单次扫描慢于出块（覆盖上限≈出块间隔/扫描耗时，受网络 RTT 限制，非代码低效）。"
+          "三类归因：区块未观察(扫描慢于出块)、已观察但扫描期链前进致池状态未在当块捕捉、已观察区块上"
+          "检出的正毛收益数。降低 RTT(低延迟/就近 RPC)或 WS 推送触发是主要抓手，详见 docs/ARBITRUM_LATENCY.md。",
           "", "## 各路径净收益与容量（按本金）", "",
           "| 链 | 交易对 | 本金USD | 最大净 | 最小净 | 平均净 | 样本 |",
           "|----|--------|---------|--------|--------|--------|------|"]
