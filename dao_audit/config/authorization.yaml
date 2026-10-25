@@ -1,0 +1,34 @@
+# ============================================================================
+# 审计授权边界 (Audit Authorization Boundary)
+# ============================================================================
+# 本系统仅分析此文件显式授权的合约。未列入 authorized_paths 的源文件会被拒绝。
+# This system analyzes ONLY the contracts explicitly authorized below.
+# ----------------------------------------------------------------------------
+
+# 授权声明（由资产所有者/审计委托方填写并签署）
+authorization:
+  engagement: "X100 DAO governance audit — research/case-study"
+  authorized_by: "liwanrou1990@gmail.com"          # 委托方
+  scope_note: >
+    仅限本仓库 dao_audit/contracts 下的研究用靶标与修复合约。
+    这些是为授权安全审计编写的合约，不是第三方生产合约。
+  authorized_on: "2026-10-25"
+
+# 仅这些路径（相对 dao_audit/ 根）内的 .sol 文件允许被静态扫描
+authorized_paths:
+  - "contracts/targets"
+  - "contracts/fixed"
+  - "contracts/mocks"
+
+# 本地测试链白名单：任何链上交互只允许指向以下主机。
+# 拒绝一切主网/公网 RPC，确保不向主网发送交易、不接触真实资产。
+allowed_rpc_hosts:
+  - "127.0.0.1"
+  - "localhost"
+  - "0.0.0.0"
+
+# 明确禁止：主网分叉、真实私钥、真实资产
+hard_prohibitions:
+  mainnet_fork: false          # 禁止 --fork-url 指向公网
+  broadcast_to_public: false   # 禁止向公网广播交易
+  real_private_keys: false     # 禁止使用真实私钥
