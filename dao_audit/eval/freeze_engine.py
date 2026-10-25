@@ -21,6 +21,7 @@ ENGINE_FILES = [
     TOOL / "static_scan.py",
     TOOL / "analysis" / "detectors.py",
     TOOL / "analysis" / "solmodel.py",
+    TOOL / "analysis" / "semantic.py",   # V0.13 semantic governance analyzer
 ]
 FREEZE = Path(__file__).resolve().parent / "engine_freeze.json"
 

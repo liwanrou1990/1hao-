@@ -24,28 +24,40 @@ sys.path.insert(0, str(ROOT / "tool"))
 import freeze_engine  # noqa: E402
 from dao_audit.analysis.solmodel import parse_source  # noqa: E402
 from dao_audit.analysis.detectors import run_detectors  # noqa: E402
+from dao_audit.analysis.semantic import run_semantic_case  # noqa: E402
 
 DATASET = HERE / "dataset"
 
 
-def run_case(case_dir: Path) -> dict:
-    """Run the engine on every .sol under contracts/. Returns raw findings.
-    Only reads contracts/ — nothing else in the case directory."""
-    contracts = sorted((case_dir / "contracts").rglob("*.sol"))
-    out = {"case": case_dir.name, "n_files": len(contracts), "files": {}, "findings": []}
-    for sol in contracts:
-        rel = str(sol.relative_to(case_dir / "contracts"))
+def run_case(case_dir: Path, engine: str = "semantic") -> dict:
+    """Run the engine over the case, reading ONLY contracts/. engine='semantic'
+    (V0.13, case-level call-graph) or 'regex' (V0.12 per-file detectors)."""
+    cdir = case_dir / "contracts"
+    contracts = sorted(cdir.rglob("*.sol"))
+    out = {"case": case_dir.name, "engine": engine, "n_files": len(contracts),
+           "files": {}, "findings": []}
+    if engine == "semantic":
         t0 = time.monotonic()
+        try:
+            fs = run_semantic_case(cdir)
+            out["ms"] = round((time.monotonic() - t0) * 1000, 1)
+            for f in fs:
+                d = f.to_dict()
+                d["file"] = f.file.split("/")[-1] if f.file else ""
+                out["findings"].append(d)
+        except Exception as e:
+            out["error"] = repr(e)[:200]
+        return out
+    for sol in contracts:
+        rel = str(sol.relative_to(cdir))
         try:
             su = parse_source(sol)
             fs = run_detectors(su)
-            ms = round((time.monotonic() - t0) * 1000, 1)
-            out["files"][rel] = {"ok": True, "n_findings": len(fs), "ms": ms}
+            out["files"][rel] = {"ok": True, "n_findings": len(fs)}
             for f in fs:
-                d = f.to_dict()
-                d["file"] = rel
+                d = f.to_dict(); d["file"] = rel
                 out["findings"].append(d)
-        except Exception as e:  # engine must never crash the whole run on one file
+        except Exception as e:
             out["files"][rel] = {"ok": False, "error": repr(e)[:200]}
     return out
 
@@ -54,6 +66,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--case", default=None)
     ap.add_argument("--round", default="round1")
+    ap.add_argument("--engine", default="semantic", choices=["semantic", "regex"])
     a = ap.parse_args()
 
     if not freeze_engine.check():
@@ -73,9 +86,9 @@ def main():
         if not (c / "contracts").exists():
             print(f"skip {c.name}: no contracts/", file=sys.stderr)
             continue
-        res = run_case(c)
+        res = run_case(c, engine=a.engine)
         (raw_dir / f"{c.name}.json").write_text(json.dumps(res, ensure_ascii=False, indent=2))
-        print(f"[blind] {c.name}: {res['n_files']} files, {len(res['findings'])} findings")
+        print(f"[blind:{a.engine}] {c.name}: {res['n_files']} files, {len(res['findings'])} findings")
     print(f"raw outputs -> {raw_dir}")
     return 0
 

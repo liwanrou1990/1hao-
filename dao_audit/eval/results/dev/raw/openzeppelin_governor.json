@@ -1,0 +1,8 @@
+{
+  "case": "openzeppelin_governor",
+  "engine": "semantic",
+  "n_files": 4,
+  "files": {},
+  "findings": [],
+  "ms": 55.3
+}
