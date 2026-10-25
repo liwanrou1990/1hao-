@@ -1,0 +1,3 @@
+{"case":"aave_governance_v2","project":"aave","kind":"secure_control","is_chain_case":false,"truth":[],
+ "evidence":{"repo":"https://github.com/aave/governance-v2","commit":"d4e5ae0c31824b9ec9aec4e06a3ee2c3c34ae431",
+ "rationale":"snapshot voting via GovernanceStrategy.getVotingPowerAt(block) + ExecutorWithTimelock delay/queue/execute + role gating -> secure; any high-sev gov finding is FP"}}
