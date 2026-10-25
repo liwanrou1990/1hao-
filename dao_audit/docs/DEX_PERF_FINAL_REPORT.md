@@ -1,8 +1,23 @@
-# DEX 套利监控 性能优化 / 防漏检 / 持续部署 — 最终报告 (v0.10)
+# DEX 套利监控 性能优化 / 防漏检 / 持续部署 — 最终报告 (v0.11)
 
 > 范围：只优化**性能、扫描完整性、长时间监控**，**不扩展交易路径**。
 > 全部数值为真实链上测量；未达标如实报告，不伪报。
 > 保留 NO_TRADE 标准，不降低手续费/滑点/MEV/失败成本以制造正收益；不连接钱包、不执行真实交易。
+
+## V0.11 新增（检出完整性 / Arbitrum / 四级分离 / 验收）
+
+- **一 Tier-1 安全上界（证明+实链交叉验证）**：`flag_decision` 以最优闭环毛收益 ≥ -50bps 为候选，
+  并在**最小本金**下评估（毛收益随规模单调下降 → 最小 size 的毛收益是全 size 上界）。证明：任何在某
+  规模净收益为正的路径必有正毛收益 ≥ -50bps → 必被标记，**不漏**。`dex-verify-tier1` 同区块跑权威全
+  扫描 vs Tier-1：Base 实测 full -6.2bps ≈ tier1 -6.18bps、0 漏检。缺买/卖腿报价 → `INSUFFICIENT_DATA`
+  并保留重验，**绝不读作"无套利"**（一.5）。单测 `test_dex_perf.py` 锁定该安全上界逻辑。
+- **二 Arbitrum 漏块归因**：实测出块 ~232ms、公共 RPC RTT ~162ms、扫描 ~556ms(3 往返) → 理论覆盖上限
+  ~42%，瓶颈是网络 RTT 非计算。验收报告新增"出块间隔/覆盖上限"与三类归因（区块未观察/池状态滞后/机会
+  检出）。低延迟抓手见 `docs/ARBITRUM_LATENCY.md`。**不虚报 0 漏块。**
+- **四 四级收益互不混淆**：L1a 正毛收益 / L1b 正净收益(Tier-2 精确) / L2 Fork 全腿 balanceOf 验证
+  / L3 主网已实现。修正了此前"净>0 自动记 L2"的混淆：runner **只记到 L1**，L2/L3 仅由显式 fork/主网
+  步骤置位（当前真实数据三者皆 0）。
+- **五 验收指标齐全**：`dex-acceptance` 现含 Tier-2 触发次数、Tier-1 正毛收益标记数、RPC 失败切换次数。
 
 ## 0. 核心结论：系统能否"及时、完整地观察市场"？—— Base 已证明 ✅
 
@@ -120,6 +135,23 @@
 - **交易验证纪律**：仅当出现正净收益候选，才保存区块/时间/真实报价 → 全成本计算 → 同状态
   fork 模拟全部交易腿 → `balanceOf` 验证最终净利；未经真实主网执行**绝不**标记为已实现利润。
   当前无正收益候选 → 无可进入此流程者。
+
+## 五 最终验收输出对照（命令 → 指标）
+
+| 要求输出 | 来源 | 当前真实值 |
+|----------|------|-----------|
+| 连续运行时间 | `dex-acceptance` continuous_seconds_observed | 会话内短验证；24–72h 须 VPS 部署后以 DB 为准 |
+| 实际区块覆盖率 | per_chain missed_block_ratio / 覆盖上限 | Base 0.000；Arbitrum ~0.83（RTT 物理下限，已归因） |
+| Tier-1 正收益检出率与漏检 | `dex-verify-tier1` detection_rate / missed | 0 漏检；正毛收益对为 0（市场高效）；安全上界已证明+单测 |
+| Tier-2 实际触发次数 | `dex-acceptance` tier2_trigger_count | 0（毛收益恒 ≤0，未触发） |
+| P50/P95/P99 扫描延迟 | `dex-perf` latency_ms | Base P95=565ms<1s；Arbitrum P95=640ms |
+| 不同交易规模净收益 | `dex-acceptance` per_path_net_by_size / `dex-scan` | 各档位净收益非正（薄池大额更负） |
+| Fork 完整验证通过次数 | `dex-acceptance` fork_verified_count (L2) | 0（无正净候选可 fork）；机制见 DexRoundTripFork.t.sol |
+| 机会出现频率与持续 | `dex-acceptance` opportunity_lifetime / `dex-monitor` | 0（无正净机会） |
+| RPC 失败率与恢复 | `dex-acceptance` failure_rate / rpc_failover_count | 失败率低；失败切换按需（本环境主端点稳定） |
+
+> 结论：系统已证明能**及时（Base 每块、485ms）、完整（全 venue 批量 + 安全上界不漏正收益路径）**地观察
+> 真实市场；在测试范围内**未发现**经完整成本与 Fork 验证仍为正的合法套利 → **NO_TRADE**，不制造盈利结论。
 
 ## 关于"池状态增量缓存"的设计决策（诚实说明）
 

@@ -151,10 +151,14 @@ def _fast_round(con, cfg, trig, bn_ms_total, size_usd, tier2_bar,
                         net = s.get("net_usd")
                         if net is not None and net > 0:
                             n_pos_net += 1
+                        # level 1 = Tier-2 precise quote result (gross/net). Fork
+                        # (level 2) and mainnet-realized (level 3) are set ONLY by
+                        # their own explicit steps — never auto-claimed here, so
+                        # quote-positive is never conflated with fork-verified (四.5).
                         con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
                                     (scan_id, chain, tb, r["pair"], s.get("size_usd"),
                                      s.get("gross_usd"), s.get("total_cost_usd"), net,
-                                     2 if (net or 0) > 0 else 1, _now()))
+                                     1, _now()))
     if not any_ok:
         con.execute("DELETE FROM scans WHERE id=?", (scan_id,))
         con.commit()
@@ -371,6 +375,11 @@ def acceptance_from_db(db_path) -> dict:
     n_fail = con.execute("SELECT COUNT(*) FROM failures").fetchone()[0]
     fork_positive = con.execute("SELECT COUNT(*) FROM opportunities WHERE level>=2").fetchone()[0]
     mainnet_realized = con.execute("SELECT COUNT(*) FROM opportunities WHERE level>=3").fetchone()[0]
+    # Tier-1 flag count (level 0 rows with positive gross) and Tier-2 trigger
+    # count (distinct scans that produced any level>=1 precise row) — 五.
+    tier1_flags = con.execute("SELECT COUNT(*) FROM opportunities WHERE level=0 AND gross_usd>0").fetchone()[0]
+    tier2_triggers = con.execute("SELECT COUNT(DISTINCT scan_id) FROM opportunities WHERE level>=1").fetchone()[0]
+    rpc_failovers = con.execute("SELECT COUNT(*) FROM failures WHERE context LIKE 'rpc_failover%'").fetchone()[0]
     # per-pair best/worst net across the run, by size
     rows = con.execute("SELECT chain,pair,size_usd,MAX(net_usd),MIN(net_usd),AVG(net_usd),COUNT(*) "
                        "FROM opportunities GROUP BY chain,pair,size_usd ORDER BY MAX(net_usd) DESC").fetchall()
@@ -398,8 +407,9 @@ def acceptance_from_db(db_path) -> dict:
         "valid_scans": n_scans,
         "positive_spread_count": agg[0], "positive_net_count": n_pos_net,
         "fork_verified_count": fork_positive, "mainnet_realized_count": mainnet_realized,
+        "tier1_positive_gross_flags": tier1_flags, "tier2_trigger_count": tier2_triggers,
         "avg_scan_wall_ms": round(agg[2], 1), "avg_blocknum_rpc_ms": round(agg[3], 1),
-        "failures": n_fail,
+        "failures": n_fail, "rpc_failover_count": rpc_failovers,
         "failure_rate": round(n_fail / max(1, n_scans + n_fail), 4),
         "opportunity_lifetime": life,
         "per_chain_stats": per_chain,
@@ -505,12 +515,15 @@ def acceptance_markdown(rep: dict) -> str:
           f"（起 {rep['run_started']} 至 {rep['run_last']}）",
           f"- 已观察区块数: {rep['blocks_observed']}（{rep['chains']} 条链）",
           f"- 有效扫描次数: {rep['valid_scans']}",
-          f"- 正价差出现次数(quote_positive): {rep['positive_spread_count']}",
-          f"- 扣成本后正收益次数(net>0): {rep['positive_net_count']}",
-          f"- Fork 完整验证成功次数: {rep['fork_verified_count']}",
-          f"- 主网实际成交次数: {rep['mainnet_realized_count']}（设计上恒为 0，不执行真实交易）",
+          "- **四级收益分别统计（互不混淆）**：",
+          f"  - L1a 报价正毛收益次数(gross>0): {rep['positive_spread_count']}",
+          f"  - L1b 扣全部成本后正净收益次数(net>0, Tier-2精确): {rep['positive_net_count']}",
+          f"  - L2 Fork 同区块全腿 balanceOf 验证通过次数: {rep['fork_verified_count']}（仅由显式 fork 步骤置位）",
+          f"  - L3 真实主网已实现收益次数: {rep['mainnet_realized_count']}（设计上恒为 0，不执行真实交易）",
+          f"- Tier-1 正毛收益标记数: {rep.get('tier1_positive_gross_flags', 0)}；"
+          f"Tier-2 触发次数(精确全扫描): {rep.get('tier2_trigger_count', 0)}",
           f"- 平均扫描耗时: {rep['avg_scan_wall_ms']} ms；平均区块号 RPC 延迟: {rep['avg_blocknum_rpc_ms']} ms",
-          f"- 失败次数/失败率: {rep['failures']} / {rep['failure_rate']}",
+          f"- 失败次数/失败率: {rep['failures']} / {rep['failure_rate']}；RPC 失败切换次数: {rep.get('rpc_failover_count', 0)}",
           f"- **判定: {rep['verdict']}**", "",
           "## 机会持续时间（连续正净收益扫描数）", "",
           "| 链 | 交易对 | 本金USD | 最大连续正收益扫描 | 样本 |",
