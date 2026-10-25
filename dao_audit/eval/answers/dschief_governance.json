@@ -1,0 +1,5 @@
+{"case":"dschief_governance","project":"makerdao_dschief","kind":"vulnerable","is_chain_case":false,
+ "truth":[{"vuln":"VULN-2","contract":"DSChiefApprovals","function":"vote","line":[83,103],"treasury_risk":false,
+   "governance_relation":"投票权取自实时 deposits/approvals 无逐提案快照;经典版 free 无同块限制,借入MKR单笔lock→vote→lift改写hat"}],
+ "evidence":{"repo":"https://github.com/dapphub/ds-chief","vuln_commit":"4a833cdaeb66313da0fb16108771a52135d23a04",
+   "fixed_commit":null,"note":"设计性风险;缓解在 dss-chief 重写(free 需后一区块)","incident_date":"2020-10-28(演示,非恶意)"}}
