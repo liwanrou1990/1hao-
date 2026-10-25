@@ -36,6 +36,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from .fastquote import batch_quote_univ3
+from . import quotes as _quotes
 from .quotes import block_number, best_univ3_quote, best_slipstream_quote
 
 # A pair is flagged when best round-trip gross >= -GROSS_FLOOR_BPS. The floor
@@ -46,17 +47,43 @@ GROSS_FLOOR_BPS = 50.0
 
 
 def _cl_venues(chain_cfg: dict):
-    """Concentrated-liquidity venues Tier 1 can batch (shared quoter ABI)."""
+    """Concentrated-liquidity venues (shared quoter ABI)."""
     return [v for v in chain_cfg["venues"] if v["type"] in ("univ3", "slipstream")]
+
+
+def _all_venues(chain_cfg: dict):
+    """Every batchable venue: univ3/slipstream (quoter) + solidly (router)."""
+    return [v for v in chain_cfg["venues"] if v["type"] in ("univ3", "slipstream", "solidly")]
 
 
 def _params_for(v, fee_tiers, tick_spacings):
     return fee_tiers if v["type"] == "univ3" else tick_spacings
 
 
+def _leg_reqs(v, token_in, token_out, amount_in, fee_tiers, tick_spacings):
+    """Batch requests + param labels for ALL params of one venue on one leg.
+    univ3 -> each fee tier; slipstream -> each tick spacing; solidly -> stable
+    and volatile. Covers every on-chain venue type, so Tier-1 is COMPLETE."""
+    out = []
+    if v["type"] == "univ3":
+        for p in fee_tiers:
+            out.append(({"quoter": v["quoter"], "token_in": token_in, "token_out": token_out,
+                         "amount_in": amount_in, "fee": p, "vtype": "univ3"}, p))
+    elif v["type"] == "slipstream":
+        for p in tick_spacings:
+            out.append(({"quoter": v["quoter"], "token_in": token_in, "token_out": token_out,
+                         "amount_in": amount_in, "fee": p, "vtype": "slipstream"}, p))
+    elif v["type"] == "solidly":
+        for stable in (False, True):
+            out.append(({"router": v["router"], "factory": v["factory"], "token_in": token_in,
+                         "token_out": token_out, "amount_in": amount_in, "stable": stable,
+                         "vtype": "solidly"}, "stable" if stable else "volatile"))
+    return out
+
+
 def build_cl_requests(chain_cfg: dict, pairs, fee_tiers, tick_spacings, size_usd):
-    """Build the BUY-leg (quote->base) CL quote requests at one reference size.
-    Returns (reqs, meta) where meta parallels reqs with venue/pair/param."""
+    """Build the BUY-leg (quote->base) quote requests at one reference size,
+    across ALL venue types (univ3/slipstream/solidly). Returns (reqs, meta)."""
     toks = chain_cfg["tokens"]
     reqs: List[dict] = []
     meta: List[dict] = []
@@ -65,13 +92,14 @@ def build_cl_requests(chain_cfg: dict, pairs, fee_tiers, tick_spacings, size_usd
             continue
         bt, qt = toks[base], toks[quote]
         amt_q = int(size_usd * (10 ** qt["decimals"]))  # quote->base leg input
-        for v in _cl_venues(chain_cfg):
-            for p in _params_for(v, fee_tiers, tick_spacings):
-                reqs.append({"quoter": v["quoter"], "token_in": qt["address"],
-                             "token_out": bt["address"], "amount_in": amt_q, "fee": p,
-                             "vtype": v["type"]})
-                meta.append({"venue": v["name"], "type": v["type"], "quoter": v["quoter"],
-                             "pair": f"{base}/{quote}", "param": p,
+        for v in _all_venues(chain_cfg):
+            for req, label in _leg_reqs(v, qt["address"], bt["address"], amt_q,
+                                        fee_tiers, tick_spacings):
+                reqs.append(req)
+                meta.append({"venue": v["name"], "type": v["type"],
+                             "quoter": v.get("quoter"), "router": v.get("router"),
+                             "factory": v.get("factory"),
+                             "pair": f"{base}/{quote}", "param": label,
                              "base": base, "quote": quote, "amt_q": amt_q,
                              "base_dec": bt["decimals"], "quote_dec": qt["decimals"],
                              "bt": bt["address"], "qt": qt["address"]})
@@ -116,15 +144,14 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
     sell_meta: List[dict] = []
     for (pair, buy_venue), bb in best_buy.items():
         m = bb["m"]
-        for v in _cl_venues(chain_cfg):
+        for v in _all_venues(chain_cfg):
             if v["name"] == buy_venue:
                 continue  # round trip must cross venues
-            for p in _params_for(v, fee_tiers, tick_spacings):
-                sell_reqs.append({"quoter": v["quoter"], "token_in": m["bt"],
-                                  "token_out": m["qt"], "amount_in": bb["base_out"], "fee": p,
-                                  "vtype": v["type"]})
+            for req, label in _leg_reqs(v, m["bt"], m["qt"], bb["base_out"],
+                                        fee_tiers, tick_spacings):
+                sell_reqs.append(req)
                 sell_meta.append({"pair": pair, "buy_venue": buy_venue, "buy_param": bb["param"],
-                                  "sell_venue": v["name"], "sell_param": p,
+                                  "sell_venue": v["name"], "sell_param": label,
                                   "amt_q": m["amt_q"], "quote_dec": m["quote_dec"]})
     bsell = batch_quote_univ3(rpc, sell_reqs, block=blk) if sell_reqs else None
     if sell_reqs and not bsell.ok:
@@ -148,10 +175,11 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
                     "buy_param": m["buy_param"], "sell_venue": m["sell_venue"],
                     "sell_param": m["sell_param"], "quote_out": out, "amt_q": m["amt_q"]}
 
-    # Venues Tier-1 cannot price in-batch (solidly/classic use a different ABI).
-    # Their presence on a pair means Tier-1 CANNOT prove that pair unprofitable,
-    # so it MUST flag it (deferred to Tier-2) — never dropped on speedup.
-    deferred = [v["name"] for v in chain_cfg["venues"] if v["type"] not in ("univ3", "slipstream")]
+    # Tier-1 now batches EVERY on-chain venue type (univ3/slipstream/solidly),
+    # so there is no deferred venue: the best round trip above is exact across
+    # all venues, and the candidate set is an EXACT superset of the baseline's.
+    deferred = [v["name"] for v in chain_cfg["venues"]
+                if v["type"] not in ("univ3", "slipstream", "solidly")]
     pair_names = [f"{b}/{q}" for (b, q) in pairs
                   if b in chain_cfg["tokens"] and q in chain_cfg["tokens"]]
 
@@ -162,16 +190,16 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
         gross = v["gross_bps"] if v else None
         near = gross is not None and gross >= -gross_floor_bps
         has_deferred = bool(deferred)
-        flagged = near or has_deferred or v is None  # v is None => no CL quote, can't rule out
+        flagged = near or has_deferred or v is None  # can't rule out => keep
         if near:
-            reason = f"CL闭环毛收益 {gross}bps >= -{gross_floor_bps}bps（近/超盈亏平衡）"
+            reason = f"闭环毛收益 {gross}bps >= -{gross_floor_bps}bps（近/超盈亏平衡）→ 候选"
         elif has_deferred:
-            reason = f"存在非CL venue {deferred} 未入批量，无法证伪 → 保守保留交 Tier-2"
+            reason = f"存在未入批量 venue {deferred}，无法证伪 → 保守保留交 Tier-2"
         elif v is None:
-            reason = "无CL可执行报价，无法判定 → 保守保留交 Tier-2"
+            reason = "无可执行报价，无法判定 → 保守保留交 Tier-2"
         else:
-            reason = f"CL闭环毛收益 {gross}bps << -{gross_floor_bps}bps 且无其它 venue → 丢弃"
-        filter_log.append({"pair": pair, "flagged": flagged, "cl_gross_bps": gross,
+            reason = f"闭环毛收益 {gross}bps << -{gross_floor_bps}bps（全 venue）→ 过滤丢弃"
+        filter_log.append({"pair": pair, "flagged": flagged, "gross_bps": gross,
                            "deferred_venues": deferred, "reason": reason})
         if flagged:
             entry = {"pair": pair, "flag_reason": reason, "deferred_venues": deferred}
@@ -188,11 +216,85 @@ def tier1_scan(chain: str, chain_cfg: dict, pairs, fee_tiers, tick_spacings,
             "deferred_venues": deferred,
             "candidates": candidates, "best_roundtrip_by_pair": best_rt,
             "filter_log": filter_log, "data_status": "OK",
-            "note": ("Tier-1 候选=最优CL闭环毛收益 >= -%.0fbps（含两腿手续费+价格冲击），或该交易对"
-                     "存在未入批量的非CL venue（solidly/classic，无法证伪故保守保留）。该下限宽于全部"
-                     "显式成本(Gas/MEV/失败/闪电贷)，故候选集为基准(scan_chain)候选集的真超集——提速"
-                     "不漏任何正净收益路径。精确净收益由 Tier-2（全 venue+全成本+fork）判定。"
+            "note": ("Tier-1 候选=全 venue(univ3+slipstream+solidly) 最优闭环毛收益 >= -%.0fbps"
+                     "（含两腿手续费+价格冲击）。该下限宽于全部显式成本(Gas/MEV/失败/闪电贷)，且"
+                     "Tier-1 已覆盖全部链上 venue 类型，故候选集为基准(scan_chain)候选集的真超集——"
+                     "提速不漏任何正净收益路径。精确净收益由 Tier-2（全成本+完整双腿 fork）判定。"
                      % gross_floor_bps)}
+
+
+def profile_full_scan(cfg: dict, chain: str, eth_price: float = 3000.0) -> dict:
+    """Attribute where the slow FULL scan (scan_chain, all venues/sizes) spends
+    its time: block/gas RPC, Quoter `cast` calls (count + latency), pure path
+    computation, and a representative DB write. Answers 一(1)."""
+    import sqlite3, tempfile, os
+    from . import scan as _scan
+    ccfg = cfg["chains"][chain]
+    pairs = [tuple(p) for p in cfg.get("pairs", {}).get(chain, [])]
+    fee_tiers = cfg.get("fee_tiers", [100, 500, 3000])
+    tick_spacings = cfg.get("tick_spacings", [1, 50, 100, 200, 2000])
+    sizes = cfg.get("capital_sizes", [1000, 10000, 100000, 1000000])
+    costs = cfg.get("costs", {})
+    min_net = float(cfg.get("min_net_usd", 1))
+
+    cats = {"block-number": [0, 0.0], "gas-price": [0, 0.0], "call": [0, 0.0]}
+    orig = _quotes._run
+
+    def wrap(args, timeout=25.0):
+        key = args[0] if args else "?"
+        out, lat, err = orig(args, timeout)
+        c = cats.setdefault(key, [0, 0.0])
+        c[0] += 1
+        c[1] += lat
+        return out, lat, err
+
+    _quotes._run = wrap
+    try:
+        t0 = time.monotonic()
+        rows = _scan.scan_chain(chain, ccfg, pairs, fee_tiers, tick_spacings, sizes,
+                                costs, eth_price, min_net)
+        wall_ms = (time.monotonic() - t0) * 1000
+    finally:
+        _quotes._run = orig
+
+    quoter_ms = cats["call"][1]
+    rpc_meta_ms = cats["block-number"][1] + cats["gas-price"][1]
+    # pure path computation = wall minus all subprocess time (cast already
+    # includes spawn + network in its own latency)
+    compute_ms = max(0.0, wall_ms - quoter_ms - rpc_meta_ms)
+
+    # representative DB write: insert one opportunity row per (pair,size)
+    n_rows = sum(1 for _ in pairs) * len(sizes)
+    fd, tmp = tempfile.mkstemp(suffix=".db")
+    os.close(fd)
+    try:
+        con = sqlite3.connect(tmp)
+        con.execute("CREATE TABLE o(a,b,c,d,e,f,g,h,i,j)")
+        t0 = time.monotonic()
+        for i in range(max(1, n_rows)):
+            con.execute("INSERT INTO o VALUES(?,?,?,?,?,?,?,?,?,?)",
+                        (i, "base", 1, "WETH/USDC", 1000, 0.1, 0.2, -0.1, 0, "t"))
+        con.commit()
+        db_write_ms = (time.monotonic() - t0) * 1000
+        con.close()
+    finally:
+        os.unlink(tmp)
+
+    total = wall_ms
+    def pctf(x):
+        return round(100 * x / total, 1) if total else None
+    return {"chain": chain, "scan_wall_ms": round(wall_ms, 1),
+            "quoter_cast_ms": round(quoter_ms, 1), "quoter_cast_calls": cats["call"][0],
+            "block_gas_rpc_ms": round(rpc_meta_ms, 1),
+            "block_gas_calls": cats["block-number"][0] + cats["gas-price"][0],
+            "path_compute_ms": round(compute_ms, 1),
+            "db_write_ms_est": round(db_write_ms, 2), "db_rows": n_rows,
+            "breakdown_pct": {"quoter_cast": pctf(quoter_ms), "block_gas_rpc": pctf(rpc_meta_ms),
+                              "path_compute": pctf(compute_ms)},
+            "n_candidates": sum(1 for r in rows if r.get("decision") == "TRADE_CANDIDATE"),
+            "note": ("完整扫描耗时归因：逐笔 `cast` 子进程(quoter_cast)通常占压倒性比例，"
+                     "印证瓶颈在每笔一个子进程+一次往返，而非路径计算或 DB 写入。"
+                     "DB 写入为每轮代表性行数的实测插入耗时。")}
 
 
 def benchmark(cfg: dict, chain: str, n_blocks: int = 20, size_usd: float = 1000,
@@ -306,9 +408,13 @@ def equivalence_check(cfg: dict, chain: str, size_usd: float = 1000) -> dict:
         if m["type"] == "univ3":
             q = best_univ3_quote(ccfg["rpc"], m["venue"], m["quoter"], r["token_in"],
                                  r["token_out"], r["amount_in"], [r["fee"]], blk)
-        else:
+        elif m["type"] == "slipstream":
             q = best_slipstream_quote(ccfg["rpc"], m["venue"], m["quoter"], r["token_in"],
                                       r["token_out"], r["amount_in"], [r["fee"]], blk)
+        else:  # solidly: compare the SAME stable flag as the batched request
+            q = _quotes.solidly_quote(ccfg["rpc"], m["venue"], m["router"], r["token_in"],
+                                      r["token_out"], r["amount_in"], r["stable"],
+                                      m["factory"], blk)
         seq = q.amount_out if q.ok else None
         compared += 1
         if a is None and seq is None:

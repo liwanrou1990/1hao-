@@ -513,8 +513,10 @@ def cmd_dex_run(args):
           f"(0=无界，用于常驻部署)")
     res = DEXRUN.run_continuous(cfg, db, max_rounds=int(args.max_rounds),
                                 max_seconds=int(args.max_seconds), poll_s=float(args.poll),
-                                rate_limit_s=float(args.rate_limit))
-    print(f"结束: rounds={res['rounds']} scans={res['scans']} elapsed={res['elapsed_s']}s db={res['db']}")
+                                rate_limit_s=float(args.rate_limit), fast=bool(args.fast),
+                                size_usd=float(args.size), tier2_gross_bar_bps=float(args.tier2_bar))
+    mode = "fast(Tier-1批量)" if args.fast else "full(全扫描基准)"
+    print(f"结束[{mode}]: rounds={res['rounds']} scans={res['scans']} elapsed={res['elapsed_s']}s db={res['db']}")
     return 0
 
 
@@ -532,6 +534,25 @@ def cmd_dex_acceptance(args):
           f"正价差{rep['positive_spread_count']} 正净收益{rep['positive_net_count']} "
           f"Fork验证{rep['fork_verified_count']} 失败率{rep['failure_rate']} 判定={rep['verdict']}")
     print(f"  报告: {out_dir/'dex_acceptance.md'}")
+    return 0
+
+
+def cmd_dex_profile(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    chain = args.chain
+    print(f"完整扫描耗时归因: chain={chain}（运行真实全扫描，可能较慢）...")
+    rep = DEXPERF.profile_full_scan(cfg, chain, eth_price=float(args.eth_price))
+    (out_dir / f"dex_profile_{chain}.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2),
+                                                       encoding="utf-8")
+    print(f"  全扫描 wall={rep['scan_wall_ms']}ms")
+    print(f"  Quoter(cast): {rep['quoter_cast_ms']}ms / {rep['quoter_cast_calls']} 笔 "
+          f"({rep['breakdown_pct']['quoter_cast']}%)")
+    print(f"  block/gas RPC: {rep['block_gas_rpc_ms']}ms / {rep['block_gas_calls']} 笔 "
+          f"({rep['breakdown_pct']['block_gas_rpc']}%)")
+    print(f"  路径计算: {rep['path_compute_ms']}ms ({rep['breakdown_pct']['path_compute']}%)")
+    print(f"  DB写入(估,{rep['db_rows']}行): {rep['db_write_ms_est']}ms")
     return 0
 
 
@@ -590,7 +611,7 @@ def cmd_dex_tier1(args):
     print(f"Tier-1 扫描: chain={chain} block={r['block']} status={r['data_status']} "
           f"latency={r['latency_ms']}ms rpc={r['rpc_calls']} inner={r['n_inner_quotes']}")
     for fl in r.get("filter_log", []):
-        print(f"  {fl['pair']:12} flagged={fl['flagged']} cl_gross_bps={fl['cl_gross_bps']}  {fl['reason']}")
+        print(f"  {fl['pair']:12} flagged={fl['flagged']} gross_bps={fl['gross_bps']}  {fl['reason']}")
     print(f"  候选(交 Tier-2)={len(r.get('candidates', []))}")
     return 0
 
@@ -698,6 +719,9 @@ def build_parser() -> argparse.ArgumentParser:
     dn.add_argument("--config", default=None); dn.add_argument("--db", default=None)
     dn.add_argument("--max-rounds", default=0); dn.add_argument("--max-seconds", default=0)
     dn.add_argument("--poll", default=10); dn.add_argument("--rate-limit", default=2)
+    dn.add_argument("--fast", action="store_true", help="用Tier-1批量候选发现(2 eth_call/链)跟上出块节奏")
+    dn.add_argument("--size", default=1000, help="fast模式Tier-1参考本金USD")
+    dn.add_argument("--tier2-bar", default=0.0, help="fast模式触发Tier-2精确全扫描的毛收益bps下限(默认>0才触发)")
     dn.set_defaults(func=cmd_dex_run)
 
     da = sub.add_parser("dex-acceptance", help="从监控DB生成连续监控验收报告")
@@ -724,6 +748,12 @@ def build_parser() -> argparse.ArgumentParser:
     dh.add_argument("--config", default=None); dh.add_argument("--db", default=None)
     dh.add_argument("--max-scan-age", default=300, help="最近一次扫描允许的最大秒龄")
     dh.set_defaults(func=cmd_dex_health)
+
+    dpr = sub.add_parser("dex-profile", help="完整扫描耗时归因(RPC/Quoter cast/路径计算/DB写入)")
+    dpr.add_argument("--config", default=None)
+    dpr.add_argument("--chain", default="base")
+    dpr.add_argument("--eth-price", default=3000.0, help="归因用固定ETH计价(避免DefiLlama波动)")
+    dpr.set_defaults(func=cmd_dex_profile)
     return p
 
 

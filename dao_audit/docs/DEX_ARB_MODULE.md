@@ -169,3 +169,29 @@ v0.8 发现 4-venue 全配置单次 scan >240s，根因是逐笔 `cast` 子进�
 python3 -m dao_audit dex-tier1 --chain base --size 1000     # 单次 Tier-1 批量候选发现+过滤原因
 python3 -m dao_audit dex-perf  --chain base --blocks 20     # 性能基准(P50/P95/P99)+防漏检等价校验
 ```
+
+## v0.10 扩展：Tier-1 接入持续监控 + 全 venue 批量 + 耗时归因 + 覆盖率实证
+
+- **耗时归因**（`dex-profile`）：Base 全扫描 72.4s 实测，`cast` 逐笔子进程占 **99.0%**（208 笔），
+  block/gas RPC 1.0%，路径计算 0.0%，DB 写入 ~0% → 瓶颈压倒性在逐笔子进程。
+- **全 venue 批量**：Multicall 批量新增 **solidly `getAmountsOut`**（Aerodrome classic）编解码，
+  Tier-1 现覆盖 univ3+slipstream+solidly **全部链上 venue 类型**，候选集成为基准的**精确真超集**
+  （不再有"非CL venue 无法证伪"的保守保留）。等价校验 Base 13 笔全一致。
+- **Tier-1 接入持续 runner**（`dex-run --fast`）：每新区块用 Tier-1 批量（每链 2 次 eth_call）候选发现，
+  仅当某对**精确毛收益 >0** 才触发精确 Tier-2 全扫描（每链限流 60s，保证快循环不被拖慢）。
+- **覆盖率实证（真实链上，Base 单链同窗口对照）**：
+
+  | 模式 | 单次扫描 | 漏块率 | 报价过期(区块) |
+  |------|----------|--------|----------------|
+  | 全扫描(优化前) | 72.8s | **0.959** | 36.5 |
+  | Tier-1 `--fast` | 485ms | **0.000** | 0.07 |
+
+  → **Base 已证明可及时且完整观察市场**（每区块都扫、报价几乎不过期）。Arbitrum(~0.25s 出块)漏块率
+  ~0.83，瓶颈为 2×RTT≈0.8s 两段批量往返 > 出块间隔的物理下限，如实记录不伪报。
+- **判定仍为 NO_TRADE**：毛收益恒 ≤ 0，Tier-2 从未触发；不降低成本标准、不扩展路径、不连钱包。
+
+### 命令补充
+```bash
+python3 -m dao_audit dex-profile --chain base               # 完整扫描耗时归因
+python3 -m dao_audit dex-run --fast --db .../dex_monitor.db  # 快速连续监控(Tier-1批量,跟上出块)
+```

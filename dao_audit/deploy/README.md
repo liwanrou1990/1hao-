@@ -20,9 +20,11 @@ sudo APP_DIR=/opt/dao_audit DB_DIR=/var/lib/dexmon deploy/deploy.sh
 ## 手动运行（前台，调试用）
 ```bash
 cd dao_audit
-PYTHONPATH=tool python3 -m dao_audit dex-run \
-  --db /var/lib/dexmon/dex_monitor.db --poll 10 --rate-limit 2
-# 新区块触发增量扫描；SQLite 持久化；进程重启后自动从上次区块续跑。
+PYTHONPATH=tool python3 -m dao_audit dex-run --fast \
+  --db /var/lib/dexmon/dex_monitor.db --poll 2 --rate-limit 0
+# --fast：每新区块用 Tier-1 批量候选发现(每链2次eth_call,全venue)，可跟上 Base 出块(实测漏块率0)。
+# 仅当某对精确毛收益>0才触发精确 Tier-2 全扫描(每链限流60s)。SQLite 持久化；重启从上次区块续跑。
+# 省略 --fast 则为全扫描基准模式(慢,用于对照)。
 ```
 
 ## RPC 失败切换（failover）

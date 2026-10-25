@@ -11,7 +11,8 @@ sys.path.insert(0, str(ROOT / "tool"))
 
 from dao_audit.dex.fastquote import (  # noqa: E402
     enc_quote_inner, enc_aggregate3, _decode_results, _w,
-    _SEL_QUOTE_UNIV3, _SEL_QUOTE_SLIP, MULTICALL3,
+    enc_solidly_inner, _decode_u256_array_last,
+    _SEL_QUOTE_UNIV3, _SEL_QUOTE_SLIP, _SEL_SOLIDLY, MULTICALL3,
 )
 
 TIN = "0x4200000000000000000000000000000000000006"   # WETH (Base)
@@ -91,3 +92,39 @@ def test_decode_results_roundtrip():
 def test_decode_empty_or_short():
     assert _decode_results("0x") == []
     assert _decode_results("0x" + "00" * 10) == []
+
+
+FACTORY = "0x420DD381b31aEf6683db6B902084cB0FFECe40Da"  # Aerodrome classic factory
+
+
+def test_solidly_inner_calldata():
+    # getAmountsOut(amountIn, [Route(from,to,stable,factory)]) single hop
+    cd = enc_solidly_inner(TIN, TOUT, AMT, True, FACTORY)
+    assert cd[2:10] == _SEL_SOLIDLY == "5509a1ac"
+    body = cd[10:]
+    w = [body[i * 64:(i + 1) * 64] for i in range(7)]
+    assert int(w[0], 16) == AMT          # amountIn
+    assert int(w[1], 16) == 0x40          # offset to routes array
+    assert int(w[2], 16) == 1             # routes length = 1 (single hop)
+    assert w[3].endswith("4200000000000000000000000000000000000006")   # from
+    assert w[4].lower().endswith("833589fcd6edb6e08f4c7c32d4f71b54bda02913")  # to
+    assert int(w[5], 16) == 1             # stable = true
+    assert w[6].lower().endswith(FACTORY.lower()[2:])                   # factory
+    # stable=false flips exactly that one word
+    cd0 = enc_solidly_inner(TIN, TOUT, AMT, False, FACTORY)
+    assert int(cd0[10:][5 * 64:6 * 64], 16) == 0
+
+
+def test_solidly_decode_uint256_array_last():
+    # getAmountsOut returns uint256[] amounts; output = last element
+    amts = [AMT, 2330_000000]  # [amountIn, amountOut] for a 1-hop route
+    words = [_w(0x20), _w(len(amts))] + [_w(a) for a in amts]
+    data = "".join(words)
+    assert _decode_u256_array_last(data) == 2330_000000
+    # three-hop style: last is the final output
+    amts3 = [AMT, 111, 222, 333]
+    data3 = "".join([_w(0x20), _w(len(amts3))] + [_w(a) for a in amts3])
+    assert _decode_u256_array_last(data3) == 333
+    # empty / malformed -> None (never fabricated)
+    assert _decode_u256_array_last("") is None
+    assert _decode_u256_array_last(_w(0x20) + _w(0)) is None

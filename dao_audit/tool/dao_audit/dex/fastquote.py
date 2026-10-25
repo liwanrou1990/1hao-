@@ -22,6 +22,7 @@ MULTICALL3 = "0xcA11bde05977b3631167028862bE2a173976CA11"  # same address on Bas
 # is byte-identical (a positive int24 encodes exactly like the uint24).
 _SEL_QUOTE_UNIV3 = "c6a5026a"  # quoteExactInputSingle((address,address,uint256,uint24,uint160))
 _SEL_QUOTE_SLIP = "9e7defe6"   # quoteExactInputSingle((address,address,uint256,int24,uint160))
+_SEL_SOLIDLY = "5509a1ac"      # getAmountsOut(uint256,(address,address,bool,address)[])
 _SEL_QUOTE = _SEL_QUOTE_UNIV3  # back-compat default
 _SEL_AGG3 = "82ad56cb"         # aggregate3((address,bool,bytes)[])
 
@@ -43,6 +44,35 @@ def enc_quote_inner(token_in: str, token_out: str, amount_in: int, fee_or_tick: 
     sel = _SEL_BY_VTYPE.get(vtype, _SEL_QUOTE_UNIV3)
     return "0x" + sel + _w(token_in) + _w(token_out) + _w(amount_in) + \
         _w(fee_or_tick) + _w(0)
+
+
+def enc_solidly_inner(token_in: str, token_out: str, amount_in: int,
+                      stable: bool, factory: str) -> str:
+    """getAmountsOut(uint256 amountIn, Route[] routes) calldata for a single-hop
+    Route=(from,to,stable,factory). amountIn is static; routes is a dynamic array
+    of a static 4-field tuple, so: amountIn, offset(0x40), length(1), route words."""
+    return "0x" + _SEL_SOLIDLY + _w(amount_in) + _w(0x40) + _w(1) + \
+        _w(token_in) + _w(token_out) + _w(1 if stable else 0) + _w(factory)
+
+
+def _decode_u256_array_last(data_hex: str):
+    """Decode a uint256[] return blob and take the LAST element (solidly
+    getAmountsOut returns per-hop amounts; the output is the final one)."""
+    d = data_hex
+    if len(d) < 128:
+        return None
+    off = int(d[0:64], 16) // 32           # word index of the length word
+    n = int(d[off * 64:(off + 1) * 64], 16)
+    if n <= 0:
+        return None
+    last_idx = off + n                      # words: [len][a0]..[a_{n-1}]
+    seg = d[last_idx * 64:(last_idx + 1) * 64]
+    if len(seg) < 64:
+        return None
+    try:
+        return int(seg, 16)
+    except ValueError:
+        return None
 
 
 def enc_aggregate3(calls: List[Tuple[str, bool, str]]) -> str:
@@ -104,8 +134,17 @@ class BatchResult:
 def batch_quote_univ3(rpc: str, reqs: List[dict], block: Optional[int] = None) -> BatchResult:
     """reqs: [{quoter, token_in, token_out, amount_in, fee}]. Returns amountOut
     per request (None if that inner call failed), in one eth_call."""
-    calls = [(r["quoter"], True, enc_quote_inner(r["token_in"], r["token_out"],
-             r["amount_in"], r["fee"], r.get("vtype", "univ3"))) for r in reqs]
+    def _inner(r):
+        if r.get("vtype") == "solidly":
+            return enc_solidly_inner(r["token_in"], r["token_out"], r["amount_in"],
+                                     r.get("stable", False), r["factory"])
+        return enc_quote_inner(r["token_in"], r["token_out"], r["amount_in"],
+                               r["fee"], r.get("vtype", "univ3"))
+
+    def _target(r):
+        return r.get("router") or r["quoter"]
+
+    calls = [(_target(r), True, _inner(r)) for r in reqs]
     data = enc_aggregate3(calls)
     tag = hex(block) if isinstance(block, int) else (block or "latest")
     payload = {"jsonrpc": "2.0", "id": 1, "method": "eth_call",
@@ -122,10 +161,13 @@ def batch_quote_univ3(rpc: str, reqs: List[dict], block: Optional[int] = None) -
     amounts: List[Optional[int]] = []
     for i in range(len(reqs)):
         if i < len(results) and results[i][0] and len(results[i][1]) >= 64:
-            try:
-                amounts.append(int(results[i][1][:64], 16))
-            except ValueError:
-                amounts.append(None)
+            if reqs[i].get("vtype") == "solidly":
+                amounts.append(_decode_u256_array_last(results[i][1]))
+            else:
+                try:
+                    amounts.append(int(results[i][1][:64], 16))
+                except ValueError:
+                    amounts.append(None)
         else:
             amounts.append(None)
     return BatchResult(amounts, True, lat, block, None, len(reqs))

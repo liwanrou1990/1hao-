@@ -85,16 +85,103 @@ def _last_block(con, chain):
     return row[0] if row and row[0] is not None else None
 
 
+def _fast_round(con, cfg, trig, bn_ms_total, size_usd, tier2_bar,
+                tier2_last=None, tier2_min_interval_s=60.0) -> "int|None":
+    """One fast round: per advanced chain, Tier-1 batched discovery (all venues,
+    2 eth_calls) pinned to the trigger block; record exact round-trip gross per
+    pair. Run the slow precise Tier-2 full scan (full cost model + all sizes)
+    ONLY when a pair's exact gross reaches `tier2_bar` (default 0 bps): since any
+    profitable trade needs net>0 => gross>0, a gross>0 trigger never misses a
+    candidate yet almost never fires in an efficient market, so the loop stays
+    fast. Tier-2 is additionally throttled to at most once per chain per
+    `tier2_min_interval_s` so a persistently near-breakeven pair can't stall
+    coverage. Returns the scan_id, or None if every chain was INSUFFICIENT_DATA."""
+    if tier2_last is None:
+        tier2_last = {}
+    from . import perf
+    from .scan import scan_chain, _usd_price_map
+    from ..market.sources import DefiLlamaSource
+    fee_tiers = cfg.get("fee_tiers", [100, 500, 3000])
+    tick_spacings = cfg.get("tick_spacings", [1, 50, 100, 200, 2000])
+    cur = con.execute("INSERT INTO scans(started_at,wall_ms,blocknum_rpc_ms,chains,"
+                      "n_pairs,n_positive_spread,n_positive_net,eth_price) VALUES(?,?,?,?,?,?,?,?)",
+                      (_now(), 0.0, bn_ms_total, ",".join(trig.keys()), 0, 0, 0, None))
+    scan_id = cur.lastrowid
+    total_wall = 0.0
+    n_pairs = n_pos_spread = n_pos_net = 0
+    any_ok = False
+    for chain, (tb, rpc) in trig.items():
+        ccfg = cfg["chains"][chain]
+        pairs = [tuple(p) for p in cfg.get("pairs", {}).get(chain, [])]
+        t1 = perf.tier1_scan(chain, ccfg, pairs, fee_tiers, tick_spacings, size_usd, block=tb)
+        total_wall += t1.get("latency_ms", 0.0)
+        if t1.get("data_status") != "OK":
+            con.execute("INSERT INTO failures VALUES(?,?,?)",
+                        (_now(), f"tier1:{chain}", str(t1.get("error"))[:200]))
+            continue
+        any_ok = True
+        for pair, v in t1["best_roundtrip_by_pair"].items():
+            n_pairs += 1
+            gross_usd = v["gross_bps"] / 1e4 * size_usd
+            if gross_usd > 0:
+                n_pos_spread += 1
+            con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
+                        (scan_id, chain, tb, pair, size_usd, round(gross_usd, 4),
+                         None, None, 0, _now()))  # level 0 = Tier-1 gross only
+        # Tier-2 precise (full cost + all sizes) ONLY when exact gross clears the
+        # bar (default 0: a profitable trade needs gross>0), and at most once per
+        # chain per interval so a near-breakeven pair can't stall coverage.
+        near = [c for c in t1["candidates"]
+                if c.get("gross_bps") is not None and c["gross_bps"] > tier2_bar]
+        due = (time.monotonic() - tier2_last.get(chain, -1e9)) >= tier2_min_interval_s
+        if near and due:
+            tier2_last[chain] = time.monotonic()
+            eth, _ = _usd_price_map(DefiLlamaSource())
+            if eth is not None:
+                rows = scan_chain(chain, ccfg, pairs, fee_tiers, tick_spacings,
+                                  cfg.get("capital_sizes", [1000]), cfg.get("costs", {}),
+                                  eth, float(cfg.get("min_net_usd", 1)))
+                for r in rows:
+                    for s in r.get("sizes", []):
+                        if s.get("status") == "NO_QUOTE":
+                            continue
+                        net = s.get("net_usd")
+                        if net is not None and net > 0:
+                            n_pos_net += 1
+                        con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
+                                    (scan_id, chain, tb, r["pair"], s.get("size_usd"),
+                                     s.get("gross_usd"), s.get("total_cost_usd"), net,
+                                     2 if (net or 0) > 0 else 1, _now()))
+    if not any_ok:
+        con.execute("DELETE FROM scans WHERE id=?", (scan_id,))
+        con.commit()
+        return None
+    con.execute("UPDATE scans SET wall_ms=?,n_pairs=?,n_positive_spread=?,n_positive_net=? WHERE id=?",
+                (round(total_wall, 1), n_pairs, n_pos_spread, n_pos_net, scan_id))
+    con.commit()
+    return scan_id
+
+
 def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0,
                    poll_s: float = 10.0, rate_limit_s: float = 2.0,
-                   backoff=(1, 2, 4, 8)) -> dict:
+                   backoff=(1, 2, 4, 8), fast: bool = False, size_usd: float = 1000.0,
+                   tier2_gross_bar_bps: float = 0.0, tier2_min_interval_s: float = 60.0) -> dict:
     """Block-triggered continuous loop. max_rounds/max_seconds=0 means unbounded
-    (for server deployment); set them to bound a validation run."""
+    (for server deployment); set them to bound a validation run.
+
+    fast=True uses the Tier-1 batched candidate discovery (2 Multicall eth_calls
+    per chain, all venue types) every new block — fast enough to keep up with
+    L2 block cadence — and only runs the slow precise Tier-2 full scan when a
+    pair's exact round-trip gross reaches `tier2_gross_bar_bps` of breakeven
+    (so a genuinely near-profitable pair gets the full cost model + fork, while
+    the common deeply-negative case stays cheap). fast=False keeps the original
+    full-scan-every-block behavior (the baseline, kept for comparison)."""
     con = _connect(db_path)
     chains = list(cfg.get("chains", {}).keys())
     start = time.monotonic()
     rounds = 0
     scans_done = 0
+    tier2_last = {}  # chain -> monotonic ts of last Tier-2 fire (throttle)
     con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_started',?)", (_now(),))
     con.commit()
 
@@ -150,48 +237,55 @@ def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0
                 continue
 
             # 2) scan on the fresh block(s)
-            t0 = time.monotonic()
-            try:
-                rep = scan(cfg)
-            except Exception as e:
-                con.execute("INSERT INTO failures VALUES(?,?,?)", (_now(), "scan", repr(e)[:200]))
-                con.commit()
-                time.sleep(rate_limit_s)
-                continue
-            wall = (time.monotonic() - t0) * 1000
-            scans_done += 1
-            if rep.get("status") != "OK":
-                con.execute("INSERT INTO failures VALUES(?,?,?)",
-                            (_now(), "scan_status", rep.get("reason", "")[:200]))
-                con.commit()
-                time.sleep(rate_limit_s)
-                continue
+            if fast:
+                scan_id = _fast_round(con, cfg, trig, bn_ms_total, size_usd,
+                                      tier2_gross_bar_bps, tier2_last, tier2_min_interval_s)
+                if scan_id is None:          # every chain INSUFFICIENT_DATA -> no signal
+                    time.sleep(rate_limit_s)
+                    continue
+                scans_done += 1
+            else:
+                t0 = time.monotonic()
+                try:
+                    rep = scan(cfg)
+                except Exception as e:
+                    con.execute("INSERT INTO failures VALUES(?,?,?)", (_now(), "scan", repr(e)[:200]))
+                    con.commit()
+                    time.sleep(rate_limit_s)
+                    continue
+                wall = (time.monotonic() - t0) * 1000
+                scans_done += 1
+                if rep.get("status") != "OK":
+                    con.execute("INSERT INTO failures VALUES(?,?,?)",
+                                (_now(), "scan_status", rep.get("reason", "")[:200]))
+                    con.commit()
+                    time.sleep(rate_limit_s)
+                    continue
 
-            n_pairs = 0; n_pos_spread = 0; n_pos_net = 0
-            cur = con.execute("INSERT INTO scans(started_at,wall_ms,blocknum_rpc_ms,chains,"
-                              "n_pairs,n_positive_spread,n_positive_net,eth_price) "
-                              "VALUES(?,?,?,?,?,?,?,?)",
-                              (_now(), wall, bn_ms_total, ",".join(chains), 0, 0, 0,
-                               rep.get("eth_price_usd")))
-            scan_id = cur.lastrowid
-            for r in rep.get("same_chain", []):
-                best = r.get("best")
-                for s in r.get("sizes", []):
-                    if s.get("status") == "NO_QUOTE":
-                        continue
-                    n_pairs += 1
-                    gross = s.get("gross_usd"); net = s.get("net_usd")
-                    if gross is not None and gross > 0:
-                        n_pos_spread += 1
-                    level = 1 if (gross is not None and gross > 0) else 0
-                    if net is not None and net > 0:
-                        n_pos_net += 1
-                    con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
-                                (scan_id, r["chain"], r.get("block"), r["pair"],
-                                 s.get("size_usd"), gross, s.get("total_cost_usd"), net,
-                                 level, _now()))
-            con.execute("UPDATE scans SET n_pairs=?,n_positive_spread=?,n_positive_net=? WHERE id=?",
-                        (n_pairs, n_pos_spread, n_pos_net, scan_id))
+                n_pairs = 0; n_pos_spread = 0; n_pos_net = 0
+                cur = con.execute("INSERT INTO scans(started_at,wall_ms,blocknum_rpc_ms,chains,"
+                                  "n_pairs,n_positive_spread,n_positive_net,eth_price) "
+                                  "VALUES(?,?,?,?,?,?,?,?)",
+                                  (_now(), wall, bn_ms_total, ",".join(chains), 0, 0, 0,
+                                   rep.get("eth_price_usd")))
+                scan_id = cur.lastrowid
+                for r in rep.get("same_chain", []):
+                    for s in r.get("sizes", []):
+                        if s.get("status") == "NO_QUOTE":
+                            continue
+                        n_pairs += 1
+                        gross = s.get("gross_usd"); net = s.get("net_usd")
+                        if gross is not None and gross > 0:
+                            n_pos_spread += 1
+                        level = 1 if (gross is not None and gross > 0) else 0
+                        if net is not None and net > 0:
+                            n_pos_net += 1
+                        con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
+                                    (scan_id, r["chain"], r.get("block"), r["pair"],
+                                     s.get("size_usd"), gross, s.get("total_cost_usd"), net,
+                                     level, _now()))
+                con.execute("UPDATE scans SET n_pairs=?,n_positive_spread=?,n_positive_net=? WHERE id=?",
+                            (n_pairs, n_pos_spread, n_pos_net, scan_id))
             # 3) per-chain quote staleness: how many blocks the chain advanced
             # DURING the scan (tip_after - trigger_block) = how stale the quotes
             # are by the time results land. Real measurement, one extra bn read.

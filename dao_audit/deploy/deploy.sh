@@ -61,7 +61,7 @@ Environment=PATH=$FOUNDRY_DIR:/usr/local/bin:/usr/bin:/bin
 # Optional fallback RPCs for failover (uncomment + set real endpoints):
 # Environment=BASE_RPC_FALLBACK=${BASE_RPC_FALLBACK:-}
 # Environment=ARBITRUM_RPC_FALLBACK=${ARBITRUM_RPC_FALLBACK:-}
-ExecStart=/usr/bin/python3 -m dao_audit dex-run --db $DB_DIR/dex_monitor.db --poll $POLL --rate-limit $RATE
+ExecStart=/usr/bin/python3 -m dao_audit dex-run --fast --db $DB_DIR/dex_monitor.db --poll $POLL --rate-limit $RATE
 Restart=always
 RestartSec=5
 StandardOutput=append:$DB_DIR/dexmon.log
