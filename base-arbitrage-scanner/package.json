@@ -1,0 +1,35 @@
+{
+  "name": "base-arbitrage-scanner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only Base mainnet flash-loan arbitrage scanner (Uniswap V3 x Aerodrome AMM/Slipstream) with Aave V3 cost model, fork simulation and historical backtest. Phase 1: no signing, no real transactions.",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "cli": "node --no-warnings=ExperimentalWarning --import tsx src/cli/index.ts",
+    "env-check": "npm run -s cli -- env-check",
+    "discover": "npm run -s cli -- discover",
+    "scan": "npm run -s cli -- scan",
+    "backtest": "npm run -s cli -- backtest",
+    "leaderboard": "npm run -s cli -- leaderboard",
+    "report": "npm run -s cli -- report",
+    "export": "npm run -s cli -- export-csv",
+    "compile-contracts": "node --no-warnings=ExperimentalWarning --import tsx scripts/compile-contracts.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "viem": "^2.57.11"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@uniswap/v3-core": "^1.0.1",
+    "hardhat": "^2.22.0",
+    "solc": "^0.8.28",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

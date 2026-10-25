@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+data/*.sqlite
+data/*.sqlite-*
+reports/*.csv
+reports/live/
+*.log
+cache/
+artifacts/hardhat/
+reports/csv*/candidates-*.csv
+reports/csv*/pool_snapshots.csv
