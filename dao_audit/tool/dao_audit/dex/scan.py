@@ -18,7 +18,7 @@ import time
 from datetime import datetime, timezone
 from typing import Optional
 
-from .quotes import best_univ3_quote, block_number, gas_price_wei
+from .quotes import best_quote, block_number, gas_price_wei
 from ..market.sources import DefiLlamaSource
 
 
@@ -54,7 +54,7 @@ def _token_usd(symbol: str, eth_price: Optional[float]) -> Optional[float]:
     return None
 
 
-def scan_chain(chain: str, ccfg: dict, pairs, fee_tiers, sizes, costs,
+def scan_chain(chain: str, ccfg: dict, pairs, fee_tiers, tick_spacings, sizes, costs,
                eth_price: float, min_net_usd: float) -> list:
     rpc = ccfg["rpc"]
     toks = ccfg["tokens"]
@@ -82,8 +82,8 @@ def scan_chain(chain: str, ccfg: dict, pairs, fee_tiers, sizes, costs,
             leg1 = {}  # venue -> base_out
             leg2_in = {}
             for v in venues:
-                q1 = best_univ3_quote(rpc, v["name"], v["quoter"], qt["address"],
-                                      bt["address"], amount_in_q, fee_tiers, blk)
+                q1 = best_quote(v, rpc, qt["address"], bt["address"],
+                                amount_in_q, blk, fee_tiers, tick_spacings)
                 leg1[v["name"]] = q1
             best = None
             for va in venues:        # buy base on A
@@ -93,8 +93,8 @@ def scan_chain(chain: str, ccfg: dict, pairs, fee_tiers, sizes, costs,
                 for vb in venues:    # sell base on B
                     if vb["name"] == va["name"]:
                         continue
-                    q2 = best_univ3_quote(rpc, vb["name"], vb["quoter"], bt["address"],
-                                          qt["address"], q1.amount_out, fee_tiers, blk)
+                    q2 = best_quote(vb, rpc, bt["address"], qt["address"],
+                                    q1.amount_out, blk, fee_tiers, tick_spacings)
                     if not q2.ok:
                         continue
                     quote_out = q2.amount_out
@@ -132,6 +132,7 @@ def scan(cfg: dict) -> dict:
     dl = DefiLlamaSource()
     eth_price, erec = _usd_price_map(dl)
     fee_tiers = cfg.get("fee_tiers", [100, 500, 3000])
+    tick_spacings = cfg.get("tick_spacings", [1, 50, 100, 200, 2000])
     sizes = cfg.get("capital_sizes", [1000, 10000, 100000])
     costs = cfg.get("costs", {})
     min_net = float(cfg.get("min_net_usd", 1))
@@ -148,7 +149,7 @@ def scan(cfg: dict) -> dict:
         return result
     for chain, ccfg in cfg.get("chains", {}).items():
         pairs = [tuple(p) for p in pairs_cfg.get(chain, [])]
-        rows = scan_chain(chain, ccfg, pairs, fee_tiers, sizes, costs, eth_price, min_net)
+        rows = scan_chain(chain, ccfg, pairs, fee_tiers, tick_spacings, sizes, costs, eth_price, min_net)
         result["same_chain"].extend(rows)
     result["status"] = "OK"
     result["n_candidates"] = sum(1 for r in result["same_chain"] if r["decision"] == "TRADE_CANDIDATE")
@@ -228,3 +229,90 @@ def monitor(cfg: dict, snapshots: int = 3, interval_s: int = 20) -> dict:
             "detail": snaps,
             "note": ("机会频率=出现正净收益候选的快照占比；本窗口为真实快照统计。"
                      "无候选时频率为 0，不代表未来，也不构成收益承诺。")}
+
+
+def monitor_resumable(cfg: dict, state_path, max_new: int = 5, interval_s: int = 30,
+                      target_hours: float = 24.0) -> dict:
+    """Resumable continuous monitor. Appends one JSONL line per snapshot to
+    state_path; on re-invocation it reads prior lines and continues, so 24h+
+    observation accumulates across runs (rate-limit friendly: bounded per run).
+    Aggregates opportunity frequency, persistence and simulated tradability."""
+    import json, os, time as _t
+    from datetime import datetime, timezone
+    prior = []
+    if os.path.exists(state_path):
+        with open(state_path, "r", encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if line:
+                    try:
+                        prior.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        pass
+    # elapsed span of accumulated observation
+    def _span_hours(rows):
+        ts = [r.get("epoch") for r in rows if r.get("epoch")]
+        return (max(ts) - min(ts)) / 3600 if len(ts) >= 2 else 0.0
+
+    added = 0
+    with open(state_path, "a", encoding="utf-8") as fh:
+        for i in range(max(1, max_new)):
+            if _span_hours(prior) >= target_hours:
+                break
+            rep = scan(cfg)
+            now = int(_t.time())
+            snap = {"epoch": now, "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    "n_candidates": rep.get("n_candidates", 0), "pairs": []}
+            for r in rep.get("same_chain", []):
+                best = r.get("best")
+                snap["pairs"].append({"pair": f"{r['chain']}/{r['pair']}",
+                                      "block": r.get("block"),
+                                      "candidate": r["decision"] == "TRADE_CANDIDATE",
+                                      "best_net_usd": best["net_usd"] if best else None})
+            fh.write(json.dumps(snap, ensure_ascii=False) + "\n"); fh.flush()
+            prior.append(snap); added += 1
+            if i < max_new - 1 and _span_hours(prior) < target_hours:
+                _t.sleep(min(interval_s, 120))
+
+    total = len(prior)
+    with_cand = sum(1 for s in prior if s.get("n_candidates", 0) > 0)
+    pair_hits = {}
+    pair_best = {}
+    for s in prior:
+        for p in s.get("pairs", []):
+            k = p["pair"]
+            if p.get("candidate"):
+                pair_hits[k] = pair_hits.get(k, 0) + 1
+            if p.get("best_net_usd") is not None:
+                pair_best[k] = max(pair_best.get(k, -1e18), p["best_net_usd"])
+    return {"state_file": str(state_path), "snapshots_total": total, "added_this_run": added,
+            "observation_hours": round(_span_hours(prior), 3), "target_hours": target_hours,
+            "snapshots_with_candidate": with_cand,
+            "candidate_frequency": round(with_cand / total, 4) if total else 0.0,
+            "persistence_by_pair": pair_hits,
+            "best_net_seen_by_pair": {k: round(v, 2) for k, v in pair_best.items()},
+            "note": ("可恢复监控：每次调用追加若干真实快照到 JSONL，多次运行累积至 target_hours。"
+                     "机会频率=出现正净收益候选的快照占比。无候选→频率 0，不构成收益承诺。")}
+
+
+def rank_report(scan_rep: dict, roundtrip_fork_verified: bool = False) -> dict:
+    """Rank same-chain opportunities by best net USD. An opportunity is
+    'simulated_feasible' ONLY if net>0 AND a full two-leg fork round trip was
+    verified. Realized profit is never claimed."""
+    rows = []
+    for r in scan_rep.get("same_chain", []):
+        best = r.get("best")
+        net = best["net_usd"] if best else None
+        feasible = bool(net is not None and net > 0 and roundtrip_fork_verified)
+        rows.append({"chain": r["chain"], "pair": r["pair"], "block": r.get("block"),
+                     "best_net_usd": net, "decision": r["decision"],
+                     "buy_on": best["buy_on"] if best else None,
+                     "sell_on": best["sell_on"] if best else None,
+                     "size_usd": best.get("size_usd") if best else None,
+                     "simulated_feasible": feasible})
+    rows.sort(key=lambda x: (x["best_net_usd"] is not None, x["best_net_usd"] or -1e18), reverse=True)
+    n_feasible = sum(1 for x in rows if x["simulated_feasible"])
+    return {"ranked": rows, "n_feasible": n_feasible,
+            "verdict": "NO_TRADE" if n_feasible == 0 else "CANDIDATES",
+            "note": ("按扣全部成本后净收益排序。simulated_feasible 需 净>0 且完整双腿 fork 验证通过；"
+                     "真实执行成功率未经验证前，不标记为已实现利润。")}

@@ -438,15 +438,48 @@ def cmd_dex_scan(args):
 def cmd_dex_monitor(args):
     import json
     root, cfg = _dex_cfg(args)
-    rep = DEXSCAN.monitor(cfg, snapshots=int(args.snapshots), interval_s=int(args.interval))
     out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    state = Path(args.state) if args.state else out_dir / "dex_monitor_state.jsonl"
+    rep = DEXSCAN.monitor_resumable(cfg, state, max_new=int(args.max_new),
+                                    interval_s=int(args.interval), target_hours=float(args.target_hours))
     (out_dir / "dex_arb_monitor.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"DEX监控: {rep['snapshots']}个快照 候选频率={rep['candidate_frequency']} "
-          f"出现候选快照={rep['snapshots_with_candidate']}")
-    for s in rep["detail"]:
-        print(f"  snap{s['i']} {s['ts']} candidates={s['n_candidates']} "
-              + " ".join(f"{p['pair']}={p['best_net_usd']}" for p in s['pairs']))
-    print(f"  JSON: {out_dir/'dex_arb_monitor.json'}")
+    print(f"DEX监控(可恢复): 累计{rep['snapshots_total']}快照 (+{rep['added_this_run']}) "
+          f"观测{rep['observation_hours']}h/{rep['target_hours']}h 候选频率={rep['candidate_frequency']}")
+    print(f"  各对最佳净收益(USD): {rep['best_net_seen_by_pair']}")
+    print(f"  状态文件(可续跑): {rep['state_file']}")
+    return 0
+
+
+def cmd_dex_report(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"
+    sj = out_dir / "dex_arb_scan.json"
+    if not sj.exists():
+        print("无 dex_arb_scan.json，请先运行 dex-scan", file=sys.stderr); return 1
+    scan_rep = json.loads(sj.read_text(encoding="utf-8"))
+    # roundtrip fork verified flag: user runs the fork test separately; default False
+    rep = DEXSCAN.rank_report(scan_rep, roundtrip_fork_verified=bool(args.fork_verified))
+    lines = ["# 真实 DEX 套利机会排序报告", "",
+             f"> 按扣全部成本后净收益排序。判定: **{rep['verdict']}**。{rep['note']}", "",
+             "| 排名 | 链 | 交易对 | 买@ | 卖@ | 规模USD | 最佳净USD | 决策 | 模拟可行 |",
+             "|------|----|--------|-----|-----|---------|-----------|------|----------|"]
+    for i, r in enumerate(rep["ranked"], 1):
+        lines.append("| {i} | {c} | {p} | {b} | {s} | {sz} | {n} | {d} | {f} |".format(
+            i=i, c=r["chain"], p=r["pair"], b=r["buy_on"] or "-", s=r["sell_on"] or "-",
+            sz=f"{r['size_usd']:,}" if r["size_usd"] else "-",
+            n=r["best_net_usd"] if r["best_net_usd"] is not None else "-",
+            d=r["decision"], f="YES" if r["simulated_feasible"] else "NO"))
+    if rep["n_feasible"] == 0:
+        lines += ["", "## 结论：NO_TRADE", "",
+                  "所有机会扣除全部成本后净收益非正，或未通过完整双腿 fork 验证 → 无可标记为"
+                  "模拟可行的套利。不制造正收益结论。"]
+    (out_dir / "dex_opportunities.md").write_text("\n".join(lines), encoding="utf-8")
+    (out_dir / "dex_opportunities.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"排序报告: 判定={rep['verdict']} 可行机会={rep['n_feasible']}")
+    for r in rep["ranked"]:
+        print(f"  {r['chain']:9} {r['pair']:10} net=${r['best_net_usd']} {r['decision']} feasible={r['simulated_feasible']}")
+    print(f"  报告: {out_dir/'dex_opportunities.md'}")
     return 0
 
 
@@ -531,11 +564,18 @@ def build_parser() -> argparse.ArgumentParser:
     dx.add_argument("--config", default=None)
     dx.set_defaults(func=cmd_dex_scan)
 
-    dm = sub.add_parser("dex-monitor", help="重复快照统计机会频率/持续/成交")
+    dm = sub.add_parser("dex-monitor", help="可恢复连续监控(JSONL续跑)：频率/持续/成交，支持24h+累积")
     dm.add_argument("--config", default=None)
-    dm.add_argument("--snapshots", default=3)
-    dm.add_argument("--interval", default=20)
+    dm.add_argument("--state", default=None, help="JSONL 状态文件(续跑)")
+    dm.add_argument("--max-new", default=5, help="本次最多新增快照数")
+    dm.add_argument("--interval", default=30, help="采样间隔秒(限流友好)")
+    dm.add_argument("--target-hours", default=24, help="累计观测目标小时")
     dm.set_defaults(func=cmd_dex_monitor)
+
+    dr = sub.add_parser("dex-report", help="按净利/容量/模拟成功率排序的机会报告")
+    dr.add_argument("--config", default=None)
+    dr.add_argument("--fork-verified", action="store_true", help="完整双腿 fork 已验证时置位")
+    dr.set_defaults(func=cmd_dex_report)
     return p
 
 

@@ -47,3 +47,34 @@ def test_flashloan_fee_applied_only_when_enabled():
 def test_failure_cost_scales_with_gas():
     cb = net_after_costs(0, 1000, 20_000_000, 800000, 2400, COSTS)
     assert abs(cb["fail_usd"] - 0.15 * cb["gas_usd"]) < 1e-3  # within rounding
+
+
+# --- ranked report logic (pure) ---
+from dao_audit.dex.scan import rank_report  # noqa: E402
+
+
+def _scan_rep(nets):
+    return {"same_chain": [
+        {"chain": "base", "pair": "WETH/USDC", "block": 1, "decision": "NO_TRADE",
+         "best": {"net_usd": nets[0], "buy_on": "A", "sell_on": "B", "size_usd": 1000}},
+        {"chain": "arbitrum", "pair": "USDC/USDT", "block": 2, "decision": "NO_TRADE",
+         "best": {"net_usd": nets[1], "buy_on": "C", "sell_on": "D", "size_usd": 1000}},
+    ]}
+
+
+def test_rank_sorts_by_net_desc_and_no_trade_when_all_negative():
+    rep = rank_report(_scan_rep([-0.64, -0.57]))
+    assert rep["verdict"] == "NO_TRADE"
+    assert rep["n_feasible"] == 0
+    # -0.57 ranks above -0.64
+    assert rep["ranked"][0]["pair"] == "USDC/USDT"
+
+
+def test_positive_net_feasible_only_when_fork_verified():
+    # positive net but NO fork verification -> not feasible
+    rep = rank_report(_scan_rep([5.0, -0.57]), roundtrip_fork_verified=False)
+    assert rep["n_feasible"] == 0 and rep["verdict"] == "NO_TRADE"
+    # positive net AND fork verified -> feasible candidate
+    rep2 = rank_report(_scan_rep([5.0, -0.57]), roundtrip_fork_verified=True)
+    assert rep2["n_feasible"] == 1 and rep2["verdict"] == "CANDIDATES"
+    assert rep2["ranked"][0]["simulated_feasible"] is True

@@ -51,3 +51,32 @@ FOUNDRY_PROFILE=fork RUN_FORK=true forge test --match-contract DexSwapForkTest -
 - 闪电贷费按参数计（默认自有资金，未计）；真实闪电贷还需 flashloan 合约路径与回调 gas。
 - 跨链套利未实现（非原子、高风险）；仅同链原子 round-trip 计为机会。
 - 本地 fork 模拟依赖公共 RPC 可 fork；默认离线测试套件跳过该用例。
+
+## v0.6 扩展：更多 venue + 完整双腿验证 + 可恢复监控 + 排序报告
+
+- **Base venue 扩展到 4 个**（地址均经 `cast` 链上功能验证）：Uniswap V3、SushiSwap V3、
+  **Aerodrome Slipstream**(CL, tickSpacing)、**Aerodrome classic**(solidly Router.getAmountsOut)。
+  加入后 Base WETH/USDC 最佳 round-trip 净收益从 -$3.39 收窄到 **-$0.64**（$1k，近盈亏平衡，仍 NO_TRADE）。
+  最紧价差来自 AerodromeSlipstream↔UniswapV3。
+- **0x 聚合报价**：`api.0x.org` 本环境代理 403 未放行且需 API key → 按 `aggregator_0x.enabled`
+  与 `ZEROX_API_KEY` 门控，当前标注 **inactive**，不编造。放行域名并配置 key 后可作交叉参考/去重。
+- **双向/多 venue 路径**：引擎枚举有序 venue 组合，天然覆盖正/反向；多跳三角为后续扩展。
+- **完整双腿原子 Fork 验证**（`test/DexRoundTripFork.t.sol`）：fork 真实 Base 状态，USDC→WETH→USDC
+  完整 round-trip，`balanceOf` 验证最终余额==两腿账目。实测 2000 USDC→0.8532 WETH→1991.60 USDC
+  （毛利 -8.40，含两腿手续费，无免费套利）。证明完整交易而非单笔 swap。离线套件以 RUN_FORK 门控跳过。
+- **可恢复连续监控**（`dex-monitor`，JSONL 续跑）：每次追加若干真实快照到状态文件，多次调用累积
+  至 target-hours（24h+），限流友好；统计机会频率/持续/各对最佳净收益。
+- **排序机会报告**（`dex-report`）：按扣全部成本后净收益排序；`simulated_feasible` 需
+  净>0 且完整双腿 fork 验证通过；真实执行成功率未验证前不标记已实现利润。当前判定 **NO_TRADE**。
+
+### 命令补充
+```bash
+python3 -m dao_audit dex-monitor --max-new 5 --interval 30 --target-hours 24   # 续跑累积
+python3 -m dao_audit dex-report                                                # 排序机会报告
+FOUNDRY_PROFILE=fork RUN_FORK=true forge test --match-contract DexRoundTripForkTest -vv  # 完整双腿验证
+```
+
+### v0.6 实测结论
+4 venue、3 交易对、1k–1M 档位、同区块双腿可执行报价、完整双腿 fork 验证均成功，但**所有机会扣除
+全部成本后净收益非正**（最优 Base WETH/USDC -$0.64@$1k）→ **NO_TRADE，0 个模拟可行机会**。
+与高效 L2 DEX 一致；不制造正收益结论。
