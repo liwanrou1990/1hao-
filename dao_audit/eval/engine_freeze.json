@@ -1,0 +1,9 @@
+{
+  "git_commit": "798dd37e45426de4791b1bbe12313c90f34671e9",
+  "files": {
+    "tool/dao_audit/rules.py": "989fee78d0037cded309e25b6b4aae090014a0347dd5403e123c4ddb397756e0",
+    "tool/dao_audit/static_scan.py": "a86aeef37cd943edf4b105c4c38f8a56e24ce24402497c2a5f81d459e4ed2ee1",
+    "tool/dao_audit/analysis/detectors.py": "8af450b7ec1e0f4303e17cb8fc254477f073b12d8f821bb805f9da200f472407",
+    "tool/dao_audit/analysis/solmodel.py": "450b9425198fd1a7d15e7df9fab97363f7628b8b58ddfe448c3ded6261ecfd61"
+  }
+}
