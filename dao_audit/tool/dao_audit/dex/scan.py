@@ -33,10 +33,11 @@ def _usd_price_map(dl: DefiLlamaSource):
 
 
 def net_after_costs(gross_usd: float, n_usd: float, gas_price_wei: int,
-                    gas_units: int, eth_price: float, costs: dict) -> dict:
-    """Pure cost model: two-swap gas + optional flash fee + MEV haircut +
-    expected failure cost. Returns the breakdown and net USD."""
-    gas_usd = 2 * gas_units * gas_price_wei * 1e-18 * eth_price
+                    gas_units: int, eth_price: float, costs: dict,
+                    n_legs: int = 2) -> dict:
+    """Pure cost model: per-leg gas x n_legs + optional flash fee + MEV haircut
+    + expected failure cost. Returns the breakdown and net USD."""
+    gas_usd = n_legs * gas_units * gas_price_wei * 1e-18 * eth_price
     flash_usd = n_usd * costs.get("flashloan_bps", 0) / 1e4 if costs.get("use_flashloan") else 0.0
     mev_usd = n_usd * costs.get("mev_haircut_bps", 0) / 1e4
     fail_usd = costs.get("fail_probability", 0) * gas_usd
@@ -278,6 +279,7 @@ def monitor_resumable(cfg: dict, state_path, max_new: int = 5, interval_s: int =
     with_cand = sum(1 for s in prior if s.get("n_candidates", 0) > 0)
     pair_hits = {}
     pair_best = {}
+    pair_series = {}   # ordered best_net per pair for persistence/competition
     for s in prior:
         for p in s.get("pairs", []):
             k = p["pair"]
@@ -285,14 +287,37 @@ def monitor_resumable(cfg: dict, state_path, max_new: int = 5, interval_s: int =
                 pair_hits[k] = pair_hits.get(k, 0) + 1
             if p.get("best_net_usd") is not None:
                 pair_best[k] = max(pair_best.get(k, -1e18), p["best_net_usd"])
+                pair_series.setdefault(k, []).append(p["best_net_usd"])
+    # competition / persistence proxies: how close to breakeven, and how often
+    # the best net sign flips across consecutive snapshots (churn = competition).
+    competition = {}
+    for k, ser in pair_series.items():
+        flips = sum(1 for i in range(1, len(ser))
+                    if (ser[i] > 0) != (ser[i - 1] > 0))
+        competition[k] = {"n": len(ser), "best_net_usd": round(max(ser), 2),
+                          "avg_net_usd": round(sum(ser) / len(ser), 2),
+                          "sign_flips": flips,
+                          "max_consecutive_positive": _max_run_positive(ser)}
     return {"state_file": str(state_path), "snapshots_total": total, "added_this_run": added,
             "observation_hours": round(_span_hours(prior), 3), "target_hours": target_hours,
             "snapshots_with_candidate": with_cand,
             "candidate_frequency": round(with_cand / total, 4) if total else 0.0,
             "persistence_by_pair": pair_hits,
             "best_net_seen_by_pair": {k: round(v, 2) for k, v in pair_best.items()},
+            "competition_by_pair": competition,
             "note": ("可恢复监控：每次调用追加若干真实快照到 JSONL，多次运行累积至 target_hours。"
-                     "机会频率=出现正净收益候选的快照占比。无候选→频率 0，不构成收益承诺。")}
+                     "机会频率=出现正净收益候选的快照占比；sign_flips 近似竞争/价差翻转频率；"
+                     "max_consecutive_positive 近似机会持续时间。无候选→频率 0，不构成收益承诺。")}
+
+
+def _max_run_positive(series) -> int:
+    best = cur = 0
+    for x in series:
+        if x > 0:
+            cur += 1; best = max(best, cur)
+        else:
+            cur = 0
+    return best
 
 
 def rank_report(scan_rep: dict, roundtrip_fork_verified: bool = False) -> dict:

@@ -78,3 +78,31 @@ def test_positive_net_feasible_only_when_fork_verified():
     rep2 = rank_report(_scan_rep([5.0, -0.57]), roundtrip_fork_verified=True)
     assert rep2["n_feasible"] == 1 and rep2["verdict"] == "CANDIDATES"
     assert rep2["ranked"][0]["simulated_feasible"] is True
+
+
+# --- graph cost (n_legs) + root-cause attribution (pure) ---
+from dao_audit.dex.graph import _root_cause  # noqa: E402
+
+
+def test_gas_scales_with_legs():
+    two = net_after_costs(0, 1000, 20_000_000, 800000, 2400, COSTS, n_legs=2)
+    three = net_after_costs(0, 1000, 20_000_000, 800000, 2400, COSTS, n_legs=3)
+    assert three["gas_usd"] > two["gas_usd"]
+    assert abs(three["gas_usd"] - 1.5 * two["gas_usd"]) < 1e-6
+
+
+def test_root_cause_negative_spread():
+    cycles = [{"size_usd": 1000, "route": "USDC->WETH->USDC", "net_usd": -0.6,
+               "gross_usd": -0.4, "gas_usd": 0.004, "mev_usd": 0.2, "fail_usd": 0.0006}]
+    rc = _root_cause(cycles)
+    assert "价差本身为负" in rc["primary_cause"]
+    assert rc["gross_bps"] < 0
+
+
+def test_root_cause_costs_eat_small_spread():
+    # tiny positive spread (+1bps = $0.1 on $1000) but costs larger
+    cycles = [{"size_usd": 1000, "route": "USDC->DAI->USDC", "net_usd": -0.15,
+               "gross_usd": 0.10, "gas_usd": 0.05, "mev_usd": 0.2, "fail_usd": 0.0075}]
+    rc = _root_cause(cycles)
+    assert "吞没" in rc["primary_cause"]
+    assert rc["gross_bps"] > 0

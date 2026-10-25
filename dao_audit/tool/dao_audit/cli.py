@@ -26,6 +26,7 @@ from .market import accept as ACCEPT
 from .market import rpcverify as RPCV
 from .market import events_study as ESTUDY
 from .dex import scan as DEXSCAN
+from .dex import graph as DEXGRAPH
 from .rules import RULES
 
 
@@ -483,6 +484,25 @@ def cmd_dex_report(args):
     return 0
 
 
+def cmd_dex_graph(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    rep = DEXGRAPH.run(cfg, max_hops=int(args.max_hops))
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "dex_graph.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "dex_graph.md").write_text(DEXGRAPH.to_markdown(rep), encoding="utf-8")
+    print(f"图搜索: status={rep.get('status')} 闭环={rep.get('n_cycles')} 正净收益={rep.get('n_positive')} "
+          f"判定={rep.get('verdict')}")
+    for ch in rep.get("chains", []):
+        top = ch["cycles"][0] if ch["cycles"] else None
+        if top:
+            print(f"  {ch['chain']}: best {top['route']} size=${top['size_usd']:,} net=${top['net_usd']} ROC={top['roc_pct']}%")
+    if rep.get("root_cause"):
+        print(f"  根因: {rep['root_cause']['primary_cause']}")
+    print(f"  报告: {out_dir/'dex_graph.md'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -576,6 +596,11 @@ def build_parser() -> argparse.ArgumentParser:
     dr.add_argument("--config", default=None)
     dr.add_argument("--fork-verified", action="store_true", help="完整双腿 fork 已验证时置位")
     dr.set_defaults(func=cmd_dex_report)
+
+    dg = sub.add_parser("dex-graph", help="图搜索三角/多跳闭环套利 + 根因分析")
+    dg.add_argument("--config", default=None)
+    dg.add_argument("--max-hops", default=3)
+    dg.set_defaults(func=cmd_dex_graph)
     return p
 
 

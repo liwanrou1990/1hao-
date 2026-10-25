@@ -16,6 +16,8 @@ chains:
     tokens:
       WETH: {address: "0x4200000000000000000000000000000000000006", decimals: 18}
       USDC: {address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", decimals: 6}
+      cbETH: {address: "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22", decimals: 18}
+      DAI: {address: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb", decimals: 18}
   arbitrum:
     chain_id: 42161
     rpc: "https://arb1.arbitrum.io/rpc"
@@ -55,3 +57,13 @@ aggregator_0x:
   base_url: "https://api.0x.org"
   api_key_env: "ZEROX_API_KEY"     # 安全环境变量；缺失或域名未放行 → 标注 inactive，不编造
   note: "需放行 api.0x.org 并设置 ZEROX_API_KEY 后启用；用于交叉参考与去重，不作为唯一成交依据。"
+
+# 图搜索闭环套利：每条链的起止资产(base)与中间资产(intermediates)
+graph:
+  sizes: [1000, 100000]
+  base:
+    base: "USDC"
+    intermediates: ["WETH", "cbETH", "DAI"]
+  arbitrum:
+    base: "USDC"
+    intermediates: ["WETH", "USDT"]
