@@ -1,0 +1,45 @@
+# 真实 DEX 跨市场套利研究配置（只读链上报价）。
+# 仅用真实数据；缺报价/流动性/成本 → NO_TRADE。不自动签名或执行真实交易。
+
+chains:
+  base:
+    chain_id: 8453
+    rpc: "https://mainnet.base.org"
+    native_coingecko: "coingecko:ethereum"   # gas 以 ETH 计价
+    gas_units_per_swap: 150000
+    venues:
+      - {name: "UniswapV3", type: "univ3", quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a"}
+      - {name: "SushiSwapV3", type: "univ3", quoter: "0xb1E835Dc2785b52265711e17fCCb0fd018226a6e"}
+    tokens:
+      WETH: {address: "0x4200000000000000000000000000000000000006", decimals: 18}
+      USDC: {address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", decimals: 6}
+  arbitrum:
+    chain_id: 42161
+    rpc: "https://arb1.arbitrum.io/rpc"
+    native_coingecko: "coingecko:ethereum"
+    gas_units_per_swap: 800000              # Arbitrum gas 计量较大
+    venues:
+      - {name: "UniswapV3", type: "univ3", quoter: "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"}
+      - {name: "SushiSwapV3", type: "univ3", quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1"}
+    tokens:
+      WETH: {address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", decimals: 18}
+      USDC: {address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", decimals: 6}
+      USDT: {address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", decimals: 6}
+
+# 要扫描的交易对（base/quote），round-trip 从 quote 资产出发
+pairs:
+  base: [["WETH","USDC"]]
+  arbitrum: [["WETH","USDC"], ["USDC","USDT"]]
+
+fee_tiers: [100, 500, 3000]
+
+# 本金档位（以 quote 资产计，通常 USDC）
+capital_sizes: [1000, 10000, 100000, 1000000]
+
+costs:
+  flashloan_bps: 5        # 若用闪电贷（Aave v3 ~5bps；自有资金则 0）
+  mev_haircut_bps: 2      # MEV/抢跑风险折价（估计，标注）
+  fail_probability: 0.15  # 交易失败概率（revert 仍付 gas），期望失败成本 = p*gas
+  use_flashloan: false    # 默认自有资金；true 则计入闪电贷费
+
+min_net_usd: 1            # 扣全部成本后净收益需 > 此值（USD）才算机会

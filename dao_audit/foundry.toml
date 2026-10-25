@@ -29,3 +29,18 @@ verbosity = 2
 
 [fmt]
 line_length = 110
+
+# Fork profile: vendored solc (no solc download) BUT network allowed, for
+# forking real Base/Arbitrum state to simulate swaps locally. Select with
+# FOUNDRY_PROFILE=fork. Never sends transactions to mainnet (fork is local).
+[profile.fork]
+src = "contracts"
+test = "test"
+out = "out"
+libs = ["lib"]
+solc = "/root/.foundry/bin/solc"
+offline = false
+auto_detect_solc = false
+optimizer = true
+optimizer_runs = 200
+evm_version = "cancun"

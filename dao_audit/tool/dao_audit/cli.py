@@ -25,6 +25,7 @@ from .market import edge_runner as EDGE
 from .market import accept as ACCEPT
 from .market import rpcverify as RPCV
 from .market import events_study as ESTUDY
+from .dex import scan as DEXSCAN
 from .rules import RULES
 
 
@@ -409,6 +410,46 @@ def cmd_market_eventstudy(args):
     return 0
 
 
+def _dex_cfg(args):
+    import yaml as _y
+    root = _root(args)
+    cfgp = Path(args.config) if getattr(args, "config", None) else root / "config/dex.yaml"
+    with open(cfgp, "r", encoding="utf-8") as fh:
+        return root, _y.safe_load(fh)
+
+
+def cmd_dex_scan(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    rep = DEXSCAN.scan(cfg)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "dex_arb_scan.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "dex_arb_scan.md").write_text(DEXSCAN.to_markdown(rep), encoding="utf-8")
+    print(f"DEX套利扫描: status={rep.get('status')} ETH=${rep.get('eth_price_usd')} "
+          f"候选={rep.get('n_candidates','-')}")
+    for r in rep.get("same_chain", []):
+        b = r.get("best")
+        print(f"  {r['chain']:9} {r['pair']:10} {r['decision']:16} "
+              f"best_net={b['net_usd'] if b else '-'}USD  {r['reason'][:60]}")
+    print(f"  报告: {out_dir/'dex_arb_scan.md'}")
+    return 0
+
+
+def cmd_dex_monitor(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    rep = DEXSCAN.monitor(cfg, snapshots=int(args.snapshots), interval_s=int(args.interval))
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "dex_arb_monitor.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"DEX监控: {rep['snapshots']}个快照 候选频率={rep['candidate_frequency']} "
+          f"出现候选快照={rep['snapshots_with_candidate']}")
+    for s in rep["detail"]:
+        print(f"  snap{s['i']} {s['ts']} candidates={s['n_candidates']} "
+              + " ".join(f"{p['pair']}={p['best_net_usd']}" for p in s['pairs']))
+    print(f"  JSON: {out_dir/'dex_arb_monitor.json'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -485,6 +526,16 @@ def build_parser() -> argparse.ArgumentParser:
     es = sub.add_parser("market-eventstudy", help="v0.4 小时级事件研究：分类+多窗口+walk-forward+分档净收益")
     es.add_argument("--config", default=None)
     es.set_defaults(func=cmd_market_eventstudy)
+
+    dx = sub.add_parser("dex-scan", help="真实DEX同链跨市场套利扫描（可执行报价+全成本+分档容量）")
+    dx.add_argument("--config", default=None)
+    dx.set_defaults(func=cmd_dex_scan)
+
+    dm = sub.add_parser("dex-monitor", help="重复快照统计机会频率/持续/成交")
+    dm.add_argument("--config", default=None)
+    dm.add_argument("--snapshots", default=3)
+    dm.add_argument("--interval", default=20)
+    dm.set_defaults(func=cmd_dex_monitor)
     return p
 
 
