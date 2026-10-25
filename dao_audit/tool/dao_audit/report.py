@@ -151,3 +151,119 @@ def write_reports(out_dir: Path, findings: List[dict], meta: dict) -> dict:
     jp.write_text(to_json(findings, meta), encoding="utf-8")
     mp.write_text(to_markdown(findings, meta), encoding="utf-8")
     return {"json": str(jp), "markdown": str(mp)}
+
+
+# ===========================================================================
+# Detailed per-location findings (detector engine) with dynamic evidence.
+# ===========================================================================
+from .analysis.detectors import Finding as _DetFinding  # noqa: E402
+
+# Case-study target files whose findings can be dynamically confirmed by the
+# bundled Foundry PoC/regression suites. Imported real contracts won't have
+# these, so their findings stay STATIC_ONLY until a project supplies PoCs.
+def _rule_tests(rule_id: str):
+    try:
+        r = rule_by_id(rule_id)
+        return r.poc_test, r.fix_test
+    except KeyError:
+        return "", ""
+
+
+def build_detailed_findings(det_findings, suite_summary, case_study: bool = True):
+    out = []
+    for f in det_findings:
+        poc_test, fix_test = _rule_tests(f.rule_id)
+        poc = suite_summary.get(poc_test, {}) if case_study else {}
+        fix = suite_summary.get(fix_test, {}) if case_study else {}
+        poc_passed = bool(poc) and all(poc.values())
+        fix_verified = bool(fix) and all(fix.values())
+        is_target = "/targets/" in f.file
+        if is_target and poc_passed:
+            status = "CONFIRMED"      # dynamic exploit reproduced on local chain
+        else:
+            status = "STATIC_ONLY"    # structural/permission finding; no local PoC yet
+        out.append({
+            "id": f.rule_id,
+            "title": f.title,
+            "severity": f.severity,
+            "category": f.category,
+            "status": status,
+            "location": {"file": f.file, "contract": f.contract,
+                         "function": f.function, "line": f.line, "code": f.code},
+            "root_cause": f.root_cause,
+            "trigger_conditions": f.trigger_conditions,
+            "impact": f.impact,
+            "confidence": f.confidence,
+            "false_positive": {"likelihood": f.fp_likelihood, "reasoning": f.fp_reasoning},
+            "signals": f.signals,
+            "remediation": f.remediation,
+            "evidence": {
+                "poc_test": poc_test, "poc_passed": poc_passed,
+                "fix_test": fix_test, "fix_verified": fix_verified,
+            },
+        })
+    out.sort(key=lambda d: (SEVERITY_ORDER.get(d["severity"], 9),
+                            0 if d["status"] == "CONFIRMED" else 1,
+                            -d["confidence"]))
+    return out
+
+
+def detailed_to_markdown(detailed, meta) -> str:
+    lines = ["# DAO 治理合约安全审计报告（详细）", "",
+             "> 防御性安全研究。仅审计授权合约；动态复现仅在本地测试链 + 模拟金库进行；"
+             "不接触真实资产，不向主网发送交易。", ""]
+    lines.append(f"- 审计工程: `{meta.get('project')}`")
+    lines.append(f"- 生成时间: {meta.get('generated_at')}")
+    lines.append(f"- 本地链: {meta.get('chain')}")
+    lines.append(f"- 分析文件: {meta.get('files_analyzed', 'n/a')}")
+    lines.append("")
+    n_conf = sum(1 for d in detailed if d["status"] == "CONFIRMED")
+    lines.append(f"共 {len(detailed)} 处发现，{n_conf} 处经本地链 PoC 确认。")
+    lines.append("")
+    lines.append("| # | ID | 位置 | 严重 | 状态 | 置信度 | 误报可能 |")
+    lines.append("|---|----|------|------|------|--------|----------|")
+    for i, d in enumerate(detailed, 1):
+        loc = d["location"]
+        lines.append("| {i} | {id} | `{c}.{fn}:{ln}` | {sev} | {st} | {cf:.2f} | {fp} |".format(
+            i=i, id=d["id"], c=loc["contract"], fn=loc["function"], ln=loc["line"],
+            sev=d["severity"], st=d["status"], cf=d["confidence"],
+            fp=d["false_positive"]["likelihood"]))
+    lines.append("")
+    for i, d in enumerate(detailed, 1):
+        loc = d["location"]
+        lines.append(f"## {i}. {d['id']} — {d['title']}")
+        lines.append("")
+        lines.append(f"- **位置**: `{loc['file']}` → `{loc['contract']}.{loc['function']}` 第 {loc['line']} 行")
+        lines.append(f"  ```solidity\n  {loc['code']}\n  ```")
+        lines.append(f"- **严重程度**: {d['severity']}  ·  **状态**: {d['status']}  ·  **置信度**: {d['confidence']:.2f}")
+        lines.append(f"- **根本原因**: {d['root_cause']}")
+        lines.append(f"- **触发条件**: {d['trigger_conditions']}")
+        lines.append(f"- **影响范围**: {d['impact']}")
+        lines.append(f"- **误报判断**: {d['false_positive']['likelihood']} — {d['false_positive']['reasoning']}")
+        if d["signals"]:
+            lines.append(f"- **结构信号**: {', '.join(d['signals'])}")
+        ev = d["evidence"]
+        if ev["poc_test"]:
+            lines.append(f"- **本地链证据**: PoC `{ev['poc_test']}`=" +
+                         ("✅复现" if ev["poc_passed"] else "无") +
+                         f"；修复回归 `{ev['fix_test']}`=" +
+                         ("✅已验证" if ev["fix_verified"] else "无"))
+        else:
+            lines.append("- **本地链证据**: 本合约无内置 PoC（导入的真实合约）。"
+                         "可按 test/ 模式补写针对性 PoC 以动态确认。")
+        lines.append(f"- **修复建议**: {d['remediation']}")
+        lines.append("")
+    lines.append("---")
+    lines.append("_由 dao_audit 检测器引擎生成。靶标合约为授权研究用途，禁止部署主网。_")
+    return "\n".join(lines)
+
+
+def write_detailed_reports(out_dir: Path, detailed, meta: dict, prefix: str = "x100") -> dict:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    import json as _json
+    jp = out_dir / f"{prefix}_detailed_findings.json"
+    mp = out_dir / f"{prefix}_detailed_findings.md"
+    jp.write_text(_json.dumps({"meta": meta, "detailed_findings": detailed},
+                              ensure_ascii=False, indent=2), encoding="utf-8")
+    mp.write_text(detailed_to_markdown(detailed, meta), encoding="utf-8")
+    return {"detailed_json": str(jp), "detailed_markdown": str(mp)}

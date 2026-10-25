@@ -71,3 +71,39 @@ class Authorization:
             val = env.get(key)
             if val:
                 self.assert_local_rpc(val)
+
+    # --- importing authorized real contracts ---
+    def import_dir(self) -> Path:
+        d = self.root / "contracts" / "imported"
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def record_attestation(self, record: dict):
+        import json
+        from datetime import datetime, timezone
+        log = self.root / "config" / "imported_attestations.jsonl"
+        record = dict(record)
+        record["recorded_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        with open(log, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+        return str(log)
+
+    def import_contract(self, src: Path, attested_by: str, note: str) -> Path:
+        """Copy an authorized real contract into contracts/imported/ and record
+        the authorization attestation. Only .sol files are accepted."""
+        src = Path(src)
+        if src.suffix != ".sol":
+            raise AuthorizationError(f"只接受 .sol 源文件: {src}")
+        if not src.is_file():
+            raise AuthorizationError(f"文件不存在: {src}")
+        if not attested_by:
+            raise AuthorizationError(
+                "导入真实合约需声明授权来源 (--attested-by)：你必须拥有或已获得该合约的审计授权。")
+        dest = self.import_dir() / src.name
+        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        self.record_attestation({
+            "source": str(src.resolve()), "dest": str(dest),
+            "attested_by": attested_by, "note": note,
+            "engagement": self.cfg.get("authorization", {}).get("engagement", ""),
+        })
+        return dest

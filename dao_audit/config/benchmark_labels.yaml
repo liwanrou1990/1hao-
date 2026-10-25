@@ -1,0 +1,29 @@
+# 对照基准标注语料 (ground truth)。
+# 每个合约文件标注其应被检出的风险 ID；安全/中性合约标注空列表 []。
+# 用于计算检出率(recall)/误报率(FPR)/漏报率 的混淆矩阵。
+#
+# 关系：targets/* 为"漏洞合约"（正样本），fixed/* 与 mocks/* 为"安全合约"（负样本）。
+
+rules_universe: [VULN-1, VULN-2, VULN-3, VULN-4, VULN-5]
+
+labels:
+  # --- 漏洞合约（正样本）---
+  "contracts/targets/VulnX100Governor.sol": [VULN-1, VULN-2, VULN-3]
+  "contracts/targets/VulnX100Treasury.sol": [VULN-4]
+  "contracts/targets/VulnOracleVault.sol":  [VULN-5]
+
+  # --- 安全合约（负样本，期望零检出）---
+  "contracts/fixed/SafeX100Governor.sol":   []
+  "contracts/fixed/SafeX100Treasury.sol":   []
+  "contracts/fixed/SafeOracleVault.sol":    []
+  "contracts/fixed/SafeTWAPOracle.sol":     []
+  "contracts/fixed/CheckpointToken.sol":    []
+
+  # --- 中性 mock（负样本）---
+  "contracts/mocks/MockERC20.sol":          []
+  "contracts/mocks/MockDEXPair.sol":        []
+  "contracts/mocks/MockFlashLender.sol":    []
+
+  # --- 导入的真实风格合约（验证对非预置代码的泛化）---
+  "contracts/imported/MiniDAO.sol":     [VULN-1, VULN-2, VULN-3, VULN-4, VULN-5]
+  "contracts/imported/SafeMiniDAO.sol": []

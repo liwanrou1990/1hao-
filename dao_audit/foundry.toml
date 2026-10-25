@@ -1,15 +1,28 @@
+# Default profile: CI-friendly. forge resolves/downloads the pinned solc.
 [profile.default]
 src = "contracts"
 test = "test"
 out = "out"
 libs = ["lib"]
-# Offline, pinned compiler: use the vendored solc binary so no network fetch is attempted.
+solc_version = "0.8.28"
+optimizer = true
+optimizer_runs = 200
+evm_version = "cancun"
+fs_permissions = [{ access = "read-write", path = "./reports_out" }]
+verbosity = 2
+
+# Offline profile: use a vendored solc binary (no network). Select with
+# FOUNDRY_PROFILE=offline in air-gapped / sandboxed environments.
+[profile.offline]
+src = "contracts"
+test = "test"
+out = "out"
+libs = ["lib"]
 solc = "/root/.foundry/bin/solc"
 offline = true
 auto_detect_solc = false
 optimizer = true
 optimizer_runs = 200
-# Deterministic local test EVM
 evm_version = "cancun"
 fs_permissions = [{ access = "read-write", path = "./reports_out" }]
 verbosity = 2

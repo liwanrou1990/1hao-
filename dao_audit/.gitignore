@@ -4,3 +4,4 @@ broadcast/
 reports_out/*.json
 reports_out/*.md
 reports_out/*.html
+config/imported_attestations.jsonl

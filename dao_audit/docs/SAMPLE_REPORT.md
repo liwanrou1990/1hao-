@@ -3,9 +3,9 @@
 > 防御性安全研究。仅审计授权合约；全部漏洞在**本地测试链 + 模拟金库**上复现；不接触真实资产，不向主网发送交易。
 
 - 审计工程: `/home/user/1hao-/dao_audit`
-- 生成时间: 2026-10-25T01:10:26+00:00
+- 生成时间: 2026-10-25T01:43:22+00:00
 - 授权委托: liwanrou1990@gmail.com
-- 本地链: http://127.0.0.1:8545
+- 本地链: forge in-process local EVM (no network)
 - 结论: **5/5 项已确认**，其中 **5 项已验证修复有效**。
 
 ## 汇总
@@ -27,7 +27,7 @@
 **说明**: 特权治理席位（council/admin/role）可被任意账户初始化或重复初始化，攻击者据此把自己设为唯一席位持有者，接管治理。
 
 **漏洞位置**:
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:74` — 初始化函数缺少 onlyOwner/initializer 保护
+- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:74` — 特权席位/角色的初始化或赋权函数对外可调用，且缺少 owner/role 门禁与一次性初始化守卫。
   ```solidity
   function initializeCouncil(address[] calldata members) external {
   ```
@@ -47,9 +47,9 @@
 **说明**: 投票权重在投票当刻读取 token.balanceOf()（实时余额），未在提案创建时快照，攻击者可用闪电贷在单笔交易内借入大量代币投票后归还，零成本操纵结果。
 
 **漏洞位置**:
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:110` — 投票权重来自实时余额
+- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:110` — 投票权重取自实时余额 balanceOf/getVotes，未使用历史区块快照 (getPastVotes)。
   ```solidity
-  uint256 weight = token.balanceOf(msg.sender);
+  uint256 weight = token.balanceOf(msg.sender); // BUG: live balance, no snapshot
   ```
 
 **测试证据 (本地链)**:
@@ -67,15 +67,7 @@
 **说明**: 金库对外暴露任意调用 (target+calldata+value)，仅以单一 governor 地址为唯一门禁，无目标白名单、无额度上限、无熔断，一笔通过的提案即可原子清空全部资产。
 
 **漏洞位置**:
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:11` — 任意外部调用桥 (target,value,data)
-  ```solidity
-  function execute(address target, uint256 value, bytes calldata data) external returns (bytes memory);
-  ```
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Treasury.sol:36` — 任意外部调用桥 (target,value,data)
-  ```solidity
-  function execute(address target, uint256 value, bytes calldata data)
-  ```
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Treasury.sol:41` — 无约束的低级 call
+- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Treasury.sol:41` — 对外暴露任意 (target,value,data) 低级调用，仅以单一角色为门禁，无目标白名单/额度/熔断。
   ```solidity
   (bool ok, bytes memory ret) = target.call{value: value}(data);
   ```
@@ -95,17 +87,9 @@
 **说明**: 合约以 AMM 瞬时现货价 (reserves/spotPrice) 作为预言机为抵押品定价，攻击者用一笔（常为闪电贷驱动的）大额兑换在单区块内拉高价格后超额借出。
 
 **漏洞位置**:
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnOracleVault.sol:5` — 读取瞬时现货价
+- `/home/user/1hao-/dao_audit/contracts/targets/VulnOracleVault.sol:50` — 用 AMM 瞬时现货价/储备比为资产定价，无 TWAP/外部喂价。
   ```solidity
-  function spotPrice0() external view returns (uint256);
-  ```
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnOracleVault.sol:50` — 读取瞬时现货价
-  ```solidity
-  uint256 price = pair.spotPrice0();
-  ```
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnOracleVault.sol:6` — 直接读取储备计价
-  ```solidity
-  function getReserves() external view returns (uint112 r0, uint112 r1);
+  uint256 price = pair.spotPrice0();                 // BUG: instantaneous spot price
   ```
 
 **测试证据 (本地链)**:
@@ -123,13 +107,9 @@
 **说明**: 提案通过后立即执行，审批与执行之间无延迟，持币人与守护者没有退出或否决的时间窗。
 
 **漏洞位置**:
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:122` — execute 中直接调用金库，无队列/延迟
+- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:122` — 提案执行函数在通过后立即对外调用，无 queue/eta/minDelay 延迟。
   ```solidity
   function execute(uint256 id) external returns (bytes memory ret) {
-  ```
-- `/home/user/1hao-/dao_audit/contracts/targets/VulnX100Governor.sol:50` — 投票期可能过短
-  ```solidity
-  uint64 public votingPeriod = 1;
   ```
 
 **测试证据 (本地链)**:

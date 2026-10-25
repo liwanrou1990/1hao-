@@ -6,6 +6,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 cd "$HERE"
 export PATH="/root/.foundry/bin:$PATH"
+export FOUNDRY_PROFILE="${FOUNDRY_PROFILE:-offline}"   # sandbox: vendored solc; CI overrides to default
 export PYTHONPATH="$HERE/tool:${PYTHONPATH:-}"
 
 MODE="${1:-inprocess}"   # inprocess | anvil

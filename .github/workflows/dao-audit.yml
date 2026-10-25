@@ -1,0 +1,72 @@
+name: DAO Governance Audit
+
+# Defensive security CI: builds the audit project, runs the local-chain PoC /
+# regression suites, the Python tool self-tests, the full audit report, and the
+# safe-vs-vulnerable benchmark (which fails the build on any detection
+# regression). Everything runs on a LOCAL test EVM — no mainnet, no real assets.
+
+on:
+  push:
+    branches: [ "claude/dao-governance-audit" ]
+    paths: [ "dao_audit/**", ".github/workflows/dao-audit.yml" ]
+  pull_request:
+    paths: [ "dao_audit/**", ".github/workflows/dao-audit.yml" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dao_audit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install pyyaml pytest
+
+      - name: Show toolchain
+        run: forge --version
+
+      - name: Build contracts
+        run: forge build
+
+      - name: Local-chain PoC + regression suites
+        run: forge test -vv
+
+      - name: Tool self-tests (pytest)
+        env:
+          PYTHONPATH: tool
+        run: python -m pytest tests -q
+
+      - name: Full audit (static + permission + local-chain evidence)
+        env:
+          PYTHONPATH: tool
+        run: python -m dao_audit audit
+
+      - name: Safe-vs-vulnerable benchmark (fails on regression)
+        env:
+          PYTHONPATH: tool
+        run: python -m dao_audit benchmark --min-recall 1.0 --max-fpr 0.0
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dao-audit-reports
+          path: dao_audit/reports_out/
+          if-no-files-found: warn

@@ -19,6 +19,7 @@ authorized_paths:
   - "contracts/targets"
   - "contracts/fixed"
   - "contracts/mocks"
+  - "contracts/imported"     # 导入的授权真实合约
 
 # 本地测试链白名单：任何链上交互只允许指向以下主机。
 # 拒绝一切主网/公网 RPC，确保不向主网发送交易、不接触真实资产。

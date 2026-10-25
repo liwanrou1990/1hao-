@@ -18,6 +18,55 @@
 
 另有端到端攻击链 `X100KillChainTest`：闪电贷投票 + 无时间锁 + 金库过大权限，单笔近零成本清空模拟金库。
 
+## v0.2：可复用分析引擎 + 真实合约审计
+
+本版把 5 类检测从"仅验证预置靶标"升级为**可复用的静态分析 + 权限分析引擎**，可审计
+你**拥有或明确授权**的真实 Solidity 合约：
+
+- **结构化模型** (`tool/dao_audit/analysis/solmodel.py`)：把任意 .sol 解析为合约/函数/
+  修饰符/状态变量（可见性、应用的修饰符、函数体、行号），检测基于结构而非纯正则。
+- **检测器** (`analysis/detectors.py`)：5 类风险各一个结构化检测器 + 权限分析
+  （特权函数是否缺门禁/初始化守卫、是否暴露任意调用）。每条发现带
+  **位置 / 根本原因 / 触发条件 / 影响范围 / 误报判断 / 修复建议 / 置信度**。
+- **导入真实合约**：`import` 需显式授权声明（记录到 `config/imported_attestations.jsonl`），
+  只接受你声明拥有/授权审计的合约。
+- **对照基准** (`benchmark.py`)：安全 vs 漏洞合约语料，输出**检出率/误报率/漏报率**混淆矩阵。
+- **泛化验证**：`contracts/imported/MiniDAO.sol`（脆弱）与 `SafeMiniDAO.sol`（安全）使用与
+  案例完全不同的命名（ballot/steward/enact），证明引擎不依赖预置词汇。
+
+### 新增命令
+
+```bash
+export PATH=/root/.foundry/bin:$PATH PYTHONPATH=tool
+# 导入我拥有/授权的真实合约并分析（必须声明授权来源）
+python3 -m dao_audit import /path/to/MyGovernor.sol --attested-by "you@org" --note "owned"
+# 分析全部授权合约（静态+权限，真实合约无需 PoC）→ 详细报告
+python3 -m dao_audit analyze --prefix myproject
+# 安全/漏洞对照基准：检出率/误报率/漏报率（可设阈值，CI 用）
+python3 -m dao_audit benchmark --min-recall 1.0 --max-fpr 0.0
+```
+
+> 真实合约默认只做静态+权限分析（标 `STATIC_ONLY`）。要**本地链动态确认**，按 `test/`
+> 模式为其手写针对性 Foundry PoC。局限见 `docs/LIMITATIONS.md`。
+
+### 当前基准结果（自建语料，13 文件：4 漏洞 / 9 安全）
+
+| 指标 | 值 |
+|------|----|
+| 检出率 (recall) | 100% (TP=10, FN=0) |
+| 误报率 (FPR) | 0% (FP=0, TN=55) |
+| 漏报率 | 0% |
+| 精确率 | 100% |
+
+数值仅代表在此小型自建语料上的表现，不等于对任意真实合约的泛化精度（见 LIMITATIONS）。
+
+## 持续集成 (GitHub Actions)
+
+`.github/workflows/dao-audit.yml`：push/PR 触发，装 Foundry → `forge test`（本地链 PoC/回归）
+→ pytest（工具自测）→ `audit`（生成报告）→ `benchmark`（检出回归即 fail）→ 上传 `reports_out/`
+产物。CI 用默认 profile（联网下载 pin 的 solc）；本仓库沙箱用 `FOUNDRY_PROFILE=offline`
+（内置 solc 二进制，不联网）。
+
 ## 快速开始
 
 ```bash
@@ -67,14 +116,19 @@ dao_audit/
 ├── contracts/
 │   ├── targets/              # 授权研究靶标（蓄意脆弱，禁止部署）
 │   ├── fixed/                # 修复版合约（修复建议的参考实现）
-│   └── mocks/                # 模拟代币/闪电贷/DEX（本地链用）
+│   ├── mocks/                # 模拟代币/闪电贷/DEX（本地链用）
+│   └── imported/             # 导入的授权真实合约（+ 授权声明记录）
 ├── test/                     # Foundry PoC（0x_*）与回归（Rx_*）
 ├── tool/dao_audit/           # Python 审计编排器
-│   ├── rules.py              # 5 类风险规则库（含 SWC/CWE、修复）
-│   ├── authorization.py      # 授权边界强制
-│   ├── static_scan.py        # 启发式静态扫描
+│   ├── analysis/             # ★ 可复用分析引擎
+│   │   ├── solmodel.py       #   Solidity 结构化模型（括号匹配解析）
+│   │   └── detectors.py      #   5 类结构化检测器 + 权限分析
+│   ├── rules.py              # 5 类风险规则库（含 SWC/CWE、PoC/修复映射）
+│   ├── authorization.py      # 授权边界强制 + 真实合约导入/授权声明
+│   ├── static_scan.py        # 检测器适配层（兼容旧接口）
 │   ├── runner.py             # 调用 forge 本地链复现
-│   └── report.py             # JSON/Markdown 报告
+│   ├── report.py             # 聚合 + 详细发现报告（JSON/Markdown）
+│   └── benchmark.py          # 安全/漏洞对照基准（检出率/误报率/漏报率）
 ├── tests/                    # 工具自测（pytest）
 └── docs/                     # 方法论与 X100 案例分析
 ```
