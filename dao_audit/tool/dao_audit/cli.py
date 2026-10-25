@@ -28,6 +28,7 @@ from .market import events_study as ESTUDY
 from .dex import scan as DEXSCAN
 from .dex import graph as DEXGRAPH
 from .dex import runner as DEXRUN
+from .dex import perf as DEXPERF
 from .rules import RULES
 
 
@@ -534,6 +535,52 @@ def cmd_dex_acceptance(args):
     return 0
 
 
+def cmd_dex_perf(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    chain = args.chain
+    print(f"性能基准(Tier-1 候选发现): chain={chain} blocks={args.blocks} size=${int(args.size):,} ...")
+    bench = DEXPERF.benchmark(cfg, chain, n_blocks=int(args.blocks), size_usd=float(args.size),
+                              poll_s=float(args.poll), max_seconds=int(args.max_seconds))
+    equiv = {"data_status": "SKIPPED"}
+    if not args.no_equiv:
+        print("防漏检等价校验(批量 vs 顺序，同区块) ...")
+        equiv = DEXPERF.equivalence_check(cfg, chain, size_usd=float(args.size))
+    (out_dir / f"dex_perf_{chain}.json").write_text(
+        json.dumps({"benchmark": bench, "equivalence": equiv}, ensure_ascii=False, indent=2),
+        encoding="utf-8")
+    (out_dir / f"dex_perf_{chain}.md").write_text(DEXPERF.to_markdown(bench, equiv), encoding="utf-8")
+    lm = bench["latency_ms"]
+    print(f"  延迟(ms) P50={lm['p50']} P95={lm['p95']} P99={lm['p99']} mean={lm['mean']} "
+          f"(区块{bench['blocks_measured']}, RPC/scan={bench['rpc_calls_per_scan']})")
+    print(f"  Base P95<1s 目标: {'达标' if bench['p95_under_1s'] else '未达标'} (P95={lm['p95']}ms)")
+    if equiv.get("data_status") == "OK":
+        print(f"  等价校验: 比对{equiv['compared']}报价 一致={equiv['identical']} "
+              f"不一致={len(equiv['mismatches'])}")
+    print(f"  报告: {out_dir/('dex_perf_'+chain+'.md')}")
+    return 0
+
+
+def cmd_dex_tier1(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    chain = args.chain
+    ccfg = cfg["chains"][chain]
+    pairs = [tuple(p) for p in cfg.get("pairs", {}).get(chain, [])]
+    r = DEXPERF.tier1_scan(chain, ccfg, pairs, cfg.get("fee_tiers", [100, 500, 3000]),
+                           cfg.get("tick_spacings", [1, 50, 100, 200, 2000]), float(args.size))
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / f"dex_tier1_{chain}.json").write_text(json.dumps(r, ensure_ascii=False, indent=2),
+                                                     encoding="utf-8")
+    print(f"Tier-1 扫描: chain={chain} block={r['block']} status={r['data_status']} "
+          f"latency={r['latency_ms']}ms rpc={r['rpc_calls']} inner={r['n_inner_quotes']}")
+    for fl in r.get("filter_log", []):
+        print(f"  {fl['pair']:12} flagged={fl['flagged']} cl_gross_bps={fl['cl_gross_bps']}  {fl['reason']}")
+    print(f"  候选(交 Tier-2)={len(r.get('candidates', []))}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -642,6 +689,22 @@ def build_parser() -> argparse.ArgumentParser:
     da = sub.add_parser("dex-acceptance", help="从监控DB生成连续监控验收报告")
     da.add_argument("--config", default=None); da.add_argument("--db", default=None)
     da.set_defaults(func=cmd_dex_acceptance)
+
+    dp = sub.add_parser("dex-perf", help="性能基准(Tier-1候选发现P50/P95/P99)+防漏检等价校验")
+    dp.add_argument("--config", default=None)
+    dp.add_argument("--chain", default="base")
+    dp.add_argument("--blocks", default=20, help="测量的不同区块数")
+    dp.add_argument("--size", default=1000, help="参考本金USD")
+    dp.add_argument("--poll", default=1.0, help="轮询出块间隔秒")
+    dp.add_argument("--max-seconds", default=120, help="基准最长运行秒")
+    dp.add_argument("--no-equiv", action="store_true", help="跳过等价校验")
+    dp.set_defaults(func=cmd_dex_perf)
+
+    dt = sub.add_parser("dex-tier1", help="单次 Tier-1 批量候选发现(2 RPC)+逐对过滤原因")
+    dt.add_argument("--config", default=None)
+    dt.add_argument("--chain", default="base")
+    dt.add_argument("--size", default=1000)
+    dt.set_defaults(func=cmd_dex_tier1)
     return p
 
 

@@ -125,3 +125,47 @@ FOUNDRY_PROFILE=fork RUN_FORK=true forge test --match-contract DexRoundTripForkT
   不以牺牲成本标准换取盈利。
 
 > 连续时长/区块数以部署后监控 DB 为准；本处 111s/32 区块为会话内短验证，非 24–72h 连续监控。
+
+## v0.9 扩展：Multicall 批量报价 + 两级扫描 + 防漏检等价校验（性能核心）
+
+v0.8 发现 4-venue 全配置单次 scan >240s，根因是逐笔 `cast` 子进程（每笔 ~0.4s）。本阶段
+**不扩展交易路径**，只解决性能、扫描完整性与长时间监控。
+
+- **批量报价**（`dex/fastquote.py`）：手写 ABI 编解码，把 N 个 QuoterV2 / Slipstream
+  `quoteExactInputSingle` 合并进 **1 次 Multicall3 `aggregate3` eth_call**，N 次网络往返 → 1 次。
+  仍为只读 eth_call；内层失败解码为 None，绝不编造。
+- **两级扫描**（`dex/perf.py`，`dex-tier1` / `dex-perf`）：
+  - **Tier-1 候选发现**：每区块 **2 次批量 eth_call**（买腿 quote→base、卖腿 base→quote），
+    算出每对**精确最优闭环毛收益**；候选判据 = 毛收益 ≥ -50bps（含两腿手续费+价格冲击），
+    或该对存在未入批量的非CL venue（solidly/classic 无法证伪→保守保留）。该下限宽于全部显式
+    成本(Gas/MEV/失败/闪电贷)，故 **Tier-1 候选集是基准 `scan_chain` 候选集的真超集——提速不漏
+    任何正净收益路径**。Tier-1 不产生 TRADE 决策。
+  - **Tier-2 精确验证**：仅对 Tier-1 候选运行现有 `scan_chain`（全 venue + 全成本模型）+ 完整
+    双腿 fork，权威判定。
+- **防漏检等价校验**（`equivalence_check`，`dex-perf`）：同一区块下逐笔比对**批量 vs 顺序
+  `cast`** 报价，要求数值完全一致。
+- **缺数据即停**：批量失败 / 区块不可得 → `data_status=INSUFFICIENT_DATA`，不产生任何候选/信号。
+- **每条路径过滤原因**（`filter_log`）：Tier-1 逐对记录 flagged 与原因，可核对无正收益路径被误丢。
+
+### v0.9 实测（真实数据，20 个连续区块/链）
+
+| 链 | Tier-1 延迟 P50 | P95 | P99 | 每扫描 RPC | 内层报价数 | 等价校验 | P95<1s |
+|----|----------------|-----|-----|-----------|-----------|----------|--------|
+| Base | 414 ms | **565 ms** | 584 ms | 2 | 33 | 11 报价**完全一致** | **达标 ✅** |
+| Arbitrum | 419 ms | **640 ms** | 663 ms | 2 | 12 | 12 报价**完全一致** | **达标 ✅** |
+
+- **优化前/后**（Base，同一区块、同 11 个买腿报价）：逐笔 `cast` **3542 ms / 11 子进程**
+  → 批量 Multicall **342 ms / 1 eth_call**，**约 10x**（纯网络批量在无子进程开销时实测达 19.5x）。
+- **Base 核心候选发现 P95 = 565 ms < 1s，目标达标**（真实测量，非伪报）。
+- **等价校验一次性捕获真实漏检 bug**：初版对 Slipstream 误用 univ3 选择器（`0xc6a5026a` vs
+  Slipstream `0x9e7defe6`，二者 tuple 字节相同但选择器不同），导致批量中所有 Slipstream 报价
+  静默返回 None。等价校验立即报出 5 处不一致，修复后 11/12 报价完全一致——这正是“防止提速造成
+  漏检”机制生效的实证。
+- 单元测试 `tests/test_dex_fastquote.py`（无网络）锁定两个选择器、tuple 编码、aggregate3 结构与
+  Result[] 解码，防止该漏检回归。
+
+### 命令补充
+```bash
+python3 -m dao_audit dex-tier1 --chain base --size 1000     # 单次 Tier-1 批量候选发现+过滤原因
+python3 -m dao_audit dex-perf  --chain base --blocks 20     # 性能基准(P50/P95/P99)+防漏检等价校验
+```
