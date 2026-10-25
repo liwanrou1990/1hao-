@@ -1,0 +1,31 @@
+{
+  "case": "dodo_dvm_fixed",
+  "engine": "semantic",
+  "n_files": 5,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-1",
+      "title": "治理席位/初始化接管",
+      "severity": "Critical",
+      "category": "access-control",
+      "file": "DVM.sol",
+      "contract": "DVM",
+      "function": "init",
+      "line": 24,
+      "code": "function init(",
+      "root_cause": "对外可调用的特权赋权/初始化函数,无角色门禁/一次性init守卫/治理+时间锁。",
+      "trigger_conditions": "任意账户调用(或重复调用)写入特权席位/角色/owner/guardian。",
+      "impact": "攻击者获治理特权席位,接管治理。",
+      "confidence": 0.65,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁；init名",
+      "remediation": "",
+      "signals": [
+        "init-name",
+        ""
+      ]
+    }
+  ],
+  "ms": 20.4
+}

@@ -1,0 +1,3 @@
+{"case":"furucombo_proxy_fixed","project":"furucombo","kind":"fixed","is_chain_case":false,"truth":[],
+ "evidence":{"repo":"https://github.com/dinngo/furucombo-contract","commit":"b096f10b4081f0cbc459cea75eddfe5e81d7b2e1",
+   "rationale":"added ban/halt guards; still an arbitrary delegatecall proxy by design, but hardened -> treat as fixed/hardened control"}}

@@ -1,0 +1,31 @@
+{
+  "case": "aave_governance_v2",
+  "engine": "semantic",
+  "n_files": 3,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "High",
+      "category": "treasury",
+      "file": "ExecutorWithTimelock.sol",
+      "contract": "ExecutorWithTimelock",
+      "function": "executeTransaction",
+      "line": 178,
+      "code": "function executeTransaction(",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.6,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 角色/owner/guardian门禁; modifiers=onlyAdmin；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:角色/owner/guardian门禁; modifiers=onlyAdmin"
+      ]
+    }
+  ],
+  "ms": 27.7
+}

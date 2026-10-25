@@ -1,0 +1,6 @@
+{"case":"furucombo_proxy","project":"furucombo","kind":"vulnerable","is_chain_case":false,
+ "truth":[{"vuln":"VULN-4","contract":"Proxy","function":"_exec","line":[64,230],"treasury_risk":true,
+   "governance_relation":"内联汇编 delegatecall 到仅校验注册与否的 handler 地址,proxy 持用户授权,target 以 proxy 全权限执行抽资产;外部入口 batchExec/execs/fallback"}],
+ "evidence":{"repo":"https://github.com/dinngo/furucombo-contract","vuln_commit":"e416ad1baa1ec8dd6efbce98dd465a304ad3e818",
+   "fixed_commit":"b096f10b4081f0cbc459cea75eddfe5e81d7b2e1","incident_date":"2021-02-27",
+   "reports":["https://rekt.news/furucombo-rekt/"]}}
