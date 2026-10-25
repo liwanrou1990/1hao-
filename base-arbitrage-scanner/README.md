@@ -4,6 +4,17 @@
 
 目标：在 **Uniswap V3** 与 **Aerodrome（经典 AMM + Slipstream 集中流动性）** 之间寻找可在同一笔交易内闭环完成的合法价差套利机会，以 **USDC** 作为 Aave V3 闪电贷借款与利润计价资产。不预测行情，不持币。
 
+## 四种机会状态（互斥，取到达的最高状态）
+
+| 状态 | 含义 | 可否计入"可执行" |
+|---|---|---|
+| `THEORETICAL_SPREAD` | 仅中间价价差为正，ExactInput 报价扣成本后不为正 | 否，永不 |
+| `QUOTED_ESTIMATE` | 链上 Quoter/getAmountOut 报价 − 全部成本 > 0，尚未经 fork 原子验证 | 否 |
+| `VERIFIED_FORK` | 在真实链状态 fork 上完成 flashLoanSimple→swap→repay，本金+费足额偿还且净利润 > 0 | **是（唯一）** |
+| `LIVE_EXECUTED` | 真实主网交易已确认 | 第一阶段永不产生（不广播） |
+
+合成数据（OFFLINE_FIXTURE / LOCAL_EVM_SYNTHETIC）最高只能到 `QUOTED_ESTIMATE`。每个状态的行数、机会持续时间（连续采样合并去重）、下一区块复核失效次数（状态变化/竞争）都写入报告。
+
 ## 三种"利润"的严格区分
 
 | 名称 | 含义 | 本系统如何得到 | 是否可标记为"可执行" |
@@ -48,13 +59,15 @@ cd base-arbitrage-scanner
 scripts/install.sh            # npm install + solc-js 编译合约 + 生成 .env + env-check
 # 编辑 .env，填写 BASE_RPC_URL（Base 主网，回测需要 archive 节点）
 npm run env-check             # RPC 连通性、chainId=8453、fork 提供者、合约编译状态
+npm run -s cli -- rpc-check   # 逐个端点分类：OK / EGRESS_POLICY_DENIED(云环境出站策略) / DNS_UNRESOLVED / PROVIDER_AUTH_DENIED / WRONG_CHAIN / UNREACHABLE → reports/rpc-diagnosis.md
 npm run discover              # 链上验证全部地址，发现并校验池，读取 Aave USDC 闪电贷费率与可用流动性
 scripts/run_scan.sh           # 实时扫描（新块触发），CLI 排行榜；Ctrl+C 结束并生成报告
-scripts/run_backtest.sh --hours 24 --sample 30     # 最近 24h 回测（每 30 块采样一次）；完成后 --hours 168 扩展至 7 天
+scripts/run_backtest.sh --hours 24 --sample 30     # 最近 24h 回测（每 30 块采样一次）
+scripts/run_backtest_full.sh                       # 24h 之后自动扩展 168h（7 天），导出 CSV；无健康 RPC 时退出码 2 并写 reports/BLOCKED-rpc-diagnosis.md
 npm run leaderboard -- --run <run_id>
 npm run report -- --run <run_id>
 npm run export -- --run <run_id>                   # CSV：candidates / block_stats / rpc_failures / sim_failures / pools / pool_snapshots
-scripts/test.sh               # 类型检查 + 19 个单元/集成测试（含本地 EVM 原子模拟）
+scripts/test.sh               # 类型检查 + 单元/集成测试（本地 EVM 原子模拟；主网 fork 集成测试在无 RPC 时标记 BLOCKED 跳过）
 ```
 
 无 RPC 时的离线验证（结果带 OFFLINE_FIXTURE 标签）：
@@ -74,6 +87,10 @@ npm run -s cli -- backtest --offline --hours 2 --sample 30
 - **成本完整**：Aave 费率 + L2 基础费与优先费（`eth_maxPriorityFeePerGas`）× Gas 单位（优先使用 Quoter 返回的 gasEstimate）+ OP 栈 `GasPriceOracle.getL1Fee` + 执行缓冲（`SLIPPAGE_BUFFER_BPS`）。
 - **原子模拟**：候选在 fork 上由 `FlashArbExecutor.simulate()` 走完整的 `flashLoanSimple → executeOperation → 多腿 swap → approve 偿还` 路径；偿还不足则 revert `Unprofitable(received, owed)` 并记录差额；通过者再用 `eth_estimateGas` 取实际 Gas。只有 `FORK_ATOMIC` 通过且净利润 ≥ `MIN_NET_PROFIT_USD` 才计入"可执行"。
 - **历史回测无未来数据**：所有 `eth_call`/Multicall 钉在采样块号；fork 用 `--fork-block-number`/`*_reset` 切到该块；非 archive 节点无法提供历史状态时记为失败块而非用当前状态替代。
+- **RPC 健康与故障切换**：启动时对每个 `BASE_RPC_URLS` 端点做 DNS/代理 CONNECT/HTTP 状态/chainId/区块高度/archive(7 天) 探测并分类；只有健康端点进入 viem fallback，按 archive 优先、延迟次之排序。代理 403/407 归类为 `EGRESS_POLICY_DENIED`（云环境策略，代码不绕过），源站 401/403 归类为 `PROVIDER_AUTH_DENIED`。
+- **无 RPC 即 BLOCKED**：`scan`/`backtest` 不带 `--offline` 时若无健康端点，退出码 2，写 `reports/BLOCKED-rpc-diagnosis.md`，绝不用合成数据代替。
+- **机会去重与持续时间**：同路线同金额在连续采样块中合并为一个 opportunity，记录首末区块、采样次数、跨度、最高状态；对上一块的最佳候选在下一块复核报价，失效（净利润 ≤ 0 或报价失败）计入 `invalidations`。
+- **安全开关**：`LIVE_BROADCAST`/`AUTO_DEPLOY` 默认 false，设为 true 直接拒绝启动。
 - **稳健性**：令牌桶限流、并发闸、指数退避重试、多 RPC fallback、轮询/WS 断线重连、所有失败调用入库 `rpc_failures`；候选去重（同路线同金额在 `DEDUPE_BLOCKS` 内净利润不变则不重复写入，模拟过的始终写入）。
 
 ## 已知限制 / 阻塞项

@@ -27,6 +27,9 @@ export interface AppConfig {
   gasUnitsPerV2Leg: number;
   gasUnitsBase: number;
   logLevel: 'debug' | 'info' | 'warn' | 'error';
+  /** Phase-1 safety switches. Both are forced false; setting them true in .env aborts startup. */
+  liveBroadcast: false;
+  autoDeploy: false;
 }
 
 function num(name: string, def: number): number {
@@ -48,6 +51,7 @@ export function loadConfig(): AppConfig {
   const ladder = (process.env.AMOUNT_LADDER_USD ?? '1000,10000,50000,100000,500000,1000000')
     .split(',').map(s => Number(s.trim())).filter(n => Number.isFinite(n) && n > 0);
   const fp = (process.env.FORK_PROVIDER ?? 'auto') as AppConfig['forkProvider'];
+  if (bool('LIVE_BROADCAST', false) || bool('AUTO_DEPLOY', false)) throw new Error('LIVE_BROADCAST / AUTO_DEPLOY are not supported in phase 1 (read-only + local fork simulation). Refusing to start.');
   return {
     rpcUrls: urls,
     wsUrl: process.env.BASE_WS_URL || undefined,
@@ -74,6 +78,8 @@ export function loadConfig(): AppConfig {
     gasUnitsPerV2Leg: num('GAS_UNITS_V2_LEG', 95_000),
     gasUnitsBase: num('GAS_UNITS_BASE', 60_000),
     logLevel: (process.env.LOG_LEVEL as AppConfig['logLevel']) ?? 'info',
+    liveBroadcast: false,
+    autoDeploy: false,
   };
 }
 

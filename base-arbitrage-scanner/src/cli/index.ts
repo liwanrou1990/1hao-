@@ -17,6 +17,8 @@ import { ADDR } from '../chain/addresses.js';
 import { renderLeaderboard, renderBlockStats } from './leaderboard.js';
 import { buildReport, writeReport } from '../report.js';
 import { exportTable } from '../storage/csv.js';
+import { checkAllRpcs, rankHealthy, renderDiagnosis } from '../chain/health.js';
+import { writeFileSync } from 'node:fs';
 
 function parseArgs(argv: string[]) { const out: Record<string, string | boolean> = {}; const pos: string[] = []; for (let i = 0; i < argv.length; i++) { const a = argv[i]; if (a.startsWith('--')) { const [k, v] = a.slice(2).split('='); if (v !== undefined) out[k] = v; else if (argv[i + 1] && !argv[i + 1].startsWith('--')) out[k] = argv[++i]; else out[k] = true; } else pos.push(a); } return { opts: out, pos }; }
 const { opts, pos } = parseArgs(process.argv.slice(2));
@@ -27,8 +29,18 @@ const runId = (opts.run as string) ?? `${cmd}-${new Date().toISOString().replace
 
 async function openSource(): Promise<{ src: MarketSource; cc?: ChainClient; dataSource: DataSource }> {
   if (cfg.offlineFixture) { log.warn('OFFLINE_FIXTURE mode: synthetic market, results are NOT real'); return { src: new OfflineFixtureSource(Number(opts.seed ?? 42), (opts.scenario as any) ?? 'volatile'), dataSource: 'OFFLINE_FIXTURE' }; }
-  if (!cfg.rpcUrls.length) { log.error('No BASE_RPC_URL configured and --offline not set. Blocked: cannot read Base mainnet.'); process.exit(2); }
-  const cc = createChainClient(cfg);
+  const health = await checkAllRpcs(cfg);
+  const healthy = rankHealthy(health);
+  if (!healthy.length) {
+    const diag = renderDiagnosis(health);
+    const out = join(cfg.reportDir, 'BLOCKED-rpc-diagnosis.md');
+    mkdirSync(cfg.reportDir, { recursive: true });
+    writeFileSync(out, `# BLOCKED: Base mainnet RPC unavailable\n\n- checked at: ${new Date().toISOString()}\n- consequence: no real-data scan/backtest was run. Synthetic data is NOT used as a substitute (use --offline explicitly for pipeline tests; its output is labeled OFFLINE_FIXTURE).\n\n${diag}\n`);
+    log.error('BLOCKED: no healthy Base RPC endpoint.\n' + diag + `\nwritten: ${out}`);
+    process.exit(2);
+  }
+  for (const h of health) log[h.ok ? 'info' : 'warn'](`rpc ${h.masked}: ${h.cls} ${h.detail}`);
+  const cc = createChainClient(cfg, healthy);
   const v = await verifyDeployments(cc);
   for (const c of v.checks) log[c.ok ? 'info' : 'error'](`verify ${c.ok ? 'OK ' : 'BAD'} ${c.name}: ${c.detail}`);
   if (!v.ok) { log.error('deployment verification failed; refusing to scan with unverified addresses'); process.exit(3); }
@@ -59,7 +71,7 @@ function printBlock(s: BlockSummary, db: ScannerDb, all: BlockSummary[]) {
   if (process.stdout.isTTY) process.stdout.write('\x1b[2J\x1b[H');
   console.log(`=== Base flash-loan arbitrage scanner — run ${runId} — ${new Date().toISOString()} ===`);
   console.log(renderBlockStats(all));
-  console.log('\n--- leaderboard (ranked by simulated net profit; un-simulated rows never count as executable) ---');
+  console.log('\n--- leaderboard (ranked by simulated net profit; only VERIFIED_FORK counts as executable; LIVE_EXECUTED never occurs in phase 1) ---');
   console.log(renderLeaderboard(db, runId, Number(opts.top ?? 15)));
   if (Object.keys(s.failures).length) console.log('\nfailures this block: ' + Object.entries(s.failures).map(([k, v]) => `${k}=${v}`).join(', '));
 }
@@ -68,13 +80,11 @@ async function cmdEnvCheck() {
   console.log('node', process.version, '| node:sqlite available');
   console.log('chainId expected', cfg.chainId, '| RPC URLs configured:', cfg.rpcUrls.length, '| offline fixture:', cfg.offlineFixture);
   console.log('fork provider:', detectForkProvider(cfg.forkProvider), '| contracts compiled:', existsSync('artifacts/compiled.json'));
-  let ok = true;
-  for (const u of cfg.rpcUrls) {
-    const masked = u.replace(/\/\/.*@/, '//***@').replace(/\/(v2|v3)\/[^/]+/, '/$1/***');
-    try { const cc = createChainClient(cfg, [u]); const id = await cc.call('eth_chainId', () => cc.client.getChainId()); const bn = await cc.call('eth_blockNumber', () => cc.client.getBlockNumber()); console.log(`RPC ${masked}: chainId=${id} block=${bn} ${id === 8453 ? 'OK' : 'WRONG CHAIN'}`); if (id !== 8453) ok = false; }
-    catch (e: any) { ok = false; console.log(`RPC ${masked}: FAILED ${String(e?.shortMessage ?? e?.message ?? e).slice(0, 160)}`); }
-  }
-  if (!cfg.rpcUrls.length) console.log('BLOCKED: no RPC configured (set BASE_RPC_URL). Offline parts can run with --offline.');
+  console.log('proxy:', process.env.HTTPS_PROXY ? 'HTTPS_PROXY set (outbound goes through the environment proxy; policy denials show as EGRESS_POLICY_DENIED)' : 'none');
+  const health = await checkAllRpcs(cfg);
+  console.log(renderDiagnosis(health));
+  const ok = rankHealthy(health).length > 0;
+  console.log(ok ? `healthy endpoints (ranked): ${rankHealthy(health).map(u => u.replace(/\/\/.*@/, '//***@').replace(/\/(v2|v3)\/[^/?]+/, '/$1/***')).join(', ')}` : 'BLOCKED: no healthy Base RPC. Real-data scan/backtest cannot run; --offline only exercises the pipeline on synthetic data.');
   process.exit(ok ? 0 : 1);
 }
 
@@ -133,12 +143,19 @@ async function cmdBacktest() {
   db.close();
 }
 
-function cmdLeaderboard() { const db = new ScannerDb(cfg.dbPath); console.log(renderLeaderboard(db, opts.run as string | undefined, Number(opts.top ?? 25))); const stats = db.all('SELECT * FROM block_stats ' + (opts.run ? 'WHERE run_id=? ' : '') + 'ORDER BY block DESC LIMIT 15', ...(opts.run ? [opts.run] : [])).reverse(); console.log('\n' + renderBlockStats(stats.map((r: any) => ({ block: r.block, time: r.block_time, poolsScanned: r.pools_scanned, poolsExcluded: r.pools_excluded, routes: r.routes, evaluations: r.evaluations, candidates: r.candidates, simulated: r.simulated, simPassed: r.sim_passed, executable: r.executable, bestNetUsd: r.best_net_usd, bestSimNetUsd: null, failures: {} })), 15)); db.close(); }
+async function cmdRpcCheck() {
+  const health = await checkAllRpcs(cfg);
+  const md = `# RPC diagnosis (${new Date().toISOString()})\n\n${renderDiagnosis(health)}\n`;
+  mkdirSync(cfg.reportDir, { recursive: true }); writeFileSync(join(cfg.reportDir, 'rpc-diagnosis.md'), md);
+  console.log(md); process.exit(rankHealthy(health).length ? 0 : 1);
+}
+function cmdLeaderboard() { const db = new ScannerDb(cfg.dbPath); console.log(renderLeaderboard(db, opts.run as string | undefined, Number(opts.top ?? 25))); const stats = db.all('SELECT * FROM block_stats ' + (opts.run ? 'WHERE run_id=? ' : '') + 'ORDER BY block DESC LIMIT 15', ...(opts.run ? [opts.run] : [])).reverse(); console.log('\n' + renderBlockStats(stats.map((r: any) => ({ block: r.block, time: r.block_time, poolsScanned: r.pools_scanned, poolsExcluded: r.pools_excluded, routes: r.routes, evaluations: r.evaluations, candidates: r.candidates, simulated: r.simulated, simPassed: r.sim_passed, executable: r.executable, bestNetUsd: r.best_net_usd, bestSimNetUsd: null, failures: {}, states: { NONE: 0, THEORETICAL_SPREAD: 0, QUOTED_ESTIMATE: 0, VERIFIED_FORK: r.executable, LIVE_EXECUTED: 0 }, invalidated: 0 })), 15)); db.close(); }
 function cmdReport() { const db = new ScannerDb(cfg.dbPath); const rid = (opts.run as string) ?? db.get('SELECT run_id FROM runs ORDER BY started_at DESC LIMIT 1')?.run_id; if (!rid) { console.log('no runs'); return; } const rep = buildReport(db, rid, { title: `Report for run ${rid}` }); const out = (opts.out as string) ?? join(cfg.reportDir, `report-${rid}.md`); writeReport(out, rep); console.log(rep); console.log(`\nwritten: ${out}`); db.close(); }
-function cmdExport() { const db = new ScannerDb(cfg.dbPath); const rid = opts.run as string | undefined; const dir = (opts.out as string) ?? join(cfg.reportDir, 'csv'); mkdirSync(dir, { recursive: true }); for (const t of ['candidates', 'block_stats', 'rpc_failures', 'sim_failures']) { const n = exportTable(db, t, join(dir, `${t}${rid ? '-' + rid : ''}.csv`), rid ? 'WHERE run_id=?' : '', ...(rid ? [rid] : [])); console.log(`${t}: ${n} rows -> ${join(dir, t + (rid ? '-' + rid : '') + '.csv')}`); } console.log(`pools: ${exportTable(db, 'pools', join(dir, 'pools.csv'))} rows`); console.log(`pool_snapshots: ${exportTable(db, 'pool_snapshots', join(dir, 'pool_snapshots.csv'))} rows`); db.close(); }
+function cmdExport() { const db = new ScannerDb(cfg.dbPath); const rid = opts.run as string | undefined; const dir = (opts.out as string) ?? join(cfg.reportDir, 'csv'); mkdirSync(dir, { recursive: true }); for (const t of ['candidates', 'block_stats', 'rpc_failures', 'sim_failures', 'opportunities', 'invalidations', 'ladder_stats']) { const n = exportTable(db, t, join(dir, `${t}${rid ? '-' + rid : ''}.csv`), rid ? 'WHERE run_id=?' : '', ...(rid ? [rid] : [])); console.log(`${t}: ${n} rows -> ${join(dir, t + (rid ? '-' + rid : '') + '.csv')}`); } console.log(`pools: ${exportTable(db, 'pools', join(dir, 'pools.csv'))} rows`); console.log(`pool_snapshots: ${exportTable(db, 'pool_snapshots', join(dir, 'pool_snapshots.csv'))} rows`); db.close(); }
 
 const help = `base-arbitrage-scanner (phase 1: read-only + local fork simulation)
   env-check                       check Node, RPC connectivity (chainId 8453), fork provider, compiled contracts
+  rpc-check                       classify every RPC endpoint: OK / EGRESS_POLICY_DENIED / DNS_UNRESOLVED / PROVIDER_AUTH_DENIED / WRONG_CHAIN ... (writes reports/rpc-diagnosis.md)
   discover [--offline]            verify deployments on-chain, discover & verify pools, read Aave flash-loan capacity
   scan [--blocks N] [--offline] [--no-sim] [--max-sim N] [--top N]   live per-block scanning with leaderboard
   backtest --hours 24 [--sample 30] [--max-blocks N] [--end BLOCK] [--offline] [--no-sim]   historical replay at sampled blocks
@@ -150,6 +167,7 @@ flags: --offline uses the deterministic synthetic fixture (labeled OFFLINE_FIXTU
 (async () => {
   switch (cmd) {
     case 'env-check': return cmdEnvCheck();
+    case 'rpc-check': return cmdRpcCheck();
     case 'discover': return cmdDiscover();
     case 'scan': return cmdScan();
     case 'backtest': return cmdBacktest();

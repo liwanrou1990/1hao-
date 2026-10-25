@@ -86,6 +86,15 @@ export class ScanEngine {
     return state.map(s => ({ quotes: s.quotes, amountOut: s.ok ? s.amount : 0n, ok: s.ok, failReason: s.failReason }));
   }
 
+  /** Net profit (USD) of one route at one amount at `block`, using this block's flash-loan/gas context. Used for next-block re-checks. */
+  async quoteOne(route: Route, amountIn: bigint, block: bigint, ctx: BlockScanResult): Promise<number | null> {
+    const usdc = this.src.tokens().USDC;
+    const [q] = await this.quoteRoutes([{ route, amountIn }], block);
+    if (!q.ok) return null;
+    const spot = route.legs.map(l => this.spotPrice(l.pool, l.tokenIn, ctx.states.get(l.pool.address)));
+    return computeCosts({ cfg: this.cfg, route, quotes: q.quotes, amountIn, amountOut: q.amountOut, usdcDecimals: usdc.decimals, fl: ctx.fl, gas: ctx.gas, refPriceUsd: this.refPriceUsd, spotPrices: spot }).netProfitUsd;
+  }
+
   async scanBlock(block: bigint): Promise<BlockScanResult> {
     const usdc = this.src.tokens().USDC;
     const failures: Record<string, number> = {};
