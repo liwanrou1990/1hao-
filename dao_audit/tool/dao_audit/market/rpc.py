@@ -46,6 +46,12 @@ class EvmRpc:
             rec.block = self._to_int(rec.data)
         return rec
 
+    def chain_id(self) -> Record:
+        rec = self._call("eth_chainId", [])
+        if rec.ok:
+            rec.data = self._to_int(rec.data)
+        return rec
+
     def get_block(self, block="latest", full_tx=False) -> Record:
         tag = block if isinstance(block, str) else hex(block)
         rec = self._call("eth_getBlockByNumber", [tag, full_tx])
@@ -84,3 +90,48 @@ class EvmRpc:
         if not bn.ok:
             return bn
         return self.get_block("latest")
+
+
+import time as _time
+from .provenance import OK as _OK, STALE as _STALE
+
+
+class MultiRpc:
+    """Ordered endpoints with 429 exponential backoff and failover on upstream
+    errors. Read-only. Records which endpoint served and all attempt outcomes."""
+    def __init__(self, chain: str, urls, max_staleness_s: float = 120.0,
+                 backoff=(0.5, 1.0, 2.0)):
+        self.chain = chain
+        self.endpoints = [EvmRpc(chain, u, max_staleness_s=max_staleness_s) for u in urls if u]
+        self.backoff = backoff
+
+    def _try(self, method_name: str):
+        attempts = []
+        for ep in self.endpoints:
+            # 429 backoff: retry the SAME endpoint a few times
+            for i, wait in enumerate([0.0] + list(self.backoff)):
+                if wait:
+                    _time.sleep(wait)
+                rec = getattr(ep, method_name)()
+                code = rec.http_code
+                is_429 = code == 429 or (rec.error and "429" in str(rec.error))
+                attempts.append({"url": ep.url, "status": rec.status,
+                                 "http": code, "try": i, "error": rec.error})
+                if rec.status in (_OK, _STALE):
+                    return rec, ep.url, attempts
+                if not is_429:
+                    break  # non-rate-limit failure -> failover to next endpoint
+        last = attempts[-1] if attempts else {}
+        from .provenance import Record, UNAVAILABLE, _now_iso
+        return (Record(source=f"rpc:{self.chain}", url=last.get("url", ""),
+                       status=UNAVAILABLE, fetched_at=_now_iso(), chain=self.chain,
+                       error=f"all endpoints failed: {last.get('error')}"),
+                None, attempts)
+
+    def health(self):
+        rec, served, attempts = self._try("health")
+        return rec, served, attempts
+
+    def chain_id(self):
+        rec, served, attempts = self._try("chain_id")
+        return rec, served, attempts

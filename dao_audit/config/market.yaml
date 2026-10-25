@@ -8,15 +8,23 @@ max_staleness_s: 120
 chains:
   ethereum:
     rpc: "https://eth.llamarpc.com"
+    rpcs: ["https://eth.llamarpc.com", "https://cloudflare-eth.com", "https://rpc.ankr.com/eth"]
+    chain_id: 1
+    alchemy_env: "ALCHEMY_ETH_URL"     # 若设置该环境变量则加入失败切换（需同时放行 *.g.alchemy.com）
   base:
     rpc: "https://mainnet.base.org"
+    rpcs: ["https://mainnet.base.org"]
+    chain_id: 8453
   arbitrum:
     rpc: "https://arb1.arbitrum.io/rpc"
+    rpcs: ["https://arb1.arbitrum.io/rpc"]
+    chain_id: 42161
+    alchemy_env: "ALCHEMY_ARB_URL"
 
 # 关注的 DAO（Snapshot 治理空间 + 链上金库地址，公开标识）
 daos:
   - name: "Aave"
-    snapshot_space: "aave.eth"
+    snapshot_space: "aavedao.eth"
     chain: ethereum
     treasury: "0x25F2226B597E8F9514B3F68F00f494cF4f286491"   # Aave Ecosystem Reserve (公开)
     token_symbol: "AAVE"
@@ -27,6 +35,30 @@ daos:
     treasury: "0x1a9C8182C09F50C8318d769245beA52c32BE35BC"   # Uniswap Timelock (公开)
     token_symbol: "UNI"
     coingecko_id: "uniswap"
+  - name: "Arbitrum"
+    snapshot_space: "arbitrumfoundation.eth"
+    chain: arbitrum
+    treasury: ""
+    token_symbol: "ARB"
+    coingecko_id: "arbitrum"
+  - name: "ENS"
+    snapshot_space: "ens.eth"
+    chain: ethereum
+    treasury: ""
+    token_symbol: "ENS"
+    coingecko_id: "ethereum-name-service"
+  - name: "GMX"
+    snapshot_space: "gmx.eth"
+    chain: arbitrum
+    treasury: ""
+    token_symbol: "GMX"
+    coingecko_id: "gmx"
+  - name: "Lido"
+    snapshot_space: "lido-snapshot.eth"
+    chain: ethereum
+    treasury: ""
+    token_symbol: "LDO"
+    coingecko_id: "lido-dao"
 
 # 关注代币（DefiLlama coin key）
 tokens:
@@ -36,6 +68,14 @@ tokens:
     symbol: "AAVE"
   - key: "coingecko:uniswap"
     symbol: "UNI"
+  - key: "coingecko:arbitrum"
+    symbol: "ARB"
+  - key: "coingecko:ethereum-name-service"
+    symbol: "ENS"
+  - key: "coingecko:gmx"
+    symbol: "GMX"
+  - key: "coingecko:lido-dao"
+    symbol: "LDO"
 
 # 成本模型参数
 costs:
@@ -57,3 +97,5 @@ edge:
   min_events: 8                 # 最小样本量
   t_threshold: 1.65             # 单边 ~95% 显著
   edge_cost_bps: 50             # 估计阶段的成本扣减（bps）
+  max_proposals_per_space: 300  # 每空间取最近 N 条历史提案
+  price_period: "1d"            # DefiLlama 日线（事件时间按日对齐，见文档局限）

@@ -21,6 +21,7 @@ from __future__ import annotations
 import math
 import random
 import statistics
+from statistics import NormalDist
 from dataclasses import dataclass, field, asdict
 from typing import Callable, List, Optional, Tuple
 
@@ -86,9 +87,14 @@ def _summary(returns: List[float], cost_bps: float, seed: int = 1337, boots: int
     hi = means[min(int(0.975 * boots), boots - 1)]
     cost = cost_bps / 1e4
     cadj = mean - cost
+    # max drawdown of the cumulative per-event net-return path (chronological)
+    equity = 0.0; peak = 0.0; mdd = 0.0
+    for r in returns:
+        equity += (r - cost); peak = max(peak, equity); mdd = min(mdd, equity - peak)
     return {"n": n, "mean": mean, "std": std, "win_rate": win,
             "t_stat": t_stat, "ci95": [lo, hi],
-            "cost_adj_mean": cadj, "cost_adj_bps": cadj * 1e4}
+            "cost_adj_mean": cadj, "cost_adj_bps": cadj * 1e4,
+            "max_drawdown": mdd, "max_drawdown_bps": mdd * 1e4}
 
 
 @dataclass
@@ -102,6 +108,8 @@ class EdgeResult:
     confirmed: bool = False
     edge_bps: Optional[float] = None   # OOS cost-adjusted excess, only if confirmed
     reason: str = ""
+    n_hypotheses: Optional[int] = None
+    bonferroni_t: Optional[float] = None
 
     def to_dict(self):
         return asdict(self)
@@ -134,14 +142,15 @@ def estimate(events: List[Event], series_provider: SeriesProvider,
              horizons: List[int], cost_bps: float,
              benchmark_provider=None, pre_window_s: int = 7 * 24 * 3600,
              train: float = 0.5, val: float = 0.25,
-             min_n: int = 8, t_threshold: float = 1.65,
-             seed: int = 1337) -> List[EdgeResult]:
+             min_n: int = 8, t_threshold: float = 1.65, alpha: float = 0.05,
+             min_oos: int = 5, seed: int = 1337) -> List[EdgeResult]:
     """Return one EdgeResult per (event_type, asset, horizon)."""
     results: List[EdgeResult] = []
     by_key = {}
     for e in events:
         by_key.setdefault((e.event_type, e.asset), []).append(e)
 
+    pending = []  # (res, in_s, oos_s)
     for (etype, asset), evs in by_key.items():
         evs = sorted(evs, key=lambda x: x.ts)  # chronological
         n = len(evs)
@@ -156,25 +165,43 @@ def estimate(events: List[Event], series_provider: SeriesProvider,
             res = EdgeResult(asset=asset, event_type=etype, horizon_s=h,
                              status="OK" if in_s["n"] > 0 else "INSUFFICIENT_DATA",
                              in_sample=in_s, out_of_sample=oos_s)
-            if in_s["n"] == 0:
-                res.reason = "无真实历史定价数据（样本为空）"
-                results.append(res); continue
-            # confirmation gates (all must hold)
-            gates = []
-            g_n = in_s["n"] >= min_n
-            g_mean = (in_s["mean"] or 0) > 0
-            g_sig = (in_s["t_stat"] is not None and in_s["t_stat"] >= t_threshold) or \
-                    (in_s["ci95"] is not None and in_s["ci95"][0] > 0)
-            g_oos = (oos_s["n"] or 0) >= 1 and (oos_s["cost_adj_mean"] or 0) > 0
-            gates = [("样本量>=min_n", g_n), ("均值>0", g_mean),
-                     ("统计显著", g_sig), ("样本外成本调整后>0", g_oos)]
-            res.confirmed = all(ok for _, ok in gates)
-            if res.confirmed:
-                res.edge_bps = max(0.0, oos_s["cost_adj_bps"])
-                res.reason = "通过全部确认门（显著且样本外成本调整后为正）"
-            else:
-                failed = [name for name, ok in gates if not ok]
-                res.edge_bps = None
-                res.reason = "未确认，缺: " + ", ".join(failed)
-            results.append(res)
+            pending.append((res, in_s, oos_s))
+
+    # multiple-testing correction: Bonferroni over all tested hypotheses
+    m = sum(1 for (_, i, _) in pending if i["n"] > 0) or 1
+    try:
+        z_bonf = NormalDist().inv_cdf(1 - alpha / m)   # one-sided, family-wise
+    except Exception:
+        z_bonf = 3.0
+    bonf_t = max(t_threshold, z_bonf)
+
+    for res, in_s, oos_s in pending:
+        if in_s["n"] == 0:
+            res.reason = "无真实历史定价数据（样本为空）"
+            results.append(res); continue
+        g_n = in_s["n"] >= min_n
+        g_mean = (in_s["mean"] or 0) > 0
+        # significance: strict AND of (Bonferroni t) and (bootstrap CI low > 0);
+        # a degenerate zero-variance positive sample counts as significant.
+        if in_s["std"] == 0:
+            g_sig = (in_s["mean"] or 0) > 0
+        else:
+            g_t = in_s["t_stat"] is not None and in_s["t_stat"] >= bonf_t
+            g_ci = in_s["ci95"] is not None and in_s["ci95"][0] > 0
+            g_sig = g_t and g_ci
+        g_oos = (oos_s["n"] or 0) >= min_oos and (oos_s["cost_adj_mean"] or 0) > 0
+        gates = [("样本量>=min_n", g_n), ("均值>0", g_mean),
+                 (f"多重检验显著(t>=%.2f且CI下界>0)" % bonf_t, g_sig),
+                 ("样本外成本调整后>0", g_oos)]
+        res.n_hypotheses = m
+        res.bonferroni_t = bonf_t
+        res.confirmed = all(ok for _, ok in gates)
+        if res.confirmed:
+            res.edge_bps = max(0.0, oos_s["cost_adj_bps"])
+            res.reason = "通过全部确认门（多重检验显著 + 样本外成本调整后为正）"
+        else:
+            failed = [name for name, ok in gates if not ok]
+            res.edge_bps = None
+            res.reason = "未确认，缺: " + ", ".join(failed)
+        results.append(res)
     return results

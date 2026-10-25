@@ -30,6 +30,11 @@ class DefiLlamaSource:
     def protocol_tvl(self, slug: str) -> Record:
         return http_get_json(f"{self.BASE}/protocol/{slug}", source="defillama")
 
+    def chart(self, coin_key: str, start: int, span: int, period: str = "1d") -> Record:
+        """Historical price series: span points of `period` from unix `start`."""
+        url = f"{self.COINS}/chart/{coin_key}?start={int(start)}&span={int(span)}&period={period}"
+        return http_get_json(url, source="defillama")
+
 
 class SnapshotSource:
     URL = "https://hub.snapshot.org/graphql"

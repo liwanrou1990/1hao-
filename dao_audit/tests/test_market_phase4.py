@@ -41,7 +41,10 @@ def test_accept_all_blocked_when_no_reports(tmp_path):
 
 def test_accept_all_pass_with_real_evidence(tmp_path):
     (tmp_path / "connection_report.json").write_text(json.dumps(
-        {"overall": "OK", "ok": 8, "total": 8, "denied_hosts": []}), encoding="utf-8")
+        {"overall": "OK", "ok": 8, "total": 8, "denied_hosts": [], "checks": [
+            {"name": "DefiLlama price (current)", "category": "OK"},
+            {"name": "DefiLlama price (historical)", "category": "OK"},
+            {"name": "Snapshot governance", "category": "OK"}]}), encoding="utf-8")
     (tmp_path / "edge_report.json").write_text(json.dumps(
         {"status": "OK", "events": 40, "edge_model": {"AAVE": {"edge_bps": 60}}}), encoding="utf-8")
     (tmp_path / "market_scan.json").write_text(json.dumps(

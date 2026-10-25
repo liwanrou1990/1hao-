@@ -23,6 +23,7 @@ from .market import backtest as BT
 from .market import netcheck as NET
 from .market import edge_runner as EDGE
 from .market import accept as ACCEPT
+from .market import rpcverify as RPCV
 from .rules import RULES
 
 
@@ -339,6 +340,7 @@ def cmd_market_edge(args):
                    ensure_ascii=False, indent=2), encoding="utf-8")
     (out_dir / "edge_report.json").write_text(
         json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "edge_report.md").write_text(EDGE.to_markdown(rep), encoding="utf-8")
     print(f"事件收益模型: status={rep['status']} events={rep['events']} "
           f"confirmed_edges={len(rep['edge_model'])}")
     for sym, e in rep["edge_model"].items():
@@ -363,6 +365,25 @@ def cmd_market_accept(args):
         print(f"  [{ph['status']}] {ph['phase']}  {ph['evidence']}  {ph.get('blocker') or ''}")
     print(f"  报告: {out_dir/'acceptance_report.md'}")
     return 0 if rep["overall"] == "PASS" else 1
+
+
+def cmd_market_rpcverify(args):
+    import json
+    root, cfg = _market_cfg(args)
+    rep = RPCV.run(cfg, samples=int(args.samples))
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "rpc_verify.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "rpc_verify.md").write_text(RPCV.to_markdown(rep), encoding="utf-8")
+    for ch in rep["chains"]:
+        print(f"[{ch['chain']}] expected chainId={ch['expected_chain_id']} "
+              f"failover->{ch['failover_served_by'] or 'ALL FAIL'} primary={ch['healthy_primary']}")
+        for e in ch["endpoints"]:
+            print(f"    {e['url']:34} sr={e['success_rate']:.0%} cid={e['chain_id']} "
+                  f"block={e['block']} lat={e['avg_latency_ms']}ms")
+        if ch["alchemy_note"]:
+            print(f"    NOTE: {ch['alchemy_note']}")
+    print(f"  报告: {out_dir/'rpc_verify.md'}")
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -432,6 +453,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     ma = sub.add_parser("market-accept", help="Phase4 验收门：逐阶段 PASS/BLOCKED + 阻塞根因")
     ma.set_defaults(func=cmd_market_accept)
+
+    rv = sub.add_parser("market-rpcverify", help="RPC 多节点验证：chainId/区块/时间戳/延迟/成功率+失败切换")
+    rv.add_argument("--config", default=None)
+    rv.add_argument("--samples", default=5)
+    rv.set_defaults(func=cmd_market_rpcverify)
     return p
 
 

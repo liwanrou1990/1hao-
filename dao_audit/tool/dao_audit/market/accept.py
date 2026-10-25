@@ -25,13 +25,31 @@ def evaluate(reports_dir: Path) -> dict:
 
     phases = []
 
-    # Phase 1: continuous real-data connectivity
-    p1_ok = bool(conn and conn.get("overall") == "OK")
+    # Phase 1: the data sources the edge study actually needs (governance +
+    # historical prices) must be OK. RPC degradation is noted, not blocking,
+    # because the estimator uses Snapshot + DefiLlama, not chain RPC.
+    def _cat(name_sub):
+        if not conn:
+            return None
+        for c in conn.get("checks", []):
+            if name_sub in c.get("name", ""):
+                return c.get("category")
+        return None
+    price_ok = _cat("DefiLlama price (current)") == "OK" and _cat("DefiLlama price (historical)") == "OK"
+    gov_ok = _cat("Snapshot") == "OK"
+    denied = conn.get("denied_hosts", []) if conn else []
+    p1_ok = bool(conn and price_ok and gov_ok and not denied)
+    rpc_note = []
+    for c in (conn.get("checks", []) if conn else []):
+        if c.get("name", "").startswith("RPC") and c.get("category") != "OK":
+            rpc_note.append(f"{c['name']}={c['category']}")
     phases.append({"phase": "1 真实数据连接", "status": "PASS" if p1_ok else "BLOCKED",
-                   "evidence": (f"{conn.get('ok')}/{conn.get('total')} 源 OK" if conn else "未运行"),
+                   "evidence": ((f"{conn.get('ok')}/{conn.get('total')} 源 OK; 行情&治理源可用"
+                                 + ("; RPC降级: " + ", ".join(rpc_note) if rpc_note else ""))
+                                if conn else "未运行"),
                    "blocker": None if p1_ok else (
-                       f"被网络策略拒绝: {', '.join(conn.get('denied_hosts', []))}" if conn
-                       else "缺 connection_report.json")})
+                       (f"被网络策略拒绝: {', '.join(denied)}" if denied else
+                        "行情或治理源不可用") if conn else "缺 connection_report.json")})
 
     # Phase 2: event-edge model with >=1 confirmed OOS-positive edge
     p2_ok = bool(edge and edge.get("status") == "OK" and edge.get("edge_model"))
@@ -39,7 +57,9 @@ def evaluate(reports_dir: Path) -> dict:
                    "evidence": (f"events={edge.get('events')}, confirmed={len(edge.get('edge_model', {}))}"
                                 if edge else "未运行"),
                    "blocker": None if p2_ok else (
-                       edge.get("reason") if edge else "缺 edge_report.json") if not p1_ok or edge else "依赖 Phase1"})
+                       ("0 个样本外确认的正edge（多重检验校正后，真实数据未显示可持续优势）"
+                        if (edge and edge.get("status") == "OK") else
+                        (edge.get("reason") if edge else "缺 edge_report.json")))})
 
     # Phase 3: scan produced >=1 TRADE from real data
     n_trade = (scan or {}).get("summary", {}).get("trade_signals", 0)
