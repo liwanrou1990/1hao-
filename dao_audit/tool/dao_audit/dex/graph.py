@@ -92,8 +92,9 @@ def search_chain(chain: str, ccfg: dict, base_sym: str, intermediates, sizes,
 def run(cfg: dict, max_hops: int = 3) -> dict:
     dl = DefiLlamaSource()
     eth_price, _ = _usd_price_map(dl)
-    fee_tiers = cfg.get("fee_tiers", [100, 500, 3000])
-    tick_spacings = cfg.get("tick_spacings", [1, 100, 2000])
+    gcfg0 = cfg.get("graph", {})
+    fee_tiers = gcfg0.get("fee_tiers", [500, 3000])        # graph: fewer tiers to bound cast calls
+    tick_spacings = gcfg0.get("tick_spacings", [100, 2000])
     costs = cfg.get("costs", {})
     gcfg = cfg.get("graph", {})
     sizes = gcfg.get("sizes", [1000, 100000])

@@ -80,3 +80,26 @@ FOUNDRY_PROFILE=fork RUN_FORK=true forge test --match-contract DexRoundTripForkT
 4 venue、3 交易对、1k–1M 档位、同区块双腿可执行报价、完整双腿 fork 验证均成功，但**所有机会扣除
 全部成本后净收益非正**（最优 Base WETH/USDC -$0.64@$1k）→ **NO_TRADE，0 个模拟可行机会**。
 与高效 L2 DEX 一致；不制造正收益结论。
+
+## v0.7 扩展：图搜索闭环 + 根因分析 + 监控竞争统计
+
+- **图搜索闭环套利**（`dex/graph.py`，`dex-graph`）：代币为节点、跨 venue/费率的可执行报价为边，
+  DFS 枚举 USDC 起止的 2–3 跳闭环（三角/多跳/跨 venue），逐跳同区块 best_quote + 记忆化，按净收益/ROC 排序。
+- **根因分析**：无正收益时分解最优闭环（毛价差 bps vs Gas/MEV/失败 bps）并归因。
+- **监控竞争/持续统计**：`dex-monitor` 增加 sign_flips（价差翻转/竞争近似）与 max_consecutive_positive
+  （机会持续近似），JSONL 续跑累积 24–72h。
+- 新增 Base 代币 cbETH、DAI（地址 cast 验证）；USDC↔cbETH 无直连池，经 WETH 多跳。
+
+### v0.7 实测结论（真实数据）
+- Base（4 venue，block 53064428）+ Arbitrum（2 venue，block 518095631），共 **26 条闭环路径**评估，
+  **0 条正净收益 → NO_TRADE**。
+- 最优路径为简单两腿 `USDC->WETH->USDC`：Base 净 -$1.02/$1k（毛价差 -8.1bps），Arbitrum 净 -$1.30/$1k。
+- 三角/多跳（经 cbETH、DAI、USDT）**更差**：额外一腿手续费 + 薄池价格冲击使毛利显著转负
+  （如 USDC->WETH->cbETH->USDC 毛利 -$148/$1k）。
+- **根因**：闭环毛价差本身 ≤ 0（gross -8.1bps），即池间定价已被充分套利/竞争充分；增加跳数只增加
+  手续费与冲击。并非 Gas（仅 0.04bps）或 MEV（估 2bps）主导，而是**价差不存在**。大额档位进一步被
+  流动性深度/价格冲击压垮。
+- 判定：真实、合法、可执行的正期望套利**未发现**；不制造盈利结论。
+
+> 诚实说明：24–72h 连续监控依赖进程持续运行（JSONL 续跑支持跨次累积与断点恢复，并由计划任务驱动）；
+> 单次会话内无法保持 24h 进程，呈现的是带区块戳的真实快照按正确续跑语义累积，而非把几次手动扫描当作 24h。
