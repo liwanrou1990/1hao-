@@ -24,6 +24,7 @@ from .market import netcheck as NET
 from .market import edge_runner as EDGE
 from .market import accept as ACCEPT
 from .market import rpcverify as RPCV
+from .market import events_study as ESTUDY
 from .rules import RULES
 
 
@@ -386,6 +387,28 @@ def cmd_market_rpcverify(args):
     return 0
 
 
+def cmd_market_eventstudy(args):
+    import json
+    root, cfg = _market_cfg(args)
+    rep = ESTUDY.run(cfg)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "event_study.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "event_study.md").write_text(ESTUDY.to_markdown(rep), encoding="utf-8")
+    if rep["status"] != "OK":
+        print(f"事件研究: {rep['status']} — {rep.get('reason','')}")
+    else:
+        print(f"事件研究: events={rep['n_events']} groups={rep['n_groups']} "
+              f"bonferroni_t={rep['bonferroni_t']} confirmed={len(rep['confirmed_signals'])}")
+        for r in rep["results"]:
+            if r["confirmed"]:
+                print(f"  CONFIRMED {r['category']} {r['event_type']} {r['horizon_h']}h "
+                      f"OOS={r['oos_aligned_mean_bps']}bps")
+        if not rep["confirmed_signals"]:
+            print("  无确认信号 → 全部 NO_TRADE（未人为放宽标准）")
+    print(f"  报告: {out_dir/'event_study.md'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -458,6 +481,10 @@ def build_parser() -> argparse.ArgumentParser:
     rv.add_argument("--config", default=None)
     rv.add_argument("--samples", default=5)
     rv.set_defaults(func=cmd_market_rpcverify)
+
+    es = sub.add_parser("market-eventstudy", help="v0.4 小时级事件研究：分类+多窗口+walk-forward+分档净收益")
+    es.add_argument("--config", default=None)
+    es.set_defaults(func=cmd_market_eventstudy)
     return p
 
 

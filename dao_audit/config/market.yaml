@@ -99,3 +99,18 @@ edge:
   edge_cost_bps: 50             # 估计阶段的成本扣减（bps）
   max_proposals_per_space: 300  # 每空间取最近 N 条历史提案
   price_period: "1d"            # DefiLlama 日线（事件时间按日对齐，见文档局限）
+
+# 小时级事件研究（v0.4，新增，不改动 v0.3 edge 结果）
+study:
+  lookback_days: 365            # 小时价仅近 ~1 年可得，研究窗口限定于此
+  horizons_h: [1, 4, 24, 72]    # 事件后反应窗口
+  reaction_threshold_bps: 100   # 超额收益 >+100bps 利多 / <-100bps 利空 / 其间中性
+  train_frac: 0.5               # walk-forward 样本内比例（其余为样本外）
+  min_events: 8
+  t_threshold: 1.65
+  capital_sizes_usd: [10000, 100000, 1000000]
+  cost:
+    dex_fee_bps: 30             # 单边，真实主流 0.30% 档
+    slippage_base_bps: 5        # 滑点模型 base（见文档假设）
+    slippage_ref_usd: 100000    # slippage_bps = base*sqrt(size/ref)
+    gas_usd_assumption: 15      # 每笔 Gas 的美元假设（ETH RPC 实时 gas 不可得时标注为假设）

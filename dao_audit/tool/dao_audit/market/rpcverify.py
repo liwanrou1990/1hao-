@@ -10,14 +10,22 @@ from .rpc import EvmRpc, MultiRpc
 
 
 def _endpoints(chain_cfg: dict):
-    urls = list(chain_cfg.get("rpcs") or ([chain_cfg["rpc"]] if chain_cfg.get("rpc") else []))
+    # Secure env overrides take priority (API keys / private RPC via env vars,
+    # never hardcoded). e.g. RPC_URL_ETHEREUM, or Alchemy via its env URL.
+    urls = []
+    note = None
+    rpc_env = chain_cfg.get("rpc_env")
+    if rpc_env and os.environ.get(rpc_env):
+        urls.append(os.environ[rpc_env])
     env = chain_cfg.get("alchemy_env")
     alchemy = os.environ.get(env) if env else None
-    note = None
     if alchemy:
         urls.append(alchemy)
     elif env:
-        note = f"Alchemy 备用未激活：环境变量 {env} 未设置（且需放行 *.g.alchemy.com）"
+        note = f"Alchemy/私有备用未激活：环境变量 {env} 未设置（如用 Alchemy 还需放行 *.g.alchemy.com）"
+    urls += list(chain_cfg.get("rpcs") or ([chain_cfg["rpc"]] if chain_cfg.get("rpc") else []))
+    # de-dup preserving order
+    seen = set(); urls = [u for u in urls if not (u in seen or seen.add(u))]
     return urls, note
 
 
