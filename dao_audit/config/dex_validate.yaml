@@ -1,0 +1,58 @@
+chains:
+  arbitrum:
+    chain_id: 42161
+    rpc: https://arb1.arbitrum.io/rpc
+    native_coingecko: coingecko:ethereum
+    gas_units_per_swap: 800000
+    venues:
+    - name: UniswapV3
+      type: univ3
+      quoter: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e'
+    - name: SushiSwapV3
+      type: univ3
+      quoter: '0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1'
+    tokens:
+      WETH:
+        address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
+        decimals: 18
+      USDC:
+        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'
+        decimals: 6
+      USDT:
+        address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9'
+        decimals: 6
+pairs:
+  arbitrum:
+  - - WETH
+    - USDC
+fee_tiers:
+- 500
+tick_spacings: []
+capital_sizes:
+- 1000
+costs:
+  flashloan_bps: 5
+  mev_haircut_bps: 2
+  fail_probability: 0.15
+  use_flashloan: false
+min_net_usd: 1
+aggregator_0x:
+  enabled: false
+  base_url: https://api.0x.org
+  api_key_env: ZEROX_API_KEY
+  note: 需放行 api.0x.org 并设置 ZEROX_API_KEY 后启用；用于交叉参考与去重，不作为唯一成交依据。
+graph:
+  sizes:
+  - 1000
+  - 100000
+  base:
+    base: USDC
+    intermediates:
+    - WETH
+    - cbETH
+    - DAI
+  arbitrum:
+    base: USDC
+    intermediates:
+    - WETH
+    - USDT
