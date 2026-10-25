@@ -83,3 +83,16 @@ class DexQuoteSource:
             status = "INSUFFICIENT_DATA"
         return {"coin": coin_key, "prices": prices, "spread": spread,
                 "status": status, "records": {k: v.to_dict() for k, v in recs.items()}}
+
+
+class CoinGeckoSource:
+    """Historical price + volume for volatility/forward-return computation."""
+    BASE = "https://api.coingecko.com/api/v3"
+
+    def ping(self) -> Record:
+        return http_get_json(f"{self.BASE}/ping", source="coingecko")
+
+    def market_chart_range(self, coin_id: str, vs: str, frm: int, to: int) -> Record:
+        url = (f"{self.BASE}/coins/{coin_id}/market_chart/range"
+               f"?vs_currency={vs}&from={frm}&to={to}")
+        return http_get_json(url, source="coingecko")

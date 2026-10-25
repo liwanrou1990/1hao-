@@ -22,7 +22,7 @@ def load_config(path: Path) -> dict:
         return yaml.safe_load(fh)
 
 
-def scan(cfg: dict) -> dict:
+def scan(cfg: dict, edge_model: dict | None = None) -> dict:
     max_stale = cfg.get("max_staleness_s", 120)
     costs_cfg = cfg.get("costs", {})
     thr = cfg.get("thresholds", {})
@@ -82,29 +82,42 @@ def scan(cfg: dict) -> dict:
                               "price_usd": px, "quote_compare": cmp,
                               "price_record": price_rec.to_dict()})
 
-    # 4) opportunities: value + TRADE/NO TRADE per token
+    # 4) opportunities: edge (confirmed only) -> value -> TRADE/NO TRADE
+    edge_model = edge_model or {}
     for tok in out["tokens"]:
-        # evidence sources that returned OK for THIS token
         evidence = 0
         if tok["price_usd"] is not None:
             evidence += 1
         if tok["quote_compare"]["status"] == OK:
             evidence += 1
-        # data_status: OK only if price present and chain fresh
         chain_ok = any(c.get("status") == OK for c in out["chains"].values())
         data_status = OK if (tok["price_usd"] is not None and chain_ok) else "UNAVAILABLE"
-        # expected gross move: requires a real signal; absent a confirmed event
-        # edge we set 0 -> economics will reject. (No invented alpha.)
-        expected_gross_bps = 0.0
+
+        # Expected gross edge comes ONLY from a statistically-confirmed,
+        # out-of-sample-positive event-edge estimate. No invented/forced edge.
+        edge_entry = edge_model.get(tok["symbol"])
+        edge_bps = edge_entry.get("edge_bps") if isinstance(edge_entry, dict) else None
+
+        if edge_bps is None:
+            out["opportunities"].append({
+                "symbol": tok["symbol"], "data_status": data_status,
+                "evidence_sources": evidence, "edge_bps": None, "cost": None,
+                "decision": {"decision": "NO_TRADE",
+                             "reason": "无样本外确认的正 event-edge（未建立或数据不足），不交易",
+                             "net_bps": None, "evidence_sources": evidence,
+                             "data_status": data_status,
+                             "disclaimer": "估计值，非收益承诺；未经人工确认不执行真实交易。"}})
+            continue
+
         ci = CostInputs(
             notional_usd=float(costs_cfg.get("trade_notional_usd", 10000)),
-            expected_gross_bps=expected_gross_bps,
+            expected_gross_bps=float(edge_bps),
             dex_fee_bps=float(costs_cfg.get("dex_fee_bps", 30)),
             slippage_bps=float(costs_cfg.get("taker_slippage_bps", 10)),
             gas_limit=int(costs_cfg.get("gas_limit", 180000)),
             gas_price_gwei=gas_price_gwei,
             eth_price_usd=eth_price_usd,
-            pool_liquidity_usd=None,  # needs DEX pool data (egress-gated) -> INSUFFICIENT_DATA
+            pool_liquidity_usd=None,  # real DEX pool data (egress-gated) -> INSUFFICIENT_DATA
         )
         cost = compute(ci)
         dec = decide(cost, evidence_sources=evidence, data_status=data_status,
@@ -112,8 +125,8 @@ def scan(cfg: dict) -> dict:
                      min_evidence_sources=int(thr.get("min_evidence_sources", 2)))
         out["opportunities"].append({
             "symbol": tok["symbol"], "data_status": data_status,
-            "evidence_sources": evidence, "cost": cost.to_dict(),
-            "decision": dec.to_dict()})
+            "evidence_sources": evidence, "edge_bps": edge_bps,
+            "cost": cost.to_dict(), "decision": dec.to_dict()})
 
     # overall integrity rollup
     any_ok = any(c.get("status") == OK for c in out["chains"].values()) or \

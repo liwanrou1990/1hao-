@@ -44,7 +44,7 @@ def render(scan: dict) -> str:
     rows_opp = ""
     for o in scan.get("opportunities", []):
         dec = o.get("decision", {})
-        cost = o.get("cost", {})
+        cost = o.get("cost") or {}
         net = cost.get("net_bps")
         rows_opp += (f"<tr><td>{html.escape(str(o.get('symbol')))}</td>"
                      f"<td>{_badge(o.get('data_status','?'))}</td>"

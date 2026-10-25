@@ -20,6 +20,9 @@ from . import verify as VERIFY
 from .market import events as MKT
 from .market import dashboard as DASH
 from .market import backtest as BT
+from .market import netcheck as NET
+from .market import edge_runner as EDGE
+from .market import accept as ACCEPT
 from .rules import RULES
 
 
@@ -233,10 +236,34 @@ def _market_cfg(args):
         return root, _y.safe_load(fh)
 
 
+def cmd_market_netcheck(args):
+    import json
+    root, cfg = _market_cfg(args)
+    rep = NET.run(cfg)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "connection_report.json").write_text(
+        json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "connection_report.md").write_text(NET.to_markdown(rep), encoding="utf-8")
+    print(f"连接验证: {rep['overall']}  ({rep['ok']}/{rep['total']} OK)")
+    for c in rep["checks"]:
+        print(f"  {c['category']:22} {c['name']}  {c.get('error') or ''}")
+    if rep["denied_hosts"]:
+        print("需放行主机:", ", ".join(rep["denied_hosts"]))
+    print(f"  报告: {out_dir/'connection_report.md'}")
+    return 0 if rep["overall"] == "OK" else 1
+
+
 def cmd_market_scan(args):
     import json
     root, cfg = _market_cfg(args)
-    scan = MKT.scan(cfg)
+    em_path = root / "reports_out" / "edge_model.json"
+    edge_model = {}
+    if em_path.exists():
+        try:
+            edge_model = json.loads(em_path.read_text(encoding="utf-8")).get("edge_model", {})
+        except Exception:
+            edge_model = {}
+    scan = MKT.scan(cfg, edge_model=edge_model)
     out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "market_scan.json").write_text(
         json.dumps(scan, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -302,6 +329,42 @@ def cmd_market_backtest(args):
     return 0
 
 
+def cmd_market_edge(args):
+    import json
+    root, cfg = _market_cfg(args)
+    rep = EDGE.build_and_estimate(cfg)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "edge_model.json").write_text(
+        json.dumps({"status": rep["status"], "edge_model": rep["edge_model"]},
+                   ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "edge_report.json").write_text(
+        json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"事件收益模型: status={rep['status']} events={rep['events']} "
+          f"confirmed_edges={len(rep['edge_model'])}")
+    for sym, e in rep["edge_model"].items():
+        print(f"  {sym}: edge={e['edge_bps']:.1f}bps horizon={e['horizon_s']//3600}h "
+              f"(in={e['in_sample_n']}, oos={e['oos_n']})")
+    if not rep["edge_model"]:
+        print(f"  原因: {rep['reason']}")
+    print(f"  模型: {out_dir/'edge_model.json'}  报告: {out_dir/'edge_report.json'}")
+    return 0
+
+
+def cmd_market_accept(args):
+    import json
+    root = _root(args)
+    rep = ACCEPT.evaluate(root / "reports_out")
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "acceptance_report.json").write_text(
+        json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "acceptance_report.md").write_text(ACCEPT.to_markdown(rep), encoding="utf-8")
+    print(f"验收: {rep['overall']}  首阻塞={rep.get('first_blocking_phase') or '无'}")
+    for ph in rep["phases"]:
+        print(f"  [{ph['status']}] {ph['phase']}  {ph['evidence']}  {ph.get('blocker') or ''}")
+    print(f"  报告: {out_dir/'acceptance_report.md'}")
+    return 0 if rep["overall"] == "PASS" else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -347,6 +410,10 @@ def build_parser() -> argparse.ArgumentParser:
     vf = sub.add_parser("recheck", help="干净环境独立复核：重建+全量测试+证据+SHA256")
     vf.set_defaults(func=cmd_verify_fundflow)
 
+    nc = sub.add_parser("market-netcheck", help="Phase1 真实数据连接验证（分类403/API/429/5xx）")
+    nc.add_argument("--config", default=None)
+    nc.set_defaults(func=cmd_market_netcheck)
+
     ms = sub.add_parser("market-scan", help="真实数据市场扫描：事件/价格/成本/TRADE决策+看板")
     ms.add_argument("--config", default=None, help="market.yaml 路径")
     ms.set_defaults(func=cmd_market_scan)
@@ -358,6 +425,13 @@ def build_parser() -> argparse.ArgumentParser:
     mb = sub.add_parser("market-backtest", help="事件驱动回测（真实历史数据；防未来泄漏+训练/验证/样本外）")
     mb.add_argument("--config", default=None)
     mb.set_defaults(func=cmd_market_backtest)
+
+    me = sub.add_parser("market-edge", help="Phase2 事件收益模型：真实事件+历史价→样本外确认的edge")
+    me.add_argument("--config", default=None)
+    me.set_defaults(func=cmd_market_edge)
+
+    ma = sub.add_parser("market-accept", help="Phase4 验收门：逐阶段 PASS/BLOCKED + 阻塞根因")
+    ma.set_defaults(func=cmd_market_accept)
     return p
 
 

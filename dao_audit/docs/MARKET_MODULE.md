@@ -59,3 +59,44 @@ https://code.claude.com/docs/en/cloud-environments#network-access 。放行后�
 UNAVAILABLE→NO TRADE、证据不足/净利非正→NO TRADE、仅全部通过才 TRADE、回测防未来泄漏与
 切分、无价格→INSUFFICIENT_DATA、看板在无真实数据时显示 NO TRADE 横幅。
 这些用例以已知合成数仅测**引擎算术**，绝不流入实时看板/扫描输出。
+
+## v0.3：四阶段真实数据交易优势流程
+
+| 阶段 | 命令 | 产物 | 当前状态(本环境) |
+|------|------|------|------------------|
+| 1 连接验证 | `market-netcheck` | connection_report.{md,json} | BLOCKED：9 主机全被网络策略拒绝(403) |
+| 2 事件收益模型 | `market-edge` | edge_model.json, edge_report.json | INSUFFICIENT_DATA（Snapshot/CoinGecko 不可达） |
+| 3 成本后决策 | `market-scan` | market_scan.json, market_dashboard.html | 全部 NO_TRADE（无确认 edge） |
+| 4 模拟交易/验收 | `market-accept`(+paper) | acceptance_report.{md,json} | BLOCKED @Phase1（根因：云环境出口策略） |
+
+### event-edge estimator（Phase 2，`market/edge.py`）
+
+- 输入：真实 DAO 治理事件（Snapshot 提案结束时刻）+ 真实历史价/量（CoinGecko market_chart）。
+- 支持多事件类型（按提案 state 分组）、多标的、多持仓窗口（默认 1d/3d/7d）。
+- 每个 (事件类型×标的×窗口) 计算：前向收益分布、相对 ETH 的基准超额、胜率、
+  成本调整收益、t 统计量与**自助法(bootstrap)95% 置信区间**。
+- 严格时序：按时间切 train+validation / 样本外(OOS)；edge 参数只来自较早的样本内事件。
+- 防未来泄漏：决策时价取 obs_ts≤事件时刻；实现收益用历史(已结算)价。
+- **确认门**（全部满足才产出可用 edge）：样本内均值>0、显著(t≥1.65 或 CI 下界>0)、
+  样本量≥min_n、**样本外成本调整后仍>0**。否则 edge_bps=None → 下游 NO_TRADE。
+
+### 反滥用保证（对应要求）
+
+- expected gross edge **只能**来自上述确认的 OOS 正 edge；代码中已删除任何硬编码正值/0 占位，
+  无 edge 即 NO_TRADE（原因显式标注）。
+- 不为生成 TRADE 而降低风险标准：阈值、显著性、成本扣减均在配置中显式，决策逐条给依据。
+- 模拟交易(`market/paper.py`)只记录信号/模拟成交/执行偏差/净收益/回撤；**不连接钱包、不下单**，
+  真实执行需人工确认。
+- 验收(`market/accept.py`)为真实数据驱动的依赖门：上游无真实证据，下游一律 BLOCKED，
+  不以模拟数据冒充通过。
+
+### 恢复真实数据后的运行顺序
+
+放行 9 个主机并开新会话后：
+```bash
+cd dao_audit && export PYTHONPATH=tool
+python3 -m dao_audit market-netcheck   # Phase1 应转 OK
+python3 -m dao_audit market-edge       # Phase2 建 OOS 确认 edge 模型
+python3 -m dao_audit market-scan       # Phase3 成本后 TRADE/NO TRADE + 看板
+python3 -m dao_audit market-accept     # Phase4 验收门
+```

@@ -19,10 +19,14 @@ daos:
     snapshot_space: "aave.eth"
     chain: ethereum
     treasury: "0x25F2226B597E8F9514B3F68F00f494cF4f286491"   # Aave Ecosystem Reserve (公开)
+    token_symbol: "AAVE"
+    coingecko_id: "aave"
   - name: "Uniswap"
     snapshot_space: "uniswapgovernance.eth"
     chain: ethereum
     treasury: "0x1a9C8182C09F50C8318d769245beA52c32BE35BC"   # Uniswap Timelock (公开)
+    token_symbol: "UNI"
+    coingecko_id: "uniswap"
 
 # 关注代币（DefiLlama coin key）
 tokens:
@@ -45,3 +49,11 @@ costs:
 thresholds:
   min_net_bps: 15          # 净收益需 > 0.15% 才考虑 TRADE
   min_evidence_sources: 2  # 至少两个独立 OK 数据源
+
+# event-edge estimator 参数
+edge:
+  horizons_h: [24, 72, 168]     # 持仓窗口（小时）：1d/3d/7d
+  benchmark_coingecko_id: "ethereum"   # 基准（超额收益相对 ETH）
+  min_events: 8                 # 最小样本量
+  t_threshold: 1.65             # 单边 ~95% 显著
+  edge_cost_bps: 50             # 估计阶段的成本扣减（bps）
