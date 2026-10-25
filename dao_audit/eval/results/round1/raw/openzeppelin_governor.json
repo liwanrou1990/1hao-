@@ -1,0 +1,52 @@
+{
+  "case": "openzeppelin_governor",
+  "n_files": 4,
+  "files": {
+    "Governor.sol": {
+      "ok": true,
+      "n_findings": 1,
+      "ms": 46.7
+    },
+    "GovernorTimelockControl.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 5.3
+    },
+    "GovernorVotes.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 2.1
+    },
+    "TimelockController.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 17.6
+    }
+  },
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "title": "金库权限过大 / Over-privileged treasury (arbitrary call)",
+      "severity": "High",
+      "category": "treasury",
+      "file": "Governor.sol",
+      "contract": "Governor",
+      "function": "relay",
+      "line": 655,
+      "code": "(bool success, bytes memory returndata) = target.call{value: value}(data);",
+      "root_cause": "对外暴露任意 (target,value,data) 低级调用，仅以单一角色为门禁，无目标白名单/额度/熔断。",
+      "trigger_conditions": "具备该角色（或通过治理获得）后，一次调用即可转走任意资产或改写任意合约状态。",
+      "impact": "单笔提案/调用原子清空全部金库资产或劫持外部合约。",
+      "confidence": 0.6,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "存在目标白名单但未见额度上限，残余过度授权风险。",
+      "remediation": "最小权限化：代币流出走白名单收款+按资产按周期额度；运营调用限目标白名单；守护者熔断 pause；大额多签+时间锁。",
+      "signals": [
+        "bytes calldata/memory param",
+        "low-level call/delegatecall",
+        "allowlist=True",
+        "cap=False"
+      ]
+    }
+  ]
+}

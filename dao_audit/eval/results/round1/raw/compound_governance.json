@@ -1,0 +1,27 @@
+{
+  "case": "compound_governance",
+  "n_files": 4,
+  "files": {
+    "Comp.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 15.1
+    },
+    "GovernorBravoDelegate.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 19.5
+    },
+    "GovernorBravoInterfaces.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 3.8
+    },
+    "Timelock.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 5.2
+    }
+  },
+  "findings": []
+}

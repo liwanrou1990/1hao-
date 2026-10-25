@@ -1,0 +1,12 @@
+{
+  "case": "compound_governance",
+  "project": "compound",
+  "kind": "secure_control",
+  "is_chain_case": false,
+  "truth": [],
+  "evidence": {
+    "repo": "https://github.com/compound-finance/compound-protocol",
+    "commit": "a3214f67b73310d547e00fc578e8355911c9d376",
+    "rationale": "GovernorBravo checkpoint snapshot voting (getPriorVotes), Timelock delay, quorum/threshold, proposal state machine -> no X100-style takeover; any high-sev gov finding is FP."
+  }
+}

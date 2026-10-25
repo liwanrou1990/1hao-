@@ -1,0 +1,12 @@
+{
+  "case": "openzeppelin_governor",
+  "project": "openzeppelin",
+  "kind": "secure_control",
+  "is_chain_case": false,
+  "truth": [],
+  "evidence": {
+    "repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+    "commit": "11565e5f6277a320408025e649240056ba6a3919",
+    "rationale": "OZ Governor snapshot voting (getPastVotes), TimelockController delayed execution, state machine, role gating -> secure reference; any high-sev gov finding is FP."
+  }
+}
