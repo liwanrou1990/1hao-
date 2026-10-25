@@ -46,6 +46,23 @@ python3 -m dao_audit analyze --prefix myproject
 python3 -m dao_audit benchmark --min-recall 1.0 --max-fpr 0.0
 ```
 
+# 金库资金流转验证：本地 EVM 真实执行 5,000,000 USDC 从金库→接收地址
+python3 -m dao_audit fundflow      # 运行资金流转测试，生成带真实 trace/gas 的验证报告
+```
+
+### 金库资金流转验证（核心验收）
+
+`test/FundFlow_X100.t.sol` 在本地隔离 EVM 上，用链上状态断言证明 5,000,000 模拟 USDC
+**确实**从 DAO 金库转移到测试接收地址（逐漏洞 VULN-1..4 + 组合攻击链）；
+`test/FundFlow_X100_Fixed.t.sol` 用修复版证明同样攻击被阻止、金库余额保持 5,000,000。
+`python3 -m dao_audit fundflow` 从**真实 Foundry 执行结果**（通过/失败、gas、console 日志、
+`-vvvv` 完整 trace）生成报告，失败如实标注，绝不伪造：
+
+- 核心断言：金库初始 5,000,000 → 最终 0；接收地址 +5,000,000；资产总量守恒。
+- 报告：`reports_out/fundflow_verification.{md,json}`；完整 trace：`reports_out/fundflow_trace_{vuln,fixed}.txt`
+  （含 `VulnX100Treasury → receiver value 5e24` 的真实 Transfer 事件）。
+- 样例见 `docs/SAMPLE_FUNDFLOW_REPORT.md`。
+
 > 真实合约默认只做静态+权限分析（标 `STATIC_ONLY`）。要**本地链动态确认**，按 `test/`
 > 模式为其手写针对性 Foundry PoC。局限见 `docs/LIMITATIONS.md`。
 

@@ -112,3 +112,41 @@ def test_import_requires_attestation():
     from pathlib import Path as _P
     with pytest.raises(AuthorizationError):
         auth.import_contract(ROOT / "contracts/targets/VulnX100Treasury.sol", "", "")
+
+
+# --- fund-flow report builder (no forge needed; pure formatting) -----------
+from dao_audit import fundflow_report as FF  # noqa: E402
+
+
+def test_fundflow_markdown_reports_failures_honestly():
+    fake = {
+        "generated_at": "2026-01-01T00:00:00+00:00",
+        "chain": "local",
+        "verdict": "FAIL",
+        "trace_files": {"vuln": "a.txt", "fixed": "b.txt"},
+        "vuln_tests": [
+            {"name": "test_05_combined_killchain_full_vault_drain", "status": "Failure",
+             "gas": 10, "reason": "assertion failed", "logs": []},
+        ],
+        "fixed_tests": [
+            {"name": "test_04_fixed_combined_attack_blocked", "status": "Success",
+             "gas": 20, "reason": None, "logs": []},
+        ],
+    }
+    md = FF.to_markdown(fake)
+    assert "FAIL" in md
+    assert "assertion failed" in md  # failure reason surfaced, not hidden
+
+
+def test_fundflow_markdown_passes_render_flow():
+    fake = {
+        "generated_at": "t", "chain": "local", "verdict": "PASS",
+        "trace_files": {"vuln": "a", "fixed": "b"},
+        "vuln_tests": [{"name": "test_05_combined_killchain_full_vault_drain",
+                        "status": "Success", "gas": 1, "reason": None,
+                        "logs": ["vault USDC   : 5000000", "receiver USDC: 5000000"]}],
+        "fixed_tests": [{"name": "test_04_fixed_combined_attack_blocked",
+                         "status": "Success", "gas": 1, "reason": None, "logs": []}],
+    }
+    md = FF.to_markdown(fake)
+    assert "5000000" in md and "PASS" in md

@@ -15,6 +15,7 @@ from .static_scan import scan_authorized, analyze_authorized, analyze_file
 from .runner import run_forge_json, summarize, ForgeNotFound
 from . import report as R
 from . import benchmark as B
+from . import fundflow_report as FF
 from .rules import RULES
 
 
@@ -187,6 +188,24 @@ def cmd_benchmark(args):
     return 0
 
 
+def cmd_fundflow(args):
+    auth = _auth(args); root = _root(args)
+    try:
+        r = FF.run(root, auth, rpc_url=args.rpc_url)
+    except AuthorizationError as e:
+        print(f"[授权拒绝] {e}", file=sys.stderr); return 2
+    except RuntimeError as e:
+        print(f"[错误] {e}", file=sys.stderr); return 3
+    paths = FF.write_report(root, r)
+    nv = sum(1 for t in r["vuln_tests"] if t["status"] == "Success")
+    nf = sum(1 for t in r["fixed_tests"] if t["status"] == "Success")
+    print(f"金库资金流转验证: 判定={r['verdict']}  漏洞版 {nv}/{len(r['vuln_tests'])}  "
+          f"修复版 {nf}/{len(r['fixed_tests'])}")
+    for k, v in paths.items():
+        print(f"  {k}: {v}")
+    return 0 if r["verdict"] == "PASS" else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -224,6 +243,10 @@ def build_parser() -> argparse.ArgumentParser:
     bm.add_argument("--min-recall", type=float, default=1.0, help="最低检出率阈值")
     bm.add_argument("--max-fpr", type=float, default=0.0, help="最高误报率阈值")
     bm.set_defaults(func=cmd_benchmark)
+
+    ff = sub.add_parser("fundflow", help="金库资金流转验证（本地链真实执行 + trace/gas 报告）")
+    ff.add_argument("--rpc-url", default=None, help="本地链 RPC (仅 localhost/127.0.0.1)")
+    ff.set_defaults(func=cmd_fundflow)
     return p
 
 

@@ -63,6 +63,11 @@ jobs:
           PYTHONPATH: tool
         run: python -m dao_audit benchmark --min-recall 1.0 --max-fpr 0.0
 
+      - name: Vault fund-flow verification (local-chain, real state)
+        env:
+          PYTHONPATH: tool
+        run: python -m dao_audit fundflow
+
       - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
