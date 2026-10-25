@@ -1,0 +1,95 @@
+{
+  "case": "tornado_governance",
+  "n_files": 8,
+  "files": {
+    "Configuration.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.9
+    },
+    "Delegation.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.8
+    },
+    "GasCompensator.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.3
+    },
+    "Governance.sol": {
+      "ok": true,
+      "n_findings": 2,
+      "ms": 7.9
+    },
+    "GovernanceGasUpgrade.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 4.4
+    },
+    "GovernanceStakingUpgrade.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.6
+    },
+    "GovernanceVaultUpgrade.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.4
+    },
+    "LoopbackProxy.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 0.5
+    }
+  },
+  "findings": [
+    {
+      "rule_id": "VULN-3",
+      "title": "治理时间锁缺失 / Missing governance timelock",
+      "severity": "High",
+      "category": "governance-process",
+      "file": "Governance.sol",
+      "contract": "Governance",
+      "function": "execute",
+      "line": 184,
+      "code": "function execute(uint256 proposalId) external payable virtual {",
+      "root_cause": "提案执行函数在通过后立即对外调用，无 queue/eta/minDelay 延迟。",
+      "trigger_conditions": "提案达到法定票数后，攻击者或提案人立即 execute，中间无延迟窗。",
+      "impact": "持币人与守护者无退出或否决窗口，恶意提案可即时落地（常与投票操纵联动）。",
+      "confidence": 0.75,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "execute 直接外呼且全合约无时间锁信号；若延迟逻辑在外部 Timelock 合约则为误报，需确认执行路径。",
+      "remediation": "引入 TimelockController：通过→queue(eta=now+minDelay)→execute(require now>=eta)；minDelay>=2 天；守护者可在窗内 cancel/pause。",
+      "signals": [
+        "execute function",
+        "external call in execute",
+        "no timelock signal"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库权限过大 / Over-privileged treasury (arbitrary call)",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "Governance.sol",
+      "contract": "Governance",
+      "function": "execute",
+      "line": 191,
+      "code": "(bool success, bytes memory data) = target.delegatecall(abi.encodeWithSignature(\"executeProposal()\"));",
+      "root_cause": "对外暴露任意 (target,value,data) 低级调用，仅以单一角色为门禁，无目标白名单/额度/熔断。",
+      "trigger_conditions": "具备该角色（或通过治理获得）后，一次调用即可转走任意资产或改写任意合约状态。",
+      "impact": "单笔提案/调用原子清空全部金库资产或劫持外部合约。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "任意 target+calldata 外呼，无白名单/额度/熔断，单次调用可清空资产。",
+      "remediation": "最小权限化：代币流出走白名单收款+按资产按周期额度；运营调用限目标白名单；守护者熔断 pause；大额多签+时间锁。",
+      "signals": [
+        "bytes calldata/memory param",
+        "low-level call/delegatecall",
+        "allowlist=False",
+        "cap=False"
+      ]
+    }
+  ]
+}

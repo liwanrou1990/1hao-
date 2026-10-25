@@ -1,0 +1,20 @@
+{
+  "case": "audius_governance", "project": "audius", "kind": "vulnerable", "is_chain_case": true,
+  "truth": [
+    {"vuln": "VULN-1", "contract": "Governance", "function": "initialize", "line": [187, 241],
+     "treasury_risk": false,
+     "governance_relation": "代理 slot-0 proxyAdmin 与实现 initialized 标志存储槽冲突，可对已部署 Governance 代理重复调用 initialize，安装攻击者 guardian"},
+    {"vuln": "VULN-3", "contract": "Governance", "function": "guardianExecuteTransaction", "line": [718, 1010],
+     "treasury_risk": false,
+     "governance_relation": "guardian 可无时间锁执行任意交易；executionDelay 由 guardian 可改；_executeTransaction 原始 call 执行任意目标"},
+    {"vuln": "VULN-4", "contract": "Governance", "function": "guardianExecuteTransaction", "line": [718, 1010],
+     "treasury_risk": true,
+     "governance_relation": "Governance 本身托管 ~18.5M AUDIO 社区金库；恶意 guardian 调用把 functionSignature 设为转账、callData 设为攻击者地址，_executeTransaction 转出金库"}
+  ],
+  "evidence": {"repo": "https://github.com/AudiusProject/audius-protocol",
+    "vuln_commit": "01f924a7762659141d3b32491b81ca6e0f63c822",
+    "fixed_commit": "1e04215d4ad8251d77a35dd75c8908d4c5cf3738 (PR#3584; 修复在 OZ Initializable 存储布局 patch, .sol 字节不变)",
+    "reports": ["https://rekt.news/audius-rekt/", "https://decrypt.co/105913/how-audius-was-hacked-6m-ethereum-tokens"],
+    "incident_date": "2022-07-23",
+    "note_vuln2_omitted": "投票权异常(VULN-2)在本次攻击中被绕过(攻击者走 guardian 路径),非被利用缺陷,故不列入真实标签,避免虚增漏报分母"}
+}

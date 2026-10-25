@@ -1,0 +1,51 @@
+{
+  "case": "tornado_governance",
+  "project": "tornado_governance",
+  "kind": "vulnerable",
+  "is_chain_case": true,
+  "truth": [
+    {
+      "vuln": "VULN-3",
+      "contract": "Governance",
+      "function": "execute",
+      "line": [
+        184,
+        202
+      ],
+      "treasury_risk": false,
+      "governance_relation": "提案执行用 target.delegatecall 执行可变字节码(CREATE2+selfdestruct 重部署)，仅 isContract 检查，无执行约束/有效时间锁护栏"
+    },
+    {
+      "vuln": "VULN-4",
+      "contract": "Governance",
+      "function": "execute",
+      "line": [
+        184,
+        202
+      ],
+      "treasury_risk": true,
+      "governance_relation": "治理 execute 可对任意外部地址发起不受约束调用(delegatecall)，可控制金库/资产转移"
+    },
+    {
+      "vuln": "VULN-2",
+      "contract": "Governance",
+      "function": "castVote",
+      "line": [
+        203,
+        252
+      ],
+      "treasury_risk": false,
+      "governance_relation": "投票权取自实时 lockedBalance，无逐提案快照；被 execute 的 delegatecall 在存储上下文伪造 lockedBalance 制造多数票"
+    }
+  ],
+  "evidence": {
+    "repo": "https://github.com/tornadocash/tornado-governance",
+    "vuln_commit": "6464973b108102b70efafa29e55da69bfb43b7b9",
+    "fixed_commit": null,
+    "reports": [
+      "https://rekt.news/tornado-gov-rekt",
+      "https://www.halborn.com/blog/post/explained-the-tornado-cash-hack-may-2023"
+    ],
+    "incident_date": "2023-05-20"
+  }
+}

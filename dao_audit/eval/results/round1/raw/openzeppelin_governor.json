@@ -5,22 +5,22 @@
     "Governor.sol": {
       "ok": true,
       "n_findings": 1,
-      "ms": 46.7
+      "ms": 31.3
     },
     "GovernorTimelockControl.sol": {
       "ok": true,
       "n_findings": 0,
-      "ms": 5.3
+      "ms": 3.5
     },
     "GovernorVotes.sol": {
       "ok": true,
       "n_findings": 0,
-      "ms": 2.1
+      "ms": 1.5
     },
     "TimelockController.sol": {
       "ok": true,
       "n_findings": 0,
-      "ms": 17.6
+      "ms": 11.6
     }
   },
   "findings": [

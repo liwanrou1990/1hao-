@@ -1,0 +1,45 @@
+{
+  "repo_url": "https://github.com/tornadocash/tornado-governance",
+  "vuln_commit": "6464973b108102b70efafa29e55da69bfb43b7b9",
+  "fixed_commit": null,
+  "fixed_commit_note": "No post-incident source fix exists in this repo. The repository's final commit is dated 2022-08-04 (10+ months before the 2023-05-20 incident); the repo was never patched afterward. Governance control was restored off-repo via a subsequent re-vote (the attacker's proposal #21 resetting state), not by a Solidity source change. The design-level fix (not committing arbitrary delegatecall execution of CREATE2-mutable targets) was never applied here.",
+  "file_paths": [
+    "contracts/v1/Governance.sol",
+    "contracts/v1/Delegation.sol",
+    "contracts/v1/Configuration.sol",
+    "contracts/v1/LoopbackProxy.sol",
+    "contracts/v2-vault-and-gas/GovernanceVaultUpgrade.sol",
+    "contracts/v2-vault-and-gas/GovernanceGasUpgrade.sol",
+    "contracts/v2-vault-and-gas/GasCompensator.sol",
+    "contracts/v3-relayer-registry/GovernanceStakingUpgrade.sol"
+  ],
+  "deployed_implementation": "GovernanceStakingUpgrade (v3-relayer-registry), inheritance chain: GovernanceStakingUpgrade -> GovernanceGasUpgrade (v2) -> GovernanceVaultUpgrade (v2) -> Governance (v1). The vulnerable execute/propose/castVote/lock logic lives in the v1 Governance base and is inherited unchanged by the deployed v3 implementation behind the LoopbackProxy.",
+  "incident_date": "2023-05-20",
+  "report_urls": [
+    "https://rekt.news/tornado-gov-rekt",
+    "https://www.halborn.com/blog/post/explained-the-tornado-cash-hack-may-2023",
+    "https://hackernoon.com/inside-the-governance-hack-of-tornado-cash",
+    "https://decrypt.co/140932/tornado-cash-governance-attacker-offers-dao-new-lifeline-expensive-lesson/"
+  ],
+  "vuln_classes": {
+    "VULN-1_governance_seat_takeover": {
+      "applies": true,
+      "contract": "Governance (v1) as inherited by deployed GovernanceStakingUpgrade (v3)",
+      "functions": ["execute(uint256)", "propose(address,string)", "_propose(address,address,string)"],
+      "detail": "By inflating their own lockedBalance voting power (see VULN-2) the attacker obtained an unassailable voting majority (~1.2M votes), passed and executed arbitrary proposals, and took de-facto control of the Governance contract / DAO."
+    },
+    "VULN-2_vote_power_manipulation": {
+      "applies": true,
+      "contract": "Governance (v1)",
+      "functions": ["execute(uint256)", "lockedBalance (state mapping)", "_castVote(address,uint256,bool)", "lock/lockWithApproval/_transferTokens"],
+      "detail": "Vote weight is read directly from the lockedBalance[voter] mapping in _castVote and _propose. Because execute() runs the proposal via delegatecall in Governance's own storage context, the attacker's malicious executeProposal() body wrote fabricated entries into lockedBalance for addresses it controlled, assigning ~10,000 locked votes each (total ~1.2M) without ever locking TORN."
+    },
+    "VULN-3_proposal_execution": {
+      "applies": true,
+      "contract": "Governance (v1)",
+      "functions": ["execute(uint256)"],
+      "detail": "Root cause. execute() performs target.delegatecall(abi.encodeWithSignature(\"executeProposal()\")) against a proposal target that passed only an Address.isContract() check. delegatecall grants the target full write access to Governance storage, and the target's code was mutable: the attacker deployed the approved proposal via CREATE2, selfdestructed it, and redeployed different (malicious) bytecode at the same approved address, so the executed logic differed from what voters reviewed."
+    }
+  },
+  "technical_description": "The deployed Tornado Cash Governance (v3 GovernanceStakingUpgrade behind LoopbackProxy, logic inherited unchanged from the v1 Governance base) executes passed proposals with target.delegatecall(executeProposal()), running attacker-supplied code directly against Governance's own storage after only an isContract check. The attacker deployed an approved-looking proposal at a CREATE2-derived address, got it voted through, then used selfdestruct + CREATE2 re-deployment to swap in malicious bytecode at that same address. On execute(), the malicious delegatecalled logic overwrote the lockedBalance voting-power mapping to grant the attacker ~1.2M fabricated votes, giving them majority control of the DAO; they later used that control to reset state via a follow-up proposal."
+}

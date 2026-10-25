@@ -1,0 +1,27 @@
+{
+  "case": "beanstalk_governance",
+  "n_files": 4,
+  "files": {
+    "Bip.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 4.7
+    },
+    "C.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 3.5
+    },
+    "GovernanceFacet.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 7.8
+    },
+    "VotingBooth.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.5
+    }
+  },
+  "findings": []
+}

@@ -47,17 +47,20 @@ def _norm(s):
 
 
 def _located(finding, truth_item):
-    """A finding LOCATES a truth item iff same VULN class AND (contract matches
-    OR reported line falls within the expected range ±5)."""
+    """A finding LOCATES a truth item per the frozen PREREGISTRATION §3 rule:
+    same VULN class AND same contract AND (function matches OR line within the
+    expected range ±5). This is the stricter 'contract AND (func OR line)' form
+    (not merely any-of), so the engine is not flattered."""
     if _norm(finding.get("rule_id")) != _norm(truth_item["vuln"]):
         return False
-    contract_ok = _norm(finding.get("contract")) == _norm(truth_item.get("contract"))
+    if _norm(finding.get("contract")) != _norm(truth_item.get("contract")):
+        return False
     line = finding.get("line")
     rng = truth_item.get("line")
     line_ok = bool(rng and line is not None and (rng[0] - 5) <= line <= (rng[1] + 5))
-    func_ok = (truth_item.get("function") and
-               _norm(finding.get("function")) == _norm(truth_item["function"]))
-    return contract_ok or line_ok or func_ok
+    func_ok = bool(truth_item.get("function") and
+                   _norm(finding.get("function")) == _norm(truth_item["function"]))
+    return line_ok or func_ok
 
 
 def score_case(raw: dict, ans: dict) -> dict:

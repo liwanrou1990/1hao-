@@ -1,0 +1,22 @@
+{
+  "case": "audius_governance",
+  "n_files": 3,
+  "files": {
+    "AudiusAdminUpgradeabilityProxy.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 3.6
+    },
+    "Governance.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 62.2
+    },
+    "InitializableV2.sol": {
+      "ok": true,
+      "n_findings": 0,
+      "ms": 1.1
+    }
+  },
+  "findings": []
+}

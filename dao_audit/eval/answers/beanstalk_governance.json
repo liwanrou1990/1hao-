@@ -1,0 +1,19 @@
+{
+  "case": "beanstalk_governance", "project": "beanstalk", "kind": "vulnerable", "is_chain_case": true,
+  "truth": [
+    {"vuln": "VULN-2", "contract": "GovernanceFacet", "function": "vote", "line": [69, 103],
+     "treasury_risk": false,
+     "governance_relation": "投票权取自实时 roots(Silo存款)，无逐提案快照；闪电贷单块内获得>2/3 roots 超多数"},
+    {"vuln": "VULN-3", "contract": "GovernanceFacet", "function": "emergencyCommit", "line": [180, 203],
+     "treasury_risk": false,
+     "governance_relation": "emergencyCommit 仅检查 1 天应急期+实时2/3，无有效时间锁，绕过 7 天正常 commit 路径"},
+    {"vuln": "VULN-4", "contract": "GovernanceFacet", "function": "propose", "line": [35, 68],
+     "treasury_risk": true,
+     "governance_relation": "propose 接受攻击者提供的 diamondCut/init/calldata，_execute 经 LibDiamond.diamondCut 对攻击者 init 合约无白名单 delegatecall，清空金库"}
+  ],
+  "evidence": {"repo": "https://github.com/BeanstalkFarms/Beanstalk",
+    "vuln_commit": "e9f49910e287e7a7afaa6db8f536b7194728b0af",
+    "fixed_commit": "9fb2ad7964821d238ea4574beeb235457b63e865 (删除治理,移至链下Snapshot;无补丁源码)",
+    "reports": ["https://rekt.news/beanstalk-rekt", "https://bean.money", "https://omniscia.io"],
+    "incident_date": "2022-04-17"}
+}
