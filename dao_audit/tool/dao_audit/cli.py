@@ -16,6 +16,7 @@ from .runner import run_forge_json, summarize, ForgeNotFound
 from . import report as R
 from . import benchmark as B
 from . import fundflow_report as FF
+from . import verify as VERIFY
 from .rules import RULES
 
 
@@ -206,6 +207,21 @@ def cmd_fundflow(args):
     return 0 if r["verdict"] == "PASS" else 1
 
 
+def cmd_verify_fundflow(args):
+    auth = _auth(args); root = _root(args)
+    try:
+        r = VERIFY.run(root, auth)
+    except (AuthorizationError,) as e:
+        print(f"[授权拒绝] {e}", file=sys.stderr); return 2
+    except RuntimeError as e:
+        print(f"[错误] {e}", file=sys.stderr); return 3
+    print(f"独立复核: 判定={r['verdict']}  全量 {r['passed_tests']}/{r['total_tests']}  "
+          f"资金流转 {r['fundflow_passed']}/{r['fundflow_total']}  断言数 {r['assertion_count']}")
+    print(f"  报告: reports_out/INDEPENDENT_VERIFICATION.md")
+    print(f"  校验: reports_out/SHA256SUMS.txt")
+    return 0 if r["verdict"] == "PASS" else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -247,6 +263,9 @@ def build_parser() -> argparse.ArgumentParser:
     ff = sub.add_parser("fundflow", help="金库资金流转验证（本地链真实执行 + trace/gas 报告）")
     ff.add_argument("--rpc-url", default=None, help="本地链 RPC (仅 localhost/127.0.0.1)")
     ff.set_defaults(func=cmd_fundflow)
+
+    vf = sub.add_parser("recheck", help="干净环境独立复核：重建+全量测试+证据+SHA256")
+    vf.set_defaults(func=cmd_verify_fundflow)
     return p
 
 

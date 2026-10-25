@@ -50,6 +50,16 @@ python3 -m dao_audit benchmark --min-recall 1.0 --max-fpr 0.0
 python3 -m dao_audit fundflow      # 运行资金流转测试，生成带真实 trace/gas 的验证报告
 ```
 
+# 独立复核（干净环境重建 + 全量测试 + 证据 + SHA256 校验）
+python3 -m dao_audit recheck       # forge clean→build→全量测试；落盘原始 JSON/trace/断言/SHA256
+sha256sum -c reports_out/SHA256SUMS.txt   # 任何人可独立校验证据文件未被改动
+```
+
+> `recheck` 从干净环境重跑，用 `balanceOf` 实际状态、解码的 ERC20 Transfer 事件、
+> decimals 与 5e24 原始单位换算独立确认资金流转真实、可重复、可审计；输出
+> `reports_out/INDEPENDENT_VERIFICATION.md` 与 `SHA256SUMS.txt`，样例见
+> `docs/SAMPLE_INDEPENDENT_VERIFICATION.md`。
+
 ### 金库资金流转验证（核心验收）
 
 `test/FundFlow_X100.t.sol` 在本地隔离 EVM 上，用链上状态断言证明 5,000,000 模拟 USDC
