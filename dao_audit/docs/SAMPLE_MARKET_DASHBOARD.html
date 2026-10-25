@@ -1,0 +1,399 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DAO Market Monitor</title>
+<style>
+:root{--bg:#f8fafc;--fg:#0f172a;--muted:#64748b;--card:#fff;--line:#e2e8f0}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b1120;--fg:#e2e8f0;--muted:#94a3b8;--card:#111827;--line:#1f2937}}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:8px 0} h2{font-size:15px;margin:22px 0 8px}
+.banner{background:#b91c1c;color:#fff;padding:12px 14px;border-radius:10px;font-weight:600}
+.meta{color:var(--muted);font-size:12px;margin:6px 0 2px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:rgba(100,116,139,.12);font-size:12px} td.err{color:#b91c1c;font-size:11px;max-width:320px;word-break:break-word}
+details{margin-top:18px} pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;font-size:11px;max-height:360px}
+.note{color:var(--muted);font-size:12px;margin-top:6px}
+</style></head><body><div class="wrap">
+<h1>DAO 治理 · 真实链上事件与市场监控看板</h1>
+<div class="meta">生成时间 (UTC): 2026-10-25T05:17:14+00:00 · 交易信号: 0</div>
+<div class="banner">所有外部数据源不可达（环境网络策略限制）——未使用任何模拟行情，全部 NO TRADE</div>
+<p class="note">完整性原则：结果仅来自真实数据；源不可达→UNAVAILABLE→NO TRADE；绝不以模拟行情替代；不承诺固定收益；未经人工确认不连接钱包或执行真实交易。安全发现(VULN-1..5)与交易信号分开管理。</p>
+
+<h2>链 RPC 健康 / 数据新鲜度</h2>
+<table><tr><th>链</th><th>状态</th><th>区块</th><th>数据延迟(s)</th><th>往返</th><th>错误/证据</th></tr><tr><td>ethereum</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>-</td><td>-</td><td>265 ms</td><td class='err'>URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;</td></tr><tr><td>base</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>-</td><td>-</td><td>211 ms</td><td class='err'>URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;</td></tr><tr><td>arbitrum</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>-</td><td>-</td><td>224 ms</td><td class='err'>URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;</td></tr></table>
+
+<h2>DAO 治理 / 金库</h2>
+<table><tr><th>DAO</th><th>Snapshot 空间</th><th>治理数据</th><th>金库地址</th><th>错误/证据</th></tr><tr><td>Aave</td><td>aave.eth</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td style='font-family:monospace;font-size:11px'>0x25F2226B597E8F9514B3F68F00f494cF4f286491</td><td class='err'>URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;</td></tr><tr><td>Uniswap</td><td>uniswapgovernance.eth</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td style='font-family:monospace;font-size:11px'>0x1a9C8182C09F50C8318d769245beA52c32BE35BC</td><td class='err'>URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;</td></tr></table>
+
+<h2>交易机会 · 净收益(扣全部成本) · TRADE/NO TRADE</h2>
+<table><tr><th>代币</th><th>数据状态</th><th>独立源</th><th>净收益(bps)</th><th>决策</th><th>依据</th></tr><tr><td>ETH</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>0</td><td>-</td><td><span style="background:#b45309;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">NO_TRADE</span></td><td>数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易</td></tr><tr><td>AAVE</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>0</td><td>-</td><td><span style="background:#b45309;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">NO_TRADE</span></td><td>数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易</td></tr><tr><td>UNI</td><td><span style="background:#b91c1c;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">UNAVAILABLE</span></td><td>0</td><td>-</td><td><span style="background:#b45309;color:#fff;padding:1px 7px;border-radius:6px;font-size:12px">NO_TRADE</span></td><td>数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易</td></tr></table>
+
+<details><summary>原始扫描 JSON（链上证据：source/url/block/timestamp/latency/status）</summary><pre>{
+  &quot;generated_at&quot;: &quot;2026-10-25T05:17:14+00:00&quot;,
+  &quot;integrity&quot;: &quot;real-data-only; unreachable sources -&gt; UNAVAILABLE -&gt; NO TRADE; no simulated quotes&quot;,
+  &quot;chains&quot;: {
+    &quot;ethereum&quot;: {
+      &quot;source&quot;: &quot;rpc:ethereum&quot;,
+      &quot;url&quot;: &quot;https://eth.llamarpc.com&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;fetched_at&quot;: &quot;2026-10-25T05:17:15+00:00&quot;,
+      &quot;latency_ms&quot;: 264.84192300000586,
+      &quot;http_code&quot;: null,
+      &quot;chain&quot;: &quot;ethereum&quot;,
+      &quot;block&quot;: null,
+      &quot;block_timestamp&quot;: null,
+      &quot;data_latency_s&quot;: null,
+      &quot;address&quot;: null,
+      &quot;tx_hash&quot;: null,
+      &quot;data&quot;: null,
+      &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+    },
+    &quot;base&quot;: {
+      &quot;source&quot;: &quot;rpc:base&quot;,
+      &quot;url&quot;: &quot;https://mainnet.base.org&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;fetched_at&quot;: &quot;2026-10-25T05:17:15+00:00&quot;,
+      &quot;latency_ms&quot;: 211.38318499998832,
+      &quot;http_code&quot;: null,
+      &quot;chain&quot;: &quot;base&quot;,
+      &quot;block&quot;: null,
+      &quot;block_timestamp&quot;: null,
+      &quot;data_latency_s&quot;: null,
+      &quot;address&quot;: null,
+      &quot;tx_hash&quot;: null,
+      &quot;data&quot;: null,
+      &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+    },
+    &quot;arbitrum&quot;: {
+      &quot;source&quot;: &quot;rpc:arbitrum&quot;,
+      &quot;url&quot;: &quot;https://arb1.arbitrum.io/rpc&quot;,
+      &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;fetched_at&quot;: &quot;2026-10-25T05:17:15+00:00&quot;,
+      &quot;latency_ms&quot;: 224.11411300004147,
+      &quot;http_code&quot;: null,
+      &quot;chain&quot;: &quot;arbitrum&quot;,
+      &quot;block&quot;: null,
+      &quot;block_timestamp&quot;: null,
+      &quot;data_latency_s&quot;: null,
+      &quot;address&quot;: null,
+      &quot;tx_hash&quot;: null,
+      &quot;data&quot;: null,
+      &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+    }
+  },
+  &quot;daos&quot;: [
+    {
+      &quot;name&quot;: &quot;Aave&quot;,
+      &quot;snapshot_space&quot;: &quot;aave.eth&quot;,
+      &quot;chain&quot;: &quot;ethereum&quot;,
+      &quot;treasury&quot;: &quot;0x25F2226B597E8F9514B3F68F00f494cF4f286491&quot;,
+      &quot;governance&quot;: {
+        &quot;source&quot;: &quot;snapshot&quot;,
+        &quot;url&quot;: &quot;https://hub.snapshot.org/graphql&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:16+00:00&quot;,
+        &quot;latency_ms&quot;: 232.99421100000473,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: null,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: null,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      },
+      &quot;treasury_balance_wei&quot;: {
+        &quot;source&quot;: &quot;rpc:ethereum&quot;,
+        &quot;url&quot;: &quot;https://eth.llamarpc.com&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:16+00:00&quot;,
+        &quot;latency_ms&quot;: 249.43396499998016,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: &quot;ethereum&quot;,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: &quot;0x25F2226B597E8F9514B3F68F00f494cF4f286491&quot;,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;Uniswap&quot;,
+      &quot;snapshot_space&quot;: &quot;uniswapgovernance.eth&quot;,
+      &quot;chain&quot;: &quot;ethereum&quot;,
+      &quot;treasury&quot;: &quot;0x1a9C8182C09F50C8318d769245beA52c32BE35BC&quot;,
+      &quot;governance&quot;: {
+        &quot;source&quot;: &quot;snapshot&quot;,
+        &quot;url&quot;: &quot;https://hub.snapshot.org/graphql&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:16+00:00&quot;,
+        &quot;latency_ms&quot;: 272.355392999998,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: null,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: null,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      },
+      &quot;treasury_balance_wei&quot;: {
+        &quot;source&quot;: &quot;rpc:ethereum&quot;,
+        &quot;url&quot;: &quot;https://eth.llamarpc.com&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:16+00:00&quot;,
+        &quot;latency_ms&quot;: 251.43356600000288,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: &quot;ethereum&quot;,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: &quot;0x1a9C8182C09F50C8318d769245beA52c32BE35BC&quot;,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      }
+    }
+  ],
+  &quot;tokens&quot;: [
+    {
+      &quot;symbol&quot;: &quot;ETH&quot;,
+      &quot;key&quot;: &quot;coingecko:ethereum&quot;,
+      &quot;price_usd&quot;: null,
+      &quot;quote_compare&quot;: {
+        &quot;coin&quot;: &quot;coingecko:ethereum&quot;,
+        &quot;prices&quot;: {},
+        &quot;spread&quot;: null,
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;records&quot;: {
+          &quot;defillama&quot;: {
+            &quot;source&quot;: &quot;defillama&quot;,
+            &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:ethereum&quot;,
+            &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+            &quot;fetched_at&quot;: &quot;2026-10-25T05:17:17+00:00&quot;,
+            &quot;latency_ms&quot;: 258.53268799994567,
+            &quot;http_code&quot;: null,
+            &quot;chain&quot;: null,
+            &quot;block&quot;: null,
+            &quot;block_timestamp&quot;: null,
+            &quot;data_latency_s&quot;: null,
+            &quot;address&quot;: null,
+            &quot;tx_hash&quot;: null,
+            &quot;data&quot;: null,
+            &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+          }
+        }
+      },
+      &quot;price_record&quot;: {
+        &quot;source&quot;: &quot;defillama&quot;,
+        &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:ethereum&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:17+00:00&quot;,
+        &quot;latency_ms&quot;: 226.91838999998026,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: null,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: null,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      }
+    },
+    {
+      &quot;symbol&quot;: &quot;AAVE&quot;,
+      &quot;key&quot;: &quot;coingecko:aave&quot;,
+      &quot;price_usd&quot;: null,
+      &quot;quote_compare&quot;: {
+        &quot;coin&quot;: &quot;coingecko:aave&quot;,
+        &quot;prices&quot;: {},
+        &quot;spread&quot;: null,
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;records&quot;: {
+          &quot;defillama&quot;: {
+            &quot;source&quot;: &quot;defillama&quot;,
+            &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:aave&quot;,
+            &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+            &quot;fetched_at&quot;: &quot;2026-10-25T05:17:17+00:00&quot;,
+            &quot;latency_ms&quot;: 244.81102400000054,
+            &quot;http_code&quot;: null,
+            &quot;chain&quot;: null,
+            &quot;block&quot;: null,
+            &quot;block_timestamp&quot;: null,
+            &quot;data_latency_s&quot;: null,
+            &quot;address&quot;: null,
+            &quot;tx_hash&quot;: null,
+            &quot;data&quot;: null,
+            &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+          }
+        }
+      },
+      &quot;price_record&quot;: {
+        &quot;source&quot;: &quot;defillama&quot;,
+        &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:aave&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:17+00:00&quot;,
+        &quot;latency_ms&quot;: 279.1309369999908,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: null,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: null,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      }
+    },
+    {
+      &quot;symbol&quot;: &quot;UNI&quot;,
+      &quot;key&quot;: &quot;coingecko:uniswap&quot;,
+      &quot;price_usd&quot;: null,
+      &quot;quote_compare&quot;: {
+        &quot;coin&quot;: &quot;coingecko:uniswap&quot;,
+        &quot;prices&quot;: {},
+        &quot;spread&quot;: null,
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;records&quot;: {
+          &quot;defillama&quot;: {
+            &quot;source&quot;: &quot;defillama&quot;,
+            &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:uniswap&quot;,
+            &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+            &quot;fetched_at&quot;: &quot;2026-10-25T05:17:18+00:00&quot;,
+            &quot;latency_ms&quot;: 224.6214109999869,
+            &quot;http_code&quot;: null,
+            &quot;chain&quot;: null,
+            &quot;block&quot;: null,
+            &quot;block_timestamp&quot;: null,
+            &quot;data_latency_s&quot;: null,
+            &quot;address&quot;: null,
+            &quot;tx_hash&quot;: null,
+            &quot;data&quot;: null,
+            &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+          }
+        }
+      },
+      &quot;price_record&quot;: {
+        &quot;source&quot;: &quot;defillama&quot;,
+        &quot;url&quot;: &quot;https://coins.llama.fi/prices/current/coingecko:uniswap&quot;,
+        &quot;status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;fetched_at&quot;: &quot;2026-10-25T05:17:18+00:00&quot;,
+        &quot;latency_ms&quot;: 245.60798699997122,
+        &quot;http_code&quot;: null,
+        &quot;chain&quot;: null,
+        &quot;block&quot;: null,
+        &quot;block_timestamp&quot;: null,
+        &quot;data_latency_s&quot;: null,
+        &quot;address&quot;: null,
+        &quot;tx_hash&quot;: null,
+        &quot;data&quot;: null,
+        &quot;error&quot;: &quot;URLError: &lt;urlopen error Tunnel connection failed: 403 Forbidden&gt;&quot;
+      }
+    }
+  ],
+  &quot;opportunities&quot;: [
+    {
+      &quot;symbol&quot;: &quot;ETH&quot;,
+      &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;evidence_sources&quot;: 0,
+      &quot;cost&quot;: {
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;reason&quot;: &quot;缺少真实输入: gas_price_gwei, eth_price_usd, pool_liquidity_usd&quot;,
+        &quot;notional_usd&quot;: 10000.0,
+        &quot;gross_usd&quot;: null,
+        &quot;fee_usd&quot;: null,
+        &quot;slippage_usd&quot;: null,
+        &quot;price_impact_usd&quot;: null,
+        &quot;gas_usd&quot;: null,
+        &quot;net_usd&quot;: null,
+        &quot;net_bps&quot;: null,
+        &quot;missing&quot;: [
+          &quot;gas_price_gwei&quot;,
+          &quot;eth_price_usd&quot;,
+          &quot;pool_liquidity_usd&quot;
+        ]
+      },
+      &quot;decision&quot;: {
+        &quot;decision&quot;: &quot;NO_TRADE&quot;,
+        &quot;reason&quot;: &quot;数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易&quot;,
+        &quot;net_bps&quot;: null,
+        &quot;evidence_sources&quot;: 0,
+        &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;disclaimer&quot;: &quot;估计值，非收益承诺；基于所列真实数据与假设。未经人工确认不得连接钱包或执行真实交易。&quot;
+      }
+    },
+    {
+      &quot;symbol&quot;: &quot;AAVE&quot;,
+      &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;evidence_sources&quot;: 0,
+      &quot;cost&quot;: {
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;reason&quot;: &quot;缺少真实输入: gas_price_gwei, eth_price_usd, pool_liquidity_usd&quot;,
+        &quot;notional_usd&quot;: 10000.0,
+        &quot;gross_usd&quot;: null,
+        &quot;fee_usd&quot;: null,
+        &quot;slippage_usd&quot;: null,
+        &quot;price_impact_usd&quot;: null,
+        &quot;gas_usd&quot;: null,
+        &quot;net_usd&quot;: null,
+        &quot;net_bps&quot;: null,
+        &quot;missing&quot;: [
+          &quot;gas_price_gwei&quot;,
+          &quot;eth_price_usd&quot;,
+          &quot;pool_liquidity_usd&quot;
+        ]
+      },
+      &quot;decision&quot;: {
+        &quot;decision&quot;: &quot;NO_TRADE&quot;,
+        &quot;reason&quot;: &quot;数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易&quot;,
+        &quot;net_bps&quot;: null,
+        &quot;evidence_sources&quot;: 0,
+        &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;disclaimer&quot;: &quot;估计值，非收益承诺；基于所列真实数据与假设。未经人工确认不得连接钱包或执行真实交易。&quot;
+      }
+    },
+    {
+      &quot;symbol&quot;: &quot;UNI&quot;,
+      &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+      &quot;evidence_sources&quot;: 0,
+      &quot;cost&quot;: {
+        &quot;status&quot;: &quot;INSUFFICIENT_DATA&quot;,
+        &quot;reason&quot;: &quot;缺少真实输入: gas_price_gwei, eth_price_usd, pool_liquidity_usd&quot;,
+        &quot;notional_usd&quot;: 10000.0,
+        &quot;gross_usd&quot;: null,
+        &quot;fee_usd&quot;: null,
+        &quot;slippage_usd&quot;: null,
+        &quot;price_impact_usd&quot;: null,
+        &quot;gas_usd&quot;: null,
+        &quot;net_usd&quot;: null,
+        &quot;net_bps&quot;: null,
+        &quot;missing&quot;: [
+          &quot;gas_price_gwei&quot;,
+          &quot;eth_price_usd&quot;,
+          &quot;pool_liquidity_usd&quot;
+        ]
+      },
+      &quot;decision&quot;: {
+        &quot;decision&quot;: &quot;NO_TRADE&quot;,
+        &quot;reason&quot;: &quot;数据状态=UNAVAILABLE（真实数据不可得/陈旧），拒绝交易&quot;,
+        &quot;net_bps&quot;: null,
+        &quot;evidence_sources&quot;: 0,
+        &quot;data_status&quot;: &quot;UNAVAILABLE&quot;,
+        &quot;disclaimer&quot;: &quot;估计值，非收益承诺；基于所列真实数据与假设。未经人工确认不得连接钱包或执行真实交易。&quot;
+      }
+    }
+  ],
+  &quot;summary&quot;: {
+    &quot;any_real_data&quot;: false,
+    &quot;trade_signals&quot;: 0,
+    &quot;no_trade&quot;: 3,
+    &quot;note&quot;: &quot;本次扫描所有外部数据源是否可达见各记录 status；无真实数据时不产生交易信号。&quot;
+  }
+}</pre></details>
+</div></body></html>

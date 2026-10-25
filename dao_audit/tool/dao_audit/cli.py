@@ -17,6 +17,9 @@ from . import report as R
 from . import benchmark as B
 from . import fundflow_report as FF
 from . import verify as VERIFY
+from .market import events as MKT
+from .market import dashboard as DASH
+from .market import backtest as BT
 from .rules import RULES
 
 
@@ -222,6 +225,83 @@ def cmd_verify_fundflow(args):
     return 0 if r["verdict"] == "PASS" else 1
 
 
+def _market_cfg(args):
+    root = _root(args)
+    import yaml as _y
+    cfgp = Path(args.config) if getattr(args, "config", None) else root / "config/market.yaml"
+    with open(cfgp, "r", encoding="utf-8") as fh:
+        return root, _y.safe_load(fh)
+
+
+def cmd_market_scan(args):
+    import json
+    root, cfg = _market_cfg(args)
+    scan = MKT.scan(cfg)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "market_scan.json").write_text(
+        json.dumps(scan, ensure_ascii=False, indent=2), encoding="utf-8")
+    html_path = DASH.write(scan, out_dir / "market_dashboard.html")
+    s = scan["summary"]
+    print(f"市场扫描: 真实数据可得={s['any_real_data']}  TRADE={s['trade_signals']}  NO_TRADE={s['no_trade']}")
+    for ch, rec in scan["chains"].items():
+        print(f"  chain {ch}: {rec['status']}  {rec.get('error') or ('block '+str(rec.get('block')))}")
+    for o in scan["opportunities"]:
+        d = o["decision"]
+        print(f"  {o['symbol']}: {d['decision']} — {d['reason']}")
+    print(f"  JSON: {out_dir/'market_scan.json'}")
+    print(f"  看板: {html_path}")
+    return 0
+
+
+def cmd_market_dashboard(args):
+    import json
+    root, cfg = _market_cfg(args)
+    sj = root / "reports_out" / "market_scan.json"
+    if not sj.exists():
+        print("无 market_scan.json，请先运行 market-scan", file=sys.stderr); return 1
+    scan = json.loads(sj.read_text(encoding="utf-8"))
+    print("看板:", DASH.write(scan, root / "reports_out" / "market_dashboard.html"))
+    return 0
+
+
+def cmd_market_backtest(args):
+    import json
+    root, cfg = _market_cfg(args)
+    from .market.sources import SnapshotSource
+    from .market.backtest import Event, run_backtest, defillama_price_at
+    snap = SnapshotSource()
+    events = []
+    # Build events from REAL snapshot proposals; map each DAO to its token key.
+    tok_by_symbol = {t.get("symbol"): t["key"] for t in cfg.get("tokens", [])}
+    sym_by_space = {d["snapshot_space"]: d["name"] for d in cfg.get("daos", [])}
+    name_to_key = {"Aave": tok_by_symbol.get("AAVE"), "Uniswap": tok_by_symbol.get("UNI")}
+    unreachable = 0
+    for d in cfg.get("daos", []):
+        rec = snap.recent_proposals(d["snapshot_space"], first=10)
+        if not rec.ok or not isinstance(rec.data, dict):
+            unreachable += 1; continue
+        key = name_to_key.get(d["name"])
+        for p_ in (rec.data.get("data", {}).get("proposals") or []):
+            if key and p_.get("end"):
+                events.append(Event(ts=int(p_["end"]), coin_key=key, label="proposal_end"))
+    result = {"events_collected": len(events), "snapshot_unreachable": unreachable}
+    if not events:
+        result.update({"status": "INSUFFICIENT_DATA",
+                       "reason": "无法获取真实治理事件（Snapshot 不可达）；不以模拟事件替代。"})
+    else:
+        bt = run_backtest(events, horizon_s=7*24*3600, cost_bps=50.0,
+                          price_at=defillama_price_at())
+        result["backtest"] = bt
+        result["status"] = bt["status"]
+    out = root / "reports_out" / "market_backtest.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"回测: status={result['status']} events={result['events_collected']} "
+          f"snapshot_unreachable={result['snapshot_unreachable']}")
+    print(f"  JSON: {out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -266,6 +346,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     vf = sub.add_parser("recheck", help="干净环境独立复核：重建+全量测试+证据+SHA256")
     vf.set_defaults(func=cmd_verify_fundflow)
+
+    ms = sub.add_parser("market-scan", help="真实数据市场扫描：事件/价格/成本/TRADE决策+看板")
+    ms.add_argument("--config", default=None, help="market.yaml 路径")
+    ms.set_defaults(func=cmd_market_scan)
+
+    md = sub.add_parser("market-dashboard", help="由上次 market-scan 结果重建 HTML 看板")
+    md.add_argument("--config", default=None)
+    md.set_defaults(func=cmd_market_dashboard)
+
+    mb = sub.add_parser("market-backtest", help="事件驱动回测（真实历史数据；防未来泄漏+训练/验证/样本外）")
+    mb.add_argument("--config", default=None)
+    mb.set_defaults(func=cmd_market_backtest)
     return p
 
 

@@ -1,0 +1,47 @@
+# 真实数据市场监控配置（只读）。所有结果必须来自真实数据；源不可达时记 UNAVAILABLE。
+# 不承诺固定收益；净收益非正或证据不足一律 NO TRADE。
+
+# 数据新鲜度上限（秒）：超过则标 STALE，不参与 TRADE 决策
+max_staleness_s: 120
+
+# 只读 EVM RPC（需环境网络策略放行这些主机才可达）
+chains:
+  ethereum:
+    rpc: "https://eth.llamarpc.com"
+  base:
+    rpc: "https://mainnet.base.org"
+  arbitrum:
+    rpc: "https://arb1.arbitrum.io/rpc"
+
+# 关注的 DAO（Snapshot 治理空间 + 链上金库地址，公开标识）
+daos:
+  - name: "Aave"
+    snapshot_space: "aave.eth"
+    chain: ethereum
+    treasury: "0x25F2226B597E8F9514B3F68F00f494cF4f286491"   # Aave Ecosystem Reserve (公开)
+  - name: "Uniswap"
+    snapshot_space: "uniswapgovernance.eth"
+    chain: ethereum
+    treasury: "0x1a9C8182C09F50C8318d769245beA52c32BE35BC"   # Uniswap Timelock (公开)
+
+# 关注代币（DefiLlama coin key）
+tokens:
+  - key: "coingecko:ethereum"
+    symbol: "ETH"
+  - key: "coingecko:aave"
+    symbol: "AAVE"
+  - key: "coingecko:uniswap"
+    symbol: "UNI"
+
+# 成本模型参数
+costs:
+  dex_fee_bps: 30          # 0.30% swap 手续费
+  taker_slippage_bps: 10   # 基础滑点假设
+  gas_limit: 180000        # 一次 swap 估算 gas
+  # gas_price 从 RPC 实时取；不可达则该项 NO TRADE
+  trade_notional_usd: 10000
+
+# 决策阈值
+thresholds:
+  min_net_bps: 15          # 净收益需 > 0.15% 才考虑 TRADE
+  min_evidence_sources: 2  # 至少两个独立 OK 数据源
