@@ -5,6 +5,7 @@ chains:
   base:
     chain_id: 8453
     rpc: "https://mainnet.base.org"
+    rpc_fallbacks: []   # 失败切换备用端点（部署时按需填真实 RPC，或用 BASE_RPC_FALLBACK 环境变量）
     native_coingecko: "coingecko:ethereum"   # gas 以 ETH 计价
     gas_units_per_swap: 150000
     venues:
@@ -21,6 +22,7 @@ chains:
   arbitrum:
     chain_id: 42161
     rpc: "https://arb1.arbitrum.io/rpc"
+    rpc_fallbacks: []   # 失败切换备用端点（部署时按需填，或用 ARBITRUM_RPC_FALLBACK 环境变量）
     native_coingecko: "coingecko:ethereum"
     gas_units_per_swap: 800000              # Arbitrum gas 计量较大
     venues:

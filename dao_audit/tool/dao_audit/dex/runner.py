@@ -19,6 +19,7 @@ Three validation levels are tracked per opportunity:
 No wallet, no real execution. Costs are never lowered to fabricate profit.
 """
 from __future__ import annotations
+import os
 import sqlite3
 import time
 from datetime import datetime, timezone
@@ -40,6 +41,9 @@ CREATE TABLE IF NOT EXISTS opportunities(
   scan_id INTEGER, chain TEXT, block INTEGER, pair TEXT, size_usd REAL,
   gross_usd REAL, cost_usd REAL, net_usd REAL, level INTEGER, ts TEXT);
 CREATE TABLE IF NOT EXISTS failures(ts TEXT, context TEXT, error TEXT);
+CREATE TABLE IF NOT EXISTS chain_rounds(
+  scan_id INTEGER, chain TEXT, trigger_block INTEGER, tip_after INTEGER,
+  staleness_blocks INTEGER, rpc_url TEXT, ts TEXT);
 """
 
 
@@ -50,8 +54,30 @@ def _now():
 def _connect(db_path):
     con = sqlite3.connect(str(db_path))
     con.executescript(SCHEMA)
+    # additive migration for DBs created before chain_rounds existed
+    con.execute("CREATE TABLE IF NOT EXISTS chain_rounds("
+                "scan_id INTEGER, chain TEXT, trigger_block INTEGER, tip_after INTEGER,"
+                "staleness_blocks INTEGER, rpc_url TEXT, ts TEXT)")
     con.commit()
     return con
+
+
+def _rpc_list(cfg: dict, chain: str) -> list:
+    """Ordered RPC endpoints for a chain: config primary + config fallbacks +
+    env override (CHAIN_RPC_FALLBACK, e.g. BASE_RPC_FALLBACK). De-duplicated.
+    Operators supply real fallbacks at deploy time; the loop fails over on a
+    dead primary and keeps using the healthy one."""
+    ccfg = cfg["chains"][chain]
+    urls = [ccfg.get("rpc")]
+    urls += list(ccfg.get("rpc_fallbacks", []) or [])
+    env = os.environ.get(f"{chain.upper()}_RPC_FALLBACK")
+    if env:
+        urls += [u.strip() for u in env.split(",") if u.strip()]
+    seen = set(); out = []
+    for u in urls:
+        if u and u not in seen:
+            seen.add(u); out.append(u)
+    return out
 
 
 def _last_block(con, chain):
@@ -72,16 +98,27 @@ def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0
     con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_started',?)", (_now(),))
     con.commit()
 
-    def _bn_retry(rpc):
-        for i, w in enumerate([0] + list(backoff)):
-            if w:
-                time.sleep(w)
-            t0 = time.monotonic()
-            bn = block_number(rpc)
-            lat = (time.monotonic() - t0) * 1000
-            if bn is not None:
-                return bn, lat
-        return None, None
+    def _bn_failover(chain):
+        """Try each RPC (primary then fallbacks) with backoff. On success via a
+        non-primary endpoint, PROMOTE it into cfg so the scan uses the healthy
+        one too. Returns (block, latency_ms, rpc_url) or (None, None, None)."""
+        urls = _rpc_list(cfg, chain)
+        for idx, rpc in enumerate(urls):
+            for w in [0] + list(backoff):
+                if w:
+                    time.sleep(w)
+                t0 = time.monotonic()
+                bn = block_number(rpc)
+                lat = (time.monotonic() - t0) * 1000
+                if bn is not None:
+                    if idx > 0 and cfg["chains"][chain].get("rpc") != rpc:
+                        con.execute("INSERT INTO failures VALUES(?,?,?)",
+                                    (_now(), f"rpc_failover:{chain}",
+                                     f"primary dead; switched to fallback #{idx}"))
+                        con.commit()
+                        cfg["chains"][chain]["rpc"] = rpc  # promote healthy endpoint
+                    return bn, lat, rpc
+        return None, None, None
 
     try:
         while True:
@@ -93,18 +130,19 @@ def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0
             # 1) incremental trigger: has any chain advanced?
             advanced = False
             bn_ms_total = 0.0
+            trig = {}  # chain -> (trigger_block, rpc_url) for advanced chains
             for chain in chains:
-                rpc = cfg["chains"][chain]["rpc"]
-                bn, lat = _bn_retry(rpc)
+                bn, lat, rpc = _bn_failover(chain)
                 if bn is None:
                     con.execute("INSERT INTO failures VALUES(?,?,?)",
-                                (_now(), f"block_number:{chain}", "unreachable after retries"))
+                                (_now(), f"block_number:{chain}", "unreachable after retries+failover"))
                     con.commit()
                     continue
                 bn_ms_total += (lat or 0)
                 last = _last_block(con, chain)
                 if last is None or bn > last:
                     advanced = True
+                    trig[chain] = (bn, rpc)
                     con.execute("INSERT OR IGNORE INTO blocks VALUES(?,?,?)", (chain, bn, _now()))
             con.commit()
             if not advanced:
@@ -154,6 +192,14 @@ def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0
                                  level, _now()))
             con.execute("UPDATE scans SET n_pairs=?,n_positive_spread=?,n_positive_net=? WHERE id=?",
                         (n_pairs, n_pos_spread, n_pos_net, scan_id))
+            # 3) per-chain quote staleness: how many blocks the chain advanced
+            # DURING the scan (tip_after - trigger_block) = how stale the quotes
+            # are by the time results land. Real measurement, one extra bn read.
+            for chain, (tb, rpc) in trig.items():
+                tip_after = block_number(cfg["chains"][chain]["rpc"])
+                stale = (tip_after - tb) if (tip_after is not None and tb is not None) else None
+                con.execute("INSERT INTO chain_rounds VALUES(?,?,?,?,?,?,?)",
+                            (scan_id, chain, tb, tip_after, stale, rpc, _now()))
             con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_last',?)", (_now(),))
             con.commit()
             time.sleep(rate_limit_s)
@@ -163,6 +209,58 @@ def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0
         con.close()
     return {"rounds": rounds, "scans": scans_done,
             "elapsed_s": round(time.monotonic() - start, 1), "db": str(db_path)}
+
+
+def health_check(cfg: dict, db_path, max_scan_age_s: float = 300.0) -> dict:
+    """Process/RPC/DB health for monitoring & alerting. Checks each chain's RPC
+    (with failover), DB writability, and recency of the last scan. Returns a
+    dict with an overall `healthy` flag and per-check detail; the CLI maps it to
+    an exit code so systemd/cron/an external alerter can act on it."""
+    checks = []
+
+    def add(name, ok, detail):
+        checks.append({"check": name, "ok": bool(ok), "detail": detail})
+
+    # 1) per-chain RPC reachability (primary + fallbacks)
+    for chain in cfg.get("chains", {}):
+        urls = _rpc_list(cfg, chain)
+        reached = None; used = None
+        for u in urls:
+            bn = block_number(u)
+            if bn is not None:
+                reached = bn; used = u; break
+        add(f"rpc:{chain}", reached is not None,
+            {"block": reached, "endpoint_used": used, "endpoints_tried": len(urls)})
+
+    # 2) DB writable + last-scan recency
+    try:
+        con = _connect(db_path)
+        con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('health_probe',?)", (_now(),))
+        con.commit()
+        meta = dict(con.execute("SELECT key,value FROM meta").fetchall())
+        n_scans = con.execute("SELECT COUNT(*) FROM scans").fetchone()[0]
+        con.close()
+        add("db_writable", True, {"path": str(db_path), "scans": n_scans})
+        last = meta.get("run_last")
+        age = None
+        if last:
+            try:
+                age = (datetime.now(timezone.utc) - datetime.fromisoformat(last)).total_seconds()
+            except Exception:
+                age = None
+        # recency only meaningful once a run has recorded scans
+        fresh = (age is not None and age <= max_scan_age_s) if n_scans else True
+        add("scan_recency", fresh,
+            {"run_last": last, "age_s": round(age, 1) if age is not None else None,
+             "max_scan_age_s": max_scan_age_s,
+             "note": "无扫描记录时视为通过（尚未开始）" if not n_scans else ""})
+    except Exception as e:
+        add("db_writable", False, {"error": repr(e)[:200]})
+
+    healthy = all(c["ok"] for c in checks)
+    return {"generated_at": _now(), "healthy": healthy, "checks": checks,
+            "note": ("健康检查供 systemd/cron/外部告警调用；healthy=False 时 CLI 以非零退出码返回。"
+                     "RPC 检查含失败切换；scan_recency 在无扫描记录时视为通过。")}
 
 
 def acceptance_from_db(db_path) -> dict:
@@ -184,6 +282,7 @@ def acceptance_from_db(db_path) -> dict:
                  "n": r[6]} for r in rows]
     # opportunity lifetime: consecutive scans with positive net per (chain,pair,size)
     life = _lifetimes(con)
+    per_chain = _per_chain_stats(con)
     # observation span
     span_s = None
     if meta.get("run_started") and meta.get("run_last"):
@@ -206,6 +305,7 @@ def acceptance_from_db(db_path) -> dict:
         "failures": n_fail,
         "failure_rate": round(n_fail / max(1, n_scans + n_fail), 4),
         "opportunity_lifetime": life,
+        "per_chain_stats": per_chain,
         "per_path_net_by_size": per_path,
         "verdict": "NO_TRADE" if n_pos_net == 0 else "HAS_POSITIVE_NET",
         "note": ("连续时长/区块数/扫描次数均来自持久化 DB 的真实记录；positive_net=扣全部成本后净>0；"
@@ -213,6 +313,39 @@ def acceptance_from_db(db_path) -> dict:
                  "若 continuous_seconds_observed 很短，说明是短验证跑，不等于 24-72h 连续监控——"
                  "连续运行请按 deploy/ 部署到常驻服务器。"),
     }
+
+
+def _per_chain_stats(con):
+    """Per-chain scan coverage and quote staleness (真实记录推导).
+    - missed_block_ratio: of all blocks that existed in the observed window
+      [min_block, max_block], the fraction we did NOT scan (speed vs block
+      cadence). High ratio = scan can't keep up with block time.
+    - staleness_blocks: blocks the chain advanced DURING a scan (tip_after -
+      trigger_block); how stale the quotes are by the time results land."""
+    out = []
+    chains = [r[0] for r in con.execute("SELECT DISTINCT chain FROM blocks").fetchall()]
+    for chain in chains:
+        mn, mx, nrec = con.execute(
+            "SELECT MIN(block), MAX(block), COUNT(DISTINCT block) FROM blocks WHERE chain=?",
+            (chain,)).fetchone()
+        span = (mx - mn + 1) if (mn is not None and mx is not None) else 0
+        missed = max(0, span - nrec) if span else 0
+        missed_ratio = round(missed / span, 4) if span else None
+        st = con.execute("SELECT AVG(staleness_blocks), MAX(staleness_blocks), COUNT(*) "
+                         "FROM chain_rounds WHERE chain=? AND staleness_blocks IS NOT NULL",
+                         (chain,)).fetchone()
+        avg_wall = con.execute(
+            "SELECT AVG(wall_ms) FROM scans WHERE id IN "
+            "(SELECT scan_id FROM chain_rounds WHERE chain=?)", (chain,)).fetchone()[0]
+        out.append({
+            "chain": chain, "window_block_span": span, "scanned_blocks": nrec,
+            "missed_blocks": missed, "missed_block_ratio": missed_ratio,
+            "avg_staleness_blocks": round(st[0], 2) if st[0] is not None else None,
+            "max_staleness_blocks": st[1], "staleness_samples": st[2],
+            "avg_compute_ms": round(avg_wall, 1) if avg_wall is not None else None,
+            "note": ("missed_block_ratio 高=扫描速度跟不上该链出块节奏；staleness_blocks=扫描"
+                     "期间链前进的区块数（报价过期程度）。缺 tip 读数时为 None，不臆测。")})
+    return out
 
 
 def _lifetimes(con):
@@ -253,7 +386,16 @@ def acceptance_markdown(rep: dict) -> str:
     for lf in rep["opportunity_lifetime"]:
         L.append(f"| {lf['chain']} | {lf['pair']} | {lf['size_usd']:,} | "
                  f"{lf['max_consecutive_positive_scans']} | {lf['samples']} |")
-    L += ["", "## 各路径净收益与容量（按本金）", "",
+    L += ["", "## 各链扫描覆盖与报价时效（真实记录推导）", "",
+          "| 链 | 窗口区块跨度 | 已扫描区块 | 漏扫区块 | 漏块率 | 平均过期(区块) | 最大过期 | 平均计算(ms) |",
+          "|----|--------------|------------|----------|--------|----------------|----------|--------------|"]
+    for c in rep.get("per_chain_stats", []):
+        L.append(f"| {c['chain']} | {c['window_block_span']} | {c['scanned_blocks']} | "
+                 f"{c['missed_blocks']} | {c['missed_block_ratio']} | {c['avg_staleness_blocks']} | "
+                 f"{c['max_staleness_blocks']} | {c['avg_compute_ms']} |")
+    L += ["", "> 漏块率高=单次扫描跟不上该链出块节奏（应收窄 venue/pair/size 或靠 Tier-1 批量提速）；"
+          "过期区块数=扫描期间链前进的区块数。两者均由持久化记录推导，非估计。",
+          "", "## 各路径净收益与容量（按本金）", "",
           "| 链 | 交易对 | 本金USD | 最大净 | 最小净 | 平均净 | 样本 |",
           "|----|--------|---------|--------|--------|--------|------|"]
     for p in rep["per_path_net_by_size"]:

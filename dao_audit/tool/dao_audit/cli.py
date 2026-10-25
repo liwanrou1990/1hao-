@@ -535,6 +535,20 @@ def cmd_dex_acceptance(args):
     return 0
 
 
+def cmd_dex_health(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    db = Path(args.db) if args.db else out_dir / "dex_monitor.db"
+    rep = DEXRUN.health_check(cfg, db, max_scan_age_s=float(args.max_scan_age))
+    (out_dir / "dex_health.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2),
+                                             encoding="utf-8")
+    print(f"健康检查: healthy={rep['healthy']}")
+    for c in rep["checks"]:
+        print(f"  [{'OK ' if c['ok'] else 'BAD'}] {c['check']}: {c['detail']}")
+    return 0 if rep["healthy"] else 3
+
+
 def cmd_dex_perf(args):
     import json
     root, cfg = _dex_cfg(args)
@@ -705,6 +719,11 @@ def build_parser() -> argparse.ArgumentParser:
     dt.add_argument("--chain", default="base")
     dt.add_argument("--size", default=1000)
     dt.set_defaults(func=cmd_dex_tier1)
+
+    dh = sub.add_parser("dex-health", help="健康检查(RPC失败切换/DB可写/扫描时效)；非零退出=不健康")
+    dh.add_argument("--config", default=None); dh.add_argument("--db", default=None)
+    dh.add_argument("--max-scan-age", default=300, help="最近一次扫描允许的最大秒龄")
+    dh.set_defaults(func=cmd_dex_health)
     return p
 
 
