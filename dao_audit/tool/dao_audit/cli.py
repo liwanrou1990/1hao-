@@ -27,6 +27,7 @@ from .market import rpcverify as RPCV
 from .market import events_study as ESTUDY
 from .dex import scan as DEXSCAN
 from .dex import graph as DEXGRAPH
+from .dex import runner as DEXRUN
 from .rules import RULES
 
 
@@ -503,6 +504,36 @@ def cmd_dex_graph(args):
     return 0
 
 
+def cmd_dex_run(args):
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"; out_dir.mkdir(parents=True, exist_ok=True)
+    db = Path(args.db) if args.db else out_dir / "dex_monitor.db"
+    print(f"持续监控启动: db={db} max_rounds={args.max_rounds} max_seconds={args.max_seconds} "
+          f"(0=无界，用于常驻部署)")
+    res = DEXRUN.run_continuous(cfg, db, max_rounds=int(args.max_rounds),
+                                max_seconds=int(args.max_seconds), poll_s=float(args.poll),
+                                rate_limit_s=float(args.rate_limit))
+    print(f"结束: rounds={res['rounds']} scans={res['scans']} elapsed={res['elapsed_s']}s db={res['db']}")
+    return 0
+
+
+def cmd_dex_acceptance(args):
+    import json
+    root, cfg = _dex_cfg(args)
+    out_dir = root / "reports_out"
+    db = Path(args.db) if args.db else out_dir / "dex_monitor.db"
+    if not db.exists():
+        print(f"无 DB {db}，请先运行 dex-run", file=sys.stderr); return 1
+    rep = DEXRUN.acceptance_from_db(db)
+    (out_dir / "dex_acceptance.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "dex_acceptance.md").write_text(DEXRUN.acceptance_markdown(rep), encoding="utf-8")
+    print(f"验收: 连续{rep['continuous_seconds_observed']}s 区块{rep['blocks_observed']} 扫描{rep['valid_scans']} "
+          f"正价差{rep['positive_spread_count']} 正净收益{rep['positive_net_count']} "
+          f"Fork验证{rep['fork_verified_count']} 失败率{rep['failure_rate']} 判定={rep['verdict']}")
+    print(f"  报告: {out_dir/'dex_acceptance.md'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dao-audit",
         description="DAO 治理合约安全审计系统 (仅授权/本地链/模拟资产)")
@@ -601,6 +632,16 @@ def build_parser() -> argparse.ArgumentParser:
     dg.add_argument("--config", default=None)
     dg.add_argument("--max-hops", default=3)
     dg.set_defaults(func=cmd_dex_graph)
+
+    dn = sub.add_parser("dex-run", help="持续监控(新区块触发+SQLite持久化+续跑)；常驻部署入口")
+    dn.add_argument("--config", default=None); dn.add_argument("--db", default=None)
+    dn.add_argument("--max-rounds", default=0); dn.add_argument("--max-seconds", default=0)
+    dn.add_argument("--poll", default=10); dn.add_argument("--rate-limit", default=2)
+    dn.set_defaults(func=cmd_dex_run)
+
+    da = sub.add_parser("dex-acceptance", help="从监控DB生成连续监控验收报告")
+    da.add_argument("--config", default=None); da.add_argument("--db", default=None)
+    da.set_defaults(func=cmd_dex_acceptance)
     return p
 
 

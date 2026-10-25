@@ -1,0 +1,22 @@
+[Unit]
+Description=DEX arbitrage continuous monitor (read-only, no execution)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/dao_audit
+Environment=PYTHONPATH=/opt/dao_audit/tool
+# Optional secure env (uncomment + set):
+# Environment=ALCHEMY_ETH_URL=
+ExecStart=/usr/bin/python3 -m dao_audit dex-run --db /var/lib/dexmon/dex_monitor.db --poll 10 --rate-limit 2
+Restart=always
+RestartSec=5
+# Hardening: read-only except the DB dir
+StateDirectory=dexmon
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/dexmon
+
+[Install]
+WantedBy=multi-user.target

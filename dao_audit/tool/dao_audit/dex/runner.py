@@ -1,0 +1,267 @@
+"""Continuous, deployable DEX arbitrage monitor with persistence.
+
+Upgrades single scans into a block-triggered continuous loop:
+- Per chain, poll block height; only (re)scan when a NEW block appears
+  (incremental trigger), so idle blocks cost one cheap block_number call.
+- Persist everything to SQLite (blocks, scans, opportunities, failures) so a
+  24-72h run survives restarts and RESUMES from the last observed block.
+- Retry with exponential backoff, rate limiting, and error recovery: a failed
+  RPC/scan is logged to `failures` and the loop continues.
+- Record per-round wall time, block-number RPC latency, block height and data
+  staleness. Profit is judged only when the scan completed on a fresh block
+  with complete quotes.
+
+Three validation levels are tracked per opportunity:
+  1 = quote_positive  (gross spread > 0 from executable quotes)
+  2 = fork_positive   (full multi-leg fork net > 0; set by the fork test)
+  3 = mainnet_realized(NEVER set here — no real execution)
+
+No wallet, no real execution. Costs are never lowered to fabricate profit.
+"""
+from __future__ import annotations
+import sqlite3
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+from .quotes import block_number
+from .scan import scan
+
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE IF NOT EXISTS blocks(
+  chain TEXT, block INTEGER, observed_at TEXT, PRIMARY KEY(chain, block));
+CREATE TABLE IF NOT EXISTS scans(
+  id INTEGER PRIMARY KEY AUTOINCREMENT, started_at TEXT, wall_ms REAL,
+  blocknum_rpc_ms REAL, chains TEXT, n_pairs INTEGER,
+  n_positive_spread INTEGER, n_positive_net INTEGER, eth_price REAL);
+CREATE TABLE IF NOT EXISTS opportunities(
+  scan_id INTEGER, chain TEXT, block INTEGER, pair TEXT, size_usd REAL,
+  gross_usd REAL, cost_usd REAL, net_usd REAL, level INTEGER, ts TEXT);
+CREATE TABLE IF NOT EXISTS failures(ts TEXT, context TEXT, error TEXT);
+"""
+
+
+def _now():
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _connect(db_path):
+    con = sqlite3.connect(str(db_path))
+    con.executescript(SCHEMA)
+    con.commit()
+    return con
+
+
+def _last_block(con, chain):
+    row = con.execute("SELECT MAX(block) FROM blocks WHERE chain=?", (chain,)).fetchone()
+    return row[0] if row and row[0] is not None else None
+
+
+def run_continuous(cfg: dict, db_path, max_rounds: int = 0, max_seconds: int = 0,
+                   poll_s: float = 10.0, rate_limit_s: float = 2.0,
+                   backoff=(1, 2, 4, 8)) -> dict:
+    """Block-triggered continuous loop. max_rounds/max_seconds=0 means unbounded
+    (for server deployment); set them to bound a validation run."""
+    con = _connect(db_path)
+    chains = list(cfg.get("chains", {}).keys())
+    start = time.monotonic()
+    rounds = 0
+    scans_done = 0
+    con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_started',?)", (_now(),))
+    con.commit()
+
+    def _bn_retry(rpc):
+        for i, w in enumerate([0] + list(backoff)):
+            if w:
+                time.sleep(w)
+            t0 = time.monotonic()
+            bn = block_number(rpc)
+            lat = (time.monotonic() - t0) * 1000
+            if bn is not None:
+                return bn, lat
+        return None, None
+
+    try:
+        while True:
+            if max_rounds and rounds >= max_rounds:
+                break
+            if max_seconds and (time.monotonic() - start) >= max_seconds:
+                break
+            rounds += 1
+            # 1) incremental trigger: has any chain advanced?
+            advanced = False
+            bn_ms_total = 0.0
+            for chain in chains:
+                rpc = cfg["chains"][chain]["rpc"]
+                bn, lat = _bn_retry(rpc)
+                if bn is None:
+                    con.execute("INSERT INTO failures VALUES(?,?,?)",
+                                (_now(), f"block_number:{chain}", "unreachable after retries"))
+                    con.commit()
+                    continue
+                bn_ms_total += (lat or 0)
+                last = _last_block(con, chain)
+                if last is None or bn > last:
+                    advanced = True
+                    con.execute("INSERT OR IGNORE INTO blocks VALUES(?,?,?)", (chain, bn, _now()))
+            con.commit()
+            if not advanced:
+                time.sleep(poll_s)
+                continue
+
+            # 2) scan on the fresh block(s)
+            t0 = time.monotonic()
+            try:
+                rep = scan(cfg)
+            except Exception as e:
+                con.execute("INSERT INTO failures VALUES(?,?,?)", (_now(), "scan", repr(e)[:200]))
+                con.commit()
+                time.sleep(rate_limit_s)
+                continue
+            wall = (time.monotonic() - t0) * 1000
+            scans_done += 1
+            if rep.get("status") != "OK":
+                con.execute("INSERT INTO failures VALUES(?,?,?)",
+                            (_now(), "scan_status", rep.get("reason", "")[:200]))
+                con.commit()
+                time.sleep(rate_limit_s)
+                continue
+
+            n_pairs = 0; n_pos_spread = 0; n_pos_net = 0
+            cur = con.execute("INSERT INTO scans(started_at,wall_ms,blocknum_rpc_ms,chains,"
+                              "n_pairs,n_positive_spread,n_positive_net,eth_price) "
+                              "VALUES(?,?,?,?,?,?,?,?)",
+                              (_now(), wall, bn_ms_total, ",".join(chains), 0, 0, 0,
+                               rep.get("eth_price_usd")))
+            scan_id = cur.lastrowid
+            for r in rep.get("same_chain", []):
+                best = r.get("best")
+                for s in r.get("sizes", []):
+                    if s.get("status") == "NO_QUOTE":
+                        continue
+                    n_pairs += 1
+                    gross = s.get("gross_usd"); net = s.get("net_usd")
+                    if gross is not None and gross > 0:
+                        n_pos_spread += 1
+                    level = 1 if (gross is not None and gross > 0) else 0
+                    if net is not None and net > 0:
+                        n_pos_net += 1
+                    con.execute("INSERT INTO opportunities VALUES(?,?,?,?,?,?,?,?,?,?)",
+                                (scan_id, r["chain"], r.get("block"), r["pair"],
+                                 s.get("size_usd"), gross, s.get("total_cost_usd"), net,
+                                 level, _now()))
+            con.execute("UPDATE scans SET n_pairs=?,n_positive_spread=?,n_positive_net=? WHERE id=?",
+                        (n_pairs, n_pos_spread, n_pos_net, scan_id))
+            con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_last',?)", (_now(),))
+            con.commit()
+            time.sleep(rate_limit_s)
+    finally:
+        con.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('run_ended',?)", (_now(),))
+        con.commit()
+        con.close()
+    return {"rounds": rounds, "scans": scans_done,
+            "elapsed_s": round(time.monotonic() - start, 1), "db": str(db_path)}
+
+
+def acceptance_from_db(db_path) -> dict:
+    """Build the acceptance report from persisted data only."""
+    con = _connect(db_path)
+    meta = dict(con.execute("SELECT key,value FROM meta").fetchall())
+    blocks = con.execute("SELECT COUNT(*), COUNT(DISTINCT chain) FROM blocks").fetchone()
+    n_scans = con.execute("SELECT COUNT(*) FROM scans").fetchone()[0]
+    agg = con.execute("SELECT COALESCE(SUM(n_positive_spread),0), COALESCE(SUM(n_positive_net),0),"
+                      "COALESCE(AVG(wall_ms),0), COALESCE(AVG(blocknum_rpc_ms),0) FROM scans").fetchone()
+    n_fail = con.execute("SELECT COUNT(*) FROM failures").fetchone()[0]
+    fork_positive = con.execute("SELECT COUNT(*) FROM opportunities WHERE level>=2").fetchone()[0]
+    mainnet_realized = con.execute("SELECT COUNT(*) FROM opportunities WHERE level>=3").fetchone()[0]
+    # per-pair best/worst net across the run, by size
+    rows = con.execute("SELECT chain,pair,size_usd,MAX(net_usd),MIN(net_usd),AVG(net_usd),COUNT(*) "
+                       "FROM opportunities GROUP BY chain,pair,size_usd ORDER BY MAX(net_usd) DESC").fetchall()
+    per_path = [{"chain": r[0], "pair": r[1], "size_usd": r[2], "max_net": r[3],
+                 "min_net": r[4], "avg_net": round(r[5], 4) if r[5] is not None else None,
+                 "n": r[6]} for r in rows]
+    # opportunity lifetime: consecutive scans with positive net per (chain,pair,size)
+    life = _lifetimes(con)
+    # observation span
+    span_s = None
+    if meta.get("run_started") and meta.get("run_last"):
+        try:
+            a = datetime.fromisoformat(meta["run_started"]); b = datetime.fromisoformat(meta["run_last"])
+            span_s = (b - a).total_seconds()
+        except Exception:
+            span_s = None
+    con.close()
+    n_pos_net = agg[1]
+    return {
+        "run_started": meta.get("run_started"), "run_last": meta.get("run_last"),
+        "run_ended": meta.get("run_ended"),
+        "continuous_seconds_observed": span_s,
+        "blocks_observed": blocks[0], "chains": blocks[1],
+        "valid_scans": n_scans,
+        "positive_spread_count": agg[0], "positive_net_count": n_pos_net,
+        "fork_verified_count": fork_positive, "mainnet_realized_count": mainnet_realized,
+        "avg_scan_wall_ms": round(agg[2], 1), "avg_blocknum_rpc_ms": round(agg[3], 1),
+        "failures": n_fail,
+        "failure_rate": round(n_fail / max(1, n_scans + n_fail), 4),
+        "opportunity_lifetime": life,
+        "per_path_net_by_size": per_path,
+        "verdict": "NO_TRADE" if n_pos_net == 0 else "HAS_POSITIVE_NET",
+        "note": ("连续时长/区块数/扫描次数均来自持久化 DB 的真实记录；positive_net=扣全部成本后净>0；"
+                 "fork_verified 需完整多腿 fork 通过；mainnet_realized 永不在此置位（不执行真实交易）。"
+                 "若 continuous_seconds_observed 很短，说明是短验证跑，不等于 24-72h 连续监控——"
+                 "连续运行请按 deploy/ 部署到常驻服务器。"),
+    }
+
+
+def _lifetimes(con):
+    """Max consecutive scans (ordered) with net>0 per (chain,pair,size)."""
+    keys = con.execute("SELECT DISTINCT chain,pair,size_usd FROM opportunities").fetchall()
+    out = []
+    for (chain, pair, size) in keys:
+        seq = con.execute("SELECT net_usd FROM opportunities WHERE chain=? AND pair=? AND size_usd=? "
+                          "ORDER BY scan_id", (chain, pair, size)).fetchall()
+        best = cur = 0
+        for (net,) in seq:
+            if net is not None and net > 0:
+                cur += 1; best = max(best, cur)
+            else:
+                cur = 0
+        out.append({"chain": chain, "pair": pair, "size_usd": size,
+                    "max_consecutive_positive_scans": best, "samples": len(seq)})
+    return out
+
+
+def acceptance_markdown(rep: dict) -> str:
+    L = ["# DEX 连续监控验收报告", "",
+         "> 数据全部来自持久化 SQLite 的真实记录。不执行真实交易；无正净收益则 NO_TRADE。", ""]
+    L += [f"- 连续监控真实时长: **{rep['continuous_seconds_observed']} 秒**"
+          f"（起 {rep['run_started']} 至 {rep['run_last']}）",
+          f"- 已观察区块数: {rep['blocks_observed']}（{rep['chains']} 条链）",
+          f"- 有效扫描次数: {rep['valid_scans']}",
+          f"- 正价差出现次数(quote_positive): {rep['positive_spread_count']}",
+          f"- 扣成本后正收益次数(net>0): {rep['positive_net_count']}",
+          f"- Fork 完整验证成功次数: {rep['fork_verified_count']}",
+          f"- 主网实际成交次数: {rep['mainnet_realized_count']}（设计上恒为 0，不执行真实交易）",
+          f"- 平均扫描耗时: {rep['avg_scan_wall_ms']} ms；平均区块号 RPC 延迟: {rep['avg_blocknum_rpc_ms']} ms",
+          f"- 失败次数/失败率: {rep['failures']} / {rep['failure_rate']}",
+          f"- **判定: {rep['verdict']}**", "",
+          "## 机会持续时间（连续正净收益扫描数）", "",
+          "| 链 | 交易对 | 本金USD | 最大连续正收益扫描 | 样本 |",
+          "|----|--------|---------|--------------------|------|"]
+    for lf in rep["opportunity_lifetime"]:
+        L.append(f"| {lf['chain']} | {lf['pair']} | {lf['size_usd']:,} | "
+                 f"{lf['max_consecutive_positive_scans']} | {lf['samples']} |")
+    L += ["", "## 各路径净收益与容量（按本金）", "",
+          "| 链 | 交易对 | 本金USD | 最大净 | 最小净 | 平均净 | 样本 |",
+          "|----|--------|---------|--------|--------|--------|------|"]
+    for p in rep["per_path_net_by_size"]:
+        L.append(f"| {p['chain']} | {p['pair']} | {p['size_usd']:,} | {p['max_net']} | "
+                 f"{p['min_net']} | {p['avg_net']} | {p['n']} |")
+    L += ["", f"> {rep['note']}"]
+    if rep["verdict"] == "NO_TRADE":
+        L += ["", "## 结论", "",
+              "在已记录的连续监控窗口内，未出现扣除全部成本后为正的可执行套利机会 → **NO_TRADE**。"
+              "不制造盈利结论。要积累 24–72h，请按 deploy/ 部署常驻运行。"]
+    return "\n".join(L)
