@@ -9,5 +9,7 @@
   "commit": "ab22c084bacb2636a1aebf9759890063eb6e4946",
   "pragma": "^0.5.16",
   "rationale": "deployed Uniswap governance (2020-09); snapshot voting via getPriorVotes, 2-day+ timelock, admin = timelock; no known vulnerability"
- }
+ },
+ "source_type": "control",
+ "source_certainty": "verified"
 }

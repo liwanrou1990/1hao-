@@ -28,5 +28,7 @@
    "https://github.com/code-423n4/2023-06-llama-findings/issues/62",
    "https://github.com/llamaxyz/llama/commit/c053b8654c38462f49642c6d67ee83a1d32c1e3e"
   ]
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

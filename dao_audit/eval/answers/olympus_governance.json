@@ -39,5 +39,8 @@
    "https://github.com/code-423n4/2022-08-olympus-findings/issues/392",
    "https://github.com/code-423n4/2022-08-olympus-findings/issues/239"
   ]
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "contest repo used instead of the (private) project repo"
 }

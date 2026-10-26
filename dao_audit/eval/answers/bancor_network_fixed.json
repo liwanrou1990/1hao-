@@ -10,5 +10,7 @@
   "commit": "47d8663d720d49aed55710039875070d514baca4",
   "pragma": "0.4.26",
   "rationale": "safeApprove/safeTransfer/safeTransferFrom are internal; no public asset-moving entry without the network's own checks"
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

@@ -40,5 +40,7 @@
    "https://github.com/banteg/evil-jar",
    "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2020-11/Pickle_exp.sol"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

@@ -1,0 +1,183 @@
+{
+  "case": "furucombo_proxy_fixed",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-eth",
+      "contract": "Proxy",
+      "function": "_postProcess",
+      "line": 293,
+      "title": "arbitrary-send-eth",
+      "evidence": "Proxy._postProcess() (contracts/Proxy.sol#293-316) sends eth to arbitrary user\n\tDangerous calls:\n\t- msg.sender.transfer(amount_scope_0) (contracts/Proxy.sol#311)",
+      "file": "Proxy.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [],
+  "build": {
+    "case": "furucombo_proxy_fixed",
+    "repo": "https://github.com/dinngo/furucombo-contract",
+    "commit": "b096f10b4081f0cbc459cea75eddfe5e81d7b2e1",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "Config.sol": true,
+      "HandlerBase.sol": true,
+      "IProxy.sol": true,
+      "IRegistry.sol": true,
+      "LibCache.sol": true,
+      "LibParam.sol": true,
+      "LibStack.sol": true,
+      "Proxy.sol": true,
+      "Registry.sol": true,
+      "Storage.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-04-07T18:47:12+08:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "3.3.0",
+        "declared_in": "package.json (range)",
+        "resolution": "exact",
+        "installed": "3.3.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/GSN/Context.sol": "9a3d1e5be0f0ace13e2d9aa1d0a1c3a6574983983ad5de94fc412f878bf7fe89",
+          "@openzeppelin/contracts/access/Ownable.sol": "871544f2a2afa21f1d57dcdfcf5a60a7715c8afc47804f47d1c886dcf9726242",
+          "@openzeppelin/contracts/math/SafeMath.sol": "38e47d1b5299ce0d5e48db837ed9248449043c50d90ffa0ee2ceb58ffde942c2",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "0573c2961569aa4906845d0cd428b5b7394956170054ceeaa8f8af96cd44875c",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "eea796f96939e7dd6119de00941717ce5772d8a942b184f5e48d2b962d0ab655",
+          "@openzeppelin/contracts/utils/Address.sol": "7a6f9acee77ad6aa4db616c473d507a5726698c3bd9005d6c54d8258c3cb6480"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/GSN/Context.sol": "9a3d1e5be0f0ace13e2d9aa1d0a1c3a6574983983ad5de94fc412f878bf7fe89",
+      "@openzeppelin/contracts/access/Ownable.sol": "871544f2a2afa21f1d57dcdfcf5a60a7715c8afc47804f47d1c886dcf9726242",
+      "@openzeppelin/contracts/math/SafeMath.sol": "38e47d1b5299ce0d5e48db837ed9248449043c50d90ffa0ee2ceb58ffde942c2",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "0573c2961569aa4906845d0cd428b5b7394956170054ceeaa8f8af96cd44875c",
+      "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "eea796f96939e7dd6119de00941717ce5772d8a942b184f5e48d2b962d0ab655",
+      "@openzeppelin/contracts/utils/Address.sol": "7a6f9acee77ad6aa4db616c473d507a5726698c3bd9005d6c54d8258c3cb6480",
+      "contracts/Config.sol": "b997a3259689c16de8c9e90416aedeca755f7d7fb57a59d94067c6f5a666696b",
+      "contracts/Proxy.sol": "a385f789de18ae317fd6b068d09ce6d017b39f5131c3dcc73504fd7c5fcf92d6",
+      "contracts/Registry.sol": "37e271e19fa99dd9830805d0d26f451c8efc197d2d36f8d783f0d3bcf3afb115",
+      "contracts/Storage.sol": "c9846ed11704dd61ddb88b9995241b8fa75c455e57469b0fa80809f67d0084d3",
+      "contracts/handlers/HandlerBase.sol": "b324a34a112a0eec79d142fe761073d5d671a9bee333f37c63ab4e02cc691d63",
+      "contracts/interface/IERC20Usdt.sol": "34a070a05bce378ce18bafd68bd953a9236aa4bcc80febccb0abb711cbf9b4a8",
+      "contracts/interface/IProxy.sol": "479a2956f4a0dd6d11e03fc288c511bd773fc91a81cb10b9654e7b3da86840b9",
+      "contracts/interface/IRegistry.sol": "1cd22a323a5c897c8f7b7832c2472a6a7b342ca48c02021130ec9dfedaee6838",
+      "contracts/lib/LibCache.sol": "cf7ad0ac8fad795e5c1c77ec85bc35c5fad4d1c5a8bc2598cb6a46d653f93343",
+      "contracts/lib/LibParam.sol": "29bf8f09161bd07023cf90a6b1da448a01abc56e8957ddc25eaa65b35bec2e37",
+      "contracts/lib/LibStack.sol": "5d5516276dc1c3d437fa034963cfa153249304e239efc5edf044f5f4791a63af"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.6.12",
+        "file": "truffle-config.js"
+      },
+      {
+        "version": "0.6.12",
+        "file": "package.json"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/Config.sol",
+          "contracts/Proxy.sol",
+          "contracts/Registry.sol",
+          "contracts/Storage.sol",
+          "contracts/handlers/HandlerBase.sol",
+          "contracts/interface/IProxy.sol",
+          "contracts/interface/IRegistry.sol",
+          "contracts/lib/LibCache.sol",
+          "contracts/lib/LibParam.sol",
+          "contracts/lib/LibStack.sol"
+        ],
+        "pragmas": [
+          ">=0.6.0 <0.8.0",
+          ">=0.6.2 <0.8.0",
+          "^0.6.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.6.12",
+            "reason": "project_config:truffle-config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.6.12",
+          "selected_by": "project_config:truffle-config.js",
+          "version_string": "0.6.12+commit.27d51765.Emscripten.clang",
+          "soljson_sha256": "3e1956c550ca48e289044c7c0bd892403081b4b5e17e77ce707c815ce6c4228f",
+          "frontend": "solc-js (official emscripten build, npm solc@0.6.12)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/GSN/Context.sol",
+          "@openzeppelin/contracts/access/Ownable.sol",
+          "@openzeppelin/contracts/math/SafeMath.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "contracts/Config.sol",
+          "contracts/Proxy.sol",
+          "contracts/Registry.sol",
+          "contracts/Storage.sol",
+          "contracts/handlers/HandlerBase.sol",
+          "contracts/interface/IERC20Usdt.sol",
+          "contracts/interface/IProxy.sol",
+          "contracts/interface/IRegistry.sol",
+          "contracts/lib/LibCache.sol",
+          "contracts/lib/LibParam.sol",
+          "contracts/lib/LibStack.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 17
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 10,
+      "compiled": 10,
+      "slither_ir": 10,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 2.2
+  },
+  "n_files": 10,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 2159.1,
+  "eval_files_opened": [
+    "dataset/furucombo_proxy_fixed/BUILD.json",
+    "dataset/furucombo_proxy_fixed/contracts/Config.sol",
+    "dataset/furucombo_proxy_fixed/contracts/HandlerBase.sol",
+    "dataset/furucombo_proxy_fixed/contracts/IProxy.sol",
+    "dataset/furucombo_proxy_fixed/contracts/IRegistry.sol",
+    "dataset/furucombo_proxy_fixed/contracts/LibCache.sol",
+    "dataset/furucombo_proxy_fixed/contracts/LibParam.sol",
+    "dataset/furucombo_proxy_fixed/contracts/LibStack.sol",
+    "dataset/furucombo_proxy_fixed/contracts/Proxy.sol",
+    "dataset/furucombo_proxy_fixed/contracts/Registry.sol",
+    "dataset/furucombo_proxy_fixed/contracts/Storage.sol"
+  ]
+}

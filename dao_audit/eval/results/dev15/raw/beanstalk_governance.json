@@ -1,0 +1,160 @@
+{
+  "case": "beanstalk_governance",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "beanstalk_governance",
+    "repo": "https://github.com/BeanstalkFarms/Beanstalk",
+    "commit": "e9f49910e287e7a7afaa6db8f536b7194728b0af",
+    "mode": "original_project_snapshot",
+    "project_root": "protocol",
+    "build_config": "protocol/hardhat.config.js",
+    "dataset_identical_to_snapshot": {
+      "Bip.sol": true,
+      "C.sol": true,
+      "GovernanceFacet.sol": true,
+      "VotingBooth.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-04-11T14:27:52-04:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "^3.4.0",
+        "declared_in": "protocol/package.json (range)",
+        "resolution": "range ^3.4.0 resolved as-of 2022-04-11",
+        "installed": "3.4.2",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/math/SafeMath.sol": "4a04d0a20a19e3ef1dcabae9cad9ba006430a4e7eec4d9b519db87999722c98a",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "0573c2961569aa4906845d0cd428b5b7394956170054ceeaa8f8af96cd44875c"
+        }
+      },
+      {
+        "package": "@uniswap/v2-core",
+        "declared": "^1.0.1",
+        "declared_in": "protocol/package.json (range)",
+        "resolution": "range ^1.0.1 resolved as-of 2022-04-11",
+        "installed": "1.0.1",
+        "status": "ok",
+        "files_sha256": {
+          "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol": "29c75e69ce173ff8b498584700fef76bc81498c1d98120e2877a1439f0c31b5a"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/math/SafeMath.sol": "4a04d0a20a19e3ef1dcabae9cad9ba006430a4e7eec4d9b519db87999722c98a",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "0573c2961569aa4906845d0cd428b5b7394956170054ceeaa8f8af96cd44875c",
+      "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol": "29c75e69ce173ff8b498584700fef76bc81498c1d98120e2877a1439f0c31b5a",
+      "contracts/C.sol": "d32adf7a7344fa132703f5c54b0f56419499c77ec5d876cc93ace279f5a4b40d",
+      "contracts/farm/AppStorage.sol": "ad36f3e79ed0cebb3451e4930cd2fdec65d3b25517cb3650b9e7fc96aca30c1a",
+      "contracts/farm/facets/GovernanceFacet/Bip.sol": "ef726c967c38bfab4474b64942efb534694d06473f2fd91ddc5a807d382b73f7",
+      "contracts/farm/facets/GovernanceFacet/GovernanceFacet.sol": "27938091a8fd181e62246d9f365e3d5523d8b825b1c562243ffa9d6db908efad",
+      "contracts/farm/facets/GovernanceFacet/VotingBooth.sol": "8f4bc3b86403814495490089e4300da66f42b34bdd4210d82bbf9abf7e2fe484",
+      "contracts/interfaces/IBean.sol": "edeb21e42821a32a5e30697f748ce47034621b3d94a088939808b820414e24b6",
+      "contracts/interfaces/ICurveMetapool.sol": "6366aa6d681ac0e8aace2e049e2f96e0ef3ccffa20bc93aaa7009a5ec281fe4b",
+      "contracts/interfaces/IDiamondCut.sol": "9209853f5a2b4ae7d4298b095cc1653667b6e7394cfa731b53acfd70a4a4acc1",
+      "contracts/interfaces/IDiamondLoupe.sol": "58ffd46e90a4b06fa56f5272018ac1101e2c94fa8eb56647dd920dedbf1f8648",
+      "contracts/interfaces/IERC165.sol": "39fca946396973e8476eb18d9a33bd90945b9c27e4ea64b94e88cb7cd867fee6",
+      "contracts/interfaces/IERC173.sol": "ed4bf8f136bc374dcf0368be2da5373c5038d202948b6b12f8afc3cae0435fa7",
+      "contracts/libraries/Decimal.sol": "57df556d362fba089bd8a07cbf1cba044220abda376d49673fb45b8c953b5e0f",
+      "contracts/libraries/LibDiamond.sol": "448cf92ae36322d9559ea6b506cdf763c18e6e6158f1cec3b9fbb8353847e227",
+      "contracts/libraries/LibIncentive.sol": "b85c32da9c4eff20f4c98bdae1ed9586e736ccf0bc3bbad8d784c48724cbd454",
+      "contracts/libraries/LibInternal.sol": "5d0e6583c92237b00bfcff0311f860b453014bd9018d82dcec4eaf9e97e4a0e4",
+      "contracts/libraries/LibMeta.sol": "2bb3f34a8fae357387c12bf1bf2aa5bec264a45dd6a03980392eafc1951f8777",
+      "contracts/libraries/LibSafeMath32.sol": "1eee20457bf308dc3eb6a32da1093443dfae07f0f8201fb84e44194ce7cc58be"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.7.6",
+        "file": "protocol/hardhat.config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/C.sol",
+          "contracts/farm/facets/GovernanceFacet/Bip.sol",
+          "contracts/farm/facets/GovernanceFacet/GovernanceFacet.sol",
+          "contracts/farm/facets/GovernanceFacet/VotingBooth.sol"
+        ],
+        "pragmas": [
+          "=0.7.6",
+          ">=0.5.0",
+          ">=0.6.0 <0.8.0",
+          "^0.7.6"
+        ],
+        "attempts": [
+          {
+            "version": "0.7.6",
+            "reason": "project_config:protocol/hardhat.config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.7.6",
+          "selected_by": "project_config:protocol/hardhat.config.js",
+          "version_string": "0.7.6+commit.7338295f.Emscripten.clang",
+          "soljson_sha256": "b94e69dfb056b3e26080f805ab43b668afbc0ac70bf124bfb7391ecfc0172ad2",
+          "frontend": "solc-js (official emscripten build, npm solc@0.7.6)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/math/SafeMath.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol",
+          "contracts/C.sol",
+          "contracts/farm/AppStorage.sol",
+          "contracts/farm/facets/GovernanceFacet/Bip.sol",
+          "contracts/farm/facets/GovernanceFacet/GovernanceFacet.sol",
+          "contracts/farm/facets/GovernanceFacet/VotingBooth.sol",
+          "contracts/interfaces/IBean.sol",
+          "contracts/interfaces/ICurveMetapool.sol",
+          "contracts/interfaces/IDiamondCut.sol",
+          "contracts/interfaces/IDiamondLoupe.sol",
+          "contracts/interfaces/IERC165.sol",
+          "contracts/interfaces/IERC173.sol",
+          "contracts/libraries/Decimal.sol",
+          "contracts/libraries/LibDiamond.sol",
+          "contracts/libraries/LibIncentive.sol",
+          "contracts/libraries/LibInternal.sol",
+          "contracts/libraries/LibMeta.sol",
+          "contracts/libraries/LibSafeMath32.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 22
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.2
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3241.9,
+  "eval_files_opened": [
+    "dataset/beanstalk_governance/BUILD.json",
+    "dataset/beanstalk_governance/contracts/Bip.sol",
+    "dataset/beanstalk_governance/contracts/C.sol",
+    "dataset/beanstalk_governance/contracts/GovernanceFacet.sol",
+    "dataset/beanstalk_governance/contracts/VotingBooth.sol"
+  ]
+}

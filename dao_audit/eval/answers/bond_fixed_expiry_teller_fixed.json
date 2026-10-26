@@ -10,5 +10,7 @@
   "commit": "cc252d658c1cdab2e56bde6d95cf03c9f357b49d",
   "pragma": "0.8.15",
   "rationale": "redeem checks token_ against the teller's own bondTokens registry before releasing underlying"
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

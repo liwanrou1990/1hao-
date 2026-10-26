@@ -39,5 +39,7 @@
    "https://blocksec.com/blog/8-sushi-swap-incident-a-clumsy-rescue-attempt-leads-to-a-series-of-copycat-attacks",
    "https://github.com/sushiswap/sushiswap/commit/bb343a0c70ab070dbcb299ab993c25815e2d1083"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

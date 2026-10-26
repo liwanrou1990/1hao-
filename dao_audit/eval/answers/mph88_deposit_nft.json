@@ -50,5 +50,8 @@
    "https://medium.com/immunefi/88mph-function-initialization-bug-fix-postmortem-c3a2282894d3",
    "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2021-06/88mph_exp.sol"
   ]
- }
+ },
+ "source_type": "bug_bounty",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "build commit of the deployed clones inferred, not verified"
 }

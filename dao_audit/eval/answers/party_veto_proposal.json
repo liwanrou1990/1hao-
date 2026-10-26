@@ -28,5 +28,7 @@
    "https://github.com/code-423n4/2023-04-party-findings/issues/2",
    "https://github.com/PartyDAO/party-protocol/commit/48300a88e06921274fab567b8973f3b597bd9069"
   ]
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

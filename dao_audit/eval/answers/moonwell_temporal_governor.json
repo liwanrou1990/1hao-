@@ -27,5 +27,7 @@
    "https://code4rena.com/reports/2023-07-moonwell",
    "https://github.com/code-423n4/2023-07-moonwell-findings/issues/276"
   ]
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

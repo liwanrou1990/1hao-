@@ -40,5 +40,7 @@
    "https://halborn.com/explained-the-nomad-hack-august-2022/",
    "https://github.com/nomad-xyz/monorepo/commit/0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

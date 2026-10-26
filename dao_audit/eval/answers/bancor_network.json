@@ -50,5 +50,7 @@
    "https://blog.1inch.com/bancor-network-hack-2020",
    "https://decrypt.co/32720/a-cryptocurrency-bug-put-545000-of-defi-funds-at-risk/"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

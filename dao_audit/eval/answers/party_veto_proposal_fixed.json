@@ -10,5 +10,7 @@
   "commit": "48300a88e06921274fab567b8973f3b597bd9069",
   "pragma": "0.8.17",
   "rationale": "each voter can veto a proposal once (hasVoted[party][proposalId][voter])"
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

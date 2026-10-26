@@ -23,6 +23,17 @@ ENGINE_FILES = [
     TOOL / "analysis" / "solmodel.py",
     TOOL / "analysis" / "semantic.py",   # V0.13 semantic governance analyzer
     TOOL / "analysis" / "compile_backend.py",  # V0.14 compiler/Slither backend
+    # V0.15 read-only baseline: exact-compiler build + Slither built-ins
+    TOOL / "analysis" / "baseline.py",
+    TOOL / "compiler" / "build.py",
+    TOOL / "compiler" / "project.py",
+    TOOL / "compiler" / "toolchain.py",
+    TOOL / "compiler" / "semver.py",
+    ROOT / "tool" / "solc_toolchain" / "solcjs_std.js",
+    Path(__file__).resolve().parent / "blind_run.py",
+    Path(__file__).resolve().parent / "evaluate.py",
+    Path(__file__).resolve().parent / "evaluate_v15.py",
+    Path(__file__).resolve().parent / "check_isolation.py",
 ]
 FREEZE = Path(__file__).resolve().parent / "engine_freeze.json"
 
@@ -39,10 +50,27 @@ def _git_commit() -> str:
         return "unknown"
 
 
+def _env() -> dict:
+    """Analysis dependencies pinned with the freeze (informational)."""
+    out = {}
+    try:
+        from importlib.metadata import version
+        for pkg in ("slither-analyzer", "crytic-compile"):
+            out[pkg] = version(pkg)
+    except Exception:
+        pass
+    try:
+        out["node"] = subprocess.check_output(["node", "--version"], text=True).strip()
+    except Exception:
+        pass
+    return out
+
+
 def compute() -> dict:
     return {
         "git_commit": _git_commit(),
         "files": {str(p.relative_to(ROOT)): _sha256(p) for p in ENGINE_FILES},
+        "environment": _env(),
     }
 
 
@@ -52,11 +80,20 @@ def check() -> bool:
         return False
     frozen = json.loads(FREEZE.read_text())
     cur = compute()["files"]
+    env = compute()["environment"]
+    for k, v in frozen.get("environment", {}).items():
+        if env.get(k) != v:
+            print(f"MISMATCH env {k}: frozen={v} now={env.get(k)}", file=sys.stderr)
+            ok_env = False
+            break
+    else:
+        ok_env = True
     ok = True
     for f, h in frozen["files"].items():
         if cur.get(f) != h:
             print(f"MISMATCH {f}: frozen={h[:12]} now={cur.get(f, 'MISSING')[:12]}", file=sys.stderr)
             ok = False
+    ok = ok and ok_env
     print("engine freeze OK" if ok else "engine freeze CHANGED", file=sys.stderr)
     return ok
 

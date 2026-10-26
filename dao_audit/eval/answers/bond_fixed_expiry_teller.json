@@ -28,5 +28,7 @@
    "https://www.theblock.co/news/markets/2022-10-21-hacker-drains-olympus-dao-178927",
    "https://halborn.com/explained-the-olympusdao-hack-october-2022/"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

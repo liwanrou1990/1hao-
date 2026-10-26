@@ -10,5 +10,8 @@
   "commit": "e6f7582392829c4964b77b6710b47ed2fd074cc1",
   "pragma": "^0.5.2",
   "rationale": "nativeReputation/nativeToken are read once and the uniqueness check applies to the stored addresses, so an already-registered Reputation cannot be re-bound to a new org"
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "on-chain contract unverified; commit inferred from PoC behaviour"
 }

@@ -39,5 +39,8 @@
    "https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a",
    "https://github.com/immunefi-team/bugfix-reviews-pocs/tree/main/src/Wormhole"
   ]
- }
+ },
+ "source_type": "bug_bounty",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "build commit inferred from deployed interface; key reports read only via search summaries"
 }

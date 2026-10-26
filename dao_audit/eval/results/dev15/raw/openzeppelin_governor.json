@@ -1,0 +1,274 @@
+{
+  "case": "openzeppelin_governor",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-eth",
+      "contract": "Governor",
+      "function": "_executeOperations",
+      "line": 433,
+      "title": "arbitrary-send-eth",
+      "evidence": "Governor._executeOperations(uint256,address[],uint256[],bytes[],bytes32) (contracts/governance/Governor.sol#433-444) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (contracts/governance/Governor.sol#441)",
+      "file": "Governor.sol",
+      "in_dataset": true
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-eth",
+      "contract": "Governor",
+      "function": "relay",
+      "line": 654,
+      "title": "arbitrary-send-eth",
+      "evidence": "Governor.relay(address,uint256,bytes) (contracts/governance/Governor.sol#654-657) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returndata) = target.call{value: value}(data) (contracts/governance/Governor.sol#655)",
+      "file": "Governor.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "TimelockController",
+      "function": "_execute",
+      "line": 410,
+      "title": "arbitrary-send-eth",
+      "evidence": "TimelockController._execute(address,uint256,bytes) (contracts/governance/TimelockController.sol#410-413) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returndata) = target.call{value: value}(data) (contracts/governance/TimelockController.sol#411)",
+      "file": "TimelockController.sol",
+      "in_dataset": true,
+      "triage": "every entry point is time/lifecycle-gated; timelock not analysable",
+      "entries": [
+        "TimelockController.execute(address,uint256,bytes,bytes32,bytes32)",
+        "TimelockController.executeBatch(address[],uint256[],bytes[],bytes32,bytes32)"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "TimelockController",
+      "function": "execute",
+      "file": "TimelockController.sol",
+      "line": 411,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "target"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    }
+  ],
+  "build": {
+    "case": "openzeppelin_governor",
+    "repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+    "commit": "11565e5f6277a320408025e649240056ba6a3919",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "Governor.sol": true,
+      "GovernorTimelockControl.sol": true,
+      "GovernorVotes.sol": true,
+      "TimelockController.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/forge-std",
+        "url": "https://github.com/foundry-rs/forge-std",
+        "commit": "1801b0541f4fda118a10798fd3486bb7051c5dd6",
+        "status": "ok"
+      },
+      {
+        "path": "lib/erc4626-tests",
+        "url": "https://github.com/a16z/erc4626-tests.git",
+        "commit": "232ff9ba8194e406967f52ecc5cb52ed764209e9",
+        "status": "ok"
+      },
+      {
+        "path": "lib/halmos-cheatcodes",
+        "url": "https://github.com/a16z/halmos-cheatcodes",
+        "commit": "7328abe100445fc53885c21d0e713b95293cf14c",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2026-10-23T12:42:02+02:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "@openzeppelin/contracts/=contracts/",
+      "forge-std=lib/forge-std/src",
+      "halmos-cheatcodes=lib/halmos-cheatcodes/src",
+      "erc4626-tests=lib/erc4626-tests",
+      "erc4626-tests/=lib/erc4626-tests/",
+      "forge-std/=lib/forge-std/src/",
+      "halmos-cheatcodes/=lib/halmos-cheatcodes/src/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/access/AccessControl.sol": "74c193e45cf09c09745b2ed5261946563acd1702f30d42cae4f42b53f5d3797b",
+      "contracts/access/IAccessControl.sol": "140304b7e99d517c57a13f391dfd3b550ca633a507f7b2af130f391b6cd89cc5",
+      "contracts/governance/Governor.sol": "67937b5ee5e33e55a3f42d4a79cc55fa0807e2467d854bb4afba06a70c52eed2",
+      "contracts/governance/IGovernor.sol": "fad9bf07114189a7f34e8909951547a69f5b39746552e88b0f07311d61efbee2",
+      "contracts/governance/TimelockController.sol": "50265193f9ded275033a7b87cd4f6d883f77154b000bf1c5ca7b805052b855c4",
+      "contracts/governance/extensions/GovernorTimelockControl.sol": "ebec682d2bc9716919e8af3a22e1014a25475eeee23419de5f0efc7a3c006e13",
+      "contracts/governance/extensions/GovernorVotes.sol": "879179fdec03211ae03672cbc6b153c4ad8294ee1b3c674a1d2e662d0c529f17",
+      "contracts/governance/utils/IVotes.sol": "059fcf54ee8e21e9dac976491d7d7441049ce12e351a8c66b894846243b60a0b",
+      "contracts/interfaces/IERC1271.sol": "2d17bba201aa2f9c55e317315b872272a60361848dfceb6b1e77081265c79a27",
+      "contracts/interfaces/IERC165.sol": "dfb3f56fa928a7c6cae41a7ce2c86b9210fa18d33fa26389099d66a0fa790368",
+      "contracts/interfaces/IERC5267.sol": "8dead72edcf99451d83eed9c0829da29db04bde2929d397effdd1f6334eed3a2",
+      "contracts/interfaces/IERC5805.sol": "5440ee3a682fd3cc3d73e64baf9d9bf9d830ab88a20bbc112d88e014482e81b8",
+      "contracts/interfaces/IERC6372.sol": "312d62c12c37a0a96d4b6bf8e6232465994e4a7341b8df91acecc1ee819cc965",
+      "contracts/interfaces/IERC7913.sol": "f66aad4249885b0f11369bfa825dded60aa4baa0d76d9becdac9daa48c350350",
+      "contracts/token/ERC1155/IERC1155Receiver.sol": "3df310870e0187a59020ea48e910ed2693778b1f758b57b97a47365d74b92af5",
+      "contracts/token/ERC1155/utils/ERC1155Holder.sol": "ee184c9620ae770a9ccf9d21d1e6fd1177eed668f4e92707b51e9ef36d7c9469",
+      "contracts/token/ERC721/IERC721Receiver.sol": "eafee3ffdc7cb2fba4bf6bd16fb28f8e5b4679742e81c2ad42a1b1df5c179feb",
+      "contracts/token/ERC721/utils/ERC721Holder.sol": "2d50f70b857cae57572c0139e3d9d84cbe3edcc18492581af36befa15c36cb3f",
+      "contracts/utils/Address.sol": "73e54e15285455f0e01e136c3663732641537614723ae5dbd820eb3cb036b1fd",
+      "contracts/utils/Bytes.sol": "bcbf2d43bb84ed2c3ac0a5d3b146201c0cd45baf5458673464cce522a59fd697",
+      "contracts/utils/Context.sol": "c070e80549c0319b25b4b2510004ecda5602a01c5ed9520adcb1354e9a0f2288",
+      "contracts/utils/ERC6372Utils.sol": "a1518ed975c06c3071878467ff9e5d6870c7a04e825b1ddfb27809a7dd0d1e40",
+      "contracts/utils/Errors.sol": "0704b9d6c032cca8512a3bc3f30f49f86f1f03102d2896a3d23e794b82efea66",
+      "contracts/utils/LowLevelCall.sol": "e128cbe9c6c406d5a42c26e4079c0a95b369ce552f2d0c3dfd2fcb836c5708f2",
+      "contracts/utils/Nonces.sol": "6a98ef6eaaac8dfc73307cb0ebbed97bfa20cf825c7fe96b734e3eda7e935e09",
+      "contracts/utils/Panic.sol": "270fc8401c1a13fae6a7a4a2dd6e381b95d658896701e51f0d3e2688acab3dec",
+      "contracts/utils/ShortStrings.sol": "0b66f6166641f1951f7a412d55df071224f1ba3a629bab73d185505026851c06",
+      "contracts/utils/StorageSlot.sol": "cf1e3a87912e70ad4a342a33b0227f73d9b02cf2a8dadfd426a81173f24d5b91",
+      "contracts/utils/Strings.sol": "e2d5ad9a8587169803ef0dfb931fab3defe08d6eb3499f6fbaa058d560ccc610",
+      "contracts/utils/cryptography/ECDSA.sol": "e3758f08ce5e53ada22c743450d3b61d965c92d4c76fcc8633a7eebd0455eb7c",
+      "contracts/utils/cryptography/EIP712.sol": "658cf6e303fd435dd6548ff2c1551bf3c1a321df4ddc2fe58f6bb1ad4b5b5389",
+      "contracts/utils/cryptography/MessageHashUtils.sol": "18477bf612b0eecdea0232e8c77d924178f08d29f43a834db422b683a4998cfc",
+      "contracts/utils/cryptography/SignatureChecker.sol": "db58c8336938e50f2dea7cd59ac2e78fd47194ba1695e94c0924062162212614",
+      "contracts/utils/introspection/ERC165.sol": "61a2b12c96857aaa35f48aeda67a4281637a42494c0b3795be0ae976aa7b3793",
+      "contracts/utils/introspection/IERC165.sol": "9055c2994b37dea1a41b7b7926dcb510f05dbe2540b0aafc5fbee9558fffd0ca",
+      "contracts/utils/math/Math.sol": "cce7796bd81939ff1f378b3dd55199deb2ad7a6eff206387d0787145492c52a4",
+      "contracts/utils/math/SafeCast.sol": "1383297308cf3802d54dc724e22325db744d009201d1c3c5c3e89d1571ba311f",
+      "contracts/utils/math/SignedMath.sol": "1ed50b1056af886752f0fb48a0165d381e69bb4a4b18b893b066dc144a7e08d7",
+      "contracts/utils/structs/DoubleEndedQueue.sol": "3f780698eed63c3470f04b7f11e59b687c8d2804ebf5a6e1eacef7efa2526518",
+      "contracts/utils/types/Time.sol": "8d325f42641e78f4a276f89b6b63e55a238da5021bcc7e0654f2b13fb53c6197"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.35",
+        "file": "foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/governance/Governor.sol",
+          "contracts/governance/TimelockController.sol",
+          "contracts/governance/extensions/GovernorTimelockControl.sol",
+          "contracts/governance/extensions/GovernorVotes.sol"
+        ],
+        "pragmas": [
+          ">=0.4.16",
+          ">=0.5.0",
+          ">=0.6.2",
+          ">=0.8.4",
+          "^0.8.20",
+          "^0.8.31"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.35",
+            "reason": "project_config:foundry.toml",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.35",
+          "selected_by": "project_config:foundry.toml",
+          "version_string": "0.8.35+commit.47b9dedd.Emscripten.clang",
+          "soljson_sha256": "fa4345d648d9a09c6601ffc978e78e9f5267b54e6d91e8f8c473f44c0c16323b",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.35)"
+        },
+        "compiled_sources": [
+          "contracts/access/AccessControl.sol",
+          "contracts/access/IAccessControl.sol",
+          "contracts/governance/Governor.sol",
+          "contracts/governance/IGovernor.sol",
+          "contracts/governance/TimelockController.sol",
+          "contracts/governance/extensions/GovernorTimelockControl.sol",
+          "contracts/governance/extensions/GovernorVotes.sol",
+          "contracts/governance/utils/IVotes.sol",
+          "contracts/interfaces/IERC1271.sol",
+          "contracts/interfaces/IERC165.sol",
+          "contracts/interfaces/IERC5267.sol",
+          "contracts/interfaces/IERC5805.sol",
+          "contracts/interfaces/IERC6372.sol",
+          "contracts/interfaces/IERC7913.sol",
+          "contracts/token/ERC1155/IERC1155Receiver.sol",
+          "contracts/token/ERC1155/utils/ERC1155Holder.sol",
+          "contracts/token/ERC721/IERC721Receiver.sol",
+          "contracts/token/ERC721/utils/ERC721Holder.sol",
+          "contracts/utils/Address.sol",
+          "contracts/utils/Bytes.sol",
+          "contracts/utils/Context.sol",
+          "contracts/utils/ERC6372Utils.sol",
+          "contracts/utils/Errors.sol",
+          "contracts/utils/LowLevelCall.sol",
+          "contracts/utils/Nonces.sol",
+          "contracts/utils/Panic.sol",
+          "contracts/utils/ShortStrings.sol",
+          "contracts/utils/StorageSlot.sol",
+          "contracts/utils/Strings.sol",
+          "contracts/utils/cryptography/ECDSA.sol",
+          "contracts/utils/cryptography/EIP712.sol",
+          "contracts/utils/cryptography/MessageHashUtils.sol",
+          "contracts/utils/cryptography/SignatureChecker.sol",
+          "contracts/utils/introspection/ERC165.sol",
+          "contracts/utils/introspection/IERC165.sol",
+          "contracts/utils/math/Math.sol",
+          "contracts/utils/math/SafeCast.sol",
+          "contracts/utils/math/SignedMath.sol",
+          "contracts/utils/structs/DoubleEndedQueue.sol",
+          "contracts/utils/types/Time.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 39
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 7.5
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 7488.4,
+  "eval_files_opened": [
+    "dataset/openzeppelin_governor/BUILD.json",
+    "dataset/openzeppelin_governor/contracts/Governor.sol",
+    "dataset/openzeppelin_governor/contracts/GovernorTimelockControl.sol",
+    "dataset/openzeppelin_governor/contracts/GovernorVotes.sol",
+    "dataset/openzeppelin_governor/contracts/TimelockController.sol"
+  ]
+}

@@ -27,5 +27,8 @@
    "https://slowmist.medium.com/the-vulnerability-behind-the-sandbox-land-migration-2abf68933170",
    "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2022-02/Sandbox_exp.sol"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "exact build commit of the deployed contract not verified"
 }

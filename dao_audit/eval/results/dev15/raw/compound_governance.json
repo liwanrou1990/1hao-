@@ -1,0 +1,224 @@
+{
+  "case": "compound_governance",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "GovernorBravoDelegate",
+      "function": "execute",
+      "line": 143,
+      "title": "arbitrary-send-eth",
+      "evidence": "GovernorBravoDelegate.execute(uint256) (contracts/Governance/GovernorBravoDelegate.sol#143-151) sends eth to arbitrary user\n\tDangerous calls:\n\t- timelock.executeTransaction{value: proposal.values[i]}(proposal.targets[i],proposal.values[i],proposal.signatures[i],proposal.calldatas[i],proposal.eta) (contracts/Governance/GovernorBravoDelegate.sol#148)",
+      "file": "GovernorBravoDelegate.sol",
+      "in_dataset": true,
+      "triage": "every entry point is time/lifecycle-gated; timelock not analysable",
+      "entries": [
+        "GovernorBravoDelegate.execute(uint256)"
+      ]
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GovernorBravoDelegate",
+      "function": "queue",
+      "file": "GovernorBravoDelegate.sol",
+      "line": 123,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GovernorBravoDelegate.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GovernorBravoDelegate",
+      "function": "execute",
+      "file": "GovernorBravoDelegate.sol",
+      "line": 143,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GovernorBravoDelegate.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GovernorBravoDelegate",
+      "function": "castVoteBySig",
+      "file": "GovernorBravoDelegate.sol",
+      "line": 254,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GovernorBravoDelegate.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "compound_governance",
+    "repo": "https://github.com/compound-finance/compound-protocol",
+    "commit": "a3214f67b73310d547e00fc578e8355911c9d376",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "saddle.config.js",
+    "dataset_identical_to_snapshot": {
+      "Comp.sol": true,
+      "GovernorBravoDelegate.sol": true,
+      "GovernorBravoInterfaces.sol": true,
+      "Timelock.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-06-06T18:47:37-07:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/Governance/Comp.sol": "04fcf66211e24618c4ed6e23695c7c853e61a41e4150e2b47614781775827190",
+      "contracts/Governance/GovernorBravoDelegate.sol": "9905679d61ca6535f0faa286d320a8a11aa80a73efa056f021868d70cc27b9fd",
+      "contracts/Governance/GovernorBravoInterfaces.sol": "7b2ecdfac9a71993a23723a4997b7ee4c80aaf77e592d6329a03485434880369",
+      "contracts/SafeMath.sol": "31e84dc585327cbed6026b8bd6980d0fff60b0fed7a57a89df74394034775b1d",
+      "contracts/Timelock.sol": "67ebcb4b154b9394d18315a5ffa49f30213749416a994682ea47d10b362255e2"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.10",
+        "file": "Dockerfile"
+      },
+      {
+        "version": "0.8.10",
+        "file": ".circleci/config.yml"
+      },
+      {
+        "version": "0.8.10",
+        "file": ".circleci/config.yml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/Governance/Comp.sol",
+          "contracts/Governance/GovernorBravoDelegate.sol",
+          "contracts/Governance/GovernorBravoInterfaces.sol",
+          "contracts/Timelock.sol"
+        ],
+        "pragmas": [
+          "^0.8.10"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.10",
+            "reason": "project_config:Dockerfile",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.10",
+          "selected_by": "project_config:Dockerfile",
+          "version_string": "0.8.10+commit.fc410830.Emscripten.clang",
+          "soljson_sha256": "5eaee3240a06891abf5ac70c75caf9a0c33ebe9a2736abdaa22a337f86c22933",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.10)"
+        },
+        "compiled_sources": [
+          "contracts/Governance/Comp.sol",
+          "contracts/Governance/GovernorBravoDelegate.sol",
+          "contracts/Governance/GovernorBravoInterfaces.sol",
+          "contracts/SafeMath.sol",
+          "contracts/Timelock.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 11
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.6
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": [
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "GovernorBravoDelegate.queue",
+        "to": "GovernorBravoDelegate.execute",
+        "via": [
+          "proposals"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "GovernorBravoDelegate.execute",
+        "to": "GovernorBravoDelegate.execute",
+        "via": [
+          "proposals"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "GovernorBravoDelegate.castVoteBySig",
+        "to": "GovernorBravoDelegate.execute",
+        "via": [
+          "proposals"
+        ]
+      }
+    ]
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3632.8,
+  "eval_files_opened": [
+    "dataset/compound_governance/BUILD.json",
+    "dataset/compound_governance/contracts/Comp.sol",
+    "dataset/compound_governance/contracts/GovernorBravoDelegate.sol",
+    "dataset/compound_governance/contracts/GovernorBravoInterfaces.sol",
+    "dataset/compound_governance/contracts/Timelock.sol"
+  ]
+}

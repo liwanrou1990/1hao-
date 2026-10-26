@@ -9,5 +9,7 @@
   "commit": "b09834d29c0db211ddd50f50905cbeff257fc8e0",
   "pragma": "0.4.24",
   "rationale": "MiniMe snapshot-based Aragon Voting with fixed vote time and objection phase; audited and deployed by Lido DAO; no known vulnerability at this tag"
- }
+ },
+ "source_type": "control",
+ "source_certainty": "verified"
 }

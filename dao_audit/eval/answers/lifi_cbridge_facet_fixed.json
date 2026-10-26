@@ -10,5 +10,7 @@
   "commit": "d69b896281df944cd1ab1b2da409afb2e0a0ece4",
   "pragma": "^0.8.7",
   "rationale": "swap targets (callTo/approveTo) must be in the owner-managed dexWhitelist before LibSwap.swap is invoked"
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

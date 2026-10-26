@@ -9,5 +9,7 @@
   "commit": "186a21a74b327f17fc41217a927dea7064f74604",
   "pragma": ">=0.7.0 <0.9.0",
   "rationale": "widely audited multisig; execTransaction requires threshold signatures, owner/module/guard management is self-authorized, singleton locked by constructor; no known vulnerability at v1.3.0"
- }
+ },
+ "source_type": "control",
+ "source_certainty": "verified"
 }

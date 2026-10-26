@@ -10,5 +10,7 @@
   "commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
   "pragma": "0.8.19",
   "rationale": "validateActionCreation callable only by LlamaCore at action creation; snapshot cannot be refreshed"
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

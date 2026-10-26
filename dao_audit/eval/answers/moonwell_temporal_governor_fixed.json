@@ -10,5 +10,7 @@
   "commit": "4580996b7cdb831701c62d13042665161ac26ec4",
   "pragma": "0.8.19",
   "rationale": "timelock-overriding fast-track only usable while paused (emergency)"
- }
+ },
+ "source_type": "audit_finding",
+ "source_certainty": "verified"
 }

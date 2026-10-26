@@ -10,5 +10,7 @@
   "commit": "bb343a0c70ab070dbcb299ab993c25815e2d1083",
   "pragma": "0.8.10",
   "rationale": "callback only transfers the router's own balance; transferFrom only from msg.sender in swapUniV3"
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

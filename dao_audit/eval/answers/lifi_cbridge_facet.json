@@ -38,5 +38,7 @@
    "https://blog.li.fi/20th-march-the-exploit-e9e1c5c03eb9",
    "https://blocksecteam.medium.com/li-fi-attack-a-cross-chain-bridge-vulnerability-no-its-due-to-unchecked-external-call-c31e7dadf60f"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "verified"
 }

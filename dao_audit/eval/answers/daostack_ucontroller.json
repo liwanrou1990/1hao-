@@ -39,5 +39,8 @@
    "https://etherscan.io/tx/0xcfff7b060a7fb881f4bd8d2498dbe4e09454f7afaf5328fc12b59812f6737cc1",
    "https://github.com/daostack/arc/commit/e6f7582392829c4964b77b6710b47ed2fd074cc1"
   ]
- }
+ },
+ "source_type": "exploited_incident",
+ "source_certainty": "uncertain",
+ "source_certainty_note": "on-chain contract unverified; commit inferred from PoC behaviour"
 }
