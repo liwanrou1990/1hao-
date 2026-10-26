@@ -78,14 +78,26 @@ def common_root(paths):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repos", default="/tmp/claude-0/repos")
+    ap.add_argument("--dataset", default=str(DATASET),
+                    help="dataset dir; cases not listed in CASES must contain BUILD_SOURCE.json "
+                         '{"repo": "owner/name", "commit": "<sha>"}')
     ap.add_argument("cases", nargs="*")
     a = ap.parse_args()
+    dataset = Path(a.dataset)
     repos = Path(a.repos); repos.mkdir(parents=True, exist_ok=True)
-    for case in a.cases or sorted(CASES):
-        slug, commit = CASES[case]
+    names = a.cases or sorted(d.name for d in dataset.iterdir()
+                              if d.is_dir() and (d / "contracts").is_dir())
+    for case in names:
+        src = dataset / case / "BUILD_SOURCE.json"
+        if src.is_file():
+            j = json.loads(src.read_text())
+            slug = j["repo"].replace("https://github.com/", "").rstrip("/")
+            commit = j["commit"]
+        else:
+            slug, commit = CASES[case]
         repo = ensure_repo(repos, slug)
         idx = blob_index(repo, commit)
-        cdir = DATASET / case / "contracts"
+        cdir = dataset / case / "contracts"
         mapping, missing = {}, []
         for f in sorted(cdir.rglob("*.sol")):
             rel = str(f.relative_to(cdir))
@@ -104,7 +116,7 @@ def main():
             "unmatched_files": missing,
             "repo_root_hint": common_root(list(mapping.values())) if mapping else "",
         }
-        (DATASET / case / "BUILD.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        (dataset / case / "BUILD.json").write_text(json.dumps(manifest, indent=2) + "\n")
         print(f"{case}: {len(mapping)} matched, {len(missing)} unmatched {missing[:3]}")
 
 
