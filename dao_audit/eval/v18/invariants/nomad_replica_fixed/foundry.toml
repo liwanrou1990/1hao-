@@ -1,0 +1,7 @@
+[profile.default]
+src = 'src_empty'
+test = 'v018test'
+script = 'no_scripts'
+libs = ['lib', 'node_modules']
+offline = true
+remappings = ['@nomad-xyz/contracts-core/=pkg/', 'forge-std/=lib/forge-std/src/', 'ds-test/=lib/forge-std/lib/ds-test/src/', '@openzeppelin/=node_modules/@openzeppelin/', '@summa-tx/=node_modules/@summa-tx/', 'src/=pkg/contracts/']

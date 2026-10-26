@@ -1,0 +1,1 @@
+{"v018test/V018_FixedInvariants.t.sol:V018_FixedInvariants":{"duration":"675µs 81ns","test_results":{"test_B_validateActionCreation_rejects_non_core()":{"status":"Success","reason":null,"counterexample":null,"logs":[],"decoded_logs":[],"kind":{"Unit":{"gas":17230}},"traces":[],"labeled_addresses":{},"duration":"105µs 232ns","breakpoints":{},"gas_snapshots":{}}},"warnings":[]}}

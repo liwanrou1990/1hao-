@@ -1,0 +1,22 @@
+{
+  "repo": "llamaxyz/llama",
+  "commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
+  "submodules": {
+    "lib/forge-std": "fc560fa34fa12a335a50c35d92e55a6628ca467c",
+    "lib/openzeppelin-contracts": "49c0e4370d0cc50ea6090709e3835a3091e33ee2",
+    "lib/solady": "3d57528984275d1746ee6597acd36277f51c091d",
+    "lib/solmate": "564e9f1606c699296420500547c47685818bcccf",
+    "lib/forge-std/lib/ds-test": "e282159d5170298eb2455a6c05280ab5a73a4ef0"
+  },
+  "dimension": "B",
+  "invariants": [
+    "validateActionCreation rejects any caller other than llamaCore (the fix: OnlyLlamaCore)"
+  ],
+  "limitation": "tested on the logic contract with initializers disabled (llamaCore unset); the initialized-strategy path is covered by the same msg.sender check but not exercised here",
+  "compiler": "0.8.19+commit.7dd6d404.Emscripten.clang (solc-js shim)",
+  "forge": "1.5.1-stable",
+  "tests": {
+    "test_B_validateActionCreation_rejects_non_core()": "Success"
+  },
+  "vulnerable_version_exercised": false
+}

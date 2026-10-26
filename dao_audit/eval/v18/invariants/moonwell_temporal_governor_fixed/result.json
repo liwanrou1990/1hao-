@@ -1,0 +1,21 @@
+{
+  "repo": "moonwell-fi/moonwell-contracts-v2",
+  "commit": "4580996b7cdb831701c62d13042665161ac26ec4",
+  "submodules": {
+    "lib/forge-std": "74cfb77e308dd188d2f58864aaf44963ae6b88b1",
+    "lib/openzeppelin-contracts": "e50c24f5839db17f46991478384bfda14acfb830",
+    "lib/forge-std/lib/ds-test": "e282159d5170298eb2455a6c05280ab5a73a4ef0"
+  },
+  "dimension": "C",
+  "invariants": [
+    "fastTrackProposalExecution rejects non-owner",
+    "fastTrackProposalExecution rejects owner while not paused (the fix: whenPaused)"
+  ],
+  "compiler": "0.8.19+commit.7dd6d404.Emscripten.clang (solc-js shim)",
+  "forge": "1.5.1-stable",
+  "tests": {
+    "test_C_fastTrack_rejects_non_owner()": "Success",
+    "test_C_fastTrack_rejects_when_not_paused()": "Success"
+  },
+  "vulnerable_version_exercised": false
+}

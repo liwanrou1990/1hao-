@@ -1,0 +1,304 @@
+{
+  "n_pairs": 10,
+  "pairs": [
+    {
+      "vulnerable_case": "bancor_network",
+      "fixed_case": "bancor_network_fixed",
+      "dimension": "D",
+      "safety_invariant": "asset helpers (safeApprove/safeTransfer/safeTransferFrom) are not externally callable",
+      "fix_evidence_lines": [
+        "-    function safeApprove(IERC20Token _token, address _spender, uint256 _value) public {",
+        "+    function safeApprove(IERC20Token _token, address _spender, uint256 _value) internal {",
+        "-    function safeTransfer(IERC20Token _token, address _to, uint256 _value) public {",
+        "+    function safeTransfer(IERC20Token _token, address _to, uint256 _value) internal {",
+        "-    function safeTransferFrom(IERC20Token _token, address _from, address _to, uint256 _value) public {",
+        "+    function safeTransferFrom(IERC20Token _token, address _from, address _to, uint256 _value) internal {"
+      ],
+      "n_changed_lines": 6,
+      "how_verifiable": "visibility public->internal; verifiable by ABI: no external selector for the helpers",
+      "diff_file": "eval/v16/fix_diffs/bancor_network.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "compiled_ir_visibility_check": {
+        "status": "VERIFIED",
+        "source": "Slither IR of exact-compiler builds (dev17)",
+        "functions": {
+          "TokenHandler.safeApprove": {
+            "vulnerable": "public",
+            "fixed": "internal"
+          },
+          "TokenHandler.safeTransfer": {
+            "vulnerable": "public",
+            "fixed": "internal"
+          },
+          "TokenHandler.safeTransferFrom": {
+            "vulnerable": "public",
+            "fixed": "internal"
+          }
+        }
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "COMPILED_IR"
+    },
+    {
+      "vulnerable_case": "bond_fixed_expiry_teller",
+      "fixed_case": "bond_fixed_expiry_teller_fixed",
+      "dimension": "D",
+      "safety_invariant": "redeem only accepts bond tokens registered by this teller",
+      "fix_evidence_lines": [
+        "-    function setReferrerFee(uint48 fee_) external override {",
+        "-        if (fee_ > 5e4) revert Teller_InvalidParams();",
+        "+    function setReferrerFee(uint48 fee_) external override nonReentrant {",
+        "+        if (fee_ > 5e3) revert Teller_InvalidParams();",
+        "+        if (fee_ > 5e3) revert Teller_InvalidParams();",
+        "-    function claimFees(ERC20[] memory tokens_, address to_) external override {",
+        "+    function setCreateFeeDiscount(uint48 discount_) external override requiresAuth {",
+        "+        if (discount_ > protocolFee) revert Teller_InvalidParams();"
+      ],
+      "n_changed_lines": 150,
+      "how_verifiable": "`token_ != bondTokens[underlying][expiry]` revert; verifiable by unit test with an unregistered token (needs market fixture)",
+      "diff_file": "eval/v16/fix_diffs/bond_fixed_expiry_teller.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NOT_ANALYSABLE"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "DIFF_REVIEW_ONLY"
+    },
+    {
+      "vulnerable_case": "daostack_ucontroller",
+      "fixed_case": "daostack_ucontroller_fixed",
+      "dimension": "A",
+      "safety_invariant": "organisation registration uses values read once, before checks and writes",
+      "fix_evidence_lines": [
+        "-        require(!reputations[address(_avatar.nativeReputation())]);",
+        "+        require(!reputations[address(nativeReputation)]);",
+        "-        require(!tokens[address(_avatar.nativeToken())]);",
+        "+        require(!tokens[address(nativeToken)]);"
+      ],
+      "n_changed_lines": 14,
+      "how_verifiable": "nativeToken/nativeReputation cached into locals; verifiable by review of the call sequence (no re-read after check)",
+      "diff_file": "eval/v16/fix_diffs/daostack_ucontroller.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "DIFF_REVIEW_ONLY"
+    },
+    {
+      "vulnerable_case": "lifi_cbridge_facet",
+      "fixed_case": "lifi_cbridge_facet_fixed",
+      "dimension": "D",
+      "safety_invariant": "swap targets and approve targets must be whitelisted",
+      "fix_evidence_lines": [
+        "+    LibStorage internal ls;",
+        "+                require(",
+        "+                    ls.dexWhitelist[_swapData[i].approveTo] == true && ls.dexWhitelist[_swapData[i].callTo] == true,",
+        "+                require(",
+        "+                    ls.dexWhitelist[_swapData[i].approveTo] == true && ls.dexWhitelist[_swapData[i].callTo] == true,",
+        "+    LibStorage internal s;",
+        "+    function addDex(address _dex) external {",
+        "+        if (s.dexWhitelist[_dex] == true) {"
+      ],
+      "n_changed_lines": 106,
+      "how_verifiable": "`dexWhitelist[approveTo] && dexWhitelist[callTo]` required; verifiable by unit test calling with a non-whitelisted callTo (needs diamond storage fixture)",
+      "diff_file": "eval/v16/fix_diffs/lifi_cbridge_facet.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "DIFF_REVIEW_ONLY"
+    },
+    {
+      "vulnerable_case": "llama_relative_quorum",
+      "fixed_case": "llama_relative_quorum_fixed",
+      "dimension": "B",
+      "safety_invariant": "quorum snapshot can only be (re)written by LlamaCore",
+      "fix_evidence_lines": [
+        "-  function isActive(ActionInfo calldata actionInfo) external view returns (bool);",
+        "+  function isActionActive(ActionInfo calldata actionInfo) external view returns (bool);",
+        "+    if (msg.sender != address(llamaCore)) revert OnlyLlamaCore();",
+        "-  function isActive(ActionInfo calldata actionInfo) external view returns (bool) {",
+        "+  function isActionActive(ActionInfo calldata actionInfo) external view returns (bool) {"
+      ],
+      "n_changed_lines": 11,
+      "how_verifiable": "`msg.sender != llamaCore -> revert OnlyLlamaCore`; VERIFIED in isolated EVM (eval/v18/invariants)",
+      "diff_file": "eval/v16/fix_diffs/llama_relative_quorum.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "VERIFIED",
+        "tests": "1/1 PASS",
+        "dir": "eval/v18/invariants/llama_relative_quorum_fixed/"
+      },
+      "verification_layer": "ISOLATED_EVM"
+    },
+    {
+      "vulnerable_case": "moonwell_temporal_governor",
+      "fixed_case": "moonwell_temporal_governor_fixed",
+      "dimension": "C",
+      "safety_invariant": "fast-track execution requires owner AND paused state",
+      "fix_evidence_lines": [
+        "-    function fastTrackProposalExecution(bytes memory VAA) external onlyOwner {",
+        "+    function fastTrackProposalExecution(bytes memory VAA) external onlyOwner whenPaused {"
+      ],
+      "n_changed_lines": 2,
+      "how_verifiable": "`onlyOwner whenPaused`; VERIFIED in isolated EVM (eval/v18/invariants)",
+      "diff_file": "eval/v16/fix_diffs/moonwell_temporal_governor.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "VERIFIED",
+        "tests": "2/2 PASS",
+        "dir": "eval/v18/invariants/moonwell_temporal_governor_fixed/"
+      },
+      "verification_layer": "ISOLATED_EVM"
+    },
+    {
+      "vulnerable_case": "nomad_replica",
+      "fixed_case": "nomad_replica_fixed",
+      "dimension": "A+D",
+      "safety_invariant": "zero root is never pre-approved nor acceptable",
+      "fix_evidence_lines": [
+        "+        if (_committedRoot != bytes32(0)) confirmAt[_committedRoot] = 1;",
+        "+        if (_root == LEGACY_STATUS_PROCESSED || _root == LEGACY_STATUS_NONE)"
+      ],
+      "n_changed_lines": 5,
+      "how_verifiable": "`if (_committedRoot != 0)` + `LEGACY_STATUS_NONE` rejected; VERIFIED in isolated EVM (eval/v18/invariants)",
+      "diff_file": "eval/v16/fix_diffs/nomad_replica.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "VERIFIED",
+        "tests": "4/4 PASS",
+        "dir": "eval/v18/invariants/nomad_replica_fixed/"
+      },
+      "verification_layer": "ISOLATED_EVM"
+    },
+    {
+      "vulnerable_case": "party_veto_proposal",
+      "fixed_case": "party_veto_proposal_fixed",
+      "dimension": "B",
+      "safety_invariant": "each member's veto power counts at most once per proposal",
+      "fix_evidence_lines": [
+        "+    mapping(Party => mapping(uint256 => mapping(address => bool))) public hasVoted;",
+        "-            revert ProposalNotActiveError(proposalId);",
+        "+        ) revert ProposalNotActiveError(proposalId);",
+        "+        if (hasVoted[party][proposalId][msg.sender]) revert AlreadyVotedError();",
+        "+        hasVoted[party][proposalId][msg.sender] = true;"
+      ],
+      "n_changed_lines": 16,
+      "how_verifiable": "`hasVoted[party][proposalId][msg.sender]` recorded and checked; verifiable by unit test (needs Party/globals fixture)",
+      "diff_file": "eval/v16/fix_diffs/party_veto_proposal.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "DIFF_REVIEW_ONLY"
+    },
+    {
+      "vulnerable_case": "sandbox_land",
+      "fixed_case": "sandbox_land_fixed",
+      "dimension": "D",
+      "safety_invariant": "token burn is not externally callable with caller-chosen owner",
+      "fix_evidence_lines": [
+        "-    function _burn(address from, address owner, uint256 id) public {",
+        "+    function _burn(address from, address owner, uint256 id) internal {"
+      ],
+      "n_changed_lines": 2,
+      "how_verifiable": "`_burn` public->internal; verifiable by ABI: no external selector",
+      "diff_file": "eval/v16/fix_diffs/sandbox_land.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "NO_ALERT_EITHER"
+      },
+      "compiled_ir_visibility_check": {
+        "status": "VERIFIED",
+        "source": "Slither IR of exact-compiler builds (dev17)",
+        "functions": {
+          "ERC721BaseToken._burn": {
+            "vulnerable": "public",
+            "fixed": "internal"
+          }
+        }
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "COMPILED_IR"
+    },
+    {
+      "vulnerable_case": "sushi_route_processor2",
+      "fixed_case": "sushi_route_processor2_fixed",
+      "dimension": "D",
+      "safety_invariant": "swap callback only pulls funds from msg.sender of the route",
+      "fix_evidence_lines": [
+        "+      require(from == msg.sender, 'swapUniV3: unexpected from address');",
+        "+      IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), uint256(amountIn));",
+        "-    if (from == address(this)) IERC20(tokenIn).safeTransfer(msg.sender, uint256(amount));",
+        "-     else IERC20(tokenIn).safeTransferFrom(from, msg.sender, uint256(amount));",
+        "+    IERC20(tokenIn).safeTransfer(msg.sender, uint256(amount));"
+      ],
+      "n_changed_lines": 12,
+      "how_verifiable": "`require(from == msg.sender)` and `from` removed from callback data; verifiable by unit test with a fake pool (needs pool fixture)",
+      "diff_file": "eval/v16/fix_diffs/sushi_route_processor2.diff",
+      "automatic_detector_difference_v17": {
+        "vulnerable_alert_at_labelled_site": [
+          "RouteProcessor2.uniswapV3SwapCallback"
+        ],
+        "same_function_alerted_in_fixed": [],
+        "verdict": "DISTINGUISHED"
+      },
+      "isolated_evm_check_fixed_version": {
+        "status": "NOT_RUN",
+        "reason": "needs project fixture (market/diamond/party/pool) or no externally callable surface to test"
+      },
+      "verification_layer": "DIFF_REVIEW_ONLY"
+    }
+  ],
+  "summary": {
+    "pairs": 10,
+    "by_verification_layer": {
+      "COMPILED_IR": 2,
+      "DIFF_REVIEW_ONLY": 5,
+      "ISOLATED_EVM": 3
+    },
+    "automatic_v17_distinguished": 1
+  }
+}

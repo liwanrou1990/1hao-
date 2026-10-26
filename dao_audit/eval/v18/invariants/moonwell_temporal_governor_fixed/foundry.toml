@@ -1,0 +1,8 @@
+[profile.default]
+src = 'src/core/Governance'
+test = 'v018test'
+script = 'no_scripts'
+libs = ['lib']
+evm_version = 'paris'
+offline = true
+remappings = ['ds-test/=lib/forge-std/lib/ds-test/src/', '@forge-std/=lib/forge-std/src/', '@openzeppelin/=lib/openzeppelin-contracts/', '@protocol=src/']

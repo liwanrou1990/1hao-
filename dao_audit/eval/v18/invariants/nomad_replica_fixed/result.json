@@ -1,0 +1,23 @@
+{
+  "repo": "nomad-xyz/monorepo",
+  "commit": "0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e",
+  "project": "packages/contracts-core (hardhat; deps @openzeppelin/contracts 3.4.2, contracts-upgradeable 3.4.2, @summa-tx/memview-sol from the V0.15 build cache)",
+  "dimension": "A+D",
+  "invariants": [
+    "zero committed root is not pre-approved at initialize",
+    "zero/default root is never an acceptable root",
+    "non-zero trusted root still pre-approved (intended behaviour kept)",
+    "initialize is one-shot"
+  ],
+  "compiler": "0.7.6+commit.7338295f.Emscripten.clang (solc-js shim)",
+  "forge": "1.5.1-stable",
+  "forge_std": "fc560fa34fa12a335a50c35d92e55a6628ca467c (external, test harness only)",
+  "tests": {
+    "test_A_initialize_is_one_shot()": "Success",
+    "test_A_zero_root_not_preapproved()": "Success",
+    "test_D_zero_root_never_acceptable()": "Success",
+    "test_nonzero_root_preapproved()": "Success"
+  },
+  "vulnerable_version_exercised": false,
+  "limitation": "message processing with a forged root is not exercised (would require constructing attacker messages); the check covers the root-acceptance predicate and init state only"
+}

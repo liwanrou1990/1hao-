@@ -1,0 +1,497 @@
+{
+  "consistency_problems": [],
+  "n": 25,
+  "by_category": {
+    "NO_RULE": 12,
+    "PARSE_FAIL": 5,
+    "SEMANTICS_UNDETERMINED": 5,
+    "INSUFFICIENT_EVIDENCE": 3
+  },
+  "rows": [
+    {
+      "n": 1,
+      "case": "bancor_network",
+      "function": "TokenHandler.safeTransferFrom",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.4.26+commit.4563c3fc.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "transferFrom is issued as a low-level call with an encoded selector (execute(token, abi.encodeWithSelector(...))); arbitrary-send-erc20 only matches high-level transferFrom calls; no detector flags a public asset helper that should be internal"
+    },
+    {
+      "n": 2,
+      "case": "bancor_network",
+      "function": "TokenHandler.safeTransfer",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.4.26+commit.4563c3fc.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "same encoded low-level call; no detector for a public helper moving the contract's own tokens"
+    },
+    {
+      "n": 3,
+      "case": "bancor_network",
+      "function": "TokenHandler.safeApprove",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.4.26+commit.4563c3fc.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "same encoded low-level call; no detector for public approve helpers"
+    },
+    {
+      "n": 4,
+      "case": "bond_fixed_expiry_teller",
+      "function": "BondFixedExpiryTeller.redeem",
+      "vuln": "VULN-4",
+      "category": "PARSE_FAIL",
+      "blind_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_compiler": [],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "ANALYSIS_INCOMPLETE",
+      "root_cause": "vulnerable commit has no recorded submodules/lockfile for solmate and clones-with-immutable-args; dependency versions unknown -> ANALYSIS_INCOMPLETE (still after V0.16 toolchain fixes)"
+    },
+    {
+      "n": 5,
+      "case": "daostack_ucontroller",
+      "function": "UController.newOrganization",
+      "vuln": "VULN-1",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.2+commit.1df8f40c.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "unprotected-upgrade",
+        "tx-origin",
+        "protected-vars"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "permissionless registration that trusts values re-read from a caller-supplied contract; no detector models time-of-check/time-of-use on external getters"
+    },
+    {
+      "n": 6,
+      "case": "daostack_ucontroller",
+      "function": "UController.sendEther",
+      "vuln": "VULN-4",
+      "category": "SEMANTICS_UNDETERMINED",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.2+commit.1df8f40c.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "sendEther is guarded by a scheme-permission modifier; Slither treats it as protected and cannot tell that the permission itself is obtainable through newOrganization (chain through a role)"
+    },
+    {
+      "n": 7,
+      "case": "lifi_cbridge_facet",
+      "function": "CBridgeFacet.swapAndStartBridgeTokensViaCBridge",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.7+commit.e28d00a7.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "no Slither detector for an arbitrary low-level call (callTo.call(callData)) without ETH value; baseline heuristic missed it because the target flows through a library function parameter (inter-procedural)"
+    },
+    {
+      "n": 8,
+      "case": "lifi_cbridge_facet",
+      "function": "LibSwap.swap",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.7+commit.e28d00a7.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "same: arbitrary call with caller-controlled target and calldata has no detector"
+    },
+    {
+      "n": 9,
+      "case": "llama_relative_quorum",
+      "function": "LlamaRelativeQuorum.validateActionCreation",
+      "vuln": "VULN-2",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.19+commit.7dd6d404.Emscripten.clang"
+      ],
+      "detectors_for_class": [],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "VULN-2: no Slither capability for quorum / voting-supply snapshot semantics"
+    },
+    {
+      "n": 10,
+      "case": "moonwell_temporal_governor",
+      "function": "TemporalGovernor.fastTrackProposalExecution",
+      "vuln": "VULN-3",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.19+commit.7dd6d404.Emscripten.clang"
+      ],
+      "detectors_for_class": [],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "VULN-3: no Slither capability for timelock / emergency-path conditions (fix adds whenPaused)"
+    },
+    {
+      "n": 11,
+      "case": "mph88_deposit_nft",
+      "function": "NFT.init",
+      "vuln": "VULN-1",
+      "category": "SEMANTICS_UNDETERMINED",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.17+commit.d19bba13.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "unprotected-upgrade",
+        "tx-origin",
+        "protected-vars"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "init is unprotected and writes _owner, but onlyOwner checks require(isOwner()) whose msg.sender comparison is inside an internal call; all_conditional_solidity_variables_read does not follow it, so _owner is not seen as a sender-checked variable"
+    },
+    {
+      "n": 12,
+      "case": "mph88_deposit_nft",
+      "function": "NFT.mint",
+      "vuln": "VULN-4",
+      "category": "SEMANTICS_UNDETERMINED",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.17+commit.d19bba13.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "onlyOwner-protected; the risk exists only through the init takeover (chain), which Slither cannot link"
+    },
+    {
+      "n": 13,
+      "case": "mph88_deposit_nft",
+      "function": "NFT.burn",
+      "vuln": "VULN-4",
+      "category": "SEMANTICS_UNDETERMINED",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.17+commit.d19bba13.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "same as mint"
+    },
+    {
+      "n": 14,
+      "case": "nomad_replica",
+      "function": "Replica.initialize",
+      "vuln": "VULN-1",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.7.6+commit.7338295f.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "unprotected-upgrade",
+        "tx-origin",
+        "protected-vars"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "initialize is protected by an initializer guard; the defect is the trusted value (zero root pre-approved), which no detector reasons about"
+    },
+    {
+      "n": 15,
+      "case": "nomad_replica",
+      "function": "Replica.process",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.7.6+commit.7338295f.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "message-acceptance semantics (acceptableRoot on the default value) have no detector"
+    },
+    {
+      "n": 16,
+      "case": "olympus_governance",
+      "function": "OlympusGovernance.endorseProposal",
+      "vuln": "VULN-2",
+      "category": "PARSE_FAIL",
+      "blind_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.15+commit.e14f2714.Emscripten.clang"
+      ],
+      "detectors_for_class": [],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "blind run: foundry.toml remappings without trailing slash -> ANALYSIS_INCOMPLETE (fixed in V0.16 toolchain; on dev rerun it compiles, and VULN-2 is then NO_RULE)"
+    },
+    {
+      "n": 17,
+      "case": "olympus_governance",
+      "function": "OlympusGovernance.executeProposal",
+      "vuln": "VULN-3",
+      "category": "PARSE_FAIL",
+      "blind_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.15+commit.e14f2714.Emscripten.clang"
+      ],
+      "detectors_for_class": [],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "same build failure in the blind run (on dev rerun: VULN-3 NO_RULE)"
+    },
+    {
+      "n": 18,
+      "case": "party_veto_proposal",
+      "function": "VetoProposal.voteToVeto",
+      "vuln": "VULN-2",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.17+commit.8df45f5f.Emscripten.clang"
+      ],
+      "detectors_for_class": [],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "VULN-2 double counting: no detector for missing per-voter records"
+    },
+    {
+      "n": 19,
+      "case": "pickle_controller",
+      "function": "ControllerV4.swapExactJarForJar",
+      "vuln": "VULN-4",
+      "category": "NO_RULE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.6.12+commit.27d51765.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "unvalidated contract parameters (_fromJar/_toJar) used as call targets; no detector for untrusted-contract parameters"
+    },
+    {
+      "n": 20,
+      "case": "pickle_controller",
+      "function": "CurveProxyLogic.add_liquidity",
+      "vuln": "VULN-4",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.6.12+commit.27d51765.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "HEURISTIC_SIGNAL_ONLY",
+      "root_cause": "baseline heuristic located it (unprotected call to parameter-derived target) but it is HEURISTIC_ONLY, not a scored finding"
+    },
+    {
+      "n": 21,
+      "case": "sandbox_land",
+      "function": "ERC721BaseToken._burn",
+      "vuln": "VULN-4",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.5.9+commit.e560f70d.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "heuristic flagged exactly _burn (public, unprotected writer of ownership state) but as VULN-1 and HEURISTIC_ONLY; label is VULN-4"
+    },
+    {
+      "n": 22,
+      "case": "sushi_route_processor2",
+      "function": "RouteProcessor2.swapUniV3",
+      "vuln": "VULN-4",
+      "category": "PARSE_FAIL",
+      "blind_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.10+commit.fc410830.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "blind run: monorepo yarn.lock lookup installed OpenZeppelin 3.1.0 instead of declared 4.8.0 (fixed in V0.16; dev rerun compiles, swapUniV3 itself still has no detector)"
+    },
+    {
+      "n": 23,
+      "case": "sushi_route_processor2",
+      "function": "RouteProcessor2.uniswapV3SwapCallback",
+      "vuln": "VULN-4",
+      "category": "PARSE_FAIL",
+      "blind_build_status": "ANALYSIS_INCOMPLETE",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.10+commit.fc410830.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "IN_REVIEW_QUEUE",
+      "root_cause": "same build failure in the blind run; on the dev rerun arbitrary-send-erc20 DOES locate this function"
+    },
+    {
+      "n": 24,
+      "case": "wormhole_core_impl",
+      "function": "Implementation.initialize",
+      "vuln": "VULN-1",
+      "category": "SEMANTICS_UNDETERMINED",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.4+commit.c7e474f2.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "unprotected-upgrade",
+        "tx-origin",
+        "protected-vars"
+      ],
+      "v17_status": "NOT_DETECTED",
+      "root_cause": "custom initializer guard keyed on the ERC1967 implementation slot; Slither unprotected-upgrade only activates for contracts named/inheriting 'Initializable' or '*upgradeable*' and only recognises a modifier named 'initializer'"
+    },
+    {
+      "n": 25,
+      "case": "wormhole_core_impl",
+      "function": "Governance.upgradeImplementation",
+      "vuln": "VULN-4",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "blind_build_status": "OK",
+      "dev17_build_status": "OK",
+      "dev17_compiler": [
+        "0.8.4+commit.c7e474f2.Emscripten.clang"
+      ],
+      "detectors_for_class": [
+        "suicidal",
+        "arbitrary-send-eth",
+        "arbitrary-send-erc20",
+        "arbitrary-send-erc20-permit",
+        "controlled-delegatecall"
+      ],
+      "v17_status": "IN_REVIEW_QUEUE",
+      "root_cause": "controlled-delegatecall fired, but the V0.15 baseline triage demoted it to INCONCLUSIVE because the guardian-signature verification reads block.timestamp (a time condition is not a timelock)"
+    }
+  ]
+}
