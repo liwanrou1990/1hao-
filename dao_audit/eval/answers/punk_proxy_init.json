@@ -1,0 +1,9 @@
+{"case":"punk_proxy_init","project":"punk","kind":"vulnerable","is_chain_case":false,
+ "truth":[
+   {"vuln":"VULN-1","contract":"CompoundModel","function":"initialize","line":[24,37],"treasury_risk":true,
+    "governance_relation":"可升级实现 initialize public 无一次性守卫/无访问控制,可重指向策略至攻击者地址→抽池资产"},
+   {"vuln":"VULN-1","contract":"Ownable","function":"initialize","line":[10,14],"treasury_risk":false,
+    "governance_relation":"Ownable.initialize public 无守卫,经代理覆盖 OwnableStorage 夺管理权"}],
+ "evidence":{"repo":"https://github.com/PunkFinance/punk.protocol","vuln_commit":"6fcdda755a4b076e362d032ffe2b18850a6c208f",
+   "fixed_commit":"d68a58ddcb98a0641f0af44c31791ead99f4433f","incident_date":"2021-08-10",
+   "reports":["https://rekt.news/punk-protocol-rekt/"]}}

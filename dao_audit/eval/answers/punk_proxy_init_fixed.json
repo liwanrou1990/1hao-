@@ -1,0 +1,3 @@
+{"case":"punk_proxy_init_fixed","project":"punk","kind":"fixed","is_chain_case":false,"truth":[],
+ "evidence":{"repo":"https://github.com/PunkFinance/punk.protocol","commit":"d68a58ddcb98a0641f0af44c31791ead99f4433f",
+   "rationale":"initialize now guarded by initializer+onlyCreator; engine should NOT flag VULN-1 -> any VULN-1 here is fixed-version FP"}}
