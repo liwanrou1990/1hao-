@@ -1,0 +1,203 @@
+{
+  "case": "olympus_governance",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "OlympusGovernance",
+      "function": "configureDependencies",
+      "file": "Governance.sol",
+      "line": 61,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "VOTES"
+      ],
+      "checked_in": [
+        "OlympusGovernance.activateProposal(uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "OlympusGovernance",
+      "function": "endorseProposal",
+      "file": "Governance.sol",
+      "line": 180,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "totalEndorsementsForProposal"
+      ],
+      "checked_in": [
+        "OlympusGovernance.activateProposal(uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "OlympusGovernance",
+      "function": "executeProposal",
+      "file": "Governance.sol",
+      "line": 265,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "activeProposal"
+      ],
+      "checked_in": [
+        "OlympusGovernance.activateProposal(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "olympus_governance",
+    "repo": "https://github.com/code-423n4/2022-08-olympus",
+    "commit": "2a0b515012b4a40076f6eac487f7816aafb8724a",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "foundry.toml",
+    "dataset_identical_to_snapshot": {
+      "Governance.sol": true,
+      "INSTR.sol": true,
+      "Kernel.sol": true,
+      "KernelUtils.sol": true,
+      "VOTES.sol": true,
+      "VoterRegistration.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/forge-std",
+        "url": "https://github.com/foundry-rs/forge-std",
+        "commit": "6b4ca42943f093642bac31783b08aa52a5a6ff64",
+        "status": "ok"
+      },
+      {
+        "path": "lib/solmate",
+        "url": "https://github.com/transmissions11/solmate",
+        "commit": "9cf1428245074e39090dceacb0c28b1f684f584c",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2022-08-25T22:32:48-07:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "forge-std/=lib/forge-std/src/",
+      "interfaces/=src/interfaces/",
+      "libraries/=src/libraries/",
+      "modules/=src/modules/",
+      "policies/=src/policies/",
+      "solmate/=lib/solmate/src/",
+      "test/=src/test/",
+      "ds-test/=lib/forge-std/lib/ds-test/src/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "lib/solmate/src/tokens/ERC20.sol": "a3a7e839f42762ef24623581542a916e838f3c7c0bef647963d1fdad0f9d208a",
+      "src/Kernel.sol": "0ea43ae4c8323781c6cfc80e3b5f826c99d51cdb30f239d3145bd125c1432e4f",
+      "src/modules/INSTR.sol": "d4f9001e384d01bec7c522a609434f1d298a9d82c3e777033fb298ffffcb8d97",
+      "src/modules/VOTES.sol": "ed712f7b03120dfe09aab9fe6db3320703cac5213b9d08934d78386b7a6bbd70",
+      "src/policies/Governance.sol": "af01a6e9a9a9917a702acd4b852e44b0ed4b93c2d8c3db8cf6c6eec2ededf59a",
+      "src/policies/VoterRegistration.sol": "53f504f007ea7582fe43e7f249551d0b6012029b9441f5e85c073e9368b37217",
+      "src/utils/KernelUtils.sol": "1f4c457b41631f07d0753ca7f4360909caf06034fe30aaa06d9e448c76eaee4c"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "src/Kernel.sol",
+          "src/modules/INSTR.sol",
+          "src/modules/VOTES.sol",
+          "src/policies/Governance.sol",
+          "src/policies/VoterRegistration.sol",
+          "src/utils/KernelUtils.sol"
+        ],
+        "pragmas": [
+          "0.8.15",
+          ">=0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.15",
+            "reason": "pragma:newest_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.15",
+          "selected_by": "pragma:newest_compiling",
+          "version_string": "0.8.15+commit.e14f2714.Emscripten.clang",
+          "soljson_sha256": "6f5730c00e5c33ea62d9e942c3b86e55209dbeb31f975b5b6b69671564cb519a",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.15)"
+        },
+        "compiled_sources": [
+          "lib/solmate/src/tokens/ERC20.sol",
+          "src/Kernel.sol",
+          "src/modules/INSTR.sol",
+          "src/modules/VOTES.sol",
+          "src/policies/Governance.sol",
+          "src/policies/VoterRegistration.sol",
+          "src/utils/KernelUtils.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 9
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 6,
+      "compiled": 6,
+      "slither_ir": 6,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.4
+  },
+  "n_files": 6,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3373.7,
+  "eval_files_opened": [
+    "dataset_r4/olympus_governance/BUILD.json",
+    "dataset_r4/olympus_governance/contracts/Governance.sol",
+    "dataset_r4/olympus_governance/contracts/INSTR.sol",
+    "dataset_r4/olympus_governance/contracts/Kernel.sol",
+    "dataset_r4/olympus_governance/contracts/KernelUtils.sol",
+    "dataset_r4/olympus_governance/contracts/VOTES.sol",
+    "dataset_r4/olympus_governance/contracts/VoterRegistration.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

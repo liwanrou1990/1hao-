@@ -1,0 +1,453 @@
+{
+  "case": "tornado_governance",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "high",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-erc20",
+      "contract": "Governance",
+      "function": "_transferTokens",
+      "line": 253,
+      "title": "arbitrary-send-erc20",
+      "evidence": "Governance._transferTokens(address,uint256) (contracts/v1/Governance.sol#253-256) uses arbitrary from in transferFrom: require(bool,string)(torn.transferFrom(owner,address(this),amount),TORN: transferFrom failed) (contracts/v1/Governance.sol#254)",
+      "file": "Governance.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "TORN",
+      "function": "rescueTokens",
+      "line": 90,
+      "title": "arbitrary-send-eth",
+      "evidence": "TORN.rescueTokens(IERC20,address,uint256) (node_modules/torn-token/contracts/TORN.sol#90-109) sends eth to arbitrary user\n\tDangerous calls:\n\t- _to.transfer(balance) (node_modules/torn-token/contracts/TORN.sol#101)",
+      "file": "node_modules/torn-token/contracts/TORN.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Delegation",
+      "function": "undelegate",
+      "file": "Delegation.sol",
+      "line": 24,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "delegatedTo"
+      ],
+      "checked_in": [
+        "Delegation.proposeByDelegate(address,address,string)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "initialize",
+      "file": "Governance.sol",
+      "line": 91,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "CLOSING_PERIOD",
+        "EXECUTION_DELAY",
+        "EXECUTION_EXPIRATION",
+        "PROPOSAL_THRESHOLD",
+        "QUORUM_VOTES",
+        "proposals"
+      ],
+      "checked_in": [
+        "Delegation.castDelegatedVote(address[],uint256,bool)",
+        "Delegation.proposeByDelegate(address,address,string)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "lock",
+      "file": "Governance.sol",
+      "line": 109,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "lockedBalance"
+      ],
+      "checked_in": [
+        "Delegation.castDelegatedVote(address[],uint256,bool)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "unlock",
+      "file": "Governance.sol",
+      "line": 125,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "lockedBalance"
+      ],
+      "checked_in": [
+        "Delegation.castDelegatedVote(address[],uint256,bool)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "execute",
+      "file": "Governance.sol",
+      "line": 184,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "Delegation.proposeByDelegate(address,address,string)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GovernanceVaultUpgrade",
+      "function": "unlock",
+      "file": "GovernanceVaultUpgrade.sol",
+      "line": 24,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "lockedBalance"
+      ],
+      "checked_in": [
+        "Delegation.castDelegatedVote(address[],uint256,bool)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GovernanceStakingUpgrade",
+      "function": "lock",
+      "file": "GovernanceStakingUpgrade.sol",
+      "line": 43,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "lockedBalance"
+      ],
+      "checked_in": [
+        "Delegation.castDelegatedVote(address[],uint256,bool)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    }
+  ],
+  "build": {
+    "case": "tornado_governance",
+    "repo": "https://github.com/tornadocash/tornado-governance",
+    "commit": "6464973b108102b70efafa29e55da69bfb43b7b9",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.js",
+    "dataset_identical_to_snapshot": {
+      "Configuration.sol": true,
+      "Delegation.sol": true,
+      "GasCompensator.sol": true,
+      "Governance.sol": true,
+      "GovernanceGasUpgrade.sol": true,
+      "GovernanceStakingUpgrade.sol": true,
+      "GovernanceVaultUpgrade.sol": true,
+      "LoopbackProxy.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-08-04T14:50:56+03:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "3.2.0-rc.0",
+        "declared_in": "yarn.lock",
+        "installed": "3.2.0-rc.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/GSN/Context.sol": "d20a5ae07bc58a546d5cc13db982d76bec82900ce99c2fbe8f01d4a710509f0a",
+          "@openzeppelin/contracts/access/Ownable.sol": "60878710dde1910d1070ed77351c73420257aa40f01887d67233956fab208fb9",
+          "@openzeppelin/contracts/math/Math.sol": "a4e62f337ecc2ce658fb9773ea918996d86b6dbef4efe90a6709079e71a1bdf4",
+          "@openzeppelin/contracts/math/SafeMath.sol": "aa64549e1edf3bd55b4a5f7404edfae8ef704f3fbd0735cdd330b380c118e067",
+          "@openzeppelin/contracts/proxy/Proxy.sol": "6b82d001db189ea635836b5fcaee3bf9fa23b73b983bdb59b5386610a16fea6f",
+          "@openzeppelin/contracts/proxy/TransparentUpgradeableProxy.sol": "14a4c9a5a45ca70d152e1b1e01ffaa38da4c76602501d9f45c819197996d87ef",
+          "@openzeppelin/contracts/proxy/UpgradeableProxy.sol": "ebc5b24d110e48d7aa6fcafef4541efdadf90e01f4560a4673c68064e29cfada",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol": "2b0b5475bde67a01c220913293be429dc086c802cce317c5272553a6bb0fc5e7",
+          "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol": "e7c17538f1a6ec6af985bd3f6d6c2e31dbb6385fc754b895b19f90b2c391a6ef",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "331d81d1058f809dc5b3cbae3438ed4e38cd1117778ca2ef2d207a8c46b4085c",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "305ffee5fb590e99c62b777087253ddeb22eaf0d20c6e8075178210ab3eff73f",
+          "@openzeppelin/contracts/utils/Address.sol": "7907ff6c000f46187e2c0798c54de8bcfca4049cfc47435771c8ad1e6e267db6",
+          "@openzeppelin/contracts/utils/Pausable.sol": "71ce63f1fe053014307683c501a614be1a32c7f586bcd9f04956e2ad1f286ae4"
+        }
+      },
+      {
+        "package": "@openzeppelin/upgrades-core",
+        "declared": "1.10.0",
+        "declared_in": "yarn.lock",
+        "installed": "1.10.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/upgrades-core/contracts/Initializable.sol": "467a5535ab431780be7dc3454845156a25f139acfae6209500c5050283cd141c"
+        }
+      },
+      {
+        "package": "torn-token",
+        "declared": "1.0.4",
+        "declared_in": "yarn.lock",
+        "installed": "1.0.4",
+        "status": "ok",
+        "files_sha256": {
+          "torn-token/contracts/ECDSA.sol": "aee0b24f85ae2e1f1ac312e4bc2c46d61b1e8080528ee400303d4227ad85ed03",
+          "torn-token/contracts/ENS.sol": "71c93f679332f9079199c70f1a23aeac4c76e925432fd4f08989ea712434d579",
+          "torn-token/contracts/ERC20Permit.sol": "d984879a62289cb34e14dd57d5b0d8562fb8241730d9e131b8749f4250dcb004",
+          "torn-token/contracts/TORN.sol": "ef48307492752325deea5c86a232599a5cf699ae3afa8dc7201d86bb423de2c5"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/GSN/Context.sol": "d20a5ae07bc58a546d5cc13db982d76bec82900ce99c2fbe8f01d4a710509f0a",
+      "@openzeppelin/contracts/access/Ownable.sol": "60878710dde1910d1070ed77351c73420257aa40f01887d67233956fab208fb9",
+      "@openzeppelin/contracts/math/Math.sol": "a4e62f337ecc2ce658fb9773ea918996d86b6dbef4efe90a6709079e71a1bdf4",
+      "@openzeppelin/contracts/math/SafeMath.sol": "aa64549e1edf3bd55b4a5f7404edfae8ef704f3fbd0735cdd330b380c118e067",
+      "@openzeppelin/contracts/proxy/Proxy.sol": "6b82d001db189ea635836b5fcaee3bf9fa23b73b983bdb59b5386610a16fea6f",
+      "@openzeppelin/contracts/proxy/TransparentUpgradeableProxy.sol": "14a4c9a5a45ca70d152e1b1e01ffaa38da4c76602501d9f45c819197996d87ef",
+      "@openzeppelin/contracts/proxy/UpgradeableProxy.sol": "ebc5b24d110e48d7aa6fcafef4541efdadf90e01f4560a4673c68064e29cfada",
+      "@openzeppelin/contracts/token/ERC20/ERC20.sol": "2b0b5475bde67a01c220913293be429dc086c802cce317c5272553a6bb0fc5e7",
+      "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol": "e7c17538f1a6ec6af985bd3f6d6c2e31dbb6385fc754b895b19f90b2c391a6ef",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "331d81d1058f809dc5b3cbae3438ed4e38cd1117778ca2ef2d207a8c46b4085c",
+      "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "305ffee5fb590e99c62b777087253ddeb22eaf0d20c6e8075178210ab3eff73f",
+      "@openzeppelin/contracts/utils/Address.sol": "7907ff6c000f46187e2c0798c54de8bcfca4049cfc47435771c8ad1e6e267db6",
+      "@openzeppelin/contracts/utils/Pausable.sol": "71ce63f1fe053014307683c501a614be1a32c7f586bcd9f04956e2ad1f286ae4",
+      "@openzeppelin/upgrades-core/contracts/Initializable.sol": "467a5535ab431780be7dc3454845156a25f139acfae6209500c5050283cd141c",
+      "contracts/v1/Configuration.sol": "f4ff2aac2e617d9251223b73fadf0da18a170bf7237695a34511607d033d0544",
+      "contracts/v1/Core.sol": "95643ed98bd39ace9f4d512c38e2fab2c837b79d96c854efd974f98428f1ea26",
+      "contracts/v1/Delegation.sol": "41e84c5897825b1ef4842a78b3dd8e75578883b700aaef69e161576bf54d9b50",
+      "contracts/v1/Governance.sol": "60f5f6cfc757513ebbb968697ca9cd75c7da14a91dfbab759a519d4dd1875a07",
+      "contracts/v1/LoopbackProxy.sol": "772a21981a64c9ce034302c2b549079b88afb64add4f8660e0b3d02979ec4393",
+      "contracts/v2-vault-and-gas/GasCompensator.sol": "deea6fb96da86b5244c262ee41e41c255f0915aca43a170e106a063f04b01a86",
+      "contracts/v2-vault-and-gas/GovernanceGasUpgrade.sol": "bbdf16f1e9284d024f02e093a0430837e5a417f5c5fda319c3bea74c21bbefa1",
+      "contracts/v2-vault-and-gas/GovernanceVaultUpgrade.sol": "4702d9ccad53ab8f9252f3b13b2b494a06271f134077a0460910547a6e7320b6",
+      "contracts/v2-vault-and-gas/interfaces/ITornadoVault.sol": "7a991e909dcf9a0d78fbc6f4592e836da3a6896604feaa6a8ba59db4aefe3b1d",
+      "contracts/v3-relayer-registry/GovernanceStakingUpgrade.sol": "1bfce909f4a91dc909be61620873f51243e2d3921ccb37b3057936a4b0959eae",
+      "contracts/v3-relayer-registry/interfaces/ITornadoStakingRewards.sol": "729107e49ee4dce55b8ccb038cb6433f69939d0250de70a9ba2d2da60d8473e0",
+      "torn-token/contracts/ECDSA.sol": "aee0b24f85ae2e1f1ac312e4bc2c46d61b1e8080528ee400303d4227ad85ed03",
+      "torn-token/contracts/ENS.sol": "71c93f679332f9079199c70f1a23aeac4c76e925432fd4f08989ea712434d579",
+      "torn-token/contracts/ERC20Permit.sol": "d984879a62289cb34e14dd57d5b0d8562fb8241730d9e131b8749f4250dcb004",
+      "torn-token/contracts/TORN.sol": "ef48307492752325deea5c86a232599a5cf699ae3afa8dc7201d86bb423de2c5"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.6.12",
+        "file": "hardhat.config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/v1/Configuration.sol",
+          "contracts/v1/Delegation.sol",
+          "contracts/v1/Governance.sol",
+          "contracts/v1/LoopbackProxy.sol",
+          "contracts/v2-vault-and-gas/GasCompensator.sol",
+          "contracts/v2-vault-and-gas/GovernanceGasUpgrade.sol",
+          "contracts/v2-vault-and-gas/GovernanceVaultUpgrade.sol",
+          "contracts/v3-relayer-registry/GovernanceStakingUpgrade.sol"
+        ],
+        "pragmas": [
+          ">=0.4.24 <0.7.0",
+          "^0.6.0",
+          "^0.6.12",
+          "^0.6.2"
+        ],
+        "attempts": [
+          {
+            "version": "0.6.12",
+            "reason": "project_config:hardhat.config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.6.12",
+          "selected_by": "project_config:hardhat.config.js",
+          "version_string": "0.6.12+commit.27d51765.Emscripten.clang",
+          "soljson_sha256": "3e1956c550ca48e289044c7c0bd892403081b4b5e17e77ce707c815ce6c4228f",
+          "frontend": "solc-js (official emscripten build, npm solc@0.6.12)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/GSN/Context.sol",
+          "@openzeppelin/contracts/access/Ownable.sol",
+          "@openzeppelin/contracts/math/Math.sol",
+          "@openzeppelin/contracts/math/SafeMath.sol",
+          "@openzeppelin/contracts/proxy/Proxy.sol",
+          "@openzeppelin/contracts/proxy/TransparentUpgradeableProxy.sol",
+          "@openzeppelin/contracts/proxy/UpgradeableProxy.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/Pausable.sol",
+          "@openzeppelin/upgrades-core/contracts/Initializable.sol",
+          "contracts/v1/Configuration.sol",
+          "contracts/v1/Core.sol",
+          "contracts/v1/Delegation.sol",
+          "contracts/v1/Governance.sol",
+          "contracts/v1/LoopbackProxy.sol",
+          "contracts/v2-vault-and-gas/GasCompensator.sol",
+          "contracts/v2-vault-and-gas/GovernanceGasUpgrade.sol",
+          "contracts/v2-vault-and-gas/GovernanceVaultUpgrade.sol",
+          "contracts/v2-vault-and-gas/interfaces/ITornadoVault.sol",
+          "contracts/v3-relayer-registry/GovernanceStakingUpgrade.sol",
+          "contracts/v3-relayer-registry/interfaces/ITornadoStakingRewards.sol",
+          "torn-token/contracts/ECDSA.sol",
+          "torn-token/contracts/ENS.sol",
+          "torn-token/contracts/ERC20Permit.sol",
+          "torn-token/contracts/TORN.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 32
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 8,
+      "compiled": 8,
+      "slither_ir": 8,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.8
+  },
+  "n_files": 8,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": [
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "Governance.initialize",
+        "to": "Governance._transferTokens",
+        "via": [
+          "torn"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "Governance.lock",
+        "to": "Governance._transferTokens",
+        "via": [
+          "lockedBalance"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "Governance.unlock",
+        "to": "Governance._transferTokens",
+        "via": [
+          "lockedBalance"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "GovernanceVaultUpgrade.unlock",
+        "to": "Governance._transferTokens",
+        "via": [
+          "lockedBalance"
+        ]
+      },
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "GovernanceStakingUpgrade.lock",
+        "to": "Governance._transferTokens",
+        "via": [
+          "lockedBalance"
+        ]
+      }
+    ]
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3835.6,
+  "eval_files_opened": [
+    "dataset/tornado_governance/BUILD.json",
+    "dataset/tornado_governance/contracts/Configuration.sol",
+    "dataset/tornado_governance/contracts/Delegation.sol",
+    "dataset/tornado_governance/contracts/GasCompensator.sol",
+    "dataset/tornado_governance/contracts/Governance.sol",
+    "dataset/tornado_governance/contracts/GovernanceGasUpgrade.sol",
+    "dataset/tornado_governance/contracts/GovernanceStakingUpgrade.sol",
+    "dataset/tornado_governance/contracts/GovernanceVaultUpgrade.sol",
+    "dataset/tornado_governance/contracts/LoopbackProxy.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

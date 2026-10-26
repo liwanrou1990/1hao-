@@ -1,0 +1,12 @@
+diff -ruN sandbox_land/contracts/ERC721BaseToken.sol sandbox_land_fixed/contracts/ERC721BaseToken.sol
+--- sandbox_land/contracts/ERC721BaseToken.sol	2026-10-26 04:35:14.012040131 +0000
++++ sandbox_land_fixed/contracts/ERC721BaseToken.sol	2026-10-26 04:35:14.056040134 +0000
+@@ -352,7 +352,7 @@
+         return _operatorsForAll[owner][operator] || _superOperators[operator];
+     }
+ 
+-    function _burn(address from, address owner, uint256 id) public {
++    function _burn(address from, address owner, uint256 id) internal {
+         require(from == owner, "not owner");
+         _owners[id] = 2**160; // cannot mint it again
+         _numNFTPerAddress[from]--;

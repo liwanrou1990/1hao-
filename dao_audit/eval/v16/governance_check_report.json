@@ -1,0 +1,2071 @@
+{
+  "generated_from": "eval/results/dev16_r4/raw + eval/answers (manual layer)",
+  "summary": {
+    "automatic": {
+      "EVIDENCE_INSUFFICIENT": 108,
+      "ANALYSIS_INCOMPLETE": 4
+    },
+    "manual": {
+      "NOT_REVIEWED": 82,
+      "EVIDENCE_SUFFICIENT_DEFECT": 12,
+      "EVIDENCE_SUFFICIENT_PROTECTED": 12,
+      "EVIDENCE_INSUFFICIENT": 6
+    },
+    "isolated": {
+      "NOT_RUN": 112
+    }
+  },
+  "cases": [
+    {
+      "case": "bancor_network",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "TokenHandler.sol:18-47 safeApprove/safeTransfer/safeTransferFrom are public; fix diff makes them internal"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "bancor_network_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "fix diff: the three helpers are internal (fix_diffs/bancor_network.diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "bond_fixed_expiry_teller",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "ANALYSIS_INCOMPLETE",
+            "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller."
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "ANALYSIS_INCOMPLETE",
+            "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller."
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "ANALYSIS_INCOMPLETE",
+            "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller."
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "ANALYSIS_INCOMPLETE",
+            "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller."
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "redeem accepts any token_; fix adds `token_ != bondTokens[underlying][expiry]` check (fix_diffs/bond_fixed_expiry_teller.diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "bond_fixed_expiry_teller_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-erc20 BondBaseTeller._handleTransfers:177"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "registry check on token_ present; flagged _handleTransfers pulls from the registered market owner (BondBaseTeller.sol:184-218)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "daostack_ucontroller",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 9,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "UController.newOrganization re-reads nativeToken()/nativeReputation() from a caller-supplied avatar; fix caches them once (fix_diffs/daostack_ucontroller.diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-erc20 Avatar.externalTokenTransferFrom:95"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "sendEther is permission-gated; the defect is reachable only after the A-step takeover; Avatar.externalTokenTransferFrom is onlyOwner (Avatar.sol:101)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "daostack_ucontroller_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 9,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "values cached before checks and writes (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-erc20 Avatar.externalTokenTransferFrom:95"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "ens_governor",
+      "kind": "secure_control",
+      "source_type": "control",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 3,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "lido_voting",
+      "kind": "secure_control",
+      "source_type": "control",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-erc20 LibAsset.transferFromERC20:94"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "LibSwap.swap: callTo.call(callData) with caller-supplied target/calldata; fix requires dexWhitelist for approveTo and callTo"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "lifi_cbridge_facet_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-erc20 LibAsset.transferFromERC20:94"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "dexWhitelist checks in CBridgeFacet (fix diff); flagged transferFromERC20 call sites pass msg.sender"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "llama_relative_quorum",
+      "kind": "vulnerable",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 4,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "validateActionCreation external without caller check overwrites the quorum snapshot; fix adds msg.sender == llamaCore"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "llama_relative_quorum_fixed",
+      "kind": "fixed",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 5,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "`if (msg.sender != address(llamaCore)) revert OnlyLlamaCore();` (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "moonwell_temporal_governor",
+      "kind": "vulnerable",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "fastTrackProposalExecution onlyOwner skips queue checks without whenPaused; fix adds whenPaused"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "moonwell_temporal_governor_fixed",
+      "kind": "fixed",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "fast track restricted to paused state (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "kind": "vulnerable",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 4,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "NFT.sol:39-57 init external, no guard, calls _transferOwnership(newOwner)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "mint/burn are onlyOwner; risk follows only from the A-step"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "nomad_replica",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "initialize sets confirmAt[_committedRoot]=1 unconditionally; fix skips the zero root"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "acceptableRoot accepted the default root; fix rejects LEGACY_STATUS_NONE"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "nomad_replica_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "zero root no longer pre-approved (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "default root rejected (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "olympus_governance",
+      "kind": "vulnerable",
+      "source_type": "audit_finding",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 3,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "label: live VOTES.balanceOf in endorseProposal; no fix pair; code not independently reviewed"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "label: threshold relative to totalSupply; no fix pair; code not independently reviewed"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "party_veto_proposal",
+      "kind": "vulnerable",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 3,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "voteToVeto has no per-voter record; fix adds hasVoted mapping and AlreadyVotedError"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "party_veto_proposal_fixed",
+      "kind": "fixed",
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 3,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "hasVoted check (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "pickle_controller",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "label + heuristic signal at CurveProxyLogic.add_liquidity; no fix pair in dataset"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "safe_contracts",
+      "kind": "secure_control",
+      "source_type": "control",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 4,
+            "alerts": [
+              "arbitrary-send-eth GnosisSafe.handlePayment:196"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "handlePayment private, reached only after checkSignatures (GnosisSafe.sol:145); refund params are signed"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "sandbox_land",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "ERC721BaseToken._burn public; fix makes it internal"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "sandbox_land_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "_burn internal (fix diff)"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "sushi_route_processor2",
+      "kind": "vulnerable",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 2,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-eth RouteProcessor2.wrapNative:217",
+              "arbitrary-send-erc20 RouteProcessor2.uniswapV3SwapCallback:334"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_DEFECT",
+            "evidence": "callback transfers from a `from` decoded from pool-supplied data; fix requires from == msg.sender and drops `from` from callback data"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "sushi_route_processor2_fixed",
+      "kind": "fixed",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 1,
+            "heuristic_signals": 0,
+            "alerts": [
+              "arbitrary-send-eth RouteProcessor2.wrapNative:217"
+            ],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_SUFFICIENT_PROTECTED",
+            "evidence": "fix diff as above; remaining wrapNative alert is a router payout by design"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "uniswap_governance",
+      "kind": "secure_control",
+      "source_type": "control",
+      "source_certainty": "verified",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 1,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    },
+    {
+      "case": "wormhole_core_impl",
+      "kind": "vulnerable",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "dims": {
+        "A": {
+          "question": "治理席位/管理权限是否受到有效控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "evidence": "label: initializer guard reads the implementation slot of the logic contract's own storage; no fix pair; not independently reviewed"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "B": {
+          "question": "投票权是否使用正确的历史状态与快照",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "C": {
+          "question": "提案执行是否受有效时间锁及授权限制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 0,
+            "alerts": [],
+            "note": "no Slither capability for this question"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        },
+        "D": {
+          "question": "金库敏感操作是否具有有效访问控制",
+          "automatic": {
+            "status": "EVIDENCE_INSUFFICIENT",
+            "detector_alerts": 0,
+            "heuristic_signals": 2,
+            "alerts": [],
+            "note": "Slither facts cannot prove that a protection is effective"
+          },
+          "manual": {
+            "status": "NOT_REVIEWED"
+          },
+          "isolated": {
+            "status": "NOT_RUN"
+          }
+        }
+      }
+    }
+  ]
+}

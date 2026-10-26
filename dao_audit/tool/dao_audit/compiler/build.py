@@ -18,7 +18,7 @@ from . import project as P
 from .semver import parse, satisfies_all, sort_desc
 from .toolchain import available_versions, compile_standard_json, ensure_solc
 
-MAX_ATTEMPTS = 24
+MAX_ATTEMPTS = 60
 
 
 class Unit:
@@ -263,8 +263,12 @@ def _link_dep(root: Path, nm: Path, pkg: str) -> None:
     """Expose an installed dependency at <project>/node_modules/<pkg> (inside the
     cached snapshot) so the compiler and crytic-compile see the normal layout."""
     dst = root / "node_modules" / pkg
-    if dst.exists() or dst.is_symlink():
-        return
+    if dst.is_symlink():
+        if dst.resolve() == (nm / pkg).resolve():
+            return
+        dst.unlink()            # a link we created earlier for another version
+    elif dst.exists():
+        return                  # real directory shipped in the snapshot: keep it
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.symlink_to(nm / pkg, target_is_directory=True)
 

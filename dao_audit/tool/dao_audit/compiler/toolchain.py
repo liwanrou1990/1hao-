@@ -39,38 +39,61 @@ def available_versions(refresh: bool = False) -> List[str]:
     return vs
 
 
-def _pkg_dir(version: str) -> Path:
-    return CACHE / "solcjs" / f"v{version}" / "node_modules" / "solc"
+def _pkg_dir(version: str, tag: str = "") -> Path:
+    return CACHE / "solcjs" / f"v{version}{tag}" / "node_modules" / "solc"
 
 
-def ensure_solc(version: str) -> Dict:
-    """Install solc-js==version (if needed) and return {shim, version_string, soljson_sha256}."""
-    pkg = _pkg_dir(version)
+def _install(version: str, tag: str) -> Path:
+    pkg = _pkg_dir(version, tag)
     if not (pkg / "soljson.js").exists():
         prefix = pkg.parents[1]
         prefix.mkdir(parents=True, exist_ok=True)
         p = _run(["npm", "install", "--silent", "--no-audit", "--no-fund", "--ignore-scripts",
-                  "--prefix", str(prefix), f"solc@{version}"], timeout=600)
+                  "--prefix", str(prefix), f"solc@{version}{tag}"], timeout=600)
         if p.returncode != 0 or not (pkg / "soljson.js").exists():
-            raise RuntimeError(f"cannot install solc-js {version}: {(p.stderr or p.stdout)[-300:]}")
+            raise RuntimeError(f"cannot install solc-js {version}{tag}: {(p.stderr or p.stdout)[-300:]}")
+    return pkg
+
+
+def _meta(pkg: Path, version: str, tag: str) -> Dict:
     meta_f = pkg.parent / "dao_audit_meta.json"
     if meta_f.exists():
-        meta = json.loads(meta_f.read_text())
-    else:
-        vs = _run(["node", "--no-warnings", "-e",
-                   f"process.stdout.write(require({json.dumps(str(pkg))}).version())"], timeout=120)
-        meta = {"requested": version,
-                "version_string": vs.stdout.strip(),
-                "soljson_sha256": hashlib.sha256((pkg / "soljson.js").read_bytes()).hexdigest()}
-        meta_f.write_text(json.dumps(meta))
-    meta["shim"] = str(_shim(version, pkg))
+        return json.loads(meta_f.read_text())
+    vs = _run(["node", "--no-warnings", "-e",
+               f"process.stdout.write(require({json.dumps(str(pkg))}).version())"], timeout=120)
+    meta = {"requested": version, "npm_spec": f"solc@{version}{tag}",
+            "version_string": vs.stdout.strip(),
+            "soljson_sha256": hashlib.sha256((pkg / "soljson.js").read_bytes()).hexdigest()}
+    meta_f.write_text(json.dumps(meta))
     return meta
+
+
+def ensure_solc(version: str) -> Dict:
+    """Install solc-js==version and VERIFY that the bundled compiler really is
+    that version. Some npm releases are mispackaged (e.g. solc@0.8.7 ships
+    compiler 0.7.5; the real one is published as 0.8.7-fixed): on a mismatch
+    the "-fixed" tag is tried, and if no package matches, installation fails
+    rather than silently compiling with the wrong compiler."""
+    tried = []
+    for tag in ("", "-fixed"):
+        try:
+            pkg = _install(version, tag)
+        except RuntimeError as e:
+            tried.append(str(e)[:120]); continue
+        meta = dict(_meta(pkg, version, tag))
+        actual = meta["version_string"].split("+")[0]
+        if actual == version:
+            meta["shim"] = str(_shim(version + tag, pkg))
+            return meta
+        tried.append(f"solc@{version}{tag} contains compiler {meta['version_string']}")
+    raise RuntimeError(f"no npm package provides solc {version}: " + "; ".join(tried))
 
 
 def _shim(version: str, pkg: Path) -> Path:
     d = CACHE / "shims"
     d.mkdir(parents=True, exist_ok=True)
     s = d / f"solc-{version}"
+    version = version.replace("-fixed", "")
     body = f"""#!/bin/sh
 if [ "$1" = "--version" ]; then
   echo "solc, the solidity compiler commandline interface"

@@ -1,0 +1,348 @@
+{
+  "case": "nouns_dao",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "NounsDAOVotes",
+      "function": "_refundGas",
+      "line": 307,
+      "title": "arbitrary-send-eth",
+      "evidence": "NounsDAOVotes._refundGas(uint256) (contracts/governance/NounsDAOVotes.sol#307-320) sends eth to arbitrary user\n\tDangerous calls:\n\t- (refundSent,None) = tx.origin.call{value: refundAmount}() (contracts/governance/NounsDAOVotes.sol#317)",
+      "file": "contracts/governance/NounsDAOVotes.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ERC721CheckpointableUpgradeable",
+      "function": "delegateBySig",
+      "file": "contracts/governance/fork/newdao/token/base/ERC721CheckpointableUpgradeable.sol",
+      "line": 137,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "checkpoints"
+      ],
+      "checked_in": [
+        "NounsTokenFork.claimFromEscrow(uint256[])"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ERC721Upgradeable",
+      "function": "transferFrom",
+      "file": "node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol",
+      "line": 157,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_owners",
+        "checkpoints"
+      ],
+      "checked_in": [
+        "NounsTokenFork.claimFromEscrow(uint256[])"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ERC721Upgradeable",
+      "function": "safeTransferFrom",
+      "file": "node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol",
+      "line": 171,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_owners",
+        "checkpoints"
+      ],
+      "checked_in": [
+        "NounsTokenFork.claimFromEscrow(uint256[])"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "NounsTokenFork",
+      "function": "initialize",
+      "file": "contracts/governance/fork/newdao/token/NounsTokenFork.sol",
+      "line": 121,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "escrow",
+        "forkId",
+        "forkingPeriodEndTimestamp",
+        "minter"
+      ],
+      "checked_in": [
+        "NounsTokenFork.claimDuringForkPeriod(address,uint256[])",
+        "NounsTokenFork.claimFromEscrow(uint256[])",
+        "NounsTokenFork.mint()"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "nouns_dao",
+    "repo": "https://github.com/nounsDAO/nouns-monorepo",
+    "commit": "2213eea1c15f331f786784c2621d53bdecf907e2",
+    "mode": "original_project_snapshot",
+    "project_root": "packages/nouns-contracts",
+    "build_config": "packages/nouns-contracts/hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "NounsDAOExecutor.sol": true,
+      "NounsDAOLogicV4.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2026-10-05T14:16:35-04:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "4.9.6",
+        "declared_in": "packages/nouns-contracts/package.json (exact)",
+        "installed": "4.9.6",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/interfaces/IERC1271.sol": "c981ecaf1c2ec77e3e47f146306d7e99c669b5e733b0adcfd3436c7f6a7a46b6",
+          "@openzeppelin/contracts/interfaces/IERC1967.sol": "dddc79fd955a7dbf954b63358f67be734da61a406bc610a90c91821a2ff84bc6",
+          "@openzeppelin/contracts/interfaces/draft-IERC1822.sol": "38728bce05e2b518d0ef66d514dbfcdee5555aeac2d57729480bf1409ee63630",
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol": "05f8710ad6a17e156b51e2c5baa87fd6281c4be50a891ad717d6cfa628301da8",
+          "@openzeppelin/contracts/proxy/beacon/IBeacon.sol": "6afea1d83856ed8e0495fe78109f674f925cfdc79fe2e24e854b1237e742f011",
+          "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol": "81fd7eff33a96b439a265d21a3244b4cfc2b674493420ae02e1f44088a8c84fc",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "7ebde70853ccafcf1876900dad458f46eb9444d591d39bfc58e952e2582f5587",
+          "@openzeppelin/contracts/token/ERC721/IERC721.sol": "c8d867eda0fd764890040a3644f5ccf5db92f852779879f321ab3ad8b799bf97",
+          "@openzeppelin/contracts/utils/Address.sol": "8b85a2463eda119c2f42c34fa3d942b61aee65df381f48ed436fe8edb3a7d602",
+          "@openzeppelin/contracts/utils/StorageSlot.sol": "51c993d87ee6096af06f8701d8497272751c8cc9c9c2b31e67a3087d5f2302df",
+          "@openzeppelin/contracts/utils/Strings.sol": "cb2df477077a5963ab50a52768cb74ec6f32177177a78611ddbbe2c07e2d36de",
+          "@openzeppelin/contracts/utils/introspection/IERC165.sol": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5",
+          "@openzeppelin/contracts/utils/math/Math.sol": "85a2caf3bd06579fb55236398c1321e15fd524a8fe140dff748c0f73d7a52345",
+          "@openzeppelin/contracts/utils/math/SafeCast.sol": "a5dab332e2caa1db5aae709693e59431132aa720528d0245a647dde6e93d7436",
+          "@openzeppelin/contracts/utils/math/SignedMath.sol": "420a5a5d8d94611a04b39d6cf5f02492552ed4257ea82aba3c765b1ad52f77f6"
+        }
+      },
+      {
+        "package": "@openzeppelin/contracts-upgradeable",
+        "declared": "4.4.0",
+        "declared_in": "packages/nouns-contracts/package.json (exact)",
+        "installed": "4.4.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": "71ec912ca5fe2ffcd68722e0a5909ff230050324887f57d11df9acf50c3a938d",
+          "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": "c14ba1e234c57d43f54814296657f72287b228a51a70198babe29b7211dfee04",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol": "e0ad13538c07c2b5654782120e206ab86c0209b0eb3b54f5c79f7731f2c1941a",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol": "f6c71a9324c196540ab619455b17f2588b9921389479d0b75f9ebe6318c728f9",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol": "d095c291bd1d7caae966049951760b86baf05e608cf8d71a11f5e684c38839c1",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol": "efc310166830b5a7294c08e85c4a140f1ef78867d58a8e5f65845060f5eea9a8",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol": "5078fdcc7a65497ee4a0e81a9b2d5da17ff155ce1d97a4ff915c5d5b01a942cb",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol": "b7f57e1ad0b94b14f8e1623524aeccaea0293b314bce91598de89bad2bc5f6ef",
+          "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": "ea1f9947646b57c4511f7d91bac61ab3a34b1cdb4aaa2c2f96ade5d6735628bc",
+          "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": "0884f541e149270c9c5d1cc1a57d5ca55ba34ff2b6c28418ed77d0b63b73fd5a",
+          "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": "a6bda737c6fe863d39f943e548f189b05709da9c3ee791176f332be000c3846d",
+          "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol": "73e828e8e11328a6017ae5e5d98874c1c5e7bac3e5e9a6b29fbad0c2d7b016a9",
+          "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol": "35e80b12312089413048a7f5d55cc490df10b610fcb5846ba95b8d0fdacbf08d"
+        }
+      }
+    ],
+    "remappings": [
+      "forge-std/=node_modules/forge-std/src/",
+      "ds-test/=node_modules/ds-test/src/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": "71ec912ca5fe2ffcd68722e0a5909ff230050324887f57d11df9acf50c3a938d",
+      "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": "c14ba1e234c57d43f54814296657f72287b228a51a70198babe29b7211dfee04",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol": "e0ad13538c07c2b5654782120e206ab86c0209b0eb3b54f5c79f7731f2c1941a",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol": "f6c71a9324c196540ab619455b17f2588b9921389479d0b75f9ebe6318c728f9",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol": "d095c291bd1d7caae966049951760b86baf05e608cf8d71a11f5e684c38839c1",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol": "efc310166830b5a7294c08e85c4a140f1ef78867d58a8e5f65845060f5eea9a8",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol": "5078fdcc7a65497ee4a0e81a9b2d5da17ff155ce1d97a4ff915c5d5b01a942cb",
+      "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol": "b7f57e1ad0b94b14f8e1623524aeccaea0293b314bce91598de89bad2bc5f6ef",
+      "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": "ea1f9947646b57c4511f7d91bac61ab3a34b1cdb4aaa2c2f96ade5d6735628bc",
+      "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": "0884f541e149270c9c5d1cc1a57d5ca55ba34ff2b6c28418ed77d0b63b73fd5a",
+      "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": "a6bda737c6fe863d39f943e548f189b05709da9c3ee791176f332be000c3846d",
+      "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol": "73e828e8e11328a6017ae5e5d98874c1c5e7bac3e5e9a6b29fbad0c2d7b016a9",
+      "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol": "35e80b12312089413048a7f5d55cc490df10b610fcb5846ba95b8d0fdacbf08d",
+      "@openzeppelin/contracts/interfaces/IERC1271.sol": "c981ecaf1c2ec77e3e47f146306d7e99c669b5e733b0adcfd3436c7f6a7a46b6",
+      "@openzeppelin/contracts/interfaces/IERC1967.sol": "dddc79fd955a7dbf954b63358f67be734da61a406bc610a90c91821a2ff84bc6",
+      "@openzeppelin/contracts/interfaces/draft-IERC1822.sol": "38728bce05e2b518d0ef66d514dbfcdee5555aeac2d57729480bf1409ee63630",
+      "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol": "05f8710ad6a17e156b51e2c5baa87fd6281c4be50a891ad717d6cfa628301da8",
+      "@openzeppelin/contracts/proxy/beacon/IBeacon.sol": "6afea1d83856ed8e0495fe78109f674f925cfdc79fe2e24e854b1237e742f011",
+      "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol": "81fd7eff33a96b439a265d21a3244b4cfc2b674493420ae02e1f44088a8c84fc",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "7ebde70853ccafcf1876900dad458f46eb9444d591d39bfc58e952e2582f5587",
+      "@openzeppelin/contracts/token/ERC721/IERC721.sol": "c8d867eda0fd764890040a3644f5ccf5db92f852779879f321ab3ad8b799bf97",
+      "@openzeppelin/contracts/utils/Address.sol": "8b85a2463eda119c2f42c34fa3d942b61aee65df381f48ed436fe8edb3a7d602",
+      "@openzeppelin/contracts/utils/StorageSlot.sol": "51c993d87ee6096af06f8701d8497272751c8cc9c9c2b31e67a3087d5f2302df",
+      "@openzeppelin/contracts/utils/Strings.sol": "cb2df477077a5963ab50a52768cb74ec6f32177177a78611ddbbe2c07e2d36de",
+      "@openzeppelin/contracts/utils/introspection/IERC165.sol": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5",
+      "@openzeppelin/contracts/utils/math/Math.sol": "85a2caf3bd06579fb55236398c1321e15fd524a8fe140dff748c0f73d7a52345",
+      "@openzeppelin/contracts/utils/math/SafeCast.sol": "a5dab332e2caa1db5aae709693e59431132aa720528d0245a647dde6e93d7436",
+      "@openzeppelin/contracts/utils/math/SignedMath.sol": "420a5a5d8d94611a04b39d6cf5f02492552ed4257ea82aba3c765b1ad52f77f6",
+      "contracts/external/openzeppelin/ECDSA.sol": "c586f2b99c318cd6c9bbc11a9ba7829ed095bcc8b6a2b8ebcd1cf691c3b5931e",
+      "contracts/external/openzeppelin/SignatureChecker.sol": "63ae815f615cd7bf812105074ccb5310705db141a535c92b1223c2e79e8caf3e",
+      "contracts/governance/NounsDAOAdmin.sol": "38a26c6405686cf466c7988609de6c48e93978bd3de950ffc88c076a63e016a9",
+      "contracts/governance/NounsDAODynamicQuorum.sol": "d44e3ea5545fe24f6f4f329647fe262f5282a4a882f6de407f7d97e9e2856ff6",
+      "contracts/governance/NounsDAOExecutor.sol": "1299e858ebcf3b925b2adc63b8c07f1285b2659a39372028930a37241b7c1357",
+      "contracts/governance/NounsDAOInterfaces.sol": "6332cfa7858119363c974123a479f332fcec953fcf5e11357712efee31869ff3",
+      "contracts/governance/NounsDAOLogicV4.sol": "fa816a9c9411b54b8c502b3b1cf7603b245270dc44d80919f908d4820872ba46",
+      "contracts/governance/NounsDAOProposals.sol": "855d6c9ecf4676b1c4580bfa167f9bf2fc4dc5dd8755390806914ca7156c46ad",
+      "contracts/governance/NounsDAOVotes.sol": "29c41b877717407817926666b5c73d4fabc1b1b605a42e837ffd666376cd4a57",
+      "contracts/governance/fork/NounsDAOFork.sol": "2172a82898342f6346b5b0a4a1a507a8d9f4156672b5c66ce34d1cd12ec0e48d",
+      "contracts/governance/fork/newdao/token/INounsTokenFork.sol": "8f364ab2ea9be057e15cb88d802ae15da5638e9a930aa2277e90ecfebe6b4d45",
+      "contracts/governance/fork/newdao/token/NounsTokenFork.sol": "a5a9c9bc6fb0d4a634e279ba11581e8a3c24d602fe1d94d02485370e06cc46bf",
+      "contracts/governance/fork/newdao/token/base/ERC721CheckpointableUpgradeable.sol": "1a77048bc0afb6f0681d4ac96df00fcb3886356bf7eea901bf6d55aa5f2880a3",
+      "contracts/interfaces/INounsDescriptorMinimal.sol": "349cefe301b9354b7f93400bd4cd9e4b362f1b84200532b543b8008bedb7a381",
+      "contracts/interfaces/INounsSeeder.sol": "85475d37d8284073e0b58d8bc4b8b8ede9e1ce55b08c149c492712bd25336c21"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.23",
+        "file": "packages/nouns-contracts/hardhat.config.ts"
+      },
+      {
+        "version": "0.8.23",
+        "file": "packages/nouns-contracts/foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/governance/NounsDAOExecutor.sol",
+          "contracts/governance/NounsDAOLogicV4.sol"
+        ],
+        "pragmas": [
+          "^0.8.0",
+          "^0.8.1",
+          "^0.8.19",
+          "^0.8.2",
+          "^0.8.6"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.23",
+            "reason": "project_config:packages/nouns-contracts/hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.23",
+          "selected_by": "project_config:packages/nouns-contracts/hardhat.config.ts",
+          "version_string": "0.8.23+commit.f704f362.Emscripten.clang",
+          "soljson_sha256": "9745559c347ccd7f9334b5e0aa00e884c23913952d943abdc0c6af85220a6b8e",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.23)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol",
+          "@openzeppelin/contracts/interfaces/IERC1271.sol",
+          "@openzeppelin/contracts/interfaces/IERC1967.sol",
+          "@openzeppelin/contracts/interfaces/draft-IERC1822.sol",
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
+          "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
+          "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/StorageSlot.sol",
+          "@openzeppelin/contracts/utils/Strings.sol",
+          "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+          "@openzeppelin/contracts/utils/math/Math.sol",
+          "@openzeppelin/contracts/utils/math/SafeCast.sol",
+          "@openzeppelin/contracts/utils/math/SignedMath.sol",
+          "contracts/external/openzeppelin/ECDSA.sol",
+          "contracts/external/openzeppelin/SignatureChecker.sol",
+          "contracts/governance/NounsDAOAdmin.sol",
+          "contracts/governance/NounsDAODynamicQuorum.sol",
+          "contracts/governance/NounsDAOExecutor.sol",
+          "contracts/governance/NounsDAOInterfaces.sol",
+          "contracts/governance/NounsDAOLogicV4.sol",
+          "contracts/governance/NounsDAOProposals.sol",
+          "contracts/governance/NounsDAOVotes.sol",
+          "contracts/governance/fork/NounsDAOFork.sol",
+          "contracts/governance/fork/newdao/token/INounsTokenFork.sol",
+          "contracts/governance/fork/newdao/token/NounsTokenFork.sol",
+          "contracts/governance/fork/newdao/token/base/ERC721CheckpointableUpgradeable.sol",
+          "contracts/interfaces/INounsDescriptorMinimal.sol",
+          "contracts/interfaces/INounsSeeder.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 50
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 2,
+      "compiled": 2,
+      "slither_ir": 2,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 12.8
+  },
+  "n_files": 2,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 12826.1,
+  "eval_files_opened": [
+    "dataset/nouns_dao/BUILD.json",
+    "dataset/nouns_dao/contracts/NounsDAOExecutor.sol",
+    "dataset/nouns_dao/contracts/NounsDAOLogicV4.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

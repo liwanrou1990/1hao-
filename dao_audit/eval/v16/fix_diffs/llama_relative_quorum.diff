@@ -1,0 +1,55 @@
+diff -ruN llama_relative_quorum/contracts/ILlamaStrategy.sol llama_relative_quorum_fixed/contracts/ILlamaStrategy.sol
+--- llama_relative_quorum/contracts/ILlamaStrategy.sol	2026-10-26 04:50:48.892095703 +0000
++++ llama_relative_quorum_fixed/contracts/ILlamaStrategy.sol	2026-10-26 04:50:49.552095743 +0000
+@@ -89,7 +89,7 @@
+   /// @notice Get whether an action is currently active.
+   /// @param actionInfo Data required to create an action.
+   /// @return Boolean value that is `true` if the action is currently active, `false` otherwise.
+-  function isActive(ActionInfo calldata actionInfo) external view returns (bool);
++  function isActionActive(ActionInfo calldata actionInfo) external view returns (bool);
+ 
+   /// @notice Get whether an action has passed the approval process.
+   /// @param actionInfo Data required to create an action.
+diff -ruN llama_relative_quorum/contracts/LlamaCore.sol llama_relative_quorum_fixed/contracts/LlamaCore.sol
+--- llama_relative_quorum/contracts/LlamaCore.sol	2026-10-26 04:50:48.389253610 +0000
++++ llama_relative_quorum_fixed/contracts/LlamaCore.sol	2026-10-26 04:50:49.546053548 +0000
+@@ -494,7 +494,7 @@
+ 
+     if (action.executed) return ActionState.Executed;
+ 
+-    if (actionInfo.strategy.isActive(actionInfo)) return ActionState.Active;
++    if (actionInfo.strategy.isActionActive(actionInfo)) return ActionState.Active;
+ 
+     if (!actionInfo.strategy.isActionApproved(actionInfo)) return ActionState.Failed;
+ 
+diff -ruN llama_relative_quorum/contracts/LlamaRelativeQuorum.sol llama_relative_quorum_fixed/contracts/LlamaRelativeQuorum.sol
+--- llama_relative_quorum/contracts/LlamaRelativeQuorum.sol	2026-10-26 04:50:48.384579860 +0000
++++ llama_relative_quorum_fixed/contracts/LlamaRelativeQuorum.sol	2026-10-26 04:50:49.540948360 +0000
+@@ -40,6 +40,9 @@
+   // ======== Errors ========
+   // ========================
+ 
++  /// @dev Only callable by a Llama instance's core contract.
++  error OnlyLlamaCore();
++
+   /// @dev The action cannot be canceled if it's already in a terminal state.
+   /// @param currentState The current state of the action.
+   error CannotCancelInState(ActionState currentState);
+@@ -197,6 +200,8 @@
+ 
+   /// @inheritdoc ILlamaStrategy
+   function validateActionCreation(ActionInfo calldata actionInfo) external {
++    if (msg.sender != address(llamaCore)) revert OnlyLlamaCore();
++
+     LlamaPolicy llamaPolicy = policy; // Reduce SLOADs.
+     uint256 approvalPolicySupply = llamaPolicy.getRoleSupplyAsNumberOfHolders(approvalRole);
+     if (approvalPolicySupply == 0) revert RoleHasZeroSupply(approvalRole);
+@@ -273,7 +278,7 @@
+   // -------- When Determining Action State --------
+ 
+   /// @inheritdoc ILlamaStrategy
+-  function isActive(ActionInfo calldata actionInfo) external view returns (bool) {
++  function isActionActive(ActionInfo calldata actionInfo) external view returns (bool) {
+     return
+       block.timestamp <= approvalEndTime(actionInfo) && (isFixedLengthApprovalPeriod || !isActionApproved(actionInfo));
+   }

@@ -1,0 +1,174 @@
+{
+  "case": "lifi_cbridge_facet",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "high",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-erc20",
+      "contract": "LibAsset",
+      "function": "transferFromERC20",
+      "line": 94,
+      "title": "arbitrary-send-erc20",
+      "evidence": "LibAsset.transferFromERC20(address,address,address,uint256) (src/Libraries/LibAsset.sol#94-101) uses arbitrary from in transferFrom: SafeERC20.safeTransferFrom(IERC20(assetId),from,to,amount) (src/Libraries/LibAsset.sol#100)",
+      "file": "LibAsset.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [],
+  "build": {
+    "case": "lifi_cbridge_facet",
+    "repo": "https://github.com/lifinance/contracts",
+    "commit": "7b41d7d3306f213480b167e9487071d1c959d4fb",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "CBridgeFacet.sol": true,
+      "ICBridge.sol": true,
+      "ILiFi.sol": true,
+      "LiFiDiamond.sol": true,
+      "LibAsset.sol": true,
+      "LibBytes.sol": true,
+      "LibDiamond.sol": true,
+      "LibSwap.sol": true,
+      "LibUtil.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-03-17T12:26:29+03:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "4.3.2",
+        "declared_in": "yarn.lock",
+        "installed": "4.3.2",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol": "80e33e340442acecc4bd995b4ead9b51adc4231c8213357fca18996b945f850b",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+          "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": "729097c056b8bf1dd93ac16831380ce4ff54703d75983f57354240cc8be2edec",
+          "@openzeppelin/contracts/utils/Address.sol": "1370d859f5c6d11025afb409d1b724279f663c4cf4bc4d2ba057290bdcf45a66",
+          "@openzeppelin/contracts/utils/Context.sol": "5828bf38f9376b659a8edbbe2df0d06b29a09e37ecd470465dda2bbcb612c85d"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/token/ERC20/ERC20.sol": "80e33e340442acecc4bd995b4ead9b51adc4231c8213357fca18996b945f850b",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+      "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+      "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": "729097c056b8bf1dd93ac16831380ce4ff54703d75983f57354240cc8be2edec",
+      "@openzeppelin/contracts/utils/Address.sol": "1370d859f5c6d11025afb409d1b724279f663c4cf4bc4d2ba057290bdcf45a66",
+      "@openzeppelin/contracts/utils/Context.sol": "5828bf38f9376b659a8edbbe2df0d06b29a09e37ecd470465dda2bbcb612c85d",
+      "src/Facets/CBridgeFacet.sol": "758a9885943a22001294ad736898256302a75992dd104953d3290687c760b932",
+      "src/Interfaces/ICBridge.sol": "41a88836d557c46c2d923c6d4f964c0e2fa2a1ccfcb8f74d667c44bea017acc0",
+      "src/Interfaces/IDiamondCut.sol": "047cac186fb7a5714c68e112cb3281cc4231ba0dceaee82ab111bd77f54aa8e7",
+      "src/Interfaces/ILiFi.sol": "3e0098307633b1b39094d045daaacb29f77d44463325391d3ec66604ade1fa9c",
+      "src/LiFiDiamond.sol": "3e9b94ae303753bffba71c0afa6588988e5b52e2251f3722bf552b18d0f1e5be",
+      "src/Libraries/LibAsset.sol": "e7762af65ee439faedaeecf50710b81279b0fe72594103b7674374fe097e3127",
+      "src/Libraries/LibBytes.sol": "1d8ac0d61608e21a35fa25e65baf2993bc2dfdef8f753d53063af51896257f62",
+      "src/Libraries/LibDiamond.sol": "946aa1f081fc9ef021d05d85ffeefe5fc58a708858d9bebb15aba0f5926c45ba",
+      "src/Libraries/LibSwap.sol": "3f82e3eddbf94770d78b4734ea3cae3db36888e791df909da6ab6f1e7b3f15da",
+      "src/Libraries/LibUtil.sol": "26f31f2b3677b8b2c10c85a64abd18696257d53f68cfa57e3d3609d3856b807c"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.7",
+        "file": "hardhat.config.ts"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "src/Facets/CBridgeFacet.sol",
+          "src/Interfaces/ICBridge.sol",
+          "src/Interfaces/ILiFi.sol",
+          "src/LiFiDiamond.sol",
+          "src/Libraries/LibAsset.sol",
+          "src/Libraries/LibBytes.sol",
+          "src/Libraries/LibDiamond.sol",
+          "src/Libraries/LibSwap.sol",
+          "src/Libraries/LibUtil.sol"
+        ],
+        "pragmas": [
+          "^0.8.0",
+          "^0.8.7"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.7",
+            "reason": "project_config:hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.7",
+          "selected_by": "project_config:hardhat.config.ts",
+          "version_string": "0.8.7+commit.e28d00a7.Emscripten.clang",
+          "soljson_sha256": "663ba99f7c7ee907f0f03227502d48a78256c3c292ace3b79a5d3eb510665306",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.7)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+          "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/Context.sol",
+          "src/Facets/CBridgeFacet.sol",
+          "src/Interfaces/ICBridge.sol",
+          "src/Interfaces/IDiamondCut.sol",
+          "src/Interfaces/ILiFi.sol",
+          "src/LiFiDiamond.sol",
+          "src/Libraries/LibAsset.sol",
+          "src/Libraries/LibBytes.sol",
+          "src/Libraries/LibDiamond.sol",
+          "src/Libraries/LibSwap.sol",
+          "src/Libraries/LibUtil.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 16
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 9,
+      "compiled": 9,
+      "slither_ir": 9,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.6
+  },
+  "n_files": 9,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3653.3,
+  "eval_files_opened": [
+    "dataset_r4/lifi_cbridge_facet/BUILD.json",
+    "dataset_r4/lifi_cbridge_facet/contracts/CBridgeFacet.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/ICBridge.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/ILiFi.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LiFiDiamond.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LibAsset.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LibBytes.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LibDiamond.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LibSwap.sol",
+    "dataset_r4/lifi_cbridge_facet/contracts/LibUtil.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

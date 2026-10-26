@@ -126,11 +126,14 @@ def main():
     ap.add_argument("--round", default="round1")
     ap.add_argument("--engine", default="semantic", choices=["semantic", "regex", "baseline"])
     ap.add_argument("--dataset", default=str(DATASET))
+    ap.add_argument("--dev", action="store_true",
+                    help="development run: skip the freeze check (recorded in every raw output); "
+                         "results of a --dev run are never blind scores")
     a = ap.parse_args()
     dataset = Path(a.dataset)
     sys.addaudithook(_audit)
 
-    if not freeze_engine.check():
+    if not a.dev and not freeze_engine.check():
         print("ABORT: engine freeze mismatch — re-freeze or restore engine before a blind run",
               file=sys.stderr)
         return 1
@@ -149,6 +152,8 @@ def main():
             print(f"skip {c.name}: no contracts/", file=sys.stderr)
             continue
         res = run_case(c, engine=a.engine)
+        res["freeze_checked"] = not a.dev
+        res["run_kind"] = "dev" if a.dev else "blind"
         (raw_dir / f"{c.name}.json").write_text(json.dumps(res, ensure_ascii=False, indent=2))
         print(f"[blind:{a.engine}] {c.name}: {res.get('n_files')} files, {len(res['findings'])} findings, "
               f"{len(res.get('heuristic_findings', []))} heuristic, {res.get('data_status', '')}")

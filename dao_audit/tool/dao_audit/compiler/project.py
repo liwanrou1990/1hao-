@@ -168,7 +168,23 @@ def load_remappings(snap: Path, proot: str) -> List[str]:
         m = re.search(r"remappings\s*=\s*\[(.*?)\]", ft.read_text(), re.S)
         if m:
             rem += re.findall(r"['\"]([^'\"]+=[^'\"]+)['\"]", m.group(1))
-    return rem
+    return normalize_remappings(rem)
+
+
+def normalize_remappings(rem: List[str]) -> List[str]:
+    """Forge semantics: a directory prefix (`x/`) maps to a directory, so the
+    target gets a trailing slash; duplicates of the same (context, prefix) keep
+    the first occurrence (remappings.txt before foundry.toml)."""
+    out, seen = [], set()
+    for r in rem:
+        k, _, t = r.partition("=")
+        if k.endswith("/") and t and not t.endswith("/"):
+            t += "/"
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(f"{k}={t}")
+    return out
 
 
 def apply_remap(path: str, remaps: List[str]) -> str:
@@ -216,36 +232,7 @@ def package_of(imp: str) -> Optional[str]:
     return parts[0]
 
 
-def locked_version(snap: Path, proot: str, pkg: str) -> Tuple[Optional[str], str]:
-    """Exact version from a lockfile, else the package.json range (as written)."""
-    dirs = []
-    d = snap / proot if proot else snap
-    while True:
-        dirs.append(d)
-        if d == snap:
-            break
-        d = d.parent
-    for d in dirs:
-        lf = d / "package-lock.json"
-        if lf.is_file():
-            try:
-                j = json.loads(lf.read_text())
-                v = ((j.get("packages") or {}).get(f"node_modules/{pkg}") or {}).get("version") \
-                    or ((j.get("dependencies") or {}).get(pkg) or {}).get("version")
-                if v:
-                    return v, str(lf.relative_to(snap))
-            except Exception:
-                pass
-        yl = d / "yarn.lock"
-        if yl.is_file():
-            m = re.search(r'(?m)^"?' + re.escape(pkg) + r'@[^\n]*:\n\s+version "?([^"\n]+)"?', yl.read_text(errors="ignore"))
-            if m:
-                return m.group(1), str(yl.relative_to(snap))
-        pl = d / "pnpm-lock.yaml"
-        if pl.is_file():
-            m = re.search(r"(?m)^\s+/?" + re.escape(pkg) + r"[@/](\d+\.\d+\.\d+)", pl.read_text(errors="ignore"))
-            if m:
-                return m.group(1), str(pl.relative_to(snap))
+def _declared(dirs: List[Path], pkg: str) -> Tuple[Optional[str], Optional[Path]]:
     for d in dirs:
         pj = d / "package.json"
         if pj.is_file():
@@ -256,8 +243,63 @@ def locked_version(snap: Path, proot: str, pkg: str) -> Tuple[Optional[str], str
             for k in ("dependencies", "devDependencies", "peerDependencies"):
                 v = (j.get(k) or {}).get(pkg)
                 if v:
-                    return v, str(pj.relative_to(snap)) + " (range)"
+                    return v, pj
+    return None, None
+
+
+def locked_version(snap: Path, proot: str, pkg: str) -> Tuple[Optional[str], str]:
+    """Version of `pkg` as the project would have installed it.
+    1. the nearest package.json declaration; an exact version is used as is;
+    2. otherwise the lockfile entry for THAT declared range (monorepo lockfiles
+       hold several versions of one package);
+    3. otherwise the declared range, resolved later as-of the commit date."""
+    dirs = []
+    d = snap / proot if proot else snap
+    while True:
+        dirs.append(d)
+        if d == snap:
+            break
+        d = d.parent
+    rng, pj = _declared(dirs, pkg)
+    if rng and re.fullmatch(r"\d+\.\d+\.\d+", rng.strip()):
+        return rng.strip(), str(pj.relative_to(snap)) + " (exact)"
+    for d in dirs:
+        yl = d / "yarn.lock"
+        if rng and yl.is_file():
+            txt = yl.read_text(errors="ignore")
+            m = re.search(r'(?m)^[^\n]*' + re.escape(f"{pkg}@{rng}") + r'["\s,:][^\n]*\n\s+version "?([^"\n]+)"?', txt)
+            if m:
+                return m.group(1), str(yl.relative_to(snap))
+        lf = d / "package-lock.json"
+        if lf.is_file():
+            try:
+                j = json.loads(lf.read_text())
+                pk = j.get("packages") or {}
+                rel = str(pj.parent.relative_to(d)) if pj and pj.parent != d and \
+                    str(pj.parent).startswith(str(d)) else ""
+                v = ((pk.get(f"{rel}/node_modules/{pkg}") if rel else None) or
+                     pk.get(f"node_modules/{pkg}") or {}).get("version") \
+                    or ((j.get("dependencies") or {}).get(pkg) or {}).get("version")
+                if v and (not rng or _sat(v, rng)):
+                    return v, str(lf.relative_to(snap))
+            except Exception:
+                pass
+        pl = d / "pnpm-lock.yaml"
+        if pl.is_file():
+            for m in re.finditer(r"(?m)^\s+/?" + re.escape(pkg) + r"[@/](\d+\.\d+\.\d+)", pl.read_text(errors="ignore")):
+                if not rng or _sat(m.group(1), rng):
+                    return m.group(1), str(pl.relative_to(snap))
+    if rng:
+        return rng, str(pj.relative_to(snap)) + " (range)"
     return None, "not declared"
+
+
+def _sat(v: str, rng: str) -> bool:
+    from .semver import satisfies
+    try:
+        return satisfies(v, rng)
+    except Exception:
+        return False
 
 
 def install_npm(pkg: str, spec: str) -> Tuple[Optional[Path], str]:

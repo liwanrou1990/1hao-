@@ -1,0 +1,1697 @@
+{
+  "round": "dev16_r123",
+  "n_cases": 16,
+  "missing_answers": [],
+  "unanalysable": [],
+  "classes_not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "tracks": {
+    "primary": {
+      "track": "primary",
+      "aggregate": {
+        "per_class": {
+          "VULN-1": {
+            "tp": 0,
+            "fn": 5,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.4345
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-2": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-3": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-4": {
+            "tp": 2,
+            "fn": 4,
+            "fp": 5,
+            "recall": [
+              0.3333,
+              0.0968,
+              0.7
+            ],
+            "precision": [
+              0.2857,
+              0.0822,
+              0.6411
+            ]
+          },
+          "VULN-5": {
+            "tp": 0,
+            "fn": 0,
+            "fp": 0,
+            "recall": [
+              null,
+              null,
+              null
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "overall": {
+          "tp": 2,
+          "fn": 15,
+          "fp": 5,
+          "recall": [
+            0.1176,
+            0.0329,
+            0.3434
+          ],
+          "precision": [
+            0.2857,
+            0.0822,
+            0.6411
+          ],
+          "fnr": [
+            0.8824,
+            0.6566,
+            0.9671
+          ]
+        },
+        "safe_cases": 7,
+        "safe_fp_cases": 2,
+        "fpr": [
+          0.2857,
+          0.0822,
+          0.6411
+        ],
+        "chain_cases": 4,
+        "chain_identified": 0,
+        "chain_rate": [
+          0.0,
+          0.0,
+          0.4899
+        ]
+      },
+      "ordinary_detection": {
+        "vulnerable_cases": 9,
+        "cases_with_located_truth": 2,
+        "case_detection_rate": [
+          0.2222,
+          0.0632,
+          0.5474
+        ]
+      },
+      "safe_fpr": {
+        "safe_cases": 7,
+        "with_gov_finding": 2,
+        "rate": [
+          0.2857,
+          0.0822,
+          0.6411
+        ],
+        "counted": "gov_high_findings"
+      },
+      "fixed_discrimination": {
+        "pairs": [
+          {
+            "vulnerable": "dodo_dvm",
+            "fixed": "dodo_dvm_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "furucombo_proxy",
+            "fixed": "furucombo_proxy_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "punk_proxy_init",
+            "fixed": "punk_proxy_init_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          }
+        ],
+        "discriminated": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.5615
+        ]
+      },
+      "full_chain": {
+        "chain_cases": [
+          {
+            "case": "audius_governance",
+            "located_classes": [
+              "VULN-4"
+            ],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "beanstalk_governance",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "parity_wallet",
+            "located_classes": [
+              "VULN-4"
+            ],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "tornado_governance",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          }
+        ],
+        "identified": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.4899
+        ],
+        "confirmed_by_engine": 0,
+        "engine_links_on_non_chain_cases": []
+      },
+      "by_source": {
+        "unspecified/unspecified": {
+          "n": 9,
+          "case_hit": 2
+        }
+      },
+      "per_case": [
+        {
+          "case": "aave_governance_v2",
+          "project": "aave",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "audius_governance",
+          "project": "audius",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-4"
+          ],
+          "fp_findings": [],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "beanstalk_governance",
+          "project": "beanstalk",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "compound_governance",
+          "project": "compound",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dodo_dvm",
+          "project": "dodo",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dodo_dvm_fixed",
+          "project": "dodo",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dschief_governance",
+          "project": "makerdao_dschief",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "furucombo_proxy",
+          "project": "furucombo",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Proxy",
+              "function": "_postProcess",
+              "line": 269,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "furucombo_proxy_fixed",
+          "project": "furucombo",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Proxy",
+              "function": "_postProcess",
+              "line": 293,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "nouns_dao",
+          "project": "nounsdao",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "openzeppelin_governor",
+          "project": "openzeppelin",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 2,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governor",
+              "function": "_executeOperations",
+              "line": 433,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governor",
+              "function": "relay",
+              "line": 654,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 2,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 2,
+          "gov_high_findings": 2
+        },
+        {
+          "case": "parity_wallet",
+          "project": "parity",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-4"
+          ],
+          "fp_findings": [],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "polynetwork_bridge",
+          "project": "polynetwork",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "punk_proxy_init",
+          "project": "punk",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "punk_proxy_init_fixed",
+          "project": "punk",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "tornado_governance",
+          "project": "tornado_governance",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            },
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governance",
+              "function": "_transferTokens",
+              "line": 253,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        }
+      ]
+    },
+    "with_heuristic": {
+      "track": "with_heuristic",
+      "aggregate": {
+        "per_class": {
+          "VULN-1": {
+            "tp": 2,
+            "fn": 3,
+            "fp": 39,
+            "recall": [
+              0.4,
+              0.1176,
+              0.7693
+            ],
+            "precision": [
+              0.0488,
+              0.0135,
+              0.1614
+            ]
+          },
+          "VULN-2": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-3": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-4": {
+            "tp": 2,
+            "fn": 4,
+            "fp": 11,
+            "recall": [
+              0.3333,
+              0.0968,
+              0.7
+            ],
+            "precision": [
+              0.1538,
+              0.0433,
+              0.4224
+            ]
+          },
+          "VULN-5": {
+            "tp": 0,
+            "fn": 0,
+            "fp": 0,
+            "recall": [
+              null,
+              null,
+              null
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "overall": {
+          "tp": 4,
+          "fn": 13,
+          "fp": 50,
+          "recall": [
+            0.2353,
+            0.0955,
+            0.4726
+          ],
+          "precision": [
+            0.0741,
+            0.0292,
+            0.1755
+          ],
+          "fnr": [
+            0.7647,
+            0.5274,
+            0.9045
+          ]
+        },
+        "safe_cases": 7,
+        "safe_fp_cases": 3,
+        "fpr": [
+          0.4286,
+          0.1582,
+          0.7495
+        ],
+        "chain_cases": 4,
+        "chain_identified": 1,
+        "chain_rate": [
+          0.25,
+          0.0456,
+          0.6994
+        ]
+      },
+      "ordinary_detection": {
+        "vulnerable_cases": 9,
+        "cases_with_located_truth": 3,
+        "case_detection_rate": [
+          0.3333,
+          0.1206,
+          0.6458
+        ]
+      },
+      "safe_fpr": {
+        "safe_cases": 7,
+        "with_gov_finding": 6,
+        "rate": [
+          0.8571,
+          0.4869,
+          0.9743
+        ],
+        "counted": "gov_findings"
+      },
+      "fixed_discrimination": {
+        "pairs": [
+          {
+            "vulnerable": "dodo_dvm",
+            "fixed": "dodo_dvm_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "furucombo_proxy",
+            "fixed": "furucombo_proxy_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "punk_proxy_init",
+            "fixed": "punk_proxy_init_fixed",
+            "vuln_located": [
+              "VULN-1"
+            ],
+            "fixed_gov_findings": 0,
+            "discriminated": true
+          }
+        ],
+        "discriminated": 1,
+        "rate": [
+          0.3333,
+          0.0615,
+          0.7923
+        ]
+      },
+      "full_chain": {
+        "chain_cases": [
+          {
+            "case": "audius_governance",
+            "located_classes": [
+              "VULN-1",
+              "VULN-4"
+            ],
+            "chain_identified": true,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "beanstalk_governance",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "parity_wallet",
+            "located_classes": [
+              "VULN-4"
+            ],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "tornado_governance",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 5,
+            "engine_link_status": "HEURISTIC_LINK"
+          }
+        ],
+        "identified": 1,
+        "rate": [
+          0.25,
+          0.0456,
+          0.6994
+        ],
+        "confirmed_by_engine": 0,
+        "engine_links_on_non_chain_cases": [
+          "compound_governance",
+          "furucombo_proxy"
+        ]
+      },
+      "by_source": {
+        "unspecified/unspecified": {
+          "n": 9,
+          "case_hit": 3
+        }
+      },
+      "per_case": [
+        {
+          "case": "aave_governance_v2",
+          "project": "aave",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 5,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 4
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "ExecutorWithTimelock",
+              "function": "executeTransaction",
+              "line": 178,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "AaveGovernanceV2",
+              "function": "create",
+              "line": 78,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "AaveGovernanceV2",
+              "function": "queue",
+              "line": 191,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "AaveGovernanceV2",
+              "function": "execute",
+              "line": 215,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "AaveGovernanceV2",
+              "function": "submitVoteBySignature",
+              "line": 249,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 5,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "audius_governance",
+          "project": "audius",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 18,
+          "per_class": {
+            "VULN-1": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 16
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-1",
+            "VULN-4"
+          ],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "InitializableV2",
+              "function": "initialize",
+              "line": 22,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ClaimsManager",
+              "function": "initialize",
+              "line": 107,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ClaimsManager",
+              "function": "initiateRound",
+              "line": 272,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "initialize",
+              "line": 174,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "delegateStake",
+              "line": 202,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "requestUndelegateStake",
+              "line": 274,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "cancelUndelegateStakeRequest",
+              "line": 330,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "undelegateStake",
+              "line": 355,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DelegateManager",
+              "function": "claimRewards",
+              "line": 436,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "submitProposal",
+              "line": 242,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "submitVote",
+              "line": 337,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "updateVote",
+              "line": 402,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "evaluateProposalOutcome",
+              "line": 467,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ServiceProviderFactory",
+              "function": "initialize",
+              "line": 194,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ServiceTypeManager",
+              "function": "initialize",
+              "line": 56,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Staking",
+              "function": "initialize",
+              "line": 62,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": true,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 18,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "beanstalk_governance",
+          "project": "beanstalk",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "compound_governance",
+          "project": "compound",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 4,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 3
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "GovernorBravoDelegate",
+              "function": "execute",
+              "line": 143,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GovernorBravoDelegate",
+              "function": "queue",
+              "line": 123,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GovernorBravoDelegate",
+              "function": "execute",
+              "line": 143,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GovernorBravoDelegate",
+              "function": "castVoteBySig",
+              "line": 254,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 4,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dodo_dvm",
+          "project": "dodo",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "InitializableOwnable",
+              "function": "initOwner",
+              "line": 42,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dodo_dvm_fixed",
+          "project": "dodo",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "InitializableOwnable",
+              "function": "initOwner",
+              "line": 42,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "dschief_governance",
+          "project": "makerdao_dschief",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 2,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "DSTokenBase",
+              "function": "approve",
+              "line": 65,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DSToken",
+              "function": "approve",
+              "line": 36,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 2,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "furucombo_proxy",
+          "project": "furucombo",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 2,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Proxy",
+              "function": "_postProcess",
+              "line": 269,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Proxy",
+              "function": "batchExec",
+              "line": 64,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 2,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "furucombo_proxy_fixed",
+          "project": "furucombo",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Proxy",
+              "function": "_postProcess",
+              "line": 293,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "nouns_dao",
+          "project": "nounsdao",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 5,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 4
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "NounsDAOVotes",
+              "function": "_refundGas",
+              "line": 307,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721CheckpointableUpgradeable",
+              "function": "delegateBySig",
+              "line": 137,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721Upgradeable",
+              "function": "transferFrom",
+              "line": 157,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721Upgradeable",
+              "function": "safeTransferFrom",
+              "line": 171,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "NounsTokenFork",
+              "function": "initialize",
+              "line": 121,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 5,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "openzeppelin_governor",
+          "project": "openzeppelin",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 4,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 4
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governor",
+              "function": "_executeOperations",
+              "line": 433,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governor",
+              "function": "relay",
+              "line": 654,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "TimelockController",
+              "function": "_execute",
+              "line": 410,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "TimelockController",
+              "function": "execute",
+              "line": 411,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 2,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 4,
+          "gov_high_findings": 2
+        },
+        {
+          "case": "parity_wallet",
+          "project": "parity",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-4"
+          ],
+          "fp_findings": [],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "polynetwork_bridge",
+          "project": "polynetwork",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "punk_proxy_init",
+          "project": "punk",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-1"
+          ],
+          "fp_findings": [],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 1,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "punk_proxy_init_fixed",
+          "project": "punk",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "tornado_governance",
+          "project": "tornado_governance",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 9,
+          "per_class": {
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 2
+            },
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 7
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governance",
+              "function": "_transferTokens",
+              "line": 253,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "TORN",
+              "function": "rescueTokens",
+              "line": 90,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Delegation",
+              "function": "undelegate",
+              "line": 24,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "initialize",
+              "line": 91,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "lock",
+              "line": 109,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "unlock",
+              "line": 125,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Governance",
+              "function": "execute",
+              "line": 184,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GovernanceVaultUpgrade",
+              "function": "unlock",
+              "line": 24,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GovernanceStakingUpgrade",
+              "function": "lock",
+              "line": 43,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "unspecified",
+          "source_certainty": "unspecified",
+          "gov_findings": 9,
+          "gov_high_findings": 2
+        }
+      ]
+    }
+  }
+}

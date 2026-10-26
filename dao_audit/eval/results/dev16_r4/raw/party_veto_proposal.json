@@ -1,0 +1,265 @@
+{
+  "case": "party_veto_proposal",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "controlled-delegatecall",
+      "contract": "ReadOnlyDelegateCall",
+      "function": "delegateCallAndRevert",
+      "line": 16,
+      "title": "controlled-delegatecall",
+      "evidence": "ReadOnlyDelegateCall.delegateCallAndRevert(address,bytes) (contracts/utils/ReadOnlyDelegateCall.sol#16-22) uses delegatecall to a input-controlled function id\n\t- (s,r) = impl.delegatecall(callData) (contracts/utils/ReadOnlyDelegateCall.sol#19)",
+      "file": "contracts/utils/ReadOnlyDelegateCall.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ERC721",
+      "function": "setApprovalForAll",
+      "file": "contracts/vendor/solmate/ERC721.sol",
+      "line": 73,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "isApprovedForAll"
+      ],
+      "checked_in": [
+        "PartyGovernanceNFT.transferFrom(address,address,uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "PartyGovernance",
+      "function": "abdicate",
+      "file": "PartyGovernance.sol",
+      "line": 450,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "isHost"
+      ],
+      "checked_in": [
+        "PartyGovernance.disableEmergencyExecute()"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Party",
+      "function": "initialize",
+      "file": "Party.sol",
+      "line": 34,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "isHost"
+      ],
+      "checked_in": [
+        "PartyGovernance.disableEmergencyExecute()"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    }
+  ],
+  "build": {
+    "case": "party_veto_proposal",
+    "repo": "https://github.com/PartyDAO/party-protocol",
+    "commit": "34bd3a2d65b157d04a7a16ab860a864bf7faa8bc",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "foundry.toml",
+    "dataset_identical_to_snapshot": {
+      "Party.sol": true,
+      "PartyGovernance.sol": true,
+      "VetoProposal.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/forge-std",
+        "url": "https://github.com/foundry-rs/forge-std",
+        "commit": "cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653",
+        "status": "ok"
+      },
+      {
+        "path": "lib/openzeppelin-contracts",
+        "url": "https://github.com/openzeppelin/openzeppelin-contracts",
+        "commit": "3d7a93876a2e5e1d7fe29b5a0e96e222afdc4cfa",
+        "status": "ok"
+      },
+      {
+        "path": "lib/solmate",
+        "url": "https://github.com/transmissions11/solmate",
+        "commit": "3a752b8c83427ed1ea1df23f092ea7a810205b6c",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2023-04-21T12:44:49-07:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "forge-std=lib/forge-std/src/",
+      "openzeppelin=lib/openzeppelin-contracts/",
+      "solmate=lib/solmate/src/",
+      "forge-std/=lib/forge-std/src/",
+      "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+      "solmate/=lib/solmate/src/",
+      "ds-test/=lib/forge-std/lib/ds-test/src/",
+      "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/distribution/ITokenDistributor.sol": "f7f545a3872717bbb9409327ff05336d838c50bf526c0f1eb269a40e5a22112d",
+      "contracts/distribution/ITokenDistributorParty.sol": "129032ce45209f61a94f24d55912dc5ef6862904e2ab9d4145fc4ebc15055294",
+      "contracts/globals/IGlobals.sol": "41db0ff07689ab0ef5a974a8a54a7a47ef7cd2963dea10d2130fa732b17ccc1b",
+      "contracts/globals/LibGlobals.sol": "f1271e5670c9cb0724eb86ea42e63c1ead666a723e70e51a73998beffc63c9a0",
+      "contracts/party/IPartyFactory.sol": "6df0234259727f346b0ba6469fdc3676ed28c68360602e4d1fbafd74a9054398",
+      "contracts/party/Party.sol": "e0bd8389b7b6d09915962fe385725b655e096d95c5ff6ee4948f48c1e36ceef7",
+      "contracts/party/PartyGovernance.sol": "acec0a349e613f057a24974918905bcda5d81b7056b1c1600d16301a223d32dd",
+      "contracts/party/PartyGovernanceNFT.sol": "06defd1eb9002d167b7a8dbfee43568eb34a8bafc1429d05dea45dba50f09c76",
+      "contracts/proposals/IProposalExecutionEngine.sol": "2a8d04abe2cabd95ad5ee312f2b8e9a0399f70fb9ef99a3f1c311e9df1d39bc4",
+      "contracts/proposals/LibProposal.sol": "24dc89d69f39179a93ce54fd90da13bae9199d6e057298158b0196c9ba5acfca",
+      "contracts/proposals/ProposalStorage.sol": "95ef2d2d7f9910678ed75d5bff85123bdff280212834ab8a58b394673b1fd6d4",
+      "contracts/proposals/VetoProposal.sol": "4cf486416b82d43f031b7dac239b068809c956cc1e51d0ca7b3d41c49cb204ec",
+      "contracts/renderers/RendererStorage.sol": "3b902929a9c03e3174b042dd251f6273f66fb406b6c82b6b160abfa605b8c5d9",
+      "contracts/tokens/ERC1155Receiver.sol": "97f887776bda89b00739a003331a59f26961e227f5201bb98ac1250785666cf0",
+      "contracts/tokens/ERC721Receiver.sol": "a8508a299805860cd49a99559edf23ef88ae08d9b7e00f7decaec9454e3ef7bb",
+      "contracts/tokens/IERC1155.sol": "42bfc2efdf6b878dd04fe2e7faf9c483d44a69ccd5a27fe53db0f6cf26ce3f37",
+      "contracts/tokens/IERC20.sol": "f0e77ce5f086a56d8ca2aba45ce838aa8b980c34e59badc353f5a3c2d0160581",
+      "contracts/tokens/IERC721.sol": "3d718eff0ccf66dfc9ba1b1adab490e8e264cc9978ae7ff6e455b7c029a0f56f",
+      "contracts/tokens/IERC721Receiver.sol": "a690b9ee25d6cfe6ae3e5ed20b9518a2c3ace23e8955f3412567c42b08421f4a",
+      "contracts/utils/EIP165.sol": "3bf7efdb06ea0232f7257f570d72e41093dd3d00cfd7f96e0a1823a5f7a4d633",
+      "contracts/utils/Implementation.sol": "64d8430daa7d1a8547e2e23cd0a31f999b94954da236d8df20bcb0265632f53b",
+      "contracts/utils/LibERC20Compat.sol": "3f90e45927bc56eb8187f4712725289eca95c670f6f38721a718c994f9643fca",
+      "contracts/utils/LibRawResult.sol": "3f67001d729a9a376a552f182e3837cc065dd051bf507697fb33b7eb26430b08",
+      "contracts/utils/LibSafeCast.sol": "373c590e22d364168526547e082c0e3a968fb8cfe831f3dba89a08eac80f52f1",
+      "contracts/utils/Multicall.sol": "678082792cb798c1c96b2a286c570f325815b004b2c933c86b28e1f64691d44e",
+      "contracts/utils/ReadOnlyDelegateCall.sol": "15bd2b68c3892d1524bdf7f0c546e242651b0ff728ac63b3d7b4f5a0be090815",
+      "contracts/vendor/solmate/ERC1155.sol": "ff315374de56d050814c2c4a8f83cb9e184dca665d07cf5ff019c66ca477d663",
+      "contracts/vendor/solmate/ERC721.sol": "c6e1974a67bf4f860852520afeed258835bb48df76e3aead814b4540dd594e8b",
+      "lib/openzeppelin-contracts//contracts/interfaces/IERC2981.sol": "a8d1ed2cf4ae5718b5c1e8e148e7f5817e934e8d933729eb5c3ac389046041b1",
+      "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": "701e025d13ec6be09ae892eb029cd83b3064325801d73654847a5fb11c58b1e5",
+      "lib/solmate/src/utils/SSTORE2.sol": "2819718fe1f9557c54562f9012b958de6851c37d1f0f66a97888d851a4bef74f"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "contracts/party/Party.sol",
+          "contracts/party/PartyGovernance.sol",
+          "contracts/proposals/VetoProposal.sol"
+        ],
+        "pragmas": [
+          "0.8.17",
+          ">=0.8.0",
+          "^0.8",
+          "^0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.17",
+            "reason": "pragma:newest_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.17",
+          "selected_by": "pragma:newest_compiling",
+          "version_string": "0.8.17+commit.8df45f5f.Emscripten.clang",
+          "soljson_sha256": "04184dd4a976c37a64c8d6470e25983cfdbb09b10ff371da9178f50d6e132745",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.17)"
+        },
+        "compiled_sources": [
+          "contracts/distribution/ITokenDistributor.sol",
+          "contracts/distribution/ITokenDistributorParty.sol",
+          "contracts/globals/IGlobals.sol",
+          "contracts/globals/LibGlobals.sol",
+          "contracts/party/IPartyFactory.sol",
+          "contracts/party/Party.sol",
+          "contracts/party/PartyGovernance.sol",
+          "contracts/party/PartyGovernanceNFT.sol",
+          "contracts/proposals/IProposalExecutionEngine.sol",
+          "contracts/proposals/LibProposal.sol",
+          "contracts/proposals/ProposalStorage.sol",
+          "contracts/proposals/VetoProposal.sol",
+          "contracts/renderers/RendererStorage.sol",
+          "contracts/tokens/ERC1155Receiver.sol",
+          "contracts/tokens/ERC721Receiver.sol",
+          "contracts/tokens/IERC1155.sol",
+          "contracts/tokens/IERC20.sol",
+          "contracts/tokens/IERC721.sol",
+          "contracts/tokens/IERC721Receiver.sol",
+          "contracts/utils/EIP165.sol",
+          "contracts/utils/Implementation.sol",
+          "contracts/utils/LibERC20Compat.sol",
+          "contracts/utils/LibRawResult.sol",
+          "contracts/utils/LibSafeCast.sol",
+          "contracts/utils/Multicall.sol",
+          "contracts/utils/ReadOnlyDelegateCall.sol",
+          "contracts/vendor/solmate/ERC1155.sol",
+          "contracts/vendor/solmate/ERC721.sol",
+          "lib/openzeppelin-contracts//contracts/interfaces/IERC2981.sol",
+          "lib/openzeppelin-contracts//contracts/utils/introspection/IERC165.sol",
+          "lib/solmate/src/utils/SSTORE2.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 34
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 3,
+      "compiled": 3,
+      "slither_ir": 3,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 6.5
+  },
+  "n_files": 3,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 6530.8,
+  "eval_files_opened": [
+    "dataset_r4/party_veto_proposal/BUILD.json",
+    "dataset_r4/party_veto_proposal/contracts/Party.sol",
+    "dataset_r4/party_veto_proposal/contracts/PartyGovernance.sol",
+    "dataset_r4/party_veto_proposal/contracts/VetoProposal.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

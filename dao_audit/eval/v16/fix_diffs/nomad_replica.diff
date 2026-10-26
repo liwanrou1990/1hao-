@@ -1,0 +1,22 @@
+diff -ruN nomad_replica/contracts/Replica.sol nomad_replica_fixed/contracts/Replica.sol
+--- nomad_replica/contracts/Replica.sol	2026-10-26 04:29:15.074251163 +0000
++++ nomad_replica_fixed/contracts/Replica.sol	2026-10-26 04:29:17.249015827 +0000
+@@ -112,7 +112,7 @@
+         remoteDomain = _remoteDomain;
+         committedRoot = _committedRoot;
+         // pre-approve the committed root.
+-        confirmAt[_committedRoot] = 1;
++        if (_committedRoot != bytes32(0)) confirmAt[_committedRoot] = 1;
+         _setOptimisticTimeout(_optimisticSeconds);
+     }
+ 
+@@ -263,7 +263,8 @@
+         // this is backwards-compatibility for messages proven/processed
+         // under previous versions
+         if (_root == LEGACY_STATUS_PROVEN) return true;
+-        if (_root == LEGACY_STATUS_PROCESSED) return false;
++        if (_root == LEGACY_STATUS_PROCESSED || _root == LEGACY_STATUS_NONE)
++            return false;
+ 
+         uint256 _time = confirmAt[_root];
+         if (_time == 0) {

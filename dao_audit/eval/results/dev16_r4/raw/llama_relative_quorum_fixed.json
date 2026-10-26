@@ -1,0 +1,320 @@
+{
+  "case": "llama_relative_quorum_fixed",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "controlled-delegatecall",
+      "contract": "LlamaExecutor",
+      "function": "execute",
+      "line": 28,
+      "title": "controlled-delegatecall",
+      "evidence": "LlamaExecutor.execute(address,bool,bytes) (src/LlamaExecutor.sol#28-35) uses delegatecall to a input-controlled function id\n\t- (success,result) = target.delegatecall(data) (src/LlamaExecutor.sol#34)",
+      "file": "src/LlamaExecutor.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "LlamaCore",
+      "function": "initialize",
+      "file": "LlamaCore.sol",
+      "line": 224,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "executor",
+        "factory",
+        "policy"
+      ],
+      "checked_in": [
+        "LlamaCore.createStrategies(ILlamaStrategy,bytes[])",
+        "LlamaCore.setGuard(address,bytes4,ILlamaActionGuard)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "LlamaPolicy",
+      "function": "initialize",
+      "file": "LlamaPolicy.sol",
+      "line": 143,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_ownerOf",
+        "numRoles"
+      ],
+      "checked_in": [
+        "ERC721NonTransferableMinimalProxy.transferFrom(address,address,uint256)",
+        "LlamaPolicy.setRoleHolder(uint8,address,uint128,uint64)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "LlamaPolicy",
+      "function": "finalizeInitialization",
+      "file": "LlamaPolicy.sol",
+      "line": 180,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "llamaExecutor"
+      ],
+      "checked_in": [
+        "LlamaPolicy.initializeRole(RoleDescription)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "LlamaPolicy",
+      "function": "revokeExpiredRole",
+      "file": "LlamaPolicy.sol",
+      "line": 217,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_ownerOf"
+      ],
+      "checked_in": [
+        "ERC721NonTransferableMinimalProxy.transferFrom(address,address,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "LlamaRelativeQuorum",
+      "function": "initialize",
+      "file": "LlamaRelativeQuorum.sol",
+      "line": 159,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "llamaCore"
+      ],
+      "checked_in": [
+        "LlamaRelativeQuorum.validateActionCreation(ActionInfo)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "llama_relative_quorum_fixed",
+    "repo": "https://github.com/llamaxyz/llama",
+    "commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "foundry.toml",
+    "dataset_identical_to_snapshot": {
+      "Enums.sol": true,
+      "ILlamaStrategy.sol": true,
+      "LlamaCore.sol": true,
+      "LlamaPolicy.sol": true,
+      "LlamaRelativeQuorum.sol": true,
+      "Structs.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/forge-std",
+        "url": "https://github.com/foundry-rs/forge-std",
+        "commit": "fc560fa34fa12a335a50c35d92e55a6628ca467c",
+        "status": "ok"
+      },
+      {
+        "path": "lib/openzeppelin-contracts",
+        "url": "https://github.com/openzeppelin/openzeppelin-contracts",
+        "commit": "49c0e4370d0cc50ea6090709e3835a3091e33ee2",
+        "status": "ok"
+      },
+      {
+        "path": "lib/solmate",
+        "url": "https://github.com/transmissions11/solmate",
+        "commit": "564e9f1606c699296420500547c47685818bcccf",
+        "status": "ok"
+      },
+      {
+        "path": "lib/solady",
+        "url": "https://github.com/vectorized/solady",
+        "commit": "3d57528984275d1746ee6597acd36277f51c091d",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2023-06-23T14:32:15-04:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "@openzeppelin=lib/openzeppelin-contracts/contracts/",
+      "@solmate=lib/solmate/src/",
+      "@solady=lib/solady/src/",
+      "forge-std/=lib/forge-std/src/",
+      "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+      "solady/=lib/solady/src/",
+      "solmate/=lib/solmate/src/",
+      "ds-test/=lib/forge-std/lib/ds-test/src/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "lib/openzeppelin-contracts/contracts//proxy/Clones.sol": "f535ec8d8eee30251ee3a986db1d9e3ab7ea195d0926579147d6b035b2a02d1a",
+      "lib/openzeppelin-contracts/contracts//proxy/utils/Initializable.sol": "94d77d62abfe6b973eb72882bc787d626bb22f34de38e95966e7e28e2fe8a84a",
+      "lib/openzeppelin-contracts/contracts//utils/Base64.sol": "9fbd7a4462f54bbb6b0bd03231738e5f081a092e9a8fd789fb4d1aeca3758aec",
+      "lib/openzeppelin-contracts/contracts/utils/Address.sol": "8160a4242e8a7d487d940814e5279d934e81f0436689132a4e73394bab084a6d",
+      "lib/solady/src//utils/LibString.sol": "3db2a4aaa651417cd52a2992a2882ae7a385cf80c98b6a558dd994575456a90e",
+      "lib/solmate/src//utils/FixedPointMathLib.sol": "edfd7fa8ec4087d252f637df16669599d5c0ac803ab465730f8cc3a5e8a8d55a",
+      "src/LlamaCore.sol": "9657766b2cd0bf96d5242513e8e13616e580849f36d9f01a5b3bdcea07ac1196",
+      "src/LlamaExecutor.sol": "911cfd03277db6365dfc53c69ec298d36305022487464403e938baaf425d02ee",
+      "src/LlamaFactory.sol": "785fa9b5a9d5162a8a885c4735d1133ff60d3e0359615d60f34b065014e8ce23",
+      "src/LlamaPolicy.sol": "40f8de41dc82f8e44d15e179d6fcc78a321faf3de3e0dd584a40439291567c64",
+      "src/LlamaPolicyMetadata.sol": "e13191fa0856dae46f0484a122688800ddfd124578261c24553e1793dd101ae9",
+      "src/LlamaPolicyMetadataParamRegistry.sol": "f317b079adae8fa065018f6ddd90ebdd0003efd5729334f28e3222dc6c63a59d",
+      "src/interfaces/ILlamaAccount.sol": "24364e0db50576affa245190f187d9743a7f856f8c81f5bc2aaf44d986e32025",
+      "src/interfaces/ILlamaActionGuard.sol": "0f92053a6b57c8163aab4f12932f0ee185422fc92ca5850f0ca65108229fa288",
+      "src/interfaces/ILlamaStrategy.sol": "cbcb43577d5fd7b333081ba1eaa68c204c4d2e3b28f0f538493ddcf48bd825a9",
+      "src/lib/Checkpoints.sol": "4df14bfb266c33b1dacd1759e2bc5747339b385d3d67b2dc7b4f9ce6bb3d7482",
+      "src/lib/ERC721NonTransferableMinimalProxy.sol": "07c67dc7d0a71f3c3dcbe2132018cd81b8e70c4ae6241a7ec6db2b4c369783ac",
+      "src/lib/Enums.sol": "662ffe1855fa45929a815ed2a334e23d62ee9ff0a04eaa69a8cc1f28441b3f38",
+      "src/lib/LlamaUtils.sol": "4ec34cb3a6cf439c76cf79ba702a3fcb72ea3819b500364623b50c7a0f9fe3be",
+      "src/lib/Structs.sol": "6cfa88a92454bdc7dc6cd6b774bf739c92796a3312e37e25dd304aa3ee7c5220",
+      "src/lib/UDVTs.sol": "fc9f86203719904185abafc2c74f08fc949affbd77c160ca5a841183c26fccef",
+      "src/strategies/LlamaRelativeQuorum.sol": "55b02a1c4ee535a12eadadf3d7c8775fc233bbcb87ae11d8ce298571c7422d13"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.19",
+        "file": "foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "src/LlamaCore.sol",
+          "src/LlamaPolicy.sol",
+          "src/interfaces/ILlamaStrategy.sol",
+          "src/lib/Enums.sol",
+          "src/lib/Structs.sol",
+          "src/strategies/LlamaRelativeQuorum.sol"
+        ],
+        "pragmas": [
+          "0.8.19",
+          ">=0.8.0",
+          "^0.8.0",
+          "^0.8.1",
+          "^0.8.2",
+          "^0.8.4"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.19",
+            "reason": "project_config:foundry.toml",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.19",
+          "selected_by": "project_config:foundry.toml",
+          "version_string": "0.8.19+commit.7dd6d404.Emscripten.clang",
+          "soljson_sha256": "fba49e26930967a28d4f301088e126002ab6fbb755f37b5d0ee22b1bf4787070",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.19)"
+        },
+        "compiled_sources": [
+          "lib/openzeppelin-contracts/contracts//proxy/Clones.sol",
+          "lib/openzeppelin-contracts/contracts//proxy/utils/Initializable.sol",
+          "lib/openzeppelin-contracts/contracts//utils/Base64.sol",
+          "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+          "lib/solady/src//utils/LibString.sol",
+          "lib/solmate/src//utils/FixedPointMathLib.sol",
+          "src/LlamaCore.sol",
+          "src/LlamaExecutor.sol",
+          "src/LlamaFactory.sol",
+          "src/LlamaPolicy.sol",
+          "src/LlamaPolicyMetadata.sol",
+          "src/LlamaPolicyMetadataParamRegistry.sol",
+          "src/interfaces/ILlamaAccount.sol",
+          "src/interfaces/ILlamaActionGuard.sol",
+          "src/interfaces/ILlamaStrategy.sol",
+          "src/lib/Checkpoints.sol",
+          "src/lib/ERC721NonTransferableMinimalProxy.sol",
+          "src/lib/Enums.sol",
+          "src/lib/LlamaUtils.sol",
+          "src/lib/Structs.sol",
+          "src/lib/UDVTs.sol",
+          "src/strategies/LlamaRelativeQuorum.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 20
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 6,
+      "compiled": 6,
+      "slither_ir": 6,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 8.0
+  },
+  "n_files": 6,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 8054.6,
+  "eval_files_opened": [
+    "dataset_r4/llama_relative_quorum_fixed/BUILD.json",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/Enums.sol",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/ILlamaStrategy.sol",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/LlamaCore.sol",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/LlamaPolicy.sol",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/LlamaRelativeQuorum.sol",
+    "dataset_r4/llama_relative_quorum_fixed/contracts/Structs.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

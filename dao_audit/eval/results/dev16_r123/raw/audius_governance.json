@@ -1,0 +1,624 @@
+{
+  "case": "audius_governance",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-eth",
+      "contract": "Governance",
+      "function": "_executeTransaction",
+      "line": 970,
+      "title": "arbitrary-send-eth",
+      "evidence": "Governance._executeTransaction(address,uint256,string,bytes) (contracts/Governance.sol#970-987) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returnData) = (_targetContractAddress.call.value(_callValue)(encodedCallData)) (contracts/Governance.sol#981-984)",
+      "file": "Governance.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "InitializableV2",
+      "function": "initialize",
+      "file": "InitializableV2.sol",
+      "line": 22,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "isInitialized"
+      ],
+      "checked_in": [
+        "ClaimsManager.setGovernanceAddress(address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ClaimsManager",
+      "function": "initialize",
+      "file": "contracts/ClaimsManager.sol",
+      "line": 107,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "currentRound",
+        "governanceAddress",
+        "isInitialized"
+      ],
+      "checked_in": [
+        "ClaimsManager.processClaim(address,uint256)",
+        "ClaimsManager.setGovernanceAddress(address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ClaimsManager",
+      "function": "initiateRound",
+      "file": "contracts/ClaimsManager.sol",
+      "line": 272,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "currentRound"
+      ],
+      "checked_in": [
+        "ClaimsManager.processClaim(address,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "initialize",
+      "file": "contracts/DelegateManager.sol",
+      "line": 174,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "governanceAddress",
+        "isInitialized",
+        "removeDelegatorEvalDuration"
+      ],
+      "checked_in": [
+        "DelegateManager.removeDelegator(address,address)",
+        "DelegateManager.slash(uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "delegateStake",
+      "file": "contracts/DelegateManager.sol",
+      "line": 202,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "spDelegateInfo"
+      ],
+      "checked_in": [
+        "DelegateManager.requestRemoveDelegator(address,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "requestUndelegateStake",
+      "file": "contracts/DelegateManager.sol",
+      "line": 274,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "spDelegateInfo",
+        "undelegateRequests"
+      ],
+      "checked_in": [
+        "DelegateManager.requestRemoveDelegator(address,address)",
+        "DelegateManager.slash(uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "cancelUndelegateStakeRequest",
+      "file": "contracts/DelegateManager.sol",
+      "line": 330,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "spDelegateInfo",
+        "undelegateRequests"
+      ],
+      "checked_in": [
+        "DelegateManager.requestRemoveDelegator(address,address)",
+        "DelegateManager.slash(uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "undelegateStake",
+      "file": "contracts/DelegateManager.sol",
+      "line": 355,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "spDelegateInfo",
+        "undelegateRequests"
+      ],
+      "checked_in": [
+        "DelegateManager.requestRemoveDelegator(address,address)",
+        "DelegateManager.slash(uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DelegateManager",
+      "function": "claimRewards",
+      "file": "contracts/DelegateManager.sol",
+      "line": 436,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "spDelegateInfo"
+      ],
+      "checked_in": [
+        "DelegateManager.requestRemoveDelegator(address,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "initialize",
+      "file": "Governance.sol",
+      "line": 187,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "guardianAddress",
+        "isInitialized"
+      ],
+      "checked_in": [
+        "Governance.vetoProposal(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "submitProposal",
+      "file": "Governance.sol",
+      "line": 242,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "inProgressProposals",
+        "lastProposalId",
+        "proposals"
+      ],
+      "checked_in": [
+        "Governance.vetoProposal(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "submitVote",
+      "file": "Governance.sol",
+      "line": 337,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "Governance.vetoProposal(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "updateVote",
+      "file": "Governance.sol",
+      "line": 402,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "Governance.vetoProposal(uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Governance",
+      "function": "evaluateProposalOutcome",
+      "file": "Governance.sol",
+      "line": 467,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "inProgressProposals",
+        "proposals"
+      ],
+      "checked_in": [
+        "Governance.vetoProposal(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ServiceProviderFactory",
+      "function": "initialize",
+      "file": "contracts/ServiceProviderFactory.sol",
+      "line": 194,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "claimsManagerAddress",
+        "governanceAddress",
+        "isInitialized"
+      ],
+      "checked_in": [
+        "ServiceProviderFactory.deregister(bytes32,string)",
+        "ServiceProviderFactory.requestUpdateDeployerCut(address,uint256)",
+        "ServiceProviderFactory.updateDeployerCutLockupDuration(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ServiceTypeManager",
+      "function": "initialize",
+      "file": "contracts/ServiceTypeManager.sol",
+      "line": 56,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "governanceAddress",
+        "isInitialized"
+      ],
+      "checked_in": [
+        "ServiceTypeManager.setGovernanceAddress(address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Staking",
+      "function": "initialize",
+      "file": "contracts/Staking.sol",
+      "line": 62,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "governanceAddress",
+        "isInitialized"
+      ],
+      "checked_in": [
+        "Staking.setGovernanceAddress(address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "audius_governance",
+    "repo": "https://github.com/AudiusProject/audius-protocol",
+    "commit": "01f924a7762659141d3b32491b81ca6e0f63c822",
+    "mode": "original_project_snapshot",
+    "project_root": "eth-contracts",
+    "build_config": "eth-contracts/truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "AudiusAdminUpgradeabilityProxy.sol": true,
+      "Governance.sol": true,
+      "InitializableV2.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-08-04T07:53:12-07:00",
+    "npm_dependencies": [
+      {
+        "package": "@aragon/court",
+        "declared": "1.1.3",
+        "declared_in": "eth-contracts/package-lock.json",
+        "installed": "1.1.3",
+        "status": "ok",
+        "files_sha256": {
+          "@aragon/court/contracts/lib/Checkpointing.sol": "3517803d5c69e27a86ea3e75221fa7cb32a37e9426886cd3e19eb37703809d0a",
+          "@aragon/court/contracts/lib/os/Uint256Helpers.sol": "904d07616152fa8efbcefd122ca92e4061270b7ef4d1326a9f44a5a31d95408f"
+        }
+      },
+      {
+        "package": "@openzeppelin/contracts-ethereum-package",
+        "declared": "2.5.0",
+        "declared_in": "eth-contracts/package.json (exact)",
+        "installed": "2.5.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol": "4657b90f79bdd6ba76d695737488132264e9e1fc01fcbffb63a9a5c7c95c14e0",
+          "@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol": "c09e02bc5fe95fd09d3345f7ef8523b68e6b60c6f683cd7b3bf8b375c2c82c4e",
+          "@openzeppelin/contracts-ethereum-package/contracts/access/roles/MinterRole.sol": "8da24de189c8810cd5dd20dcbdff881752672feb076580c0c80a7caf0aba8f04",
+          "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol": "ccbc65eddc0fe23db1360af754dfc534f2ab28ab1d2e79c1ca0cc9420a96dc58",
+          "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol": "9d2b8219d9bd3aa67777b607e2a0631711da4a1c9296f651ec5ede24da357278",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol": "806316d1f6db1565aaccfe37bbd2fecab604fe6b9640900a971724a81b5479fd",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Burnable.sol": "2daf97ef2650abcb03013b538486ee53449e7f2390c79af96c761634f496dd96",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Mintable.sol": "d1ae7e7875731d2ad27b00bc86a5d196f01670d8a567bbfa062d5864f650bd1d",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol": "1aa5fd202b00ab7a51871d5bd505693c4e51d75b313da893d9d6e4f266ef9a98",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol": "3fcb6073e59fcbdfe65f39f22d7baa518e4df8c2b9361ffcb48efa7c29ac9f7e",
+          "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol": "5fdd34a9bf892f4d469c270b9cd43c34f3a75c19d9a374369fa95cc8b4863b2b"
+        }
+      },
+      {
+        "package": "@openzeppelin/upgrades",
+        "declared": "2.8.0",
+        "declared_in": "eth-contracts/package.json (exact)",
+        "installed": "2.8.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/upgrades/contracts/Initializable.sol": "b3f8bff91edd40a4c165517ff5792750c74c0947744a8d39056211e9576c203a",
+          "@openzeppelin/upgrades/contracts/upgradeability/BaseUpgradeabilityProxy.sol": "9a4cf976e6a1b0c7ba6b09b1f63fe2bf1d9ef78ef2f02ff548bdda5f616f4bcc",
+          "@openzeppelin/upgrades/contracts/upgradeability/Proxy.sol": "26f1d46e4143000b6e7041d9f16f5bbfa457191c787bc5194907ecbfd794674f",
+          "@openzeppelin/upgrades/contracts/upgradeability/UpgradeabilityProxy.sol": "2161f7d71b0030339fe5d9c403e355a0b6c4c0f1edbb4e1de09ce2f3bc4ca799",
+          "@openzeppelin/upgrades/contracts/utils/Address.sol": "f3b86fb1ed0e594e00112dd7b02ded5d8cf8d599a5f0e2f6e1a978e4508e7e07"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@aragon/court/contracts/lib/Checkpointing.sol": "3517803d5c69e27a86ea3e75221fa7cb32a37e9426886cd3e19eb37703809d0a",
+      "@aragon/court/contracts/lib/os/Uint256Helpers.sol": "904d07616152fa8efbcefd122ca92e4061270b7ef4d1326a9f44a5a31d95408f",
+      "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol": "4657b90f79bdd6ba76d695737488132264e9e1fc01fcbffb63a9a5c7c95c14e0",
+      "@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol": "c09e02bc5fe95fd09d3345f7ef8523b68e6b60c6f683cd7b3bf8b375c2c82c4e",
+      "@openzeppelin/contracts-ethereum-package/contracts/access/roles/MinterRole.sol": "8da24de189c8810cd5dd20dcbdff881752672feb076580c0c80a7caf0aba8f04",
+      "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol": "ccbc65eddc0fe23db1360af754dfc534f2ab28ab1d2e79c1ca0cc9420a96dc58",
+      "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol": "9d2b8219d9bd3aa67777b607e2a0631711da4a1c9296f651ec5ede24da357278",
+      "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol": "806316d1f6db1565aaccfe37bbd2fecab604fe6b9640900a971724a81b5479fd",
+      "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Burnable.sol": "2daf97ef2650abcb03013b538486ee53449e7f2390c79af96c761634f496dd96",
+      "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Mintable.sol": "d1ae7e7875731d2ad27b00bc86a5d196f01670d8a567bbfa062d5864f650bd1d",
+      "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol": "1aa5fd202b00ab7a51871d5bd505693c4e51d75b313da893d9d6e4f266ef9a98",
+      "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol": "3fcb6073e59fcbdfe65f39f22d7baa518e4df8c2b9361ffcb48efa7c29ac9f7e",
+      "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol": "5fdd34a9bf892f4d469c270b9cd43c34f3a75c19d9a374369fa95cc8b4863b2b",
+      "@openzeppelin/upgrades/contracts/Initializable.sol": "b3f8bff91edd40a4c165517ff5792750c74c0947744a8d39056211e9576c203a",
+      "@openzeppelin/upgrades/contracts/upgradeability/BaseUpgradeabilityProxy.sol": "9a4cf976e6a1b0c7ba6b09b1f63fe2bf1d9ef78ef2f02ff548bdda5f616f4bcc",
+      "@openzeppelin/upgrades/contracts/upgradeability/Proxy.sol": "26f1d46e4143000b6e7041d9f16f5bbfa457191c787bc5194907ecbfd794674f",
+      "@openzeppelin/upgrades/contracts/upgradeability/UpgradeabilityProxy.sol": "2161f7d71b0030339fe5d9c403e355a0b6c4c0f1edbb4e1de09ce2f3bc4ca799",
+      "@openzeppelin/upgrades/contracts/utils/Address.sol": "f3b86fb1ed0e594e00112dd7b02ded5d8cf8d599a5f0e2f6e1a978e4508e7e07",
+      "contracts/AudiusAdminUpgradeabilityProxy.sol": "819ed63cd7c5d70a4d429dd49af5ef4f857ea5fdfccda8f5054055cbf9b3ee0c",
+      "contracts/ClaimsManager.sol": "ee7342981b072ef03bef2cdf8de29a106d8655ec6274b622de6b4393e0216f1f",
+      "contracts/DelegateManager.sol": "4b6c44ababe26e88f0c45e24a22cb913a75660b0a9e749cc0fba6943e9f58d60",
+      "contracts/Governance.sol": "2fccab75f8c253aee5ba9061b9e25c5834a973c67de27fa8545fa3087f1eb56c",
+      "contracts/InitializableV2.sol": "c3da83d8b943e0d4b109a4ccb1809ed51811920c1932eed4c926a0524040227c",
+      "contracts/ServiceProviderFactory.sol": "1657eaacd13acbc026144c69c49115c2534131fdde10c56ebed4fb4ce2c05072",
+      "contracts/ServiceTypeManager.sol": "dc36409b66eff7d51ff695ad56934b2525cc44e7e2b7e5e71dac14e791db7d99",
+      "contracts/Staking.sol": "77eb0c4919f6f1f6d0c053166da9ad6e41e1f79d4e2f98b83ad2fc6109b552d6",
+      "contracts/registry/Registry.sol": "05332a176bc2564c5d6a53c9524097cc16578dee9c925cff60eff237b32ff9a7"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.5.17",
+        "file": "eth-contracts/truffle-config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/AudiusAdminUpgradeabilityProxy.sol",
+          "contracts/Governance.sol",
+          "contracts/InitializableV2.sol"
+        ],
+        "pragmas": [
+          ">=0.4.24 <0.7.0",
+          "^0.5.0",
+          "^0.5.5",
+          "^0.5.8"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.17",
+            "reason": "project_config:eth-contracts/truffle-config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.17",
+          "selected_by": "project_config:eth-contracts/truffle-config.js",
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.17)"
+        },
+        "compiled_sources": [
+          "@aragon/court/contracts/lib/Checkpointing.sol",
+          "@aragon/court/contracts/lib/os/Uint256Helpers.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/GSN/Context.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/access/Roles.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/access/roles/MinterRole.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Burnable.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/ERC20Mintable.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol",
+          "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol",
+          "@openzeppelin/upgrades/contracts/Initializable.sol",
+          "@openzeppelin/upgrades/contracts/upgradeability/BaseUpgradeabilityProxy.sol",
+          "@openzeppelin/upgrades/contracts/upgradeability/Proxy.sol",
+          "@openzeppelin/upgrades/contracts/upgradeability/UpgradeabilityProxy.sol",
+          "@openzeppelin/upgrades/contracts/utils/Address.sol",
+          "contracts/AudiusAdminUpgradeabilityProxy.sol",
+          "contracts/ClaimsManager.sol",
+          "contracts/DelegateManager.sol",
+          "contracts/Governance.sol",
+          "contracts/InitializableV2.sol",
+          "contracts/ServiceProviderFactory.sol",
+          "contracts/ServiceTypeManager.sol",
+          "contracts/Staking.sol",
+          "contracts/registry/Registry.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 27
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 3,
+      "compiled": 3,
+      "slither_ir": 3,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 9.4
+  },
+  "n_files": 3,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 9385.0,
+  "eval_files_opened": [
+    "dataset/audius_governance/BUILD.json",
+    "dataset/audius_governance/contracts/AudiusAdminUpgradeabilityProxy.sol",
+    "dataset/audius_governance/contracts/Governance.sol",
+    "dataset/audius_governance/contracts/InitializableV2.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

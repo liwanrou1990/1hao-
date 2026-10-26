@@ -1,0 +1,700 @@
+{
+  "source": "eval/results/round4/raw (blind, unchanged) + eval/results/dev16_r4/raw (dev rerun)",
+  "missed": [
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "contract": "TokenHandler",
+      "function": "safeTransferFrom",
+      "lines": [
+        45,
+        47
+      ],
+      "file_hint": "eval/dataset_r4/bancor_network/contracts/",
+      "category": "NO_RULE",
+      "reason": "transferFrom is issued as a low-level call with an encoded selector (execute(token, abi.encodeWithSelector(...))); arbitrary-send-erc20 only matches high-level transferFrom calls; no detector flags a public asset helper that should be internal",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.4.26+commit.4563c3fc.Emscripten.clang",
+          "soljson_sha256": "357adb49bb74c9eabaa034db28f96b4105def2b052c7795db8e30ad9a34cc551",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "contract": "TokenHandler",
+      "function": "safeTransfer",
+      "lines": [
+        31,
+        33
+      ],
+      "file_hint": "eval/dataset_r4/bancor_network/contracts/",
+      "category": "NO_RULE",
+      "reason": "same encoded low-level call; no detector for a public helper moving the contract's own tokens",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.4.26+commit.4563c3fc.Emscripten.clang",
+          "soljson_sha256": "357adb49bb74c9eabaa034db28f96b4105def2b052c7795db8e30ad9a34cc551",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "contract": "TokenHandler",
+      "function": "safeApprove",
+      "lines": [
+        18,
+        20
+      ],
+      "file_hint": "eval/dataset_r4/bancor_network/contracts/",
+      "category": "NO_RULE",
+      "reason": "same encoded low-level call; no detector for public approve helpers",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.4.26+commit.4563c3fc.Emscripten.clang",
+          "soljson_sha256": "357adb49bb74c9eabaa034db28f96b4105def2b052c7795db8e30ad9a34cc551",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "bond_fixed_expiry_teller",
+      "vuln": "VULN-4",
+      "contract": "BondFixedExpiryTeller",
+      "function": "redeem",
+      "lines": [
+        137,
+        142
+      ],
+      "file_hint": "eval/dataset_r4/bond_fixed_expiry_teller/contracts/",
+      "category": "PARSE_FAIL",
+      "reason": "vulnerable commit has no recorded submodules/lockfile for solmate and clones-with-immutable-args; dependency versions unknown -> ANALYSIS_INCOMPLETE (still after V0.16 toolchain fixes)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": []
+    },
+    {
+      "case": "daostack_ucontroller",
+      "vuln": "VULN-1",
+      "contract": "UController",
+      "function": "newOrganization",
+      "lines": [
+        90,
+        108
+      ],
+      "file_hint": "eval/dataset_r4/daostack_ucontroller/contracts/",
+      "category": "NO_RULE",
+      "reason": "permissionless registration that trusts values re-read from a caller-supplied contract; no detector models time-of-check/time-of-use on external getters",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.2+commit.1df8f40c.Emscripten.clang",
+          "soljson_sha256": "f855a1e0816ac4426b8a9eebf37273b89acbb18b076a519935a05ca212c71f34",
+          "selected_by": "project_config:truffle.js"
+        }
+      ]
+    },
+    {
+      "case": "daostack_ucontroller",
+      "vuln": "VULN-4",
+      "contract": "UController",
+      "function": "sendEther",
+      "lines": [
+        388,
+        395
+      ],
+      "file_hint": "eval/dataset_r4/daostack_ucontroller/contracts/",
+      "category": "SEMANTICS_UNDETERMINED",
+      "reason": "sendEther is guarded by a scheme-permission modifier; Slither treats it as protected and cannot tell that the permission itself is obtainable through newOrganization (chain through a role)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.2+commit.1df8f40c.Emscripten.clang",
+          "soljson_sha256": "f855a1e0816ac4426b8a9eebf37273b89acbb18b076a519935a05ca212c71f34",
+          "selected_by": "project_config:truffle.js"
+        }
+      ]
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "vuln": "VULN-4",
+      "contract": "CBridgeFacet",
+      "function": "swapAndStartBridgeTokensViaCBridge",
+      "lines": [
+        93,
+        139
+      ],
+      "file_hint": "eval/dataset_r4/lifi_cbridge_facet/contracts/",
+      "category": "NO_RULE",
+      "reason": "no Slither detector for an arbitrary low-level call (callTo.call(callData)) without ETH value; baseline heuristic missed it because the target flows through a library function parameter (inter-procedural)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.8.38+commit.1835d247.Emscripten.clang",
+          "soljson_sha256": "0b15fcb24fe784ed60f3853afc7f7e133a427bf1ac0d682e3f808d44b8e2fa6c",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "vuln": "VULN-4",
+      "contract": "LibSwap",
+      "function": "swap",
+      "lines": [
+        30,
+        59
+      ],
+      "file_hint": "eval/dataset_r4/lifi_cbridge_facet/contracts/",
+      "category": "NO_RULE",
+      "reason": "same: arbitrary call with caller-controlled target and calldata has no detector",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.8.38+commit.1835d247.Emscripten.clang",
+          "soljson_sha256": "0b15fcb24fe784ed60f3853afc7f7e133a427bf1ac0d682e3f808d44b8e2fa6c",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "llama_relative_quorum",
+      "vuln": "VULN-2",
+      "contract": "LlamaRelativeQuorum",
+      "function": "validateActionCreation",
+      "lines": [
+        199,
+        210
+      ],
+      "file_hint": "eval/dataset_r4/llama_relative_quorum/contracts/",
+      "category": "NO_RULE",
+      "reason": "VULN-2: no Slither capability for quorum / voting-supply snapshot semantics",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.8.19+commit.7dd6d404.Emscripten.clang",
+          "soljson_sha256": "fba49e26930967a28d4f301088e126002ab6fbb755f37b5d0ee22b1bf4787070",
+          "selected_by": "project_config:foundry.toml"
+        }
+      ]
+    },
+    {
+      "case": "moonwell_temporal_governor",
+      "vuln": "VULN-3",
+      "contract": "TemporalGovernor",
+      "function": "fastTrackProposalExecution",
+      "lines": [
+        264,
+        266
+      ],
+      "file_hint": "eval/dataset_r4/moonwell_temporal_governor/contracts/",
+      "category": "NO_RULE",
+      "reason": "VULN-3: no Slither capability for timelock / emergency-path conditions (fix adds whenPaused)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.8.19+commit.7dd6d404.Emscripten.clang",
+          "soljson_sha256": "fba49e26930967a28d4f301088e126002ab6fbb755f37b5d0ee22b1bf4787070",
+          "selected_by": "project_config:foundry.toml"
+        }
+      ]
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-1",
+      "contract": "NFT",
+      "function": "init",
+      "lines": [
+        39,
+        57
+      ],
+      "file_hint": "eval/dataset_r4/mph88_deposit_nft/contracts/",
+      "category": "SEMANTICS_UNDETERMINED",
+      "reason": "init is unprotected and writes _owner, but onlyOwner checks require(isOwner()) whose msg.sender comparison is inside an internal call; all_conditional_solidity_variables_read does not follow it, so _owner is not seen as a sender-checked variable",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "selected_by": "project_config:buidler.config.js"
+        }
+      ]
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-4",
+      "contract": "NFT",
+      "function": "mint",
+      "lines": [
+        79,
+        81
+      ],
+      "file_hint": "eval/dataset_r4/mph88_deposit_nft/contracts/",
+      "category": "SEMANTICS_UNDETERMINED",
+      "reason": "onlyOwner-protected; the risk exists only through the init takeover (chain), which Slither cannot link",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "selected_by": "project_config:buidler.config.js"
+        }
+      ]
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-4",
+      "contract": "NFT",
+      "function": "burn",
+      "lines": [
+        83,
+        85
+      ],
+      "file_hint": "eval/dataset_r4/mph88_deposit_nft/contracts/",
+      "category": "SEMANTICS_UNDETERMINED",
+      "reason": "same as mint",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "selected_by": "project_config:buidler.config.js"
+        }
+      ]
+    },
+    {
+      "case": "nomad_replica",
+      "vuln": "VULN-1",
+      "contract": "Replica",
+      "function": "initialize",
+      "lines": [
+        103,
+        117
+      ],
+      "file_hint": "eval/dataset_r4/nomad_replica/contracts/",
+      "category": "NO_RULE",
+      "reason": "initialize is protected by an initializer guard; the defect is the trusted value (zero root pre-approved), which no detector reasons about",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.7.6+commit.7338295f.Emscripten.clang",
+          "soljson_sha256": "b94e69dfb056b3e26080f805ab43b668afbc0ac70bf124bfb7391ecfc0172ad2",
+          "selected_by": "project_config:packages/contracts-core/hardhat.config.ts"
+        }
+      ]
+    },
+    {
+      "case": "nomad_replica",
+      "vuln": "VULN-4",
+      "contract": "Replica",
+      "function": "process",
+      "lines": [
+        186,
+        211
+      ],
+      "file_hint": "eval/dataset_r4/nomad_replica/contracts/",
+      "category": "NO_RULE",
+      "reason": "message-acceptance semantics (acceptableRoot on the default value) have no detector",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.7.6+commit.7338295f.Emscripten.clang",
+          "soljson_sha256": "b94e69dfb056b3e26080f805ab43b668afbc0ac70bf124bfb7391ecfc0172ad2",
+          "selected_by": "project_config:packages/contracts-core/hardhat.config.ts"
+        }
+      ]
+    },
+    {
+      "case": "olympus_governance",
+      "vuln": "VULN-2",
+      "contract": "OlympusGovernance",
+      "function": "endorseProposal",
+      "lines": [
+        180,
+        201
+      ],
+      "file_hint": "eval/dataset_r4/olympus_governance/contracts/",
+      "category": "PARSE_FAIL",
+      "reason": "blind run: foundry.toml remappings without trailing slash -> ANALYSIS_INCOMPLETE (fixed in V0.16 toolchain; on dev rerun it compiles, and VULN-2 is then NO_RULE)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "audit_finding",
+      "source_certainty": "uncertain",
+      "compiler": []
+    },
+    {
+      "case": "olympus_governance",
+      "vuln": "VULN-3",
+      "contract": "OlympusGovernance",
+      "function": "executeProposal",
+      "lines": [
+        265,
+        289
+      ],
+      "file_hint": "eval/dataset_r4/olympus_governance/contracts/",
+      "category": "PARSE_FAIL",
+      "reason": "same build failure in the blind run (on dev rerun: VULN-3 NO_RULE)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "audit_finding",
+      "source_certainty": "uncertain",
+      "compiler": []
+    },
+    {
+      "case": "party_veto_proposal",
+      "vuln": "VULN-2",
+      "contract": "VetoProposal",
+      "function": "voteToVeto",
+      "lines": [
+        19,
+        60
+      ],
+      "file_hint": "eval/dataset_r4/party_veto_proposal/contracts/",
+      "category": "NO_RULE",
+      "reason": "VULN-2 double counting: no detector for missing per-voter records",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.8.17+commit.8df45f5f.Emscripten.clang",
+          "soljson_sha256": "04184dd4a976c37a64c8d6470e25983cfdbb09b10ff371da9178f50d6e132745",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "pickle_controller",
+      "vuln": "VULN-4",
+      "contract": "ControllerV4",
+      "function": "swapExactJarForJar",
+      "lines": [
+        251,
+        336
+      ],
+      "file_hint": "eval/dataset_r4/pickle_controller/contracts/",
+      "category": "NO_RULE",
+      "reason": "unvalidated contract parameters (_fromJar/_toJar) used as call targets; no detector for untrusted-contract parameters",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.6.12+commit.27d51765.Emscripten.clang",
+          "soljson_sha256": "3e1956c550ca48e289044c7c0bd892403081b4b5e17e77ce707c815ce6c4228f",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "pickle_controller",
+      "vuln": "VULN-4",
+      "contract": "CurveProxyLogic",
+      "function": "add_liquidity",
+      "lines": [
+        27,
+        54
+      ],
+      "file_hint": "eval/dataset_r4/pickle_controller/contracts/",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "reason": "baseline heuristic located it (unprotected call to parameter-derived target) but it is HEURISTIC_ONLY, not a scored finding",
+      "heuristic_track_located": true,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": [
+        {
+          "version_string": "0.6.12+commit.27d51765.Emscripten.clang",
+          "soljson_sha256": "3e1956c550ca48e289044c7c0bd892403081b4b5e17e77ce707c815ce6c4228f",
+          "selected_by": "pragma:newest_compiling"
+        }
+      ]
+    },
+    {
+      "case": "sandbox_land",
+      "vuln": "VULN-4",
+      "contract": "ERC721BaseToken",
+      "function": "_burn",
+      "lines": [
+        355,
+        360
+      ],
+      "file_hint": "eval/dataset_r4/sandbox_land/contracts/",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "reason": "heuristic flagged exactly _burn (public, unprotected writer of ownership state) but as VULN-1 and HEURISTIC_ONLY; label is VULN-4",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.5.9+commit.e560f70d.Emscripten.clang",
+          "soljson_sha256": "9c6970aeed958d8d169857f728cbeb36aaff77bf7b56d1a8b219de4b983f765b",
+          "selected_by": "project_config:hardhat.config.ts"
+        }
+      ]
+    },
+    {
+      "case": "sushi_route_processor2",
+      "vuln": "VULN-4",
+      "contract": "RouteProcessor2",
+      "function": "swapUniV3",
+      "lines": [
+        309,
+        323
+      ],
+      "file_hint": "eval/dataset_r4/sushi_route_processor2/contracts/",
+      "category": "PARSE_FAIL",
+      "reason": "blind run: monorepo yarn.lock lookup installed OpenZeppelin 3.1.0 instead of declared 4.8.0 (fixed in V0.16; dev rerun compiles, swapUniV3 itself still has no detector)",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": []
+    },
+    {
+      "case": "sushi_route_processor2",
+      "vuln": "VULN-4",
+      "contract": "RouteProcessor2",
+      "function": "uniswapV3SwapCallback",
+      "lines": [
+        334,
+        347
+      ],
+      "file_hint": "eval/dataset_r4/sushi_route_processor2/contracts/",
+      "category": "PARSE_FAIL",
+      "reason": "same build failure in the blind run; on the dev rerun arbitrary-send-erc20 DOES locate this function",
+      "heuristic_track_located": false,
+      "dev_rerun_located": true,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "compiler": []
+    },
+    {
+      "case": "wormhole_core_impl",
+      "vuln": "VULN-1",
+      "contract": "Implementation",
+      "function": "initialize",
+      "lines": [
+        33,
+        48
+      ],
+      "file_hint": "eval/dataset_r4/wormhole_core_impl/contracts/",
+      "category": "SEMANTICS_UNDETERMINED",
+      "reason": "custom initializer guard keyed on the ERC1967 implementation slot; Slither unprotected-upgrade only activates for contracts named/inheriting 'Initializable' or '*upgradeable*' and only recognises a modifier named 'initializer'",
+      "heuristic_track_located": false,
+      "dev_rerun_located": false,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.8.4+commit.c7e474f2.Emscripten.clang",
+          "soljson_sha256": "4a14c7bcaf0d988a829db2174b8f7731898aa8633216490603ad74bff64eca3c",
+          "selected_by": "project_config:ethereum/truffle-config.js"
+        }
+      ]
+    },
+    {
+      "case": "wormhole_core_impl",
+      "vuln": "VULN-4",
+      "contract": "Governance",
+      "function": "upgradeImplementation",
+      "lines": [
+        91,
+        102
+      ],
+      "file_hint": "eval/dataset_r4/wormhole_core_impl/contracts/",
+      "category": "INSUFFICIENT_EVIDENCE",
+      "reason": "controlled-delegatecall fired, but the V0.15 baseline triage demoted it to INCONCLUSIVE because the guardian-signature verification reads block.timestamp (a time condition is not a timelock)",
+      "heuristic_track_located": true,
+      "dev_rerun_located": false,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "compiler": [
+        {
+          "version_string": "0.8.4+commit.c7e474f2.Emscripten.clang",
+          "soljson_sha256": "4a14c7bcaf0d988a829db2174b8f7731898aa8633216490603ad74bff64eca3c",
+          "selected_by": "project_config:ethereum/truffle-config.js"
+        }
+      ]
+    }
+  ],
+  "false_positives": [
+    {
+      "case": "bond_fixed_expiry_teller_fixed",
+      "kind": "fixed",
+      "detector": "arbitrary-send-erc20",
+      "contract": "BondBaseTeller",
+      "function": "_handleTransfers",
+      "line": 177,
+      "file": "BondBaseTeller.sol",
+      "category": "PROTECTION_IGNORED",
+      "reason": "from = market owner returned by the auctioneer registry for market id_ (BondBaseTeller.sol:184-218), a pre-approved market maker, not a caller-chosen address",
+      "detector_text": "BondBaseTeller._handleTransfers(uint256,uint256,uint256,uint256) (src/bases/BondBaseTeller.sol#177-224) uses arbitrary from in transferFrom: payoutToken.safeTransferFrom(owner,address(this),payout_) (src/bases/BondBaseTeller.sol#218)"
+    },
+    {
+      "case": "daostack_ucontroller",
+      "kind": "vulnerable",
+      "detector": "arbitrary-send-erc20",
+      "contract": "Avatar",
+      "function": "externalTokenTransferFrom",
+      "line": 95,
+      "file": "Avatar.sol",
+      "category": "PROTECTION_IGNORED",
+      "reason": "arbitrary-send-erc20 ignores access control: the function is onlyOwner (Avatar.sol:101), owner is the Controller; caller cannot choose _from",
+      "detector_text": "Avatar.externalTokenTransferFrom(IERC20,address,address,uint256) (contracts/controller/Avatar.sol#95-106) uses arbitrary from in transferFrom: address(_externalToken).safeTransferFrom(_from,_to,_value) (contracts/controller/Avatar.sol#103)"
+    },
+    {
+      "case": "daostack_ucontroller_fixed",
+      "kind": "fixed",
+      "detector": "arbitrary-send-erc20",
+      "contract": "Avatar",
+      "function": "externalTokenTransferFrom",
+      "line": 95,
+      "file": "Avatar.sol",
+      "category": "PROTECTION_IGNORED",
+      "reason": "arbitrary-send-erc20 ignores access control: the function is onlyOwner (Avatar.sol:101), owner is the Controller; caller cannot choose _from",
+      "detector_text": "Avatar.externalTokenTransferFrom(IERC20,address,address,uint256) (contracts/controller/Avatar.sol#95-106) uses arbitrary from in transferFrom: address(_externalToken).safeTransferFrom(_from,_to,_value) (contracts/controller/Avatar.sol#103)"
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "kind": "vulnerable",
+      "detector": "arbitrary-send-erc20",
+      "contract": "LibAsset",
+      "function": "transferFromERC20",
+      "line": 94,
+      "file": "LibAsset.sol",
+      "category": "CALL_SITE_CONTEXT_IGNORED",
+      "reason": "internal library helper reported in isolation; both call sites pass msg.sender as from (CBridgeFacet.sol:62, LibSwap.sol:35)",
+      "detector_text": "LibAsset.transferFromERC20(address,address,address,uint256) (src/Libraries/LibAsset.sol#94-101) uses arbitrary from in transferFrom: SafeERC20.safeTransferFrom(IERC20(assetId),from,to,amount) (src/Libraries/LibAsset.sol#100)"
+    },
+    {
+      "case": "lifi_cbridge_facet_fixed",
+      "kind": "fixed",
+      "detector": "arbitrary-send-erc20",
+      "contract": "LibAsset",
+      "function": "transferFromERC20",
+      "line": 94,
+      "file": "LibAsset.sol",
+      "category": "CALL_SITE_CONTEXT_IGNORED",
+      "reason": "internal library helper reported in isolation; both call sites pass msg.sender as from (CBridgeFacet.sol:62, LibSwap.sol:35)",
+      "detector_text": "LibAsset.transferFromERC20(address,address,address,uint256) (src/Libraries/LibAsset.sol#94-101) uses arbitrary from in transferFrom: SafeERC20.safeTransferFrom(IERC20(assetId),from,to,amount) (src/Libraries/LibAsset.sol#100)"
+    },
+    {
+      "case": "safe_contracts",
+      "kind": "secure_control",
+      "detector": "arbitrary-send-eth",
+      "contract": "GnosisSafe",
+      "function": "handlePayment",
+      "line": 196,
+      "file": "GnosisSafe.sol",
+      "category": "PROTECTION_IGNORED",
+      "reason": "private; reached only from execTransaction after checkSignatures (owner threshold, GnosisSafe.sol:145); refund parameters are part of the signed hash. Signature-based authorization is not modelled by Slither",
+      "detector_text": "GnosisSafe.handlePayment(uint256,uint256,uint256,address,address) (contracts/GnosisSafe.sol#196-213) sends eth to arbitrary user\n\tDangerous calls:\n\t- require(bool,string)(receiver.send(payment),GS011) (contracts/GnosisSafe.sol#208)"
+    }
+  ],
+  "unanalysable": [
+    {
+      "case": "bond_fixed_expiry_teller",
+      "kind": "vulnerable",
+      "blind_reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller.sol:4:1:\n  |\n4 | import {ERC20} from \"solmate/tokens/ERC20.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "dev_rerun_status": "ANALYSIS_INCOMPLETE"
+    },
+    {
+      "case": "ens_governor",
+      "kind": "secure_control",
+      "blind_reason": "contracts/ENSGovernor.sol,contracts/ENSToken.sol: TypeError: Data locations of parameters have to be the same when overriding non-external functions, but they differ.\n  --> @openzeppelin/contracts/governance/Governor.sol:92:5:\n   |\n92 |     function hashProposal(\n   |     ^ (Relevant sourc",
+      "dev_rerun_status": "OK"
+    },
+    {
+      "case": "olympus_governance",
+      "kind": "vulnerable",
+      "blind_reason": "src/Kernel.sol,src/modules/INSTR.sol: ParserError: Source \"src/modulesINSTR.sol\" not found: File not found: src/modulesINSTR.sol\n --> src/policies/Governance.sol:6:1:\n  |\n6 | import {OlympusInstructions} from \"modules/INSTR.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "dev_rerun_status": "OK"
+    },
+    {
+      "case": "sushi_route_processor2",
+      "kind": "vulnerable",
+      "blind_reason": "contracts/InputStream.sol,contracts/RouteProcessor2.sol: ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr",
+      "dev_rerun_status": "OK"
+    },
+    {
+      "case": "sushi_route_processor2_fixed",
+      "kind": "fixed",
+      "blind_reason": "contracts/InputStream.sol,contracts/RouteProcessor2.sol: ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr",
+      "dev_rerun_status": "OK"
+    }
+  ],
+  "summary": {
+    "missed": {
+      "NO_RULE": 12,
+      "PARSE_FAIL": 5,
+      "SEMANTICS_UNDETERMINED": 5,
+      "INSUFFICIENT_EVIDENCE": 3
+    },
+    "false_positives": {
+      "PROTECTION_IGNORED": 4,
+      "CALL_SITE_CONTEXT_IGNORED": 2
+    },
+    "unanalysable_blind": 5,
+    "unanalysable_after_v16_fixes": 1
+  },
+  "tools": {
+    "slither-analyzer": "0.11.6",
+    "crytic-compile": "0.4.2",
+    "node": "v22.22.0"
+  }
+}

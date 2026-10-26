@@ -1,0 +1,152 @@
+{
+  "case": "dodo_dvm_fixed",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "InitializableOwnable",
+      "function": "initOwner",
+      "file": "contracts/lib/InitializableOwnable.sol",
+      "line": 42,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_OWNER_"
+      ],
+      "checked_in": [
+        "InitializableOwnable.transferOwnership(address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "dodo_dvm_fixed",
+    "repo": "https://github.com/DODOEX/contractV2",
+    "commit": "01c544780291a5acc3e2be4980493e63065fb200",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "DVM.sol": true,
+      "DVMFunding.sol": true,
+      "DVMStorage.sol": true,
+      "DVMTrader.sol": true,
+      "DVMVault.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-03-09T15:43:02+08:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/DODOVendingMachine/impl/DVM.sol": "a56ad6cd44fc6ce8838a9b9eb74ab1abdab0d356d8977fe8b4371ee066e6f10a",
+      "contracts/DODOVendingMachine/impl/DVMFunding.sol": "76eacde6fee421e9ecc4c18fa348112cde8a30fb266e09c45579d19a8208129c",
+      "contracts/DODOVendingMachine/impl/DVMStorage.sol": "171708a275f468005cf804b1271cd5f4f3cc3ecb349cc81463436697307ec69f",
+      "contracts/DODOVendingMachine/impl/DVMTrader.sol": "3cd5bd2a0277d156024bb16414b53c5745e43573260bee2d0ec286b35174bc67",
+      "contracts/DODOVendingMachine/impl/DVMVault.sol": "6ffbc2dfb9f286ad3349fe8d8ab3f565e98ed6226c96f8fb9d9569ba085dd3d8",
+      "contracts/intf/IDODOCallee.sol": "b2ebcf8e0feb9bd27fe8ec40ff518b92da6d669bcaadc01ad4fb82d607ae7081",
+      "contracts/intf/IERC20.sol": "d3d291a928dbbfe3c4ba7ae4182fdda6bc488d6be61edf9a50f20d179d6513ef",
+      "contracts/lib/DODOMath.sol": "29362a4599e630b5e23aa73cddaed899f1d218e23866204b7fc9f50442111b66",
+      "contracts/lib/DecimalMath.sol": "1bbc72e118cc7d6eda05752c58900c9bd309ad519b8979416b754b3640cece00",
+      "contracts/lib/FeeRateModel.sol": "a2305a693e0526d131519cd915dc00636432826b56322b60eb8df4d7eb195a65",
+      "contracts/lib/InitializableOwnable.sol": "979331ec48dae09e0769f65b80bccfd60a545c21cb865734a84afc95a3f60f22",
+      "contracts/lib/PMMPricing.sol": "4d41bb46d60b97a1bc1e43985733ce1050354a15d6a187b16dceab07929927c9",
+      "contracts/lib/ReentrancyGuard.sol": "7ef9617be197601353f5caa4ebe5861d388f083907a145331a3ce7e12849f18c",
+      "contracts/lib/SafeERC20.sol": "788a1c586687f937a61bc9448390d629663967295e5457d07ef10075e10fb5eb",
+      "contracts/lib/SafeMath.sol": "534db7f95a0b0c4e98bcfc70a4dac8e20ed6ed343f526bcaa91b6ef8f24e1d24"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.6.9",
+        "file": "truffle-config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/DODOVendingMachine/impl/DVM.sol",
+          "contracts/DODOVendingMachine/impl/DVMFunding.sol",
+          "contracts/DODOVendingMachine/impl/DVMStorage.sol",
+          "contracts/DODOVendingMachine/impl/DVMTrader.sol",
+          "contracts/DODOVendingMachine/impl/DVMVault.sol"
+        ],
+        "pragmas": [
+          "0.6.9"
+        ],
+        "attempts": [
+          {
+            "version": "0.6.9",
+            "reason": "project_config:truffle-config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.6.9",
+          "selected_by": "project_config:truffle-config.js",
+          "version_string": "0.6.9+commit.3e3065ac.Emscripten.clang",
+          "soljson_sha256": "f1724fd46b7a353561b3f8d473b0dc8c855b6d84b5af559d7e3326ac79b9d758",
+          "frontend": "solc-js (official emscripten build, npm solc@0.6.9)"
+        },
+        "compiled_sources": [
+          "contracts/DODOVendingMachine/impl/DVM.sol",
+          "contracts/DODOVendingMachine/impl/DVMFunding.sol",
+          "contracts/DODOVendingMachine/impl/DVMStorage.sol",
+          "contracts/DODOVendingMachine/impl/DVMTrader.sol",
+          "contracts/DODOVendingMachine/impl/DVMVault.sol",
+          "contracts/intf/IDODOCallee.sol",
+          "contracts/intf/IERC20.sol",
+          "contracts/lib/DODOMath.sol",
+          "contracts/lib/DecimalMath.sol",
+          "contracts/lib/FeeRateModel.sol",
+          "contracts/lib/InitializableOwnable.sol",
+          "contracts/lib/PMMPricing.sol",
+          "contracts/lib/ReentrancyGuard.sol",
+          "contracts/lib/SafeERC20.sol",
+          "contracts/lib/SafeMath.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 17
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 5,
+      "compiled": 5,
+      "slither_ir": 5,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.5
+  },
+  "n_files": 5,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3486.5,
+  "eval_files_opened": [
+    "dataset/dodo_dvm_fixed/BUILD.json",
+    "dataset/dodo_dvm_fixed/contracts/DVM.sol",
+    "dataset/dodo_dvm_fixed/contracts/DVMFunding.sol",
+    "dataset/dodo_dvm_fixed/contracts/DVMStorage.sol",
+    "dataset/dodo_dvm_fixed/contracts/DVMTrader.sol",
+    "dataset/dodo_dvm_fixed/contracts/DVMVault.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

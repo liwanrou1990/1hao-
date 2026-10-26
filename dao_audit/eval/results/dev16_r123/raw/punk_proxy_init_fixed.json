@@ -1,0 +1,183 @@
+{
+  "case": "punk_proxy_init_fixed",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "punk_proxy_init_fixed",
+    "repo": "https://github.com/PunkFinance/punk.protocol",
+    "commit": "d68a58ddcb98a0641f0af44c31791ead99f4433f",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "CompoundModel.sol": true,
+      "Forge.sol": true,
+      "ForgeProxy.sol": true,
+      "ForgeStorage.sol": true,
+      "ModelStorage.sol": true,
+      "Ownable.sol": true,
+      "OwnableStorage.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-08-13T20:53:11+09:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "^4.0.0",
+        "declared_in": "package.json (range)",
+        "resolution": "range ^4.0.0 resolved as-of 2021-08-13",
+        "installed": "4.2.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/proxy/Proxy.sol": "370b3075d01ef48b190f36120a06525df8428cc4684f1ae810381737f0d934b2",
+          "@openzeppelin/contracts/proxy/utils/Initializable.sol": "8954474eb8ba4a536daa0a690f24680587079d364172d9f965f367d2a9f25839",
+          "@openzeppelin/contracts/security/ReentrancyGuard.sol": "399ae351c4edaac918ed1e966953c3f45fc78b062140122c3a57e96b4ffff8e7",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol": "045a7904337eca879d18f485d26ffa40fab899dd516cadee49358d1e55bd296f",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+          "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": "729097c056b8bf1dd93ac16831380ce4ff54703d75983f57354240cc8be2edec",
+          "@openzeppelin/contracts/utils/Address.sol": "9b9053aa6ace4bb8d101adf248d93f805ee9e91eef4b2465bdc3baccad7527ab",
+          "@openzeppelin/contracts/utils/Context.sol": "810e94131350fcdbbed52a2a10523565ef98f4c9dda441495262923f251b0d12",
+          "@openzeppelin/contracts/utils/math/SafeMath.sol": "a6357cd855b7f26b18812e89084475213054c3c76ce12ff2b82f4f9b3b5ae76b"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/proxy/Proxy.sol": "370b3075d01ef48b190f36120a06525df8428cc4684f1ae810381737f0d934b2",
+      "@openzeppelin/contracts/proxy/utils/Initializable.sol": "8954474eb8ba4a536daa0a690f24680587079d364172d9f965f367d2a9f25839",
+      "@openzeppelin/contracts/security/ReentrancyGuard.sol": "399ae351c4edaac918ed1e966953c3f45fc78b062140122c3a57e96b4ffff8e7",
+      "@openzeppelin/contracts/token/ERC20/ERC20.sol": "045a7904337eca879d18f485d26ffa40fab899dd516cadee49358d1e55bd296f",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+      "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+      "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": "729097c056b8bf1dd93ac16831380ce4ff54703d75983f57354240cc8be2edec",
+      "@openzeppelin/contracts/utils/Address.sol": "9b9053aa6ace4bb8d101adf248d93f805ee9e91eef4b2465bdc3baccad7527ab",
+      "@openzeppelin/contracts/utils/Context.sol": "810e94131350fcdbbed52a2a10523565ef98f4c9dda441495262923f251b0d12",
+      "@openzeppelin/contracts/utils/math/SafeMath.sol": "a6357cd855b7f26b18812e89084475213054c3c76ce12ff2b82f4f9b3b5ae76b",
+      "contracts/3rdDeFiInterfaces/CTokenInterface.sol": "fddcc115f870d30d4d454135c3e0f3d8883b8f3b971fdf6c3cd96634df2c3832",
+      "contracts/3rdDeFiInterfaces/IUniswapV2Router.sol": "ef088ba8e3f1b9c775480d3bcbc02eb70e007858743ff74f0f2249f0dd5bf358",
+      "contracts/Forge.sol": "7a8a9c17a46f11c5a19e7807aa6019326966a492660cc3b1bae4e8f1ec142df6",
+      "contracts/ForgeProxy.sol": "b022cd0cd20e0cb0efa01c59f24d8cb8dce8fb6a269f221f7c7e510f180951fa",
+      "contracts/ForgeStorage.sol": "174af0f65f575d0ce1f31b595b5b38161a430fbba463879f772fdbe27708d77b",
+      "contracts/ModelStorage.sol": "b701e3ac2457add251248cbaf43cc42ab8962b2c73b94188b09e26251c3b8c5e",
+      "contracts/Ownable.sol": "7157251e92c6dcfb27781a16c82f48eb6cd8055ebb7c052df78efbcb7777b1b3",
+      "contracts/OwnableStorage.sol": "7009e6abf30211e67c7790cc2a8082fb52c9e1543199782fae31b4e5db934ef9",
+      "contracts/Referral.sol": "47920ce59deb6aff3c45307ecea59e3658c46becb9118890c9ff7d4280122ee0",
+      "contracts/Saver.sol": "279d8788f0dd263c08f96a57b4de4ce6ad18fb40661828c95f33510c406e976d",
+      "contracts/Variables.sol": "e31343c90527103bf24fb7f753bfb514d40ae1fe659a55c88088cd25ca402f58",
+      "contracts/interfaces/ForgeInterface.sol": "dd2c6afc83de4c642d966b0e6589597701f9f299557689b5a77fe3d10da26803",
+      "contracts/interfaces/ModelInterface.sol": "9c24a9119ab11c28f15e8768e66c27ad63092cbf563b05ae43cfcdda370059c2",
+      "contracts/interfaces/PunkRewardPoolInterface.sol": "c5d4be2e1269b587a9ffe1a719a5fd83fe0925578d154ba1936316f973c5879a",
+      "contracts/interfaces/ReferralInterface.sol": "f8eac31936b1f39d6d7f330a8b31d926e695ceac26b9b0a14261fbce543db717",
+      "contracts/libs/CommitmentWeight.sol": "f4670372c365170a2f3e4c3227b88d096d27b0858c4a00c1a100d5b480b12509",
+      "contracts/libs/Score.sol": "c36523b55ab85b7f146ede011fb713267c471cdbef25c89cf0cc0a30bd31dde9",
+      "contracts/models/CompoundModel.sol": "b80c2b194370eba0580d99eeb68e152d3225fb2ffd229243f3e45b36220dff3a"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.0",
+        "file": "hardhat.config.ts"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/Forge.sol",
+          "contracts/ForgeProxy.sol",
+          "contracts/ForgeStorage.sol",
+          "contracts/ModelStorage.sol",
+          "contracts/Ownable.sol",
+          "contracts/OwnableStorage.sol",
+          "contracts/models/CompoundModel.sol"
+        ],
+        "pragmas": [
+          ">=0.5.0",
+          ">=0.5.0 <0.9.0",
+          "^0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.0",
+            "reason": "project_config:hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.0",
+          "selected_by": "project_config:hardhat.config.ts",
+          "version_string": "0.8.0+commit.c7dfd78e.Emscripten.clang",
+          "soljson_sha256": "c596765f9b3dce486cf596ea35676f37124d54f3ada0fcbc02f094c392066a59",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.0)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/proxy/Proxy.sol",
+          "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+          "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+          "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/Context.sol",
+          "@openzeppelin/contracts/utils/math/SafeMath.sol",
+          "contracts/3rdDeFiInterfaces/CTokenInterface.sol",
+          "contracts/3rdDeFiInterfaces/IUniswapV2Router.sol",
+          "contracts/Forge.sol",
+          "contracts/ForgeProxy.sol",
+          "contracts/ForgeStorage.sol",
+          "contracts/ModelStorage.sol",
+          "contracts/Ownable.sol",
+          "contracts/OwnableStorage.sol",
+          "contracts/Referral.sol",
+          "contracts/Saver.sol",
+          "contracts/Variables.sol",
+          "contracts/interfaces/ForgeInterface.sol",
+          "contracts/interfaces/ModelInterface.sol",
+          "contracts/interfaces/PunkRewardPoolInterface.sol",
+          "contracts/interfaces/ReferralInterface.sol",
+          "contracts/libs/CommitmentWeight.sol",
+          "contracts/libs/Score.sol",
+          "contracts/models/CompoundModel.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 27
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 7,
+      "compiled": 7,
+      "slither_ir": 7,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 4.5
+  },
+  "n_files": 7,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 4542.7,
+  "eval_files_opened": [
+    "dataset/punk_proxy_init_fixed/BUILD.json",
+    "dataset/punk_proxy_init_fixed/contracts/CompoundModel.sol",
+    "dataset/punk_proxy_init_fixed/contracts/Forge.sol",
+    "dataset/punk_proxy_init_fixed/contracts/ForgeProxy.sol",
+    "dataset/punk_proxy_init_fixed/contracts/ForgeStorage.sol",
+    "dataset/punk_proxy_init_fixed/contracts/ModelStorage.sol",
+    "dataset/punk_proxy_init_fixed/contracts/Ownable.sol",
+    "dataset/punk_proxy_init_fixed/contracts/OwnableStorage.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

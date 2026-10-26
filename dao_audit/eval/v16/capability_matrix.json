@@ -1,0 +1,50 @@
+{
+  "tools": {"slither-analyzer": "0.11.6", "crytic-compile": "0.4.2", "node": "v22.22.0",
+            "compiler": "solc-js exact versions via npm (version string verified since V0.16)"},
+  "measured_on": "44 dev cases (rounds 1-4), dev16 reruns; TP/FP per located-TP rule of PREREGISTRATION.md",
+  "status_legend": {
+    "AUTOMATED": "detector result usable as an automatic finding",
+    "AUTOMATED_KNOWN_FP": "automatic, but with documented false-positive classes; needs review",
+    "NAME_DEPENDENT": "Slither logic keys on identifiers (contract/modifier/function names)",
+    "HEURISTIC_ONLY": "signal only, never a finding",
+    "FACTS_ONLY": "Slither printer gives facts for manual review, no judgement",
+    "NOT_COVERED": "no capability; must be reported as not covered"
+  },
+  "A_governance_seats_admin": [
+    {"check": "unprotected initializer on upgradeable contract with destructive capability", "tool": "detector unprotected-upgrade", "status": "NAME_DEPENDENT",
+     "limits": "activates only for contracts inheriting a contract named Initializable or with 'upgradeable'/'initializable' in the name; protection recognised only via modifier named 'initializer' or call to _disableInitializers", "dev_tp": 0, "dev_fp": 0},
+    {"check": "authorization via tx.origin", "tool": "detector tx-origin", "status": "AUTOMATED", "dev_tp": 0, "dev_fp": 0},
+    {"check": "writes to annotated protected variables", "tool": "detector protected-vars", "status": "NOT_COVERED",
+     "limits": "requires @custom:security write-protection annotations, absent in historical code"},
+    {"check": "public state-changing function that writes state used in msg.sender checks", "tool": "is_protected() + conditional reads (baseline heuristic)", "status": "HEURISTIC_ONLY",
+     "limits": "is_protected() treats a modifier literally named onlyOwner as protection and any msg.sender call argument as protection; all_conditional_solidity_variables_read does not follow msg.sender comparisons inside internal calls (require(isOwner()))", "dev_tp": 3, "dev_fp": 87},
+    {"check": "custom modifiers / one-shot init guards / signature-based authorization", "tool": null, "status": "NOT_COVERED"},
+    {"check": "proxy / implementation storage layout", "tool": "printer variable-order", "status": "FACTS_ONLY"},
+    {"check": "who writes what under which msg.sender condition", "tool": "printers vars-and-auth, modifiers, require, entry-points", "status": "FACTS_ONLY"}
+  ],
+  "B_voting_power": [
+    {"check": "live balance vs snapshot / checkpoint", "tool": null, "status": "NOT_COVERED"},
+    {"check": "double counting / missing per-voter record", "tool": null, "status": "NOT_COVERED"},
+    {"check": "quorum / supply snapshot integrity", "tool": null, "status": "NOT_COVERED"},
+    {"check": "dependency of tally on inputs", "tool": "printer data-dependency", "status": "FACTS_ONLY"}
+  ],
+  "C_execution_timelock": [
+    {"check": "effective timelock delay / queue before execution", "tool": null, "status": "NOT_COVERED"},
+    {"check": "emergency / guardian path bypassing the delay", "tool": null, "status": "NOT_COVERED"},
+    {"check": "use of block.timestamp in comparisons", "tool": "detector timestamp", "status": "FACTS_ONLY",
+     "limits": "informational; a time condition is not a timelock (V0.15 triage demoted a correct alert on this basis)"}
+  ],
+  "D_treasury_assets": [
+    {"check": "unprotected selfdestruct", "tool": "detector suicidal", "status": "AUTOMATED_KNOWN_FP",
+     "limits": "depends on is_protected(); the one dev hit (Parity kill) fired because the owner check was not seen", "dev_tp": 1, "dev_fp": 0},
+    {"check": "ETH sent to arbitrary address", "tool": "detector arbitrary-send-eth", "status": "AUTOMATED_KNOWN_FP",
+     "limits": "fires on governance execute paths, gas refunds and router payouts; ignores signature-based authorization", "dev_tp": 1, "dev_fp": 7},
+    {"check": "transferFrom with arbitrary from", "tool": "detector arbitrary-send-erc20 / -permit", "status": "AUTOMATED_KNOWN_FP",
+     "limits": "ignores modifiers (onlyOwner) and call-site context of internal helpers; misses transfers encoded as low-level calls", "dev_tp": 1, "dev_fp": 6},
+    {"check": "delegatecall to controllable target", "tool": "detector controlled-delegatecall", "status": "AUTOMATED_KNOWN_FP", "dev_tp": 1, "dev_fp": 5,
+     "limits": "all hits were demoted by the time-gate triage in V0.15; without triage +1 TP / +7 FP on dev"},
+    {"check": "arbitrary low-level call (target + calldata from caller) without value", "tool": "baseline heuristic (intra-procedural)", "status": "HEURISTIC_ONLY", "dev_tp": 1, "dev_fp": 6},
+    {"check": "public helper that should be internal / unvalidated contract parameters", "tool": null, "status": "NOT_COVERED"}
+  ],
+  "toolchain": {"dev_cases_compiled": "43/44 after V0.16 fixes (was 39/44)", "remaining_incomplete": ["bond_fixed_expiry_teller: dependencies not recorded at the commit"]}
+}

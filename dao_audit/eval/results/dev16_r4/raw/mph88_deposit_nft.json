@@ -1,0 +1,294 @@
+{
+  "case": "mph88_deposit_nft",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "high",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-erc20",
+      "contract": "MPHMinter",
+      "function": "takeBackDepositorReward",
+      "line": 133,
+      "title": "arbitrary-send-erc20",
+      "evidence": "MPHMinter.takeBackDepositorReward(address,uint256,bool) (contracts/rewards/MPHMinter.sol#133-162) uses arbitrary from in transferFrom: mph.transferFrom(from,address(this),takeBackAmount) (contracts/rewards/MPHMinter.sol#154)",
+      "file": "contracts/rewards/MPHMinter.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DInterest",
+      "function": "deposit",
+      "file": "DInterest.sol",
+      "line": 195,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_notEntered"
+      ],
+      "checked_in": [
+        "DInterest.withdraw(uint256,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DInterest",
+      "function": "multiDeposit",
+      "file": "DInterest.sol",
+      "line": 216,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_notEntered"
+      ],
+      "checked_in": [
+        "DInterest.withdraw(uint256,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DInterest",
+      "function": "fundAll",
+      "file": "DInterest.sol",
+      "line": 259,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_notEntered",
+        "latestFundedDepositID"
+      ],
+      "checked_in": [
+        "DInterest.withdraw(uint256,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DInterest",
+      "function": "fundMultiple",
+      "file": "DInterest.sol",
+      "line": 292,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_notEntered",
+        "latestFundedDepositID"
+      ],
+      "checked_in": [
+        "DInterest.withdraw(uint256,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "mph88_deposit_nft",
+    "repo": "https://github.com/88mphapp/88mph-contracts",
+    "commit": "a4c48d61661ae3d8ce5aadfda6e4de27c4f07a9e",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "buidler.config.js",
+    "dataset_identical_to_snapshot": {
+      "CloneFactory.sol": true,
+      "DInterest.sol": true,
+      "NFT.sol": true,
+      "NFTFactory.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-02-18T12:50:17-08:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "2.5.1",
+        "declared_in": "package-lock.json",
+        "installed": "2.5.1",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/GSN/Context.sol": "3029cadb62d7b2f22a75ff2cbf2b8b7ab3de3cbcfea16ece2e6c86caae94caa3",
+          "@openzeppelin/contracts/drafts/Counters.sol": "3ac012ea56e72391d0a1117a35b24f903f2804cd0e47288e605f246ff5ca5279",
+          "@openzeppelin/contracts/introspection/ERC165.sol": "11f9dca3aaefa199950390a14a5b217b8f9194373e3a86c46e97c7039bafa759",
+          "@openzeppelin/contracts/introspection/IERC165.sol": "7e06653d36b04b9068d86acd5e29be9fa76434839afa0a3bb9f4862b0301c808",
+          "@openzeppelin/contracts/math/SafeMath.sol": "ccbc65eddc0fe23db1360af754dfc534f2ab28ab1d2e79c1ca0cc9420a96dc58",
+          "@openzeppelin/contracts/ownership/Ownable.sol": "91a9c573df820460549487ed094d4e08bc20fdd0f73383f24c667258b1e2a8c6",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol": "dc9a251f5d16190e04db71b39dcd9661fe65de6362e2d9a0f07e9d56e514c022",
+          "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol": "267d492a47bb5a6debd239b8eb3b44dba7795ac30ce09ebce14bed145ea86d12",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "1aa5fd202b00ab7a51871d5bd505693c4e51d75b313da893d9d6e4f266ef9a98",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "3fcb6073e59fcbdfe65f39f22d7baa518e4df8c2b9361ffcb48efa7c29ac9f7e",
+          "@openzeppelin/contracts/token/ERC721/ERC721.sol": "f7d34b4a944c3f0a80da24ef6e3b864c46758890a895d6a37a435eb984c3b903",
+          "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol": "b1f3e7ebb6b478367fb86896010d4fd7d34d5c7192afae893daf4cd8b8360394",
+          "@openzeppelin/contracts/token/ERC721/IERC721.sol": "551702ed2bdc0516e9615e2d180d7b3861c86d91948a3cb11e477723d942d20c",
+          "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol": "bb131a00fb23627546792225d33669dd7bec6b9dd1062ccc15fdf75561c8e4a3",
+          "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": "dac19cc65bd1a261fe4f498dd784acc492bf2c53d631f10a87ea2327dbb92d22",
+          "@openzeppelin/contracts/utils/Address.sol": "5fdd34a9bf892f4d469c270b9cd43c34f3a75c19d9a374369fa95cc8b4863b2b",
+          "@openzeppelin/contracts/utils/ReentrancyGuard.sol": "95a578b6a97f66fe66c7970acd5d40c7fa097017f9d57b2a860f1da15531cf44"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/GSN/Context.sol": "3029cadb62d7b2f22a75ff2cbf2b8b7ab3de3cbcfea16ece2e6c86caae94caa3",
+      "@openzeppelin/contracts/drafts/Counters.sol": "3ac012ea56e72391d0a1117a35b24f903f2804cd0e47288e605f246ff5ca5279",
+      "@openzeppelin/contracts/introspection/ERC165.sol": "11f9dca3aaefa199950390a14a5b217b8f9194373e3a86c46e97c7039bafa759",
+      "@openzeppelin/contracts/introspection/IERC165.sol": "7e06653d36b04b9068d86acd5e29be9fa76434839afa0a3bb9f4862b0301c808",
+      "@openzeppelin/contracts/math/SafeMath.sol": "ccbc65eddc0fe23db1360af754dfc534f2ab28ab1d2e79c1ca0cc9420a96dc58",
+      "@openzeppelin/contracts/ownership/Ownable.sol": "91a9c573df820460549487ed094d4e08bc20fdd0f73383f24c667258b1e2a8c6",
+      "@openzeppelin/contracts/token/ERC20/ERC20.sol": "dc9a251f5d16190e04db71b39dcd9661fe65de6362e2d9a0f07e9d56e514c022",
+      "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol": "267d492a47bb5a6debd239b8eb3b44dba7795ac30ce09ebce14bed145ea86d12",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "1aa5fd202b00ab7a51871d5bd505693c4e51d75b313da893d9d6e4f266ef9a98",
+      "@openzeppelin/contracts/token/ERC20/SafeERC20.sol": "3fcb6073e59fcbdfe65f39f22d7baa518e4df8c2b9361ffcb48efa7c29ac9f7e",
+      "@openzeppelin/contracts/token/ERC721/ERC721.sol": "f7d34b4a944c3f0a80da24ef6e3b864c46758890a895d6a37a435eb984c3b903",
+      "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol": "b1f3e7ebb6b478367fb86896010d4fd7d34d5c7192afae893daf4cd8b8360394",
+      "@openzeppelin/contracts/token/ERC721/IERC721.sol": "551702ed2bdc0516e9615e2d180d7b3861c86d91948a3cb11e477723d942d20c",
+      "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol": "bb131a00fb23627546792225d33669dd7bec6b9dd1062ccc15fdf75561c8e4a3",
+      "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": "dac19cc65bd1a261fe4f498dd784acc492bf2c53d631f10a87ea2327dbb92d22",
+      "@openzeppelin/contracts/utils/Address.sol": "5fdd34a9bf892f4d469c270b9cd43c34f3a75c19d9a374369fa95cc8b4863b2b",
+      "@openzeppelin/contracts/utils/ReentrancyGuard.sol": "95a578b6a97f66fe66c7970acd5d40c7fa097017f9d57b2a860f1da15531cf44",
+      "contracts/DInterest.sol": "1fbdbd0ee3d9d7ece95940280cd093d600325afa849b48fb59f0d31e24bc8056",
+      "contracts/NFT.sol": "31d3f1b32decb79e9b63d19ba0ba531b5102d5e0d275bc938f18ff4d66a12c8d",
+      "contracts/NFTFactory.sol": "f9ea25d3c3bf793ee031da63a818d134beef54ae78290f41a963fe3676de3a1d",
+      "contracts/libs/CloneFactory.sol": "0df2248ddfdb1f3e20a430684a8b69ca8fd991dbfcb89f562d276d4e48240de2",
+      "contracts/libs/DecMath.sol": "576b9393b8f9ad7833cd5393f7845c952ec95f9e01f7bf2ef8c763da1c3131c3",
+      "contracts/models/fee/IFeeModel.sol": "a862bafb8f4aa88723e15ceb7e50e5f328121238638d3055d943a730fee6a454",
+      "contracts/models/interest-oracle/IInterestOracle.sol": "2901fe9fa003bad45f0ef4a0e8832015ec38d9b0c39ef465810e412883cc0ed1",
+      "contracts/models/interest/IInterestModel.sol": "632b7946f3a40c104d9fe014895b14f21f9dfb6cec65f8ef2e3cb2423f0501d4",
+      "contracts/models/issuance/IMPHIssuanceModel.sol": "df859cd1086a13d0643fe2b611d9c040177c90eebd3f6cef2792e301e029908d",
+      "contracts/moneymarkets/IMoneyMarket.sol": "610d0a7cad6066c91062e1f7286bc1ea3e02eefb903fa6afadbd54b4bd5372b7",
+      "contracts/rewards/MPHMinter.sol": "f9b9c91c1190bec1c1a93bbc679c817fe818893c47860edb9dda3a5c7528f662",
+      "contracts/rewards/MPHToken.sol": "b9ee096ae465551d4e8f3a7ad56f4f062ff9c63f6de1dbe6e915e0467fea6dcf",
+      "contracts/rewards/Vesting.sol": "6356d09271d5ec4cdbfe9fd685af82e06368085354041018fd689e067b1d5246"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.5.17",
+        "file": "buidler.config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/DInterest.sol",
+          "contracts/NFT.sol",
+          "contracts/NFTFactory.sol",
+          "contracts/libs/CloneFactory.sol"
+        ],
+        "pragmas": [
+          "0.5.17",
+          "^0.5.0",
+          "^0.5.5"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.17",
+            "reason": "project_config:buidler.config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.17",
+          "selected_by": "project_config:buidler.config.js",
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.17)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/GSN/Context.sol",
+          "@openzeppelin/contracts/drafts/Counters.sol",
+          "@openzeppelin/contracts/introspection/ERC165.sol",
+          "@openzeppelin/contracts/introspection/IERC165.sol",
+          "@openzeppelin/contracts/math/SafeMath.sol",
+          "@openzeppelin/contracts/ownership/Ownable.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/SafeERC20.sol",
+          "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+          "@openzeppelin/contracts/token/ERC721/ERC721Metadata.sol",
+          "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+          "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol",
+          "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+          "contracts/DInterest.sol",
+          "contracts/NFT.sol",
+          "contracts/NFTFactory.sol",
+          "contracts/libs/CloneFactory.sol",
+          "contracts/libs/DecMath.sol",
+          "contracts/models/fee/IFeeModel.sol",
+          "contracts/models/interest-oracle/IInterestOracle.sol",
+          "contracts/models/interest/IInterestModel.sol",
+          "contracts/models/issuance/IMPHIssuanceModel.sol",
+          "contracts/moneymarkets/IMoneyMarket.sol",
+          "contracts/rewards/MPHMinter.sol",
+          "contracts/rewards/MPHToken.sol",
+          "contracts/rewards/Vesting.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 30
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 8.7
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 8743.4,
+  "eval_files_opened": [
+    "dataset_r4/mph88_deposit_nft/BUILD.json",
+    "dataset_r4/mph88_deposit_nft/contracts/CloneFactory.sol",
+    "dataset_r4/mph88_deposit_nft/contracts/DInterest.sol",
+    "dataset_r4/mph88_deposit_nft/contracts/NFT.sol",
+    "dataset_r4/mph88_deposit_nft/contracts/NFTFactory.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

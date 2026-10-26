@@ -1,0 +1,255 @@
+{
+  "case": "ens_governor",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "Governor",
+      "function": "_execute",
+      "line": 228,
+      "title": "arbitrary-send-eth",
+      "evidence": "Governor._execute(uint256,address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#228-240) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (node_modules/@openzeppelin/contracts/governance/Governor.sol#237)",
+      "file": "node_modules/@openzeppelin/contracts/governance/Governor.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "TimelockController",
+      "function": "_call",
+      "line": 324,
+      "title": "arbitrary-send-eth",
+      "evidence": "TimelockController._call(bytes32,uint256,address,uint256,bytes) (node_modules/@openzeppelin/contracts/governance/TimelockController.sol#324-335) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,None) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/governance/TimelockController.sol#331)",
+      "file": "node_modules/@openzeppelin/contracts/governance/TimelockController.sol",
+      "in_dataset": false,
+      "triage": "outside case contract files (dependency)"
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "TimelockController",
+      "function": "execute",
+      "file": "node_modules/@openzeppelin/contracts/governance/TimelockController.sol",
+      "line": 331,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "target"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    }
+  ],
+  "build": {
+    "case": "ens_governor",
+    "repo": "https://github.com/ensdomains/governance",
+    "commit": "4097bef720d55b83cc1b637a7e0af6d0b37cbbfa",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.js",
+    "dataset_identical_to_snapshot": {
+      "ENSGovernor.sol": true,
+      "ENSToken.sol": true,
+      "MerkleProof.sol": true,
+      "TimelockController.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-11-02T11:26:49+13:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "4.3.2",
+        "declared_in": "package-lock.json",
+        "installed": "4.3.2",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/access/AccessControl.sol": "6815a22e5b2ef7e0e813961ad06afac5c9d6e7cdced9165f2cedbf11032044bd",
+          "@openzeppelin/contracts/access/IAccessControl.sol": "81a867af9f5344a0efffcfb2970db5354c8684d4d50139db1524321fbd60979b",
+          "@openzeppelin/contracts/access/Ownable.sol": "0195650aabf5270babe540969c56f8f244342aebce89266787a3b015e41d608f",
+          "@openzeppelin/contracts/governance/Governor.sol": "27ef3b70e818d2ece58b6bea721c755755e06dc0a86087af525553d5188cda2a",
+          "@openzeppelin/contracts/governance/IGovernor.sol": "d80adf2f5775f16803f15e1b963751dc6f9b10a8a50fa69105d33056b45aa80c",
+          "@openzeppelin/contracts/governance/TimelockController.sol": "e086fe599e32b6c52a5e53a2d909af32e41f5e4a1dc1272812df64f8b51561e4",
+          "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol": "ca912d29de8f362a729b920857ca529537ac9a6e2acca7cdb244b38cd1ab7a93",
+          "@openzeppelin/contracts/governance/extensions/GovernorProposalThreshold.sol": "e88336c8c7e565ae9a5d62993b33ec589a6bb843d0a9589fa48df204fa2680f6",
+          "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol": "e8ddceaf95f55dd876dc0a2f4987f2c2815cc2ac2edbb44a81097248dbbd400e",
+          "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol": "8f5190a55b34985f6fefd189fe8258a305070b82a1e7dcdfd8d2cf31bd2ac8af",
+          "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol": "9f44e5d5af574a24ff1d8cd2d909dc4ef36d69b8505f9694e7b1a69ce6b15980",
+          "@openzeppelin/contracts/governance/extensions/IGovernorTimelock.sol": "8f87ab56cea941b73436bf33138067a1256dbb5131bbc0d5f99fa1e4e5ee0dff",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol": "80e33e340442acecc4bd995b4ead9b51adc4231c8213357fca18996b945f850b",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol": "09852784cfc3ed955e4d9129231fedd23c0eaad720092821bf622f41b5376ae7",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+          "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol": "4caeef3716ac6c9bed65567dbc61169bc9740824e8791bfced2775dfd5a4f06b",
+          "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol": "0d1854245c9e46c351d403ccc3e5979582e8451a3c729dee7d0c0cddf3166cd8",
+          "@openzeppelin/contracts/utils/Address.sol": "1370d859f5c6d11025afb409d1b724279f663c4cf4bc4d2ba057290bdcf45a66",
+          "@openzeppelin/contracts/utils/Context.sol": "5828bf38f9376b659a8edbbe2df0d06b29a09e37ecd470465dda2bbcb612c85d",
+          "@openzeppelin/contracts/utils/Counters.sol": "e664dd2b610b11a9a060e109027a2acdc8c8555de0b99b6071fddf719a27c8ac",
+          "@openzeppelin/contracts/utils/Strings.sol": "3b2b0d75c7e5688950d3b6e63e46473054395dad6e390431f73febb2199913c5",
+          "@openzeppelin/contracts/utils/Timers.sol": "fd96ba817d78450caae269ca357f2ca31b4af9181bce7f1d13e05195a3fc3880",
+          "@openzeppelin/contracts/utils/cryptography/ECDSA.sol": "bff8e3c973e5c6eb0fc6f5205531328bb173fffd7b2e9920977abea924363bb2",
+          "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol": "60c2fd58640750c2f47472c5221cd99308260214ef1f2926ba3bc9daf0d3a2b9",
+          "@openzeppelin/contracts/utils/introspection/ERC165.sol": "381b0589da0e1a32242d7314905d2cc6edd8dce8193ddb6bfacc5b685e311422",
+          "@openzeppelin/contracts/utils/introspection/IERC165.sol": "072805b211a653c333b232a3199b9e65fa7b82fc7a40ee5a3bc8a2dadd1cba01",
+          "@openzeppelin/contracts/utils/math/Math.sol": "b1417f64b6fba54e2b715f2228c4dde4065e742245e6bf7c68f39c5f42af043b",
+          "@openzeppelin/contracts/utils/math/SafeCast.sol": "8dec6dd63908459be4b909861eb3a00b31431575f8169c1f0cbb6519af754bfe",
+          "@openzeppelin/contracts/utils/structs/BitMaps.sol": "89165c92e5d816650267d8a40f68dc1d7986ddeb17eaabd2391349a74e71a401"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/access/AccessControl.sol": "6815a22e5b2ef7e0e813961ad06afac5c9d6e7cdced9165f2cedbf11032044bd",
+      "@openzeppelin/contracts/access/IAccessControl.sol": "81a867af9f5344a0efffcfb2970db5354c8684d4d50139db1524321fbd60979b",
+      "@openzeppelin/contracts/access/Ownable.sol": "0195650aabf5270babe540969c56f8f244342aebce89266787a3b015e41d608f",
+      "@openzeppelin/contracts/governance/Governor.sol": "27ef3b70e818d2ece58b6bea721c755755e06dc0a86087af525553d5188cda2a",
+      "@openzeppelin/contracts/governance/IGovernor.sol": "d80adf2f5775f16803f15e1b963751dc6f9b10a8a50fa69105d33056b45aa80c",
+      "@openzeppelin/contracts/governance/TimelockController.sol": "e086fe599e32b6c52a5e53a2d909af32e41f5e4a1dc1272812df64f8b51561e4",
+      "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol": "ca912d29de8f362a729b920857ca529537ac9a6e2acca7cdb244b38cd1ab7a93",
+      "@openzeppelin/contracts/governance/extensions/GovernorProposalThreshold.sol": "e88336c8c7e565ae9a5d62993b33ec589a6bb843d0a9589fa48df204fa2680f6",
+      "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol": "e8ddceaf95f55dd876dc0a2f4987f2c2815cc2ac2edbb44a81097248dbbd400e",
+      "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol": "8f5190a55b34985f6fefd189fe8258a305070b82a1e7dcdfd8d2cf31bd2ac8af",
+      "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol": "9f44e5d5af574a24ff1d8cd2d909dc4ef36d69b8505f9694e7b1a69ce6b15980",
+      "@openzeppelin/contracts/governance/extensions/IGovernorTimelock.sol": "8f87ab56cea941b73436bf33138067a1256dbb5131bbc0d5f99fa1e4e5ee0dff",
+      "@openzeppelin/contracts/token/ERC20/ERC20.sol": "80e33e340442acecc4bd995b4ead9b51adc4231c8213357fca18996b945f850b",
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol": "b2565dec975f684ef0edfa505e212d0d0b602e1311afab782ea06ea8d3f49bb6",
+      "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol": "09852784cfc3ed955e4d9129231fedd23c0eaad720092821bf622f41b5376ae7",
+      "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": "4e2ce556a0419415ec3b01a0fa0322c20d6d53de5a05728c068e90d5684486c1",
+      "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol": "4caeef3716ac6c9bed65567dbc61169bc9740824e8791bfced2775dfd5a4f06b",
+      "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol": "0d1854245c9e46c351d403ccc3e5979582e8451a3c729dee7d0c0cddf3166cd8",
+      "@openzeppelin/contracts/utils/Address.sol": "1370d859f5c6d11025afb409d1b724279f663c4cf4bc4d2ba057290bdcf45a66",
+      "@openzeppelin/contracts/utils/Context.sol": "5828bf38f9376b659a8edbbe2df0d06b29a09e37ecd470465dda2bbcb612c85d",
+      "@openzeppelin/contracts/utils/Counters.sol": "e664dd2b610b11a9a060e109027a2acdc8c8555de0b99b6071fddf719a27c8ac",
+      "@openzeppelin/contracts/utils/Strings.sol": "3b2b0d75c7e5688950d3b6e63e46473054395dad6e390431f73febb2199913c5",
+      "@openzeppelin/contracts/utils/Timers.sol": "fd96ba817d78450caae269ca357f2ca31b4af9181bce7f1d13e05195a3fc3880",
+      "@openzeppelin/contracts/utils/cryptography/ECDSA.sol": "bff8e3c973e5c6eb0fc6f5205531328bb173fffd7b2e9920977abea924363bb2",
+      "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol": "60c2fd58640750c2f47472c5221cd99308260214ef1f2926ba3bc9daf0d3a2b9",
+      "@openzeppelin/contracts/utils/introspection/ERC165.sol": "381b0589da0e1a32242d7314905d2cc6edd8dce8193ddb6bfacc5b685e311422",
+      "@openzeppelin/contracts/utils/introspection/IERC165.sol": "072805b211a653c333b232a3199b9e65fa7b82fc7a40ee5a3bc8a2dadd1cba01",
+      "@openzeppelin/contracts/utils/math/Math.sol": "b1417f64b6fba54e2b715f2228c4dde4065e742245e6bf7c68f39c5f42af043b",
+      "@openzeppelin/contracts/utils/math/SafeCast.sol": "8dec6dd63908459be4b909861eb3a00b31431575f8169c1f0cbb6519af754bfe",
+      "@openzeppelin/contracts/utils/structs/BitMaps.sol": "89165c92e5d816650267d8a40f68dc1d7986ddeb17eaabd2391349a74e71a401",
+      "contracts/ENSGovernor.sol": "41e013bceb35ffaacd44f8b5a833596c4811695b9b1066860358c45dbd0e8456",
+      "contracts/ENSToken.sol": "e828846c347a5206085745c3273e3a495c51dac7a5a7edc2a50dbb8f0cb0edec",
+      "contracts/MerkleProof.sol": "3e50281af7b4cc93d09fc64f020afdf2825763cc6f480f6cd0d6ab7fb8b6b2e6",
+      "contracts/TimelockController.sol": "cb8945a67a8a7423bcb66b7bfd9030d3db13ede242692737ef9edb247a1bd6ee"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.7",
+        "file": "hardhat.config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/ENSGovernor.sol",
+          "contracts/ENSToken.sol",
+          "contracts/MerkleProof.sol",
+          "contracts/TimelockController.sol"
+        ],
+        "pragmas": [
+          "^0.8.0",
+          "^0.8.2"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.7",
+            "reason": "project_config:hardhat.config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.7",
+          "selected_by": "project_config:hardhat.config.js",
+          "version_string": "0.8.7+commit.e28d00a7.Emscripten.clang",
+          "soljson_sha256": "663ba99f7c7ee907f0f03227502d48a78256c3c292ace3b79a5d3eb510665306",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.7)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/access/AccessControl.sol",
+          "@openzeppelin/contracts/access/IAccessControl.sol",
+          "@openzeppelin/contracts/access/Ownable.sol",
+          "@openzeppelin/contracts/governance/Governor.sol",
+          "@openzeppelin/contracts/governance/IGovernor.sol",
+          "@openzeppelin/contracts/governance/TimelockController.sol",
+          "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol",
+          "@openzeppelin/contracts/governance/extensions/GovernorProposalThreshold.sol",
+          "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol",
+          "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
+          "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+          "@openzeppelin/contracts/governance/extensions/IGovernorTimelock.sol",
+          "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol",
+          "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/Context.sol",
+          "@openzeppelin/contracts/utils/Counters.sol",
+          "@openzeppelin/contracts/utils/Strings.sol",
+          "@openzeppelin/contracts/utils/Timers.sol",
+          "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+          "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+          "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+          "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+          "@openzeppelin/contracts/utils/math/Math.sol",
+          "@openzeppelin/contracts/utils/math/SafeCast.sol",
+          "@openzeppelin/contracts/utils/structs/BitMaps.sol",
+          "contracts/ENSGovernor.sol",
+          "contracts/ENSToken.sol",
+          "contracts/MerkleProof.sol",
+          "contracts/TimelockController.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 33
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 7.0
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 6996.3,
+  "eval_files_opened": [
+    "dataset_r4/ens_governor/BUILD.json",
+    "dataset_r4/ens_governor/contracts/ENSGovernor.sol",
+    "dataset_r4/ens_governor/contracts/ENSToken.sol",
+    "dataset_r4/ens_governor/contracts/MerkleProof.sol",
+    "dataset_r4/ens_governor/contracts/TimelockController.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}
