@@ -22,6 +22,7 @@ ENGINE_FILES = [
     TOOL / "analysis" / "detectors.py",
     TOOL / "analysis" / "solmodel.py",
     TOOL / "analysis" / "semantic.py",   # V0.13 semantic governance analyzer
+    TOOL / "analysis" / "compile_backend.py",  # V0.14 compiler/Slither backend
 ]
 FREEZE = Path(__file__).resolve().parent / "engine_freeze.json"
 

@@ -1,0 +1,162 @@
+{
+  "case": "audius_governance",
+  "engine": "semantic",
+  "n_files": 3,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "Governance.sol",
+      "contract": "Governance",
+      "function": "evaluateProposalOutcome",
+      "line": 467,
+      "code": "function evaluateProposalOutcome(uint256 _proposalId)",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-3",
+      "title": "治理提案执行缺时间锁",
+      "severity": "High",
+      "category": "governance-process",
+      "file": "Governance.sol",
+      "contract": "Governance",
+      "function": "evaluateProposalOutcome",
+      "line": 467,
+      "code": "function evaluateProposalOutcome(uint256 _proposalId)",
+      "root_cause": "执行路径消费投票结果并对外调用/delegatecall，但有效调用体内无 queue/eta/minDelay 延迟。",
+      "trigger_conditions": "提案达票后可即时执行，无退出/否决窗(常与投票操纵联动)。",
+      "impact": "恶意提案即时落地,治理失守→资产损失。",
+      "confidence": 0.75,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+      "remediation": "",
+      "signals": [
+        "vote-outcome",
+        "sink",
+        "no-delay",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "High",
+      "category": "treasury",
+      "file": "Governance.sol",
+      "contract": "Governance",
+      "function": "guardianExecuteTransaction",
+      "line": 718,
+      "code": "function guardianExecuteTransaction(",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.6,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 角色/owner/guardian门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:角色/owner/guardian门禁"
+      ]
+    }
+  ],
+  "ms": 111.1,
+  "relation_graph": {
+    "dimensions_present": [
+      "C_execution",
+      "D_treasury"
+    ],
+    "single_risks": [
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Governance",
+        "function": "evaluateProposalOutcome",
+        "line": 467,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "C_execution",
+        "rule": "VULN-3",
+        "contract": "Governance",
+        "function": "evaluateProposalOutcome",
+        "line": 467,
+        "severity": "High",
+        "gate_evidence": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+        "signals": [
+          "vote-outcome",
+          "sink",
+          "no-delay",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Governance",
+        "function": "guardianExecuteTransaction",
+        "line": 718,
+        "severity": "High",
+        "gate_evidence": "门禁: 角色/owner/guardian门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:角色/owner/guardian门禁"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": true,
+      "path": [
+        "C_execution:Governance.evaluateProposalOutcome",
+        "D_treasury:Governance.evaluateProposalOutcome"
+      ],
+      "has_treasury_sink": true,
+      "rationale": "A/B(取得治理权) 或 C(提案执行) + D(金库无约束) 构成 治理失守→资产损失完整路径"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 3,
+    "n_compiled": 0,
+    "n_incomplete": 3,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "AudiusAdminUpgradeabilityProxy.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "Governance.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.4.24 <0.7.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.4.24 <0.7.0",
+        "file": "InitializableV2.sol"
+      }
+    ]
+  }
+}

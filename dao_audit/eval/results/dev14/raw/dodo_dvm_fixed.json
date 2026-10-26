@@ -1,0 +1,57 @@
+{
+  "case": "dodo_dvm_fixed",
+  "engine": "semantic",
+  "n_files": 5,
+  "files": {},
+  "findings": [],
+  "ms": 19.0,
+  "relation_graph": {
+    "dimensions_present": [],
+    "single_risks": [],
+    "full_chain": {
+      "present": false,
+      "path": [],
+      "has_treasury_sink": false,
+      "rationale": "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 5,
+    "n_compiled": 0,
+    "n_incomplete": 5,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma 0.6.9 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "0.6.9",
+        "file": "DVM.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma 0.6.9 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "0.6.9",
+        "file": "DVMFunding.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma 0.6.9 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "0.6.9",
+        "file": "DVMStorage.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma 0.6.9 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "0.6.9",
+        "file": "DVMTrader.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma 0.6.9 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "0.6.9",
+        "file": "DVMVault.sol"
+      }
+    ]
+  }
+}

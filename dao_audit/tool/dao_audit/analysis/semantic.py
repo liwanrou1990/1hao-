@@ -48,8 +48,11 @@ _ROLE_GATE_BODY = re.compile(r"(hasRole\s*\(|_checkRole\s*\(|_checkOwner\s*\(|on
 # two-step ownership/admin handoff (completes a transfer the current admin began)
 _ACCEPT_FN = re.compile(r"^(acceptAdmin|_acceptAdmin|acceptOwnership|acceptGovernance|"
                         r"claimOwnership|_acceptOwnership)$", re.I)
+# one-shot init guard, robust to casing / custom flag names (e.g. _DVM_INITIALIZED_,
+# hasInitialized): any require(!<...initial...>) or a set-once <...initial...> = true.
 _INIT_GATE = re.compile(r"(initializer\b|onlyInitializing|_disableInitializers|"
-                        r"require\s*\(\s*!\s*\w*[Ii]nitialized|require\s*\(\s*\w*[Ii]nitialized\s*==\s*false)")
+                        r"require\s*\(\s*!\s*\w*initial\w*|require\s*\(\s*\w*initial\w*\s*==\s*false|"
+                        r"\w*initial\w*\s*=\s*true)", re.I)
 # case-level timelock routing
 _TIMELOCK_CASE = re.compile(r"(TimelockController|timelockcontroller|minDelay|getMinDelay|"
                             r"_timelock\b|onlyTimelock|queue\w*\(|readyTimestamp|_executors?\b|"
@@ -61,6 +64,9 @@ _SNAPSHOT = re.compile(r"(getPastVotes|getPriorVotes|getPastTotalSupply|balanceO
 # matches modern `.call{...}(` / `.call(` / `.delegatecall(` AND 0.5.x
 # `.call.value(v)(data)` / `.call.gas(g)(data)`.
 _LOWCALL = re.compile(r"(\w+)\s*\.\s*(call|delegatecall)\s*(\.\s*(value|gas)\s*\([^)]*\)\s*)*[\({]")
+# Yul / inline-assembly external calls: bare `delegatecall(` / `callcode(` opcodes
+# (not member-access, not preceded by a word char) — the Furucombo-style sink.
+_ASM_CALL = re.compile(r"(?<![.\w])(delegatecall|callcode)\s*\(")
 _DIAMONDCUT = re.compile(r"\bdiamondCut\s*\(", re.I)
 _VOTE_OUTCOME = re.compile(r"(quorum|forVotes|againstVotes|bipVotePercent|rootsFor|"
                            r"\bsupport\b|proposal\w*\.(executed|canceled|eta|forVotes)|"
@@ -75,8 +81,11 @@ _QUEUED_HASH = re.compile(r"(queuedTransactions\s*\[|queued\s*\[|_timestamps\s*\
 
 # ---- vote power (generalized live reads) ------------------------------------
 _VOTE_FN = re.compile(r"(castvote|_castvote|countvote|recordvote|_vote\b|\bvote\b|ballot|placevote)", re.I)
+# live, address-indexed governance weight read of ANY name (balance/deposit/stake/
+# lock/roots/approvals/votes/weight/power) — generic, not a fixed function name.
 _LIVE_WEIGHT = re.compile(r"\b(balanceOf|getVotes|balanceOfRoots|lockedBalance|stakedBalance|"
-                          r"\w*[Ss]taked?\w*|\w*[Rr]oots\w*|deposited|votingPower|weightOf)\b\s*[\(\[]")
+                          r"\w*[Ss]taked?\w*|\w*[Rr]oots\w*|deposits?|deposited|\w*locked\w*|"
+                          r"approvals?|votingPower|weightOf|\w*[Bb]alances?\w*)\b\s*[\(\[]")
 _PRIV_WRITE = re.compile(r"\b(isCouncil|councilMembers?|isAdmin|admins?|isGovernor|guardianAddress|"
                          r"_?owner|roles?|_roles|hasRole|guardian)\b\s*(\[[^\]]*\])?\s*=[^=]")
 _INIT_NAME = re.compile(r"^(initialize|init|setup|bootstrap|configure|__\w+_init)", re.I)
@@ -205,7 +214,7 @@ def run_semantic_case(contracts_dir) -> List[Finding]:
             ev = _gate_evidence(g)
 
             # ---- VULN-4: unconstrained arbitrary external call controlling funds
-            call_m = _LOWCALL.search(eff)
+            call_m = _LOWCALL.search(eff) or _ASM_CALL.search(eff)
             has_diamond = bool(_DIAMONDCUT.search(eff))
             if fn.is_externally_callable() and (call_m or has_diamond):
                 # effective constraints that make it NOT over-privileged
@@ -285,5 +294,63 @@ def run_semantic_case(contracts_dir) -> List[Finding]:
     return uniq
 
 
+_ELAPSED_DELAY = re.compile(r"(block\.timestamp\s*>=|getBlockTimestamp\(\)\s*>=|"
+                            r"block\.number\s*>=|now\s*>=)")
+
+
+# X100 risk dimensions <-> VULN classes
+_DIM = {"VULN-1": "A_seat", "VULN-2": "B_votingpower", "VULN-3": "C_execution", "VULN-4": "D_treasury"}
+
+
+def governance_relation_graph(contracts_dir) -> dict:
+    """Phase-3 X100 governance-risk view: a cross-contract permission relation
+    graph + a FULL-chain assessment, reported SEPARATELY from single risks.
+
+    Nodes = flagged (contract.function, gate, risk dimension, sink/evidence).
+    A full governance-takeover->treasury-loss chain is asserted only when the
+    case exhibits a control/vote-acquisition risk (A seat or B voting power) OR a
+    proposal-execution risk (C), TOGETHER WITH a treasury-control risk (D) — i.e.
+    a path from gaining governance power to unconstrained asset movement. Single
+    risks are listed on their own and NOT counted as a chain."""
+    findings = run_semantic_case(contracts_dir)
+    nodes = []
+    dims = set()
+    for f in findings:
+        dim = _DIM.get(f.rule_id)
+        if not dim:
+            continue
+        dims.add(dim)
+        nodes.append({"dimension": dim, "rule": f.rule_id, "contract": f.contract,
+                      "function": f.function, "line": f.line, "severity": f.severity,
+                      "gate_evidence": f.fp_reasoning, "signals": f.signals})
+    has_control = ("A_seat" in dims) or ("B_votingpower" in dims)
+    has_exec = "C_execution" in dims
+    has_treasury = "D_treasury" in dims
+    # chain: a way to gain/abuse governance power AND unconstrained treasury control
+    chain = (has_control or has_exec) and has_treasury
+    path = []
+    if chain:
+        order = ["A_seat", "B_votingpower", "C_execution", "D_treasury"]
+        for d in order:
+            n = next((x for x in nodes if x["dimension"] == d), None)
+            if n:
+                path.append(f"{d}:{n['contract']}.{n['function']}")
+    return {"dimensions_present": sorted(dims),
+            "single_risks": nodes,
+            "full_chain": {"present": bool(chain), "path": path,
+                           "has_treasury_sink": has_treasury,
+                           "rationale": ("A/B(取得治理权) 或 C(提案执行) + D(金库无约束) 构成 "
+                                         "治理失守→资产损失完整路径" if chain else
+                                         "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链")},
+            "note": "单项风险与完整风险链分别报告,不混淆。"}
+
+
 def _is_timelock_exec(body: str) -> bool:
-    return bool(_QUEUED_HASH.search(body)) and bool(_TIMELOCK_DELAY.search(body))
+    """A constrained timelock executor: a per-operation queued-hash check AND an
+    elapsed-delay check (a specific timelock signal OR a generic block.timestamp>=
+    gate). Recognizing the generic elapsed check keeps real executors (e.g. Aave
+    ExecutorWithTimelock: _queuedTransactions[hash] + block.timestamp>=executionTime)
+    from being flagged as over-privileged. Used only for VULN-4 suppression, so a
+    voting-deadline timestamp alone (no queued-hash) still does NOT suppress VULN-3."""
+    return bool(_QUEUED_HASH.search(body)) and (bool(_TIMELOCK_DELAY.search(body))
+                                                or bool(_ELAPSED_DELAY.search(body)))

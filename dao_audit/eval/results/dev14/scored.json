@@ -1,0 +1,444 @@
+{
+  "round": "dev14",
+  "n_cases": 11,
+  "n_vulnerable": 6,
+  "n_safe_control": 5,
+  "n_chain_cases": 3,
+  "aggregate": {
+    "per_class": {
+      "VULN-1": {
+        "tp": 1,
+        "fn": 1,
+        "fp": 0,
+        "recall": [
+          0.5,
+          0.0945,
+          0.9055
+        ],
+        "precision": [
+          1.0,
+          0.2065,
+          1.0
+        ]
+      },
+      "VULN-2": {
+        "tp": 3,
+        "fn": 0,
+        "fp": 3,
+        "recall": [
+          1.0,
+          0.4385,
+          1.0
+        ],
+        "precision": [
+          0.5,
+          0.1876,
+          0.8124
+        ]
+      },
+      "VULN-3": {
+        "tp": 2,
+        "fn": 1,
+        "fp": 3,
+        "recall": [
+          0.6667,
+          0.2077,
+          0.9385
+        ],
+        "precision": [
+          0.4,
+          0.1176,
+          0.7693
+        ]
+      },
+      "VULN-4": {
+        "tp": 3,
+        "fn": 1,
+        "fp": 5,
+        "recall": [
+          0.75,
+          0.3006,
+          0.9544
+        ],
+        "precision": [
+          0.375,
+          0.1368,
+          0.6943
+        ]
+      },
+      "VULN-5": {
+        "tp": 0,
+        "fn": 0,
+        "fp": 0,
+        "recall": [
+          null,
+          null,
+          null
+        ],
+        "precision": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    "overall": {
+      "tp": 9,
+      "fn": 3,
+      "fp": 11,
+      "recall": [
+        0.75,
+        0.4677,
+        0.9111
+      ],
+      "precision": [
+        0.45,
+        0.2582,
+        0.6579
+      ],
+      "fnr": [
+        0.25,
+        0.0889,
+        0.5323
+      ]
+    },
+    "safe_cases": 5,
+    "safe_fp_cases": 1,
+    "fpr": [
+      0.2,
+      0.0362,
+      0.6245
+    ],
+    "chain_cases": 3,
+    "chain_identified": 1,
+    "chain_rate": [
+      0.3333,
+      0.0615,
+      0.7923
+    ]
+  },
+  "verdict": {
+    "conclusive": false,
+    "criteria": {
+      "recall>=0.70 & CIlo>=0.50": false,
+      "chain_rate>=0.50": false,
+      "fpr<=0.30": true
+    },
+    "n_criteria_met": 1,
+    "label": "PARTIAL",
+    "note": "结论性要求 N_vuln>=10 且链式案例>=3；否则标注为探索性(样本不足)，只报实测数字，不宣称普适能力。"
+  },
+  "per_case": [
+    {
+      "case": "aave_governance_v2",
+      "project": "aave",
+      "kind": "secure_control",
+      "is_chain_case": false,
+      "n_findings": 0,
+      "per_class": {},
+      "located_classes": [],
+      "fp_findings": [],
+      "auto_found": false,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "audius_governance",
+      "project": "audius",
+      "kind": "vulnerable",
+      "is_chain_case": true,
+      "n_findings": 3,
+      "per_class": {
+        "VULN-1": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0
+        },
+        "VULN-3": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 1
+        },
+        "VULN-4": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [
+        "VULN-4"
+      ],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-4",
+          "contract": "Governance",
+          "function": "evaluateProposalOutcome",
+          "line": 467,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-3",
+          "contract": "Governance",
+          "function": "evaluateProposalOutcome",
+          "line": 467,
+          "severity": "High"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "beanstalk_governance",
+      "project": "beanstalk",
+      "kind": "vulnerable",
+      "is_chain_case": true,
+      "n_findings": 9,
+      "per_class": {
+        "VULN-2": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 2
+        },
+        "VULN-3": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 2
+        },
+        "VULN-4": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 3
+        }
+      },
+      "located_classes": [
+        "VULN-2",
+        "VULN-3"
+      ],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-2",
+          "contract": "GovernanceFacet",
+          "function": "voteAll",
+          "line": 80,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-2",
+          "contract": "GovernanceFacet",
+          "function": "voteUnvoteAll",
+          "line": 141,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "GovernanceFacet",
+          "function": "commit",
+          "line": 169,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-3",
+          "contract": "GovernanceFacet",
+          "function": "commit",
+          "line": 169,
+          "severity": "High"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "GovernanceFacet",
+          "function": "emergencyCommit",
+          "line": 180,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "GovernanceFacet",
+          "function": "pauseOrUnpause",
+          "line": 193,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-3",
+          "contract": "GovernanceFacet",
+          "function": "pauseOrUnpause",
+          "line": 193,
+          "severity": "High"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "compound_governance",
+      "project": "compound",
+      "kind": "secure_control",
+      "is_chain_case": false,
+      "n_findings": 0,
+      "per_class": {},
+      "located_classes": [],
+      "fp_findings": [],
+      "auto_found": false,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "dodo_dvm",
+      "project": "dodo",
+      "kind": "vulnerable",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-1": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        }
+      },
+      "located_classes": [
+        "VULN-1"
+      ],
+      "fp_findings": [],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "dodo_dvm_fixed",
+      "project": "dodo",
+      "kind": "fixed",
+      "is_chain_case": false,
+      "n_findings": 0,
+      "per_class": {},
+      "located_classes": [],
+      "fp_findings": [],
+      "auto_found": false,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "dschief_governance",
+      "project": "makerdao_dschief",
+      "kind": "vulnerable",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-2": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        }
+      },
+      "located_classes": [
+        "VULN-2"
+      ],
+      "fp_findings": [],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "furucombo_proxy",
+      "project": "furucombo",
+      "kind": "vulnerable",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-4": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        }
+      },
+      "located_classes": [
+        "VULN-4"
+      ],
+      "fp_findings": [],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "furucombo_proxy_fixed",
+      "project": "furucombo",
+      "kind": "fixed",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-4": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-4",
+          "contract": "Proxy",
+          "function": "batchExec",
+          "line": 79,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 1,
+      "chain_identified": false
+    },
+    {
+      "case": "openzeppelin_governor",
+      "project": "openzeppelin",
+      "kind": "secure_control",
+      "is_chain_case": false,
+      "n_findings": 0,
+      "per_class": {},
+      "located_classes": [],
+      "fp_findings": [],
+      "auto_found": false,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "tornado_governance",
+      "project": "tornado_governance",
+      "kind": "vulnerable",
+      "is_chain_case": true,
+      "n_findings": 4,
+      "per_class": {
+        "VULN-3": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        },
+        "VULN-4": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        },
+        "VULN-2": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [
+        "VULN-3",
+        "VULN-4",
+        "VULN-2"
+      ],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-2",
+          "contract": "GovernanceGasUpgrade",
+          "function": "castVote",
+          "line": 66,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": true
+    }
+  ]
+}

@@ -24,7 +24,8 @@ sys.path.insert(0, str(ROOT / "tool"))
 import freeze_engine  # noqa: E402
 from dao_audit.analysis.solmodel import parse_source  # noqa: E402
 from dao_audit.analysis.detectors import run_detectors  # noqa: E402
-from dao_audit.analysis.semantic import run_semantic_case  # noqa: E402
+from dao_audit.analysis.semantic import run_semantic_case, governance_relation_graph  # noqa: E402
+from dao_audit.analysis.compile_backend import analyze_case as compile_analyze  # noqa: E402
 
 DATASET = HERE / "dataset"
 
@@ -45,8 +46,13 @@ def run_case(case_dir: Path, engine: str = "semantic") -> dict:
                 d = f.to_dict()
                 d["file"] = f.file.split("/")[-1] if f.file else ""
                 out["findings"].append(d)
+            # Phase-3 governance relation graph + full-chain view
+            out["relation_graph"] = governance_relation_graph(cdir)
+            # Phase-1 compiler/Slither backend coverage (ANALYSIS_INCOMPLETE honesty)
+            out["compiler_backend"] = compile_analyze(cdir)
         except Exception as e:
             out["error"] = repr(e)[:200]
+            out["data_status"] = "ANALYSIS_INCOMPLETE"
         return out
     for sol in contracts:
         rel = str(sol.relative_to(cdir))

@@ -1,0 +1,394 @@
+{
+  "case": "beanstalk_governance",
+  "engine": "semantic",
+  "n_files": 4,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-2",
+      "title": "投票权异常(无快照/可临时获取)",
+      "severity": "Critical",
+      "category": "governance-voting",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "vote",
+      "line": 69,
+      "code": "function vote(uint32 bip) external {",
+      "root_cause": "投票计票取自实时按地址索引的余额/质押/roots(balanceOfRoots)，无逐提案历史快照。",
+      "trigger_conditions": "可借入/临时获取治理权重(闪电贷/质押)在单块内影响投票。",
+      "impact": "零成本或低成本达成法定票数,操纵提案(含恶意金库提案)。",
+      "confidence": 0.8,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+      "remediation": "",
+      "signals": [
+        "vote-fn",
+        "live-weight",
+        "no-snapshot"
+      ]
+    },
+    {
+      "rule_id": "VULN-2",
+      "title": "投票权异常(无快照/可临时获取)",
+      "severity": "Critical",
+      "category": "governance-voting",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "voteAll",
+      "line": 80,
+      "code": "function voteAll(uint32[] calldata bip_list) external {",
+      "root_cause": "投票计票取自实时按地址索引的余额/质押/roots(balanceOfRoots)，无逐提案历史快照。",
+      "trigger_conditions": "可借入/临时获取治理权重(闪电贷/质押)在单块内影响投票。",
+      "impact": "零成本或低成本达成法定票数,操纵提案(含恶意金库提案)。",
+      "confidence": 0.8,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+      "remediation": "",
+      "signals": [
+        "vote-fn",
+        "live-weight",
+        "no-snapshot"
+      ]
+    },
+    {
+      "rule_id": "VULN-2",
+      "title": "投票权异常(无快照/可临时获取)",
+      "severity": "Critical",
+      "category": "governance-voting",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "voteUnvoteAll",
+      "line": 141,
+      "code": "function voteUnvoteAll(uint32[] calldata bip_list) external {",
+      "root_cause": "投票计票取自实时按地址索引的余额/质押/roots(balanceOfRoots)，无逐提案历史快照。",
+      "trigger_conditions": "可借入/临时获取治理权重(闪电贷/质押)在单块内影响投票。",
+      "impact": "零成本或低成本达成法定票数,操纵提案(含恶意金库提案)。",
+      "confidence": 0.8,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+      "remediation": "",
+      "signals": [
+        "vote-fn",
+        "live-weight",
+        "no-snapshot"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "commit",
+      "line": 169,
+      "code": "function commit(uint32 bip) external {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(delegatecall/diamondCut)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "delegatecall/diamondCut",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-3",
+      "title": "治理提案执行缺时间锁",
+      "severity": "High",
+      "category": "governance-process",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "commit",
+      "line": 169,
+      "code": "function commit(uint32 bip) external {",
+      "root_cause": "执行路径消费投票结果并对外调用/delegatecall，但有效调用体内无 queue/eta/minDelay 延迟。",
+      "trigger_conditions": "提案达票后可即时执行，无退出/否决窗(常与投票操纵联动)。",
+      "impact": "恶意提案即时落地,治理失守→资产损失。",
+      "confidence": 0.75,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+      "remediation": "",
+      "signals": [
+        "vote-outcome",
+        "sink",
+        "no-delay",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "emergencyCommit",
+      "line": 180,
+      "code": "function emergencyCommit(uint32 bip) external {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(delegatecall/diamondCut)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "delegatecall/diamondCut",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-3",
+      "title": "治理提案执行缺时间锁",
+      "severity": "High",
+      "category": "governance-process",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "emergencyCommit",
+      "line": 180,
+      "code": "function emergencyCommit(uint32 bip) external {",
+      "root_cause": "执行路径消费投票结果并对外调用/delegatecall，但有效调用体内无 queue/eta/minDelay 延迟。",
+      "trigger_conditions": "提案达票后可即时执行，无退出/否决窗(常与投票操纵联动)。",
+      "impact": "恶意提案即时落地,治理失守→资产损失。",
+      "confidence": 0.75,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+      "remediation": "",
+      "signals": [
+        "vote-outcome",
+        "sink",
+        "no-delay",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "pauseOrUnpause",
+      "line": 193,
+      "code": "function pauseOrUnpause(uint32 bip) external {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(delegatecall/diamondCut)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "delegatecall/diamondCut",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-3",
+      "title": "治理提案执行缺时间锁",
+      "severity": "High",
+      "category": "governance-process",
+      "file": "GovernanceFacet.sol",
+      "contract": "GovernanceFacet",
+      "function": "pauseOrUnpause",
+      "line": 193,
+      "code": "function pauseOrUnpause(uint32 bip) external {",
+      "root_cause": "执行路径消费投票结果并对外调用/delegatecall，但有效调用体内无 queue/eta/minDelay 延迟。",
+      "trigger_conditions": "提案达票后可即时执行，无退出/否决窗(常与投票操纵联动)。",
+      "impact": "恶意提案即时落地,治理失守→资产损失。",
+      "confidence": 0.75,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+      "remediation": "",
+      "signals": [
+        "vote-outcome",
+        "sink",
+        "no-delay",
+        "gate:无有效门禁"
+      ]
+    }
+  ],
+  "ms": 21.8,
+  "relation_graph": {
+    "dimensions_present": [
+      "B_votingpower",
+      "C_execution",
+      "D_treasury"
+    ],
+    "single_risks": [
+      {
+        "dimension": "B_votingpower",
+        "rule": "VULN-2",
+        "contract": "GovernanceFacet",
+        "function": "vote",
+        "line": 69,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+        "signals": [
+          "vote-fn",
+          "live-weight",
+          "no-snapshot"
+        ]
+      },
+      {
+        "dimension": "B_votingpower",
+        "rule": "VULN-2",
+        "contract": "GovernanceFacet",
+        "function": "voteAll",
+        "line": 80,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+        "signals": [
+          "vote-fn",
+          "live-weight",
+          "no-snapshot"
+        ]
+      },
+      {
+        "dimension": "B_votingpower",
+        "rule": "VULN-2",
+        "contract": "GovernanceFacet",
+        "function": "voteUnvoteAll",
+        "line": 141,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；投票函数有效体内实时权重读取且全案无快照。",
+        "signals": [
+          "vote-fn",
+          "live-weight",
+          "no-snapshot"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "GovernanceFacet",
+        "function": "commit",
+        "line": 169,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "delegatecall/diamondCut",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "C_execution",
+        "rule": "VULN-3",
+        "contract": "GovernanceFacet",
+        "function": "commit",
+        "line": 169,
+        "severity": "High",
+        "gate_evidence": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+        "signals": [
+          "vote-outcome",
+          "sink",
+          "no-delay",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "GovernanceFacet",
+        "function": "emergencyCommit",
+        "line": 180,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "delegatecall/diamondCut",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "C_execution",
+        "rule": "VULN-3",
+        "contract": "GovernanceFacet",
+        "function": "emergencyCommit",
+        "line": 180,
+        "severity": "High",
+        "gate_evidence": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+        "signals": [
+          "vote-outcome",
+          "sink",
+          "no-delay",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "GovernanceFacet",
+        "function": "pauseOrUnpause",
+        "line": 193,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "delegatecall/diamondCut",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "C_execution",
+        "rule": "VULN-3",
+        "contract": "GovernanceFacet",
+        "function": "pauseOrUnpause",
+        "line": 193,
+        "severity": "High",
+        "gate_evidence": "门禁: 无有效门禁；消费投票结果+外呼+无延迟。若延迟在外部合约则需确认执行路径。",
+        "signals": [
+          "vote-outcome",
+          "sink",
+          "no-delay",
+          "gate:无有效门禁"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": true,
+      "path": [
+        "B_votingpower:GovernanceFacet.vote",
+        "C_execution:GovernanceFacet.commit",
+        "D_treasury:GovernanceFacet.commit"
+      ],
+      "has_treasury_sink": true,
+      "rationale": "A/B(取得治理权) 或 C(提案执行) + D(金库无约束) 构成 治理失守→资产损失完整路径"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 4,
+    "n_compiled": 0,
+    "n_incomplete": 4,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma =0.7.6 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "=0.7.6",
+        "file": "Bip.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma =0.7.6 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "=0.7.6",
+        "file": "C.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma =0.7.6 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "=0.7.6",
+        "file": "GovernanceFacet.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma =0.7.6 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "=0.7.6",
+        "file": "VotingBooth.sol"
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "case": "dschief_governance",
+  "engine": "semantic",
+  "n_files": 1,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-2",
+      "title": "投票权异常(无快照/可临时获取)",
+      "severity": "Critical",
+      "category": "governance-voting",
+      "file": "chief.sol",
+      "contract": "DSChiefApprovals",
+      "function": "vote",
+      "line": 91,
+      "code": "function vote(bytes32 slate)",
+      "root_cause": "投票计票取自实时按地址索引的余额/质押/roots(deposits)，无逐提案历史快照。",
+      "trigger_conditions": "可借入/临时获取治理权重(闪电贷/质押)在单块内影响投票。",
+      "impact": "零成本或低成本达成法定票数,操纵提案(含恶意金库提案)。",
+      "confidence": 0.8,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁; modifiers=note；投票函数有效体内实时权重读取且全案无快照。",
+      "remediation": "",
+      "signals": [
+        "vote-fn",
+        "live-weight",
+        "no-snapshot"
+      ]
+    }
+  ],
+  "ms": 3.7,
+  "relation_graph": {
+    "dimensions_present": [
+      "B_votingpower"
+    ],
+    "single_risks": [
+      {
+        "dimension": "B_votingpower",
+        "rule": "VULN-2",
+        "contract": "DSChiefApprovals",
+        "function": "vote",
+        "line": 91,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁; modifiers=note；投票函数有效体内实时权重读取且全案无快照。",
+        "signals": [
+          "vote-fn",
+          "live-weight",
+          "no-snapshot"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": false,
+      "path": [],
+      "has_treasury_sink": false,
+      "rationale": "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 1,
+    "n_compiled": 0,
+    "n_incomplete": 1,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/1hao-/dao_audit/out/build-info/217b7e5294f0aa6c.output.json'",
+        "pragma": ">=0.4.23",
+        "file": "chief.sol"
+      }
+    ]
+  }
+}

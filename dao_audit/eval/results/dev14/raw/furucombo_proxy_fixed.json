@@ -1,0 +1,126 @@
+{
+  "case": "furucombo_proxy_fixed",
+  "engine": "semantic",
+  "n_files": 10,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "Proxy.sol",
+      "contract": "Proxy",
+      "function": "batchExec",
+      "line": 79,
+      "code": "function batchExec(",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁; modifiers=isNotHalted,isNotBanned；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁; modifiers=isNotHalted,isNotBanned"
+      ]
+    }
+  ],
+  "ms": 23.9,
+  "relation_graph": {
+    "dimensions_present": [
+      "D_treasury"
+    ],
+    "single_risks": [
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Proxy",
+        "function": "batchExec",
+        "line": 79,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁; modifiers=isNotHalted,isNotBanned；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁; modifiers=isNotHalted,isNotBanned"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": false,
+      "path": [],
+      "has_treasury_sink": true,
+      "rationale": "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 10,
+    "n_compiled": 0,
+    "n_incomplete": 10,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "Config.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "HandlerBase.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "IProxy.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "IRegistry.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "LibCache.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "LibParam.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "LibStack.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "Proxy.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "Registry.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.6.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.6.0",
+        "file": "Storage.sol"
+      }
+    ]
+  }
+}
