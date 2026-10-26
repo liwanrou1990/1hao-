@@ -1,0 +1,247 @@
+{
+  "case": "parity_wallet",
+  "engine": "semantic",
+  "n_files": 1,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "High",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "WalletLibrary",
+      "function": "execute",
+      "line": 233,
+      "code": "function execute(address _to, uint _value, bytes _data) external onlyowner returns (bytes32 o_hash) {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.6,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 角色/owner/guardian门禁; modifiers=onlyowner；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:角色/owner/guardian门禁; modifiers=onlyowner"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "High",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "WalletLibrary",
+      "function": "confirm",
+      "line": 269,
+      "code": "function confirm(bytes32 _h) onlymanyowners(_h) returns (bool o_success) {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.6,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 角色/owner/guardian门禁; modifiers=onlymanyowners；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:角色/owner/guardian门禁; modifiers=onlymanyowners"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "Wallet",
+      "function": "Wallet",
+      "line": 402,
+      "code": "function Wallet(address[] _owners, uint _required, uint _daylimit) {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "Wallet",
+      "function": "function",
+      "line": 427,
+      "code": "function() payable {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "Wallet",
+      "function": "hasConfirmed",
+      "line": 442,
+      "code": "function hasConfirmed(bytes32 _operation, address _owner) external constant returns (bool) {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "enhanced-wallet.sol",
+      "contract": "Wallet",
+      "function": "isOwner",
+      "line": 446,
+      "code": "function isOwner(address _addr) constant returns (bool) {",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁"
+      ]
+    }
+  ],
+  "ms": 13.4,
+  "relation_graph": {
+    "dimensions_present": [
+      "D_treasury"
+    ],
+    "single_risks": [
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "WalletLibrary",
+        "function": "execute",
+        "line": 233,
+        "severity": "High",
+        "gate_evidence": "门禁: 角色/owner/guardian门禁; modifiers=onlyowner；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:角色/owner/guardian门禁; modifiers=onlyowner"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "WalletLibrary",
+        "function": "confirm",
+        "line": 269,
+        "severity": "High",
+        "gate_evidence": "门禁: 角色/owner/guardian门禁; modifiers=onlymanyowners；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:角色/owner/guardian门禁; modifiers=onlymanyowners"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Wallet",
+        "function": "Wallet",
+        "line": 402,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Wallet",
+        "function": "function",
+        "line": 427,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Wallet",
+        "function": "hasConfirmed",
+        "line": 442,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁"
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "Wallet",
+        "function": "isOwner",
+        "line": 446,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": false,
+      "path": [],
+      "has_treasury_sink": true,
+      "rationale": "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 1,
+    "n_compiled": 0,
+    "n_incomplete": 1,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/1hao-/dao_audit/out/build-info/217b7e5294f0aa6c.output.json'",
+        "pragma": "^0.4.9",
+        "file": "enhanced-wallet.sol"
+      }
+    ]
+  }
+}

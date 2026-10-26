@@ -1,0 +1,177 @@
+{
+  "case": "polynetwork_bridge",
+  "engine": "semantic",
+  "n_files": 12,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-1",
+      "title": "治理席位/初始化接管",
+      "severity": "Critical",
+      "category": "access-control",
+      "file": "EthCrossChainManager.sol",
+      "contract": "EthCrossChainManager",
+      "function": "initGenesisBlock",
+      "line": 25,
+      "code": "function initGenesisBlock(bytes memory rawHeader, bytes memory pubKeyList) whenNotPaused public returns(bool) {",
+      "root_cause": "对外可调用的特权赋权/初始化函数,无角色门禁/一次性init守卫/治理+时间锁。",
+      "trigger_conditions": "任意账户调用(或重复调用)写入特权席位/角色/owner/guardian。",
+      "impact": "攻击者获治理特权席位,接管治理。",
+      "confidence": 0.65,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁; modifiers=whenNotPaused；init名",
+      "remediation": "",
+      "signals": [
+        "init-name",
+        ""
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "title": "金库/任意外呼权限过大",
+      "severity": "Critical",
+      "category": "treasury",
+      "file": "EthCrossChainManager.sol",
+      "contract": "EthCrossChainManager",
+      "function": "verifyHeaderAndExecuteTx",
+      "line": 127,
+      "code": "function verifyHeaderAndExecuteTx(bytes memory proof, bytes memory rawHeader, bytes memory headerProof, bytes memory curRawHeader,bytes memory headerSig) whenNotPaused public retur",
+      "root_cause": "外部可达函数经调用链到达任意外呼汇点(low-level call)，无治理+时间锁/白名单/额度约束。",
+      "trigger_conditions": "具该门禁(或经治理获得)即可一次调用转走任意资产或劫持外部合约。",
+      "impact": "单笔调用原子控制金库/任意合约状态。",
+      "confidence": 0.9,
+      "fp_likelihood": "low",
+      "fp_reasoning": "门禁: 无有效门禁; modifiers=whenNotPaused；汇点在有效调用体内(含内部函数)。",
+      "remediation": "",
+      "signals": [
+        "low-level call",
+        "gate:无有效门禁; modifiers=whenNotPaused"
+      ]
+    }
+  ],
+  "ms": 44.9,
+  "relation_graph": {
+    "dimensions_present": [
+      "A_seat",
+      "D_treasury"
+    ],
+    "single_risks": [
+      {
+        "dimension": "A_seat",
+        "rule": "VULN-1",
+        "contract": "EthCrossChainManager",
+        "function": "initGenesisBlock",
+        "line": 25,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁; modifiers=whenNotPaused；init名",
+        "signals": [
+          "init-name",
+          ""
+        ]
+      },
+      {
+        "dimension": "D_treasury",
+        "rule": "VULN-4",
+        "contract": "EthCrossChainManager",
+        "function": "verifyHeaderAndExecuteTx",
+        "line": 127,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁; modifiers=whenNotPaused；汇点在有效调用体内(含内部函数)。",
+        "signals": [
+          "low-level call",
+          "gate:无有效门禁; modifiers=whenNotPaused"
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": true,
+      "path": [
+        "A_seat:EthCrossChainManager.initGenesisBlock",
+        "D_treasury:EthCrossChainManager.verifyHeaderAndExecuteTx"
+      ],
+      "has_treasury_sink": true,
+      "rationale": "A/B(取得治理权) 或 C(提案执行) + D(金库无约束) 构成 治理失守→资产损失完整路径"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 12,
+    "n_compiled": 0,
+    "n_incomplete": 12,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "EthCrossChainData.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "EthCrossChainManager.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "EthCrossChainUtils.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "IEthCrossChainData.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "IEthCrossChainManager.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "Ownable.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "Pausable.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "SafeMath.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "UpgradableECCM.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "Utils.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "ZeroCopySink.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma ^0.5.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": "^0.5.0",
+        "file": "ZeroCopySource.sol"
+      }
+    ]
+  }
+}

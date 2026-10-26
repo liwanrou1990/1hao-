@@ -1,0 +1,108 @@
+{
+  "case": "punk_proxy_init_fixed",
+  "engine": "semantic",
+  "n_files": 7,
+  "files": {},
+  "findings": [
+    {
+      "rule_id": "VULN-1",
+      "title": "治理席位/初始化接管",
+      "severity": "Critical",
+      "category": "access-control",
+      "file": "ForgeProxy.sol",
+      "contract": "ForgeProxy",
+      "function": "initialize",
+      "line": 26,
+      "code": "function initialize( address storage_, address implAddress ) public isInitializer{",
+      "root_cause": "对外可调用的特权赋权/初始化函数,无角色门禁/一次性init守卫/治理+时间锁。",
+      "trigger_conditions": "任意账户调用(或重复调用)写入特权席位/角色/owner/guardian。",
+      "impact": "攻击者获治理特权席位,接管治理。",
+      "confidence": 0.65,
+      "fp_likelihood": "medium",
+      "fp_reasoning": "门禁: 无有效门禁; modifiers=isInitializer；init名",
+      "remediation": "",
+      "signals": [
+        "init-name",
+        ""
+      ]
+    }
+  ],
+  "ms": 27.6,
+  "relation_graph": {
+    "dimensions_present": [
+      "A_seat"
+    ],
+    "single_risks": [
+      {
+        "dimension": "A_seat",
+        "rule": "VULN-1",
+        "contract": "ForgeProxy",
+        "function": "initialize",
+        "line": 26,
+        "severity": "Critical",
+        "gate_evidence": "门禁: 无有效门禁; modifiers=isInitializer；init名",
+        "signals": [
+          "init-name",
+          ""
+        ]
+      }
+    ],
+    "full_chain": {
+      "present": false,
+      "path": [],
+      "has_treasury_sink": false,
+      "rationale": "未同时具备取得治理权/执行 与 金库无约束控制,不计为完整链"
+    },
+    "note": "单项风险与完整风险链分别报告,不混淆。"
+  },
+  "compiler_backend": {
+    "n_files": 7,
+    "n_compiled": 0,
+    "n_incomplete": 7,
+    "coverage": 0.0,
+    "per_file": [
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "CompoundModel.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "Forge.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "ForgeProxy.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "ForgeStorage.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "ModelStorage.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "Ownable.sol"
+      },
+      {
+        "status": "ANALYSIS_INCOMPLETE",
+        "reason": "pragma >=0.5.0 <0.9.0 needs solc <0.8 (blocked: only 0.8.28 available)",
+        "pragma": ">=0.5.0 <0.9.0",
+        "file": "OwnableStorage.sol"
+      }
+    ]
+  }
+}

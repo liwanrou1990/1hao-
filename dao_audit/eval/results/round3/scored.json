@@ -1,0 +1,317 @@
+{
+  "round": "round3",
+  "n_cases": 5,
+  "n_vulnerable": 3,
+  "n_safe_control": 2,
+  "n_chain_cases": 1,
+  "aggregate": {
+    "per_class": {
+      "VULN-1": {
+        "tp": 2,
+        "fn": 1,
+        "fp": 4,
+        "recall": [
+          0.6667,
+          0.2077,
+          0.9385
+        ],
+        "precision": [
+          0.3333,
+          0.0968,
+          0.7
+        ]
+      },
+      "VULN-2": {
+        "tp": 0,
+        "fn": 0,
+        "fp": 0,
+        "recall": [
+          null,
+          null,
+          null
+        ],
+        "precision": [
+          null,
+          null,
+          null
+        ]
+      },
+      "VULN-3": {
+        "tp": 0,
+        "fn": 0,
+        "fp": 0,
+        "recall": [
+          null,
+          null,
+          null
+        ],
+        "precision": [
+          null,
+          null,
+          null
+        ]
+      },
+      "VULN-4": {
+        "tp": 1,
+        "fn": 1,
+        "fp": 6,
+        "recall": [
+          0.5,
+          0.0945,
+          0.9055
+        ],
+        "precision": [
+          0.1429,
+          0.0257,
+          0.5131
+        ]
+      },
+      "VULN-5": {
+        "tp": 0,
+        "fn": 0,
+        "fp": 0,
+        "recall": [
+          null,
+          null,
+          null
+        ],
+        "precision": [
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    "overall": {
+      "tp": 3,
+      "fn": 2,
+      "fp": 10,
+      "recall": [
+        0.6,
+        0.2307,
+        0.8824
+      ],
+      "precision": [
+        0.2308,
+        0.0818,
+        0.5026
+      ],
+      "fnr": [
+        0.4,
+        0.1176,
+        0.7693
+      ]
+    },
+    "safe_cases": 2,
+    "safe_fp_cases": 2,
+    "fpr": [
+      1.0,
+      0.3424,
+      1.0
+    ],
+    "chain_cases": 1,
+    "chain_identified": 0,
+    "chain_rate": [
+      0.0,
+      0.0,
+      0.7935
+    ]
+  },
+  "verdict": {
+    "conclusive": false,
+    "criteria": {
+      "recall>=0.70 & CIlo>=0.50": false,
+      "chain_rate>=0.50": false,
+      "fpr<=0.30": false
+    },
+    "n_criteria_met": 0,
+    "label": "FAIL/UNPROVEN",
+    "note": "结论性要求 N_vuln>=10 且链式案例>=3；否则标注为探索性(样本不足)，只报实测数字，不宣称普适能力。"
+  },
+  "per_case": [
+    {
+      "case": "nouns_dao",
+      "project": "nounsdao",
+      "kind": "secure_control",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-1": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-1",
+          "contract": "NounsDAOLogicV4",
+          "function": "initialize",
+          "line": 142,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 1,
+      "chain_identified": false
+    },
+    {
+      "case": "parity_wallet",
+      "project": "parity",
+      "kind": "vulnerable",
+      "is_chain_case": true,
+      "n_findings": 6,
+      "per_class": {
+        "VULN-1": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 0
+        },
+        "VULN-4": {
+          "tp": 0,
+          "fn": 1,
+          "fp": 6
+        }
+      },
+      "located_classes": [],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-4",
+          "contract": "WalletLibrary",
+          "function": "execute",
+          "line": 233,
+          "severity": "High"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "WalletLibrary",
+          "function": "confirm",
+          "line": 269,
+          "severity": "High"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "Wallet",
+          "function": "Wallet",
+          "line": 402,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "Wallet",
+          "function": "function",
+          "line": 427,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "Wallet",
+          "function": "hasConfirmed",
+          "line": 442,
+          "severity": "Critical"
+        },
+        {
+          "rule_id": "VULN-4",
+          "contract": "Wallet",
+          "function": "isOwner",
+          "line": 446,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "polynetwork_bridge",
+      "project": "polynetwork",
+      "kind": "vulnerable",
+      "is_chain_case": false,
+      "n_findings": 2,
+      "per_class": {
+        "VULN-4": {
+          "tp": 1,
+          "fn": 0,
+          "fp": 0
+        },
+        "VULN-1": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [
+        "VULN-4"
+      ],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-1",
+          "contract": "EthCrossChainManager",
+          "function": "initGenesisBlock",
+          "line": 25,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "punk_proxy_init",
+      "project": "punk",
+      "kind": "vulnerable",
+      "is_chain_case": false,
+      "n_findings": 3,
+      "per_class": {
+        "VULN-1": {
+          "tp": 2,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [
+        "VULN-1"
+      ],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-1",
+          "contract": "ForgeProxy",
+          "function": "initialize",
+          "line": 26,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 0,
+      "chain_identified": false
+    },
+    {
+      "case": "punk_proxy_init_fixed",
+      "project": "punk",
+      "kind": "fixed",
+      "is_chain_case": false,
+      "n_findings": 1,
+      "per_class": {
+        "VULN-1": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 1
+        }
+      },
+      "located_classes": [],
+      "fp_findings": [
+        {
+          "rule_id": "VULN-1",
+          "contract": "ForgeProxy",
+          "function": "initialize",
+          "line": 26,
+          "severity": "Critical"
+        }
+      ],
+      "auto_found": true,
+      "safe_fp_highsev": 1,
+      "chain_identified": false
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{"case":"polynetwork_bridge","project":"polynetwork","kind":"vulnerable","is_chain_case":false,
+ "truth":[{"vuln":"VULN-4","contract":"EthCrossChainManager","function":"verifyHeaderAndExecuteTx","line":[127,195],"treasury_risk":true,
+   "governance_relation":"跨链入口经 _executeCrossChainTx 对 攻击者消息派生的 (target,method) 发起无白名单低级call,可命中特权onlyOwner目标(putCurEpochConPubKeyBytes)夺keeper"}],
+ "evidence":{"repo":"https://github.com/polynetwork/eth-contracts","vuln_commit":"15d84b7f34d2068d7548d5385c3d43c37a7232ba",
+   "fixed_commit":"1011bf8ab21c620129190b229cca268ebbdc2b94","incident_date":"2021-08-10","pragma":"^0.5.0",
+   "note":"VULN-1 keeper接管为VULN-4下游后果;putCurEpochConPubKeyBytes本身onlyOwner正确,不单列"}}
