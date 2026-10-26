@@ -1,0 +1,203 @@
+{
+  "case": "dschief_governance",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DSTokenBase",
+      "function": "approve",
+      "file": "lib/ds-token/src/base.sol",
+      "line": 65,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_approvals"
+      ],
+      "checked_in": [
+        "DSTokenBase.transfer(address,uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "DSToken",
+      "function": "approve",
+      "file": "lib/ds-token/src/token.sol",
+      "line": 36,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_approvals"
+      ],
+      "checked_in": [
+        "DSTokenBase.transfer(address,uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    }
+  ],
+  "build": {
+    "case": "dschief_governance",
+    "repo": "https://github.com/dapphub/ds-chief",
+    "commit": "4a833cdaeb66313da0fb16108771a52135d23a04",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "Dappfile",
+    "dataset_identical_to_snapshot": {
+      "chief.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/ds-test",
+        "url": "https://github.com/dapphub/ds-test",
+        "commit": "eb7148d43c1ca6f9890361e2e2378364af2430ba",
+        "status": "ok"
+      },
+      {
+        "path": "lib/ds-token",
+        "url": "https://github.com/dapphub/ds-token",
+        "commit": "c3a1cebee1ae05a7e5b6cc4ce9742e49ed0228ce",
+        "status": "ok"
+      },
+      {
+        "path": "lib/ds-roles",
+        "url": "https://github.com/dapphub/ds-roles",
+        "commit": "dbd4c1a4f5aa2d64598fff69a12f773e2b4f4fa6",
+        "status": "ok"
+      },
+      {
+        "path": "lib/ds-thing",
+        "url": "https://github.com/dapphub/ds-thing",
+        "commit": "f37879a41e817f54db43728cb39178cd99311289",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2020-06-29T21:19:41+03:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "ds-roles/=lib/ds-roles/src/",
+      "ds-test/=lib/ds-test/src/",
+      "ds-thing/=lib/ds-thing/src/",
+      "ds-token/=lib/ds-token/src/",
+      "ds-auth/=lib/ds-roles/lib/ds-auth/src/",
+      "ds-math/=lib/ds-thing/lib/ds-math/src/",
+      "ds-note/=lib/ds-thing/lib/ds-note/src/",
+      "ds-stop/=lib/ds-token/lib/ds-stop/src/",
+      "erc20/=lib/ds-token/lib/erc20/src/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "lib/ds-roles/lib/ds-auth/src/auth.sol": "f1b49aa7fa92afe666a5227bd484ef5be893a707cbec0bcccf5d99953282f907",
+      "lib/ds-roles/src/roles.sol": "caa98abf34e68384de06a1ae88ac3c2f8b88c3833ecb0e7a9d6335b76b42dadb",
+      "lib/ds-thing/lib/ds-math/src/math.sol": "48b94bb12a7d8c84d660a6ab585f60a247c7eb7ffb56d563ed0e9d6b52c84c53",
+      "lib/ds-thing/lib/ds-note/src/note.sol": "3097878768a300a87dcd199ec28262beacd6e0ea807493081459b83c664e98c7",
+      "lib/ds-thing/src/thing.sol": "1b76590d427c64989d33d520f098a0bf5c1b216de539af4ee7b6bfe216c73928",
+      "lib/ds-token/lib/ds-stop/src/stop.sol": "cc52e4e6f2416c22dd32bf13cac7d29dbc26940cb84cb6f8efeb5e72218edd16",
+      "lib/ds-token/lib/erc20/src/erc20.sol": "ed027e17b1f31b0d1c21ea39b3e5dea8924cb49b7e15f22062fc640aa0f63780",
+      "lib/ds-token/src/base.sol": "4c2ac421fc0f0b62426dff64123ef10c230d79a8a0590fbd3d4572be7672ec98",
+      "lib/ds-token/src/token.sol": "3aa92b6542138a11f80b48e8c3559c23ec42cbd54bf3f56c6206ef2978d73bd9",
+      "src/chief.sol": "ff7adcb5865b53a7a2362cace2cab00096284541a819ea19bc33f7258e938a0a"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "src/chief.sol"
+        ],
+        "pragmas": [
+          ">0.4.13",
+          ">0.4.20",
+          ">=0.4.23"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.38",
+            "reason": "pragma:newest_compiling",
+            "result": "TypeError: Contract \"ERC20\" should be marked as abstract.\n  --> lib/ds-token/lib/erc20/src/erc20.sol:16:1:\n   |\n16 | contract ERC20 is ERC20Events {\n   | ^ (Relevant source part starts here and spans across multiple lines).\nNote: Missing im"
+          },
+          {
+            "version": "0.7.6",
+            "reason": "pragma:newest_compiling",
+            "result": "lib/ds-roles/src/roles.sol:71:5: TypeError: Overriding function is missing \"override\" specifier.\n    function canCall(address caller, address code, bytes4 sig)\n    ^ (Relevant source part starts here and spans across multiple lines).\nlib/ds"
+          },
+          {
+            "version": "0.6.12",
+            "reason": "pragma:newest_compiling",
+            "result": "lib/ds-roles/src/roles.sol:71:5: TypeError: Overriding function is missing \"override\" specifier.\n    function canCall(address caller, address code, bytes4 sig)\n    ^ (Relevant source part starts here and spans across multiple lines).\nlib/ds"
+          },
+          {
+            "version": "0.5.17",
+            "reason": "pragma:newest_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.17",
+          "selected_by": "pragma:newest_compiling",
+          "version_string": "0.5.17+commit.d19bba13.Emscripten.clang",
+          "soljson_sha256": "dac1bc7560247d3e69bce9891f7eb2218a6a8d0106d9cdb4de8e03ede4546153",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.17)"
+        },
+        "compiled_sources": [
+          "lib/ds-roles/lib/ds-auth/src/auth.sol",
+          "lib/ds-roles/src/roles.sol",
+          "lib/ds-thing/lib/ds-math/src/math.sol",
+          "lib/ds-thing/lib/ds-note/src/note.sol",
+          "lib/ds-thing/src/thing.sol",
+          "lib/ds-token/lib/ds-stop/src/stop.sol",
+          "lib/ds-token/lib/erc20/src/erc20.sol",
+          "lib/ds-token/src/base.sol",
+          "lib/ds-token/src/token.sol",
+          "src/chief.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 15
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 1,
+      "compiled": 1,
+      "slither_ir": 1,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 5.9
+  },
+  "n_files": 1,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [],
+  "refuted": [],
+  "ms": 5910.4,
+  "eval_files_opened": [
+    "dataset/dschief_governance/BUILD.json",
+    "dataset/dschief_governance/contracts/chief.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

@@ -1,0 +1,242 @@
+{
+  "case": "moonwell_temporal_governor_fixed",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "TemporalGovernor",
+      "function": "executeProposal",
+      "file": "TemporalGovernor.sol",
+      "line": 398,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "VAA"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "TemporalGovernor",
+      "function": "permissionlessUnpause",
+      "file": "TemporalGovernor.sol",
+      "line": 240,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_paused"
+      ],
+      "checked_in": [
+        "TemporalGovernor.revokeGuardian()"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "moonwell_temporal_governor_fixed",
+    "repo": "https://github.com/moonwell-fi/moonwell-contracts-v2",
+    "commit": "4580996b7cdb831701c62d13042665161ac26ec4",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "foundry.toml",
+    "dataset_identical_to_snapshot": {
+      "ITemporalGovernor.sol": true,
+      "TemporalGovernor.sol": true
+    },
+    "submodules": [
+      {
+        "path": "lib/openzeppelin-contracts",
+        "url": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+        "commit": "e50c24f5839db17f46991478384bfda14acfb830",
+        "status": "ok"
+      },
+      {
+        "path": "lib/forge-std",
+        "url": "https://github.com/foundry-rs/forge-std",
+        "commit": "74cfb77e308dd188d2f58864aaf44963ae6b88b1",
+        "status": "ok"
+      }
+    ],
+    "commit_date": "2023-07-28T11:32:07-07:00",
+    "npm_dependencies": [],
+    "remappings": [
+      "@forge-std/=lib/forge-std/src/",
+      "@openzeppelin/=lib/openzeppelin-contracts/",
+      "@protocol=src/",
+      "@test=test/",
+      "forge-std/=lib/forge-std/src/",
+      "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+      "ds-test/=lib/forge-std/lib/ds-test/src/",
+      "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/"
+    ],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "lib/openzeppelin-contracts/contracts/access/Ownable.sol": "a8e4e1ae19d9bd3e8b0a6d46577eec098c01fbaffd3ec1252fd20d799e73393b",
+      "lib/openzeppelin-contracts/contracts/security/Pausable.sol": "2072248d2f79e661c149fd6a6593a8a3f038466557c9b75e50e0b001bcb5cf97",
+      "lib/openzeppelin-contracts/contracts/utils/Context.sol": "1458c260d010a08e4c20a4a517882259a23a4baa0b5bd9add9fb6d6a1549814a",
+      "lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol": "a64e5d0e83019d9caa51e6fe6f68ac54b583ac15792b8557cb8e4fab20711b9f",
+      "src//core/Governance/ITemporalGovernor.sol": "4b8bf265d035cef41823fe8803871947915590ac9b8551e80f8dc2f84c554bfa",
+      "src//core/Governance/IWormhole.sol": "66a155fe176f72ed485c91747abbe9100316301901e509a54c27046e0ec12c7c",
+      "src/core/Governance/ITemporalGovernor.sol": "4b8bf265d035cef41823fe8803871947915590ac9b8551e80f8dc2f84c554bfa",
+      "src/core/Governance/TemporalGovernor.sol": "d1e6f109ea6d4295963614482bb38a6eafb59fb3f1c90aae86a9e5e779dd7f5e"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.19",
+        "file": "foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "src/core/Governance/ITemporalGovernor.sol",
+          "src/core/Governance/TemporalGovernor.sol"
+        ],
+        "pragmas": [
+          "0.8.19",
+          "^0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.19",
+            "reason": "project_config:foundry.toml",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.19",
+          "selected_by": "project_config:foundry.toml",
+          "version_string": "0.8.19+commit.7dd6d404.Emscripten.clang",
+          "soljson_sha256": "fba49e26930967a28d4f301088e126002ab6fbb755f37b5d0ee22b1bf4787070",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.19)"
+        },
+        "compiled_sources": [
+          "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+          "lib/openzeppelin-contracts/contracts/security/Pausable.sol",
+          "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+          "lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol",
+          "src//core/Governance/ITemporalGovernor.sol",
+          "src//core/Governance/IWormhole.sol",
+          "src/core/Governance/ITemporalGovernor.sol",
+          "src/core/Governance/TemporalGovernor.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 7
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 2,
+      "compiled": 2,
+      "slither_ir": 2,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 2.6
+  },
+  "n_files": 2,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": [
+      {
+        "status": "HEURISTIC_LINK",
+        "from": "TemporalGovernor.permissionlessUnpause",
+        "to": "TemporalGovernor.executeProposal",
+        "via": [
+          "_paused"
+        ]
+      }
+    ]
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "TemporalGovernor",
+      "function": "_executeProposal",
+      "line": 342,
+      "title": "arbitrary-send-eth",
+      "evidence": "TemporalGovernor._executeProposal(bytes,bool) (src/core/Governance/TemporalGovernor.sol#342-407) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success,returnData) = target.call{value: value}(data) (src/core/Governance/TemporalGovernor.sol#398-400)",
+      "file": "TemporalGovernor.sol",
+      "in_dataset": true,
+      "permission_evidence": {
+        "function": "TemporalGovernor._executeProposal(bytes,bool)",
+        "visibility": "private",
+        "detector": "arbitrary-send-eth",
+        "entries": [
+          {
+            "entry": "TemporalGovernor.executeProposal(bytes)",
+            "visibility": "public",
+            "self_checked_state": [
+              "queuedTransactions"
+            ],
+            "modifiers": [
+              "whenNotPaused"
+            ],
+            "sender_conditions": [],
+            "n_sender_conditions": 0,
+            "signature_checks": [],
+            "n_signature_checks": 0
+          },
+          {
+            "entry": "TemporalGovernor.fastTrackProposalExecution(bytes)",
+            "visibility": "external",
+            "self_checked_state": [
+              "queuedTransactions"
+            ],
+            "modifiers": [
+              "onlyOwner",
+              "whenPaused"
+            ],
+            "sender_conditions": [
+              {
+                "at": "Ownable._checkOwner:L51",
+                "expr": "require(bool,string)(owner() == _msgSender(),Ownable: caller is not the owner)"
+              }
+            ],
+            "n_sender_conditions": 1,
+            "signature_checks": [],
+            "n_signature_checks": 0
+          }
+        ],
+        "status": "PROTECTION_EVIDENCE",
+        "reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review"
+      }
+    }
+  ],
+  "refuted": [],
+  "ms": 2613.5,
+  "eval_files_opened": [
+    "dataset_r4/moonwell_temporal_governor_fixed/BUILD.json",
+    "dataset_r4/moonwell_temporal_governor_fixed/contracts/ITemporalGovernor.sol",
+    "dataset_r4/moonwell_temporal_governor_fixed/contracts/TemporalGovernor.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

@@ -1,0 +1,167 @@
+{
+  "case": "bond_fixed_expiry_teller",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "bond_fixed_expiry_teller",
+    "repo": "https://github.com/Bond-Protocol/bond-contracts",
+    "commit": "2c0311249e2356bf1b5f27c08e7b6d5e5872cd7f",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "foundry.toml",
+    "dataset_identical_to_snapshot": {
+      "BondBaseTeller.sol": true,
+      "BondFixedExpiryTeller.sol": true,
+      "CloneERC20.sol": true,
+      "ERC20BondToken.sol": true,
+      "IBondFixedExpiryTeller.sol": true,
+      "TransferHelper.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-09-16T09:55:12-05:00",
+    "npm_dependencies": [
+      {
+        "package": "clones",
+        "declared": null,
+        "declared_in": "not declared",
+        "status": "undeclared",
+        "files_sha256": {}
+      },
+      {
+        "package": "solmate",
+        "declared": null,
+        "declared_in": "not declared",
+        "status": "undeclared",
+        "files_sha256": {}
+      }
+    ],
+    "remappings": [
+      "ds-test/=lib/ds-test/src/",
+      "solmate/=lib/solmate/src/",
+      "openzeppelin/=lib/openzeppelin-contracts/contracts/",
+      "clones/=lib/clones-with-immutable-args/src/",
+      "forge-std/=lib/forge-std/src/"
+    ],
+    "unresolved_imports": [
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/lib/TransferHelper.sol"
+      },
+      {
+        "import": "clones/Clone.sol",
+        "from": "src/lib/CloneERC20.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/interfaces/IBondFixedExpiryTeller.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/ERC20BondToken.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/bases/BondBaseTeller.sol"
+      },
+      {
+        "import": "solmate/utils/ReentrancyGuard.sol",
+        "from": "src/bases/BondBaseTeller.sol"
+      },
+      {
+        "import": "solmate/auth/Auth.sol",
+        "from": "src/bases/BondBaseTeller.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/interfaces/IBondAuctioneer.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/interfaces/IBondAggregator.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/interfaces/IBondTeller.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/interfaces/IBondCallback.sol"
+      },
+      {
+        "import": "solmate/tokens/ERC20.sol",
+        "from": "src/BondFixedExpiryTeller.sol"
+      },
+      {
+        "import": "clones/ClonesWithImmutableArgs.sol",
+        "from": "src/BondFixedExpiryTeller.sol"
+      }
+    ],
+    "sources_sha256": {
+      "src/BondFixedExpiryTeller.sol": "aa705507005552dabb7dc19dc393b033c55c9c9fb7aec6c6d40e66c8dc534d84",
+      "src/ERC20BondToken.sol": "230da0937d8d4ca47c77b87cba6ee051ce452e1e6099d6f16e8ae9b9e7ddb62d",
+      "src/bases/BondBaseTeller.sol": "2fcd168dd0707e271ace87ffdbe3f405f46df409c67f980339665850a1af8190",
+      "src/interfaces/IBondAggregator.sol": "7f2dcf284fa321565408a54884f1b6848823cd5bc56a2877a49ea2c01c624ec2",
+      "src/interfaces/IBondAuctioneer.sol": "418d9ee37e3423b8eb2ce33c2b9db2bcdb1061e3852a84519de1bae50fdde825",
+      "src/interfaces/IBondCallback.sol": "88db2bd24344673f3b0b616c0315c66ec225e8016501fb71d3a719fd89696f15",
+      "src/interfaces/IBondFixedExpiryTeller.sol": "7e4145ea000906bb69fe9b5182d60e8e03340a9ae5cf66017bdd07c3de9968a4",
+      "src/interfaces/IBondTeller.sol": "e1f2c92e7d0175a9ed5acd57ad4abcda697f84f483a50852420857b5a02f1bcf",
+      "src/lib/CloneERC20.sol": "ed354b4eb0d960f097c607f6197e1c41efda6362b0800dfef6440c737edfdb5d",
+      "src/lib/FullMath.sol": "6d21f1fba6268bfdb756cf72d792c61eca711107630ce5a5058edeb6d959ec8e",
+      "src/lib/TransferHelper.sol": "b6d57c9d2cbbbb726dd167fce0eeca8d98b87851be971d386481c55343723b64"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.15",
+        "file": "foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "src/BondFixedExpiryTeller.sol",
+          "src/ERC20BondToken.sol",
+          "src/bases/BondBaseTeller.sol",
+          "src/interfaces/IBondFixedExpiryTeller.sol",
+          "src/lib/CloneERC20.sol",
+          "src/lib/TransferHelper.sol"
+        ],
+        "pragmas": [
+          "0.8.15",
+          ">=0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.15",
+            "reason": "project_config:foundry.toml",
+            "result": "ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller.sol:4:1:\n  |\n4 | import {ERC20} from \"solmate/tokens/ERC20.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^"
+          }
+        ],
+        "status": "ANALYSIS_INCOMPLETE"
+      }
+    ],
+    "coverage": {
+      "targets": 6,
+      "compiled": 0,
+      "slither_ir": 0,
+      "ratio": 0.0
+    },
+    "status": "ANALYSIS_INCOMPLETE",
+    "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller.sol:4:1:\n  |\n4 | import {ERC20} from \"solmate/tokens/ERC20.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "build_seconds": 0.5
+  },
+  "n_files": 6,
+  "data_status": "ANALYSIS_INCOMPLETE",
+  "ms": 520.4,
+  "eval_files_opened": [
+    "dataset_r4/bond_fixed_expiry_teller/BUILD.json",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/BondBaseTeller.sol",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/BondFixedExpiryTeller.sol",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/CloneERC20.sol",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/ERC20BondToken.sol",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/IBondFixedExpiryTeller.sol",
+    "dataset_r4/bond_fixed_expiry_teller/contracts/TransferHelper.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

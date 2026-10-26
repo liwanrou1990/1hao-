@@ -55,7 +55,7 @@ def _audit(event, args):
             raise IsolationViolation(f"detector tried to read {ap}")
 
 
-def run_baseline(case_dir: Path) -> dict:
+def run_baseline(case_dir: Path, profile: str = "v15") -> dict:
     """V0.15 baseline: exact-compiler build + Slither built-ins (read-only)."""
     from dao_audit.compiler.build import build_case
     from dao_audit.analysis.baseline import analyze
@@ -69,7 +69,7 @@ def run_baseline(case_dir: Path) -> dict:
         st = cb.manifest.get("status")
         out["data_status"] = "OK" if st == "OK" else ("PARTIAL" if st == "PARTIAL" else "ANALYSIS_INCOMPLETE")
         if cb.units:
-            out.update(analyze(cb))
+            out.update(analyze(cb, profile=profile))
     except IsolationViolation:
         raise
     except Exception as e:
@@ -89,6 +89,10 @@ def run_case(case_dir: Path, engine: str = "semantic") -> dict:
            "files": {}, "findings": []}
     if engine == "baseline":
         return run_baseline(case_dir)
+    if engine == "baseline17":
+        r = run_baseline(case_dir, profile="v17")
+        r["engine"] = "baseline17"
+        return r
     if engine == "semantic":
         t0 = time.monotonic()
         try:
@@ -124,7 +128,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--case", default=None)
     ap.add_argument("--round", default="round1")
-    ap.add_argument("--engine", default="semantic", choices=["semantic", "regex", "baseline"])
+    ap.add_argument("--engine", default="semantic", choices=["semantic", "regex", "baseline", "baseline17"])
     ap.add_argument("--dataset", default=str(DATASET))
     ap.add_argument("--dev", action="store_true",
                     help="development run: skip the freeze check (recorded in every raw output); "

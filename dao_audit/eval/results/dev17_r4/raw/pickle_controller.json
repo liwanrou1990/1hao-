@@ -1,0 +1,163 @@
+{
+  "case": "pickle_controller",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "CurveProxyLogic",
+      "function": "add_liquidity",
+      "file": "curve.sol",
+      "line": 52,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "curve"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    }
+  ],
+  "build": {
+    "case": "pickle_controller",
+    "repo": "https://github.com/pickle-finance/protocol",
+    "commit": "024e89e70272d6320445cbb491c3fe2ffed41b88",
+    "mode": "original_project_snapshot",
+    "project_root": "src",
+    "build_config": null,
+    "dataset_identical_to_snapshot": {
+      "controller-v4.sol": true,
+      "curve.sol": true,
+      "jar-converter.sol": true,
+      "jar.sol": true,
+      "strategy-base.sol": true,
+      "strategy-cmpd-dai-v2.sol": true,
+      "strategy.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2020-11-12T17:15:36+10:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "controller-v4.sol": "4a00a85decbcbbd7acda9fd3c5ae83367f8d017710874b78a13b2703f1957889",
+      "interfaces/compound.sol": "d53e3ca63f50eab1f25053a7a3d694da429821ef18255f84c5af0487d7fc0cf4",
+      "interfaces/controller.sol": "2613cc5aee9b06d8dc3c6cef8985e0c096e8cd1be07b4f340b692fefc16d783b",
+      "interfaces/converter.sol": "1dd236c883bad55967728455fe5292b651162acc513f0833744b70a5cd4dbcf6",
+      "interfaces/curve.sol": "dfffa4fc8f4becdd31003791275230a269ae626bdbf9e5e4d7718199cc84725b",
+      "interfaces/jar-converter.sol": "8b7e0815c5da2ab79fbf6db3188604e6035b5a01151a286da447202c613bd3c1",
+      "interfaces/jar.sol": "4753d0a160f43a263964e2445e237feee963b503c07bdd776d5c1611c6b8ae57",
+      "interfaces/onesplit.sol": "5c3068cb08eabbffc2ae621d0946a6bff4bea7e08c3991a09f67eca9cf85ba43",
+      "interfaces/staking-rewards.sol": "13349f0d4137c0679109858ee6741349105c1f8fae2ecb4e41ad4993f1749347",
+      "interfaces/strategy.sol": "4711729e24e20c3e85312a6c39cf32dbf13add629cc0029d47faf11505d24169",
+      "interfaces/uniswapv2.sol": "75a6c499c218eb45602324709edffd75f2fe6060b47223662cc48804654972af",
+      "lib/careful-math.sol": "10b97f60408df52b8d6d85cee8fad8b4895e9052cef80204409e4958dad15abf",
+      "lib/context.sol": "d20a5ae07bc58a546d5cc13db982d76bec82900ce99c2fbe8f01d4a710509f0a",
+      "lib/erc20.sol": "6ba09166aa7d8c81c1165d5646225c78d2ed1e553270b538426ea4a0346ec5b9",
+      "lib/exponential.sol": "d1a7e5b20f8f701dd44dfe873e427c608bacd649c3d648b8d80ff6314a896a7e",
+      "lib/safe-math.sol": "0a249139188b101375379d8f0dfbdf20f1be71126bfe29310d4c537b22292ff0",
+      "proxy-logic/curve.sol": "31a2908f7ddd9196d042e8fbc35a8190d5efdbb4d002bed3830861b8825bd6ba",
+      "strategies/compound/strategy-cmpd-dai-v2.sol": "3d2647326bab932444f3fe20da680ce5d29003deecad96214e8d9b9b19d3babd",
+      "strategies/strategy-base.sol": "4e9dde0661e9199123f459bc30e1b028d99b2e5964d27d55a123a56748712af5"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "controller-v4.sol",
+          "interfaces/jar-converter.sol",
+          "interfaces/jar.sol",
+          "interfaces/strategy.sol",
+          "proxy-logic/curve.sol",
+          "strategies/compound/strategy-cmpd-dai-v2.sol",
+          "strategies/strategy-base.sol"
+        ],
+        "pragmas": [
+          "^0.6.0",
+          "^0.6.2",
+          "^0.6.7"
+        ],
+        "attempts": [
+          {
+            "version": "0.6.12",
+            "reason": "pragma:newest_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.6.12",
+          "selected_by": "pragma:newest_compiling",
+          "version_string": "0.6.12+commit.27d51765.Emscripten.clang",
+          "soljson_sha256": "3e1956c550ca48e289044c7c0bd892403081b4b5e17e77ce707c815ce6c4228f",
+          "frontend": "solc-js (official emscripten build, npm solc@0.6.12)"
+        },
+        "compiled_sources": [
+          "controller-v4.sol",
+          "interfaces/compound.sol",
+          "interfaces/controller.sol",
+          "interfaces/converter.sol",
+          "interfaces/curve.sol",
+          "interfaces/jar-converter.sol",
+          "interfaces/jar.sol",
+          "interfaces/onesplit.sol",
+          "interfaces/staking-rewards.sol",
+          "interfaces/strategy.sol",
+          "interfaces/uniswapv2.sol",
+          "lib/careful-math.sol",
+          "lib/context.sol",
+          "lib/erc20.sol",
+          "lib/exponential.sol",
+          "lib/safe-math.sol",
+          "proxy-logic/curve.sol",
+          "strategies/compound/strategy-cmpd-dai-v2.sol",
+          "strategies/strategy-base.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 36
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 7,
+      "compiled": 7,
+      "slither_ir": 7,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.3
+  },
+  "n_files": 7,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [],
+  "refuted": [],
+  "ms": 3304.0,
+  "eval_files_opened": [
+    "dataset_r4/pickle_controller/BUILD.json",
+    "dataset_r4/pickle_controller/contracts/controller-v4.sol",
+    "dataset_r4/pickle_controller/contracts/curve.sol",
+    "dataset_r4/pickle_controller/contracts/jar-converter.sol",
+    "dataset_r4/pickle_controller/contracts/jar.sol",
+    "dataset_r4/pickle_controller/contracts/strategy-base.sol",
+    "dataset_r4/pickle_controller/contracts/strategy-cmpd-dai-v2.sol",
+    "dataset_r4/pickle_controller/contracts/strategy.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

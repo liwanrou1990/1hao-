@@ -1,0 +1,212 @@
+{
+  "case": "parity_wallet",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "parity_wallet",
+    "repo": "https://github.com/paritytech/parity-ethereum",
+    "commit": "02d462e2636f1898df3e7556364260c594b112e6",
+    "mode": "original_project_snapshot",
+    "project_root": "js/src/contracts/snippets",
+    "build_config": null,
+    "dataset_identical_to_snapshot": {
+      "enhanced-wallet.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2017-07-20T00:02:36+02:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "enhanced-wallet.sol": "25cb228b381f9ac291cce5b848f4259bf185624669b435d69755845d09c44771"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "enhanced-wallet.sol"
+        ],
+        "pragmas": [
+          "^0.4.9"
+        ],
+        "attempts": [
+          {
+            "version": "0.4.26",
+            "reason": "pragma:newest_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.25",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.24",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.23",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.22",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.21",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.20",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.19",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.18",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.17",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.16",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.15",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.14",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.13",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:263:13: DeclarationError: Identifier not found.\n      jumpi(invalidJumpLabel, iszero(extcodesize(o_addr)))\n            ^--------------^\n"
+          },
+          {
+            "version": "0.4.11",
+            "reason": "pragma:older_patch_compiling",
+            "result": "enhanced-wallet.sol:413:14: : Unbalanced stack at the end of a block: 1 surplus item(s).\n    assembly {\n             ^\nSpanning multiple lines.\n"
+          },
+          {
+            "version": "0.4.10",
+            "reason": "pragma:older_patch_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.4.10",
+          "selected_by": "pragma:older_patch_compiling",
+          "version_string": "0.4.10+commit.f0d539ae.Emscripten.clang",
+          "soljson_sha256": "f26d712a3a7d0ecd835eb077e23a3eae8d0b2054272baeb3eaa7feb64c69d1ea",
+          "frontend": "solc-js (official emscripten build, npm solc@0.4.10)"
+        },
+        "compiled_sources": [
+          "enhanced-wallet.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 4
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 1,
+      "compiled": 1,
+      "slither_ir": 1,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 12.9
+  },
+  "n_files": 1,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "INCONCLUSIVE",
+      "detector": "suicidal",
+      "contract": "WalletLibrary",
+      "function": "kill",
+      "line": 225,
+      "title": "suicidal",
+      "evidence": "WalletLibrary.kill(address) (enhanced-wallet.sol#225-227) allows anyone to destruct the contract",
+      "file": "enhanced-wallet.sol",
+      "in_dataset": true,
+      "permission_evidence": {
+        "function": "WalletLibrary.kill(address)",
+        "visibility": "external",
+        "detector": "suicidal",
+        "entries": [
+          {
+            "entry": "WalletLibrary.kill(address)",
+            "visibility": "external",
+            "self_checked_state": [
+              "m_pending"
+            ],
+            "modifiers": [
+              "onlymanyowners"
+            ],
+            "sender_conditions": [
+              {
+                "at": "WalletLibrary.onlymanyowners:L92",
+                "expr": "confirmAndCheck(_operation)"
+              },
+              {
+                "at": "WalletLibrary.confirmAndCheck:L291",
+                "expr": "ownerIndex == 0"
+              },
+              {
+                "at": "WalletLibrary.confirmAndCheck:L306",
+                "expr": "pending.ownersDone & ownerIndexBit == 0"
+              }
+            ],
+            "n_sender_conditions": 3,
+            "signature_checks": [],
+            "n_signature_checks": 0
+          }
+        ],
+        "status": "PROTECTION_EVIDENCE",
+        "reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review"
+      }
+    }
+  ],
+  "refuted": [],
+  "ms": 12928.5,
+  "eval_files_opened": [
+    "dataset/parity_wallet/BUILD.json",
+    "dataset/parity_wallet/contracts/enhanced-wallet.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

@@ -1,0 +1,182 @@
+{
+  "case": "nomad_replica_fixed",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "nomad_replica_fixed",
+    "repo": "https://github.com/nomad-xyz/monorepo",
+    "commit": "0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e",
+    "mode": "original_project_snapshot",
+    "project_root": "packages/contracts-core",
+    "build_config": "packages/contracts-core/hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "IMessageRecipient.sol": true,
+      "Merkle.sol": true,
+      "Message.sol": true,
+      "NomadBase.sol": true,
+      "Replica.sol": true,
+      "TypeCasts.sol": true,
+      "Version0.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2022-09-04T18:39:52+00:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "^3.4.2",
+        "declared_in": "packages/contracts-core/package.json (range)",
+        "resolution": "range ^3.4.2 resolved as-of 2022-09-04",
+        "installed": "3.4.2",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/cryptography/ECDSA.sol": "0c3c8f0e880bfb11298ab86b2863e7a6ce8c85e443fbf4998b8ed3b32739c853"
+        }
+      },
+      {
+        "package": "@openzeppelin/contracts-upgradeable",
+        "declared": "~3.4.2",
+        "declared_in": "packages/contracts-core/package.json (range)",
+        "resolution": "range ~3.4.2 resolved as-of 2022-09-04",
+        "installed": "3.4.2",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": "4d148e038344167b7506ee0efd58b38f8787c6229e43800fb1129a0d4215327f",
+          "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol": "2c3a3edc2b1a4ac2c4a8645475b51f2668b1ad5ea22df074d0c0ebd3122ce2e7",
+          "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": "877bc9cb396d0f50330bb9c0057c029407e159739b6fab0b110f19451c8681e4",
+          "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": "b9c1700bc8c28217952147b408dc67aa128eb2f71a45fceb4a8e73dff43fedac"
+        }
+      },
+      {
+        "package": "@summa-tx/memview-sol",
+        "declared": "^2.0.0",
+        "declared_in": "packages/contracts-core/package.json (range)",
+        "resolution": "range ^2.0.0 resolved as-of 2022-09-04",
+        "installed": "2.0.1",
+        "status": "ok",
+        "files_sha256": {
+          "@summa-tx/memview-sol/contracts/SafeMath.sol": "67b73aa1957ee3e77c8e8f185f2d4b147dedef6bf19a34026a8167e35ee7cd70",
+          "@summa-tx/memview-sol/contracts/TypedMemView.sol": "90bd10943d0b644c42db71278406540517b9b2da0536c0055e2d4ff35ab2493e"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": "4d148e038344167b7506ee0efd58b38f8787c6229e43800fb1129a0d4215327f",
+      "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol": "2c3a3edc2b1a4ac2c4a8645475b51f2668b1ad5ea22df074d0c0ebd3122ce2e7",
+      "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": "877bc9cb396d0f50330bb9c0057c029407e159739b6fab0b110f19451c8681e4",
+      "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": "b9c1700bc8c28217952147b408dc67aa128eb2f71a45fceb4a8e73dff43fedac",
+      "@openzeppelin/contracts/cryptography/ECDSA.sol": "0c3c8f0e880bfb11298ab86b2863e7a6ce8c85e443fbf4998b8ed3b32739c853",
+      "@summa-tx/memview-sol/contracts/SafeMath.sol": "67b73aa1957ee3e77c8e8f185f2d4b147dedef6bf19a34026a8167e35ee7cd70",
+      "@summa-tx/memview-sol/contracts/TypedMemView.sol": "90bd10943d0b644c42db71278406540517b9b2da0536c0055e2d4ff35ab2493e",
+      "contracts/NomadBase.sol": "da156a977fc8e4197fb78c912b97dbce44a6ec1f70bdea67082b45d2289a8989",
+      "contracts/Replica.sol": "1021c8b86f3e3bdf87f40f5cebfd01490291f08ddf178189026fb5f2b03b2f54",
+      "contracts/Version0.sol": "1bac57c71570487f97e5f5e046f45cd3a38b7349f55a450b96c188711b8889bc",
+      "contracts/interfaces/IMessageRecipient.sol": "0ce3f08dc672ffd6cb205889961093d2c7c7aef3d775110b2153a7198178fa01",
+      "contracts/libs/Merkle.sol": "4e9a6c2d7daccfe745b29d15bd73548edd83df930a594485a44d15680237c359",
+      "contracts/libs/Message.sol": "7ea7c135dfadf2fd4e93eec824e8714c94eb512164ea258e82c267d87264aa4e",
+      "contracts/libs/TypeCasts.sol": "05c0ef96189eb2332f8033b37a3d082a351170a0828f8583522c911f5902d2db"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.7.6",
+        "file": "packages/contracts-core/hardhat.config.ts"
+      },
+      {
+        "version": "0.7.6",
+        "file": "foundry.toml"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/NomadBase.sol",
+          "contracts/Replica.sol",
+          "contracts/Version0.sol",
+          "contracts/interfaces/IMessageRecipient.sol",
+          "contracts/libs/Merkle.sol",
+          "contracts/libs/Message.sol",
+          "contracts/libs/TypeCasts.sol"
+        ],
+        "pragmas": [
+          "0.7.6",
+          ">=0.4.24 <0.8.0",
+          ">=0.5.10",
+          ">=0.5.10 <0.8.0",
+          ">=0.6.0 <0.8.0",
+          ">=0.6.2 <0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.7.6",
+            "reason": "project_config:packages/contracts-core/hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.7.6",
+          "selected_by": "project_config:packages/contracts-core/hardhat.config.ts",
+          "version_string": "0.7.6+commit.7338295f.Emscripten.clang",
+          "soljson_sha256": "b94e69dfb056b3e26080f805ab43b668afbc0ac70bf124bfb7391ecfc0172ad2",
+          "frontend": "solc-js (official emscripten build, npm solc@0.7.6)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+          "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+          "@openzeppelin/contracts/cryptography/ECDSA.sol",
+          "@summa-tx/memview-sol/contracts/SafeMath.sol",
+          "@summa-tx/memview-sol/contracts/TypedMemView.sol",
+          "contracts/NomadBase.sol",
+          "contracts/Replica.sol",
+          "contracts/Version0.sol",
+          "contracts/interfaces/IMessageRecipient.sol",
+          "contracts/libs/Merkle.sol",
+          "contracts/libs/Message.sol",
+          "contracts/libs/TypeCasts.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 14
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 7,
+      "compiled": 7,
+      "slither_ir": 7,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 2.6
+  },
+  "n_files": 7,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [],
+  "refuted": [],
+  "ms": 2612.8,
+  "eval_files_opened": [
+    "dataset_r4/nomad_replica_fixed/BUILD.json",
+    "dataset_r4/nomad_replica_fixed/contracts/IMessageRecipient.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/Merkle.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/Message.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/NomadBase.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/Replica.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/TypeCasts.sol",
+    "dataset_r4/nomad_replica_fixed/contracts/Version0.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

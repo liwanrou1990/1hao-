@@ -1,0 +1,179 @@
+{
+  "case": "sandbox_land",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "ERC721BaseToken",
+      "function": "_burn",
+      "file": "ERC721BaseToken.sol",
+      "line": 355,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_owners"
+      ],
+      "checked_in": [
+        "LandBaseToken.transferQuad(address,address,uint256,uint256,uint256,bytes)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    }
+  ],
+  "build": {
+    "case": "sandbox_land",
+    "repo": "https://github.com/thesandboxgame/sandbox-smart-contracts",
+    "commit": "fdf99fef15dcd68d18672e60e3a0a81804fdfc8e",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "Admin.sol": true,
+      "ERC721BaseToken.sol": true,
+      "ERC721Events.sol": true,
+      "Land.sol": true,
+      "LandBaseToken.sol": true,
+      "MetaTransactionReceiver.sol": true,
+      "SuperOperators.sol": true
+    },
+    "submodules": [
+      {
+        "path": "sandbox-subgraph",
+        "url": "git@github.com:thesandboxgame/sandbox-subgraph.git",
+        "commit": "99e8647a8e84971f44329a88a882296a49a1b73b",
+        "status": "failed: clone git@github.com:thesandboxgame/sandbox-subgraph: fatal: unable to access 'https://github.com/git@github.com:thesandboxgame/sandbox-subgraph/': Th"
+      }
+    ],
+    "commit_date": "2021-12-22T14:10:15+01:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "src/solc_0.5/Land.sol": "049b1ad829349d3deeea557bb19a6e36708520b359551272b5fdd6869b34ec8d",
+      "src/solc_0.5/Land/erc721/ERC721BaseToken.sol": "abbef6990a4bb9d3a2f99a6330fa97b9a12de92a0f88ae9e30947e2c3ffcbd83",
+      "src/solc_0.5/Land/erc721/LandBaseToken.sol": "ebb6ab14f7766bc12a1d7c98566160d2ac4350c84c2294ba1d0f5623bcbbca48",
+      "src/solc_0.5/contracts_common/BaseWithStorage/Admin.sol": "f336e6bd77e29368a3afe4ffecdc9eafe0b2854f2c303d47405a45a85bfcfb6e",
+      "src/solc_0.5/contracts_common/BaseWithStorage/MetaTransactionReceiver.sol": "8bae54108e69e81fcffe22425c311814d7339e078ae37e9c1c67c30cf4e4a6e9",
+      "src/solc_0.5/contracts_common/BaseWithStorage/SuperOperators.sol": "307c0411cfc020057e1d38d9ff5a715b088bd074a8351f1cf572fe2b386dfe12",
+      "src/solc_0.5/contracts_common/Interfaces/ERC721Events.sol": "cc0c53078e9d9640b95756a7a75678e06766bf50da3d2dc2a94d1580d41db768",
+      "src/solc_0.5/contracts_common/Interfaces/ERC721MandatoryTokenReceiver.sol": "eab3bcbbc4ab4674b288ecdcc55e86f2fe5f9b37a1abd9d95351cb00b6095854",
+      "src/solc_0.5/contracts_common/Interfaces/ERC721TokenReceiver.sol": "0d3eae9d617f1afebe8682cc7ff8d04bb87aa99ccc40e979b23ca50f44c176e2",
+      "src/solc_0.5/contracts_common/Libraries/AddressUtils.sol": "2a717cd56c8a3f562015bacb0ab7b6d93cb639d64221728520bf3f40217c8957"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.2",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.7.5",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.6.5",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.5.9",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.8.2",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.8.2",
+        "file": "hardhat.config.ts"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "src/solc_0.5/Land.sol",
+          "src/solc_0.5/Land/erc721/ERC721BaseToken.sol",
+          "src/solc_0.5/Land/erc721/LandBaseToken.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/Admin.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/MetaTransactionReceiver.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/SuperOperators.sol",
+          "src/solc_0.5/contracts_common/Interfaces/ERC721Events.sol"
+        ],
+        "pragmas": [
+          "0.5.9",
+          "^0.5.2"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.9",
+            "reason": "project_config:hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.9",
+          "selected_by": "project_config:hardhat.config.ts",
+          "version_string": "0.5.9+commit.e560f70d.Emscripten.clang",
+          "soljson_sha256": "9c6970aeed958d8d169857f728cbeb36aaff77bf7b56d1a8b219de4b983f765b",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.9)"
+        },
+        "compiled_sources": [
+          "src/solc_0.5/Land.sol",
+          "src/solc_0.5/Land/erc721/ERC721BaseToken.sol",
+          "src/solc_0.5/Land/erc721/LandBaseToken.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/Admin.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/MetaTransactionReceiver.sol",
+          "src/solc_0.5/contracts_common/BaseWithStorage/SuperOperators.sol",
+          "src/solc_0.5/contracts_common/Interfaces/ERC721Events.sol",
+          "src/solc_0.5/contracts_common/Interfaces/ERC721MandatoryTokenReceiver.sol",
+          "src/solc_0.5/contracts_common/Interfaces/ERC721TokenReceiver.sol",
+          "src/solc_0.5/contracts_common/Libraries/AddressUtils.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 10
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 7,
+      "compiled": 7,
+      "slither_ir": 7,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 6.6
+  },
+  "n_files": 7,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [],
+  "refuted": [],
+  "ms": 6639.6,
+  "eval_files_opened": [
+    "dataset_r4/sandbox_land/BUILD.json",
+    "dataset_r4/sandbox_land/contracts/Admin.sol",
+    "dataset_r4/sandbox_land/contracts/ERC721BaseToken.sol",
+    "dataset_r4/sandbox_land/contracts/ERC721Events.sol",
+    "dataset_r4/sandbox_land/contracts/Land.sol",
+    "dataset_r4/sandbox_land/contracts/LandBaseToken.sol",
+    "dataset_r4/sandbox_land/contracts/MetaTransactionReceiver.sol",
+    "dataset_r4/sandbox_land/contracts/SuperOperators.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

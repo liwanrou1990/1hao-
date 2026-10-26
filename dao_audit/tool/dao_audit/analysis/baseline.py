@@ -261,8 +261,42 @@ def triage(findings: List[Dict], units) -> Tuple[List[Dict], List[Dict]]:
     return keep, moved
 
 
-def analyze(cb) -> Dict:
-    """Run the baseline over a built case (dao_audit.compiler.build.CaseBuild)."""
+def scope_triage(findings: List[Dict]) -> Tuple[List[Dict], List[Dict]]:
+    keep, moved = [], []
+    for x in findings:
+        if x.get("in_dataset") is False:
+            moved.append(dict(x, status="INCONCLUSIVE", triage="outside case contract files (dependency)"))
+        else:
+            keep.append(x)
+    return keep, moved
+
+
+def evidence_tiers(findings: List[Dict], units) -> Dict[str, List[Dict]]:
+    """V0.17: attach standardised permission evidence to every detector alert and
+    sort it into automatic alerts / manual review queue / refuted-by-dataflow."""
+    from .evidence import alert_evidence
+    tiers = {"auto": [], "review": [], "refuted": []}
+    for x in findings:
+        try:
+            ev = alert_evidence(x, units)
+        except Exception as e:
+            ev = {"status": "NOT_RESOLVED", "note": repr(e)[:200]}
+        y = dict(x, permission_evidence=ev)
+        st = ev.get("status")
+        if st == "REFUTED_BY_DATAFLOW":
+            tiers["refuted"].append(dict(y, status="REFUTED_BY_DATAFLOW"))
+        elif st in ("PROTECTION_EVIDENCE", "PREMISE_UNCONFIRMED"):
+            tiers["review"].append(dict(y, status="INCONCLUSIVE", severity="medium"))
+        else:
+            tiers["auto"].append(y)
+    return tiers
+
+
+def analyze(cb, profile: str = "v15") -> Dict:
+    """Run the baseline over a built case (dao_audit.compiler.build.CaseBuild).
+    profile v15/v16: detector findings + scope and time-gate triage.
+    profile v17: scope triage + standardised permission evidence tiers (the
+    time-gate triage is dropped: a time condition is not a timelock)."""
     loc = Loc(cb)
     res = {"findings": [], "heuristic_findings": [], "chain_links": {}, "not_covered": NOT_COVERED}
     if not cb.units:
@@ -283,8 +317,17 @@ def analyze(cb) -> Dict:
                 if k not in hseen:
                     hseen.add(k); res["heuristic_findings"].append(h)
     ok_units = [u for u in cb.units if u.slither is not None]
-    res["findings"], moved = triage(res["findings"], ok_units)
-    res["heuristic_findings"] = moved + res["heuristic_findings"]
+    if profile == "v17":
+        res["profile"] = "v17"
+        kept, moved = scope_triage(res["findings"])
+        t = evidence_tiers(kept, ok_units)
+        res["findings"] = t["auto"]
+        res["review_queue"] = t["review"]
+        res["refuted"] = t["refuted"]
+        res["heuristic_findings"] = moved + res["heuristic_findings"]
+    else:
+        res["findings"], moved = triage(res["findings"], ok_units)
+        res["heuristic_findings"] = moved + res["heuristic_findings"]
     res["chain_links"] = {
         "detector": chain_links(res["findings"], ok_units),
         "heuristic": chain_links(res["findings"] + res["heuristic_findings"], ok_units),

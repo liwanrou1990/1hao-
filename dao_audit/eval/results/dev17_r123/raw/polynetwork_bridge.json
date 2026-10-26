@@ -1,0 +1,150 @@
+{
+  "case": "polynetwork_bridge",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "polynetwork_bridge",
+    "repo": "https://github.com/polynetwork/eth-contracts",
+    "commit": "15d84b7f34d2068d7548d5385c3d43c37a7232ba",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "EthCrossChainData.sol": true,
+      "EthCrossChainManager.sol": true,
+      "EthCrossChainUtils.sol": true,
+      "IEthCrossChainData.sol": true,
+      "IEthCrossChainManager.sol": true,
+      "Ownable.sol": true,
+      "Pausable.sol": true,
+      "SafeMath.sol": true,
+      "UpgradableECCM.sol": true,
+      "Utils.sol": true,
+      "ZeroCopySink.sol": true,
+      "ZeroCopySource.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2020-08-27T20:08:43+08:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/core/cross_chain_manager/data/EthCrossChainData.sol": "abd183370f38dbdaaeae46d955169f9f8eb2271e4df914743b1ae8b4e4e29fec",
+      "contracts/core/cross_chain_manager/interface/IEthCrossChainData.sol": "be11d2c30568ae53f95188dbe361befed3549739c02a6034941472c739011ca6",
+      "contracts/core/cross_chain_manager/interface/IEthCrossChainManager.sol": "788bfb15c9086d3022ae21593c6f610440b47a8bc558d1b370b48e752b6721ac",
+      "contracts/core/cross_chain_manager/interface/IUpgradableECCM.sol": "ead20b61ec3b0b1396a884c11d124c5bfb073a6e478b26c339f529d31881a2dc",
+      "contracts/core/cross_chain_manager/libs/EthCrossChainUtils.sol": "47a0c92fe548620b2359da316005722d9085de769836e36623ca45a57841397f",
+      "contracts/core/cross_chain_manager/logic/EthCrossChainManager.sol": "d5129aae4c28b66911882ea849785864c9498b47507052cf475bcaca0b95f18c",
+      "contracts/core/cross_chain_manager/upgrade/UpgradableECCM.sol": "3ea089d81172b38f833c7bc4bd09fa5e2ac7cfadc89456e2c951ab8c50e9730b",
+      "contracts/libs/GSN/Context.sol": "a957dce4fe4b9a5bb08a93f76921e5b97793a736825f7470ecafc2a7ae4f8c69",
+      "contracts/libs/common/ZeroCopySink.sol": "4b6e79e55d1eb0c8d8101bd154a4101b610b3859778b9f5f26575aa92c6cb280",
+      "contracts/libs/common/ZeroCopySource.sol": "3a5fa9995b9da9c474a7452fc0d4f31146f4108ad6f1700c2f2c28a4cc1d03ee",
+      "contracts/libs/lifecycle/Pausable.sol": "3506c7bfaadbda999c743a9f7a5499913492b16ad03d3982a5948efa99610298",
+      "contracts/libs/math/SafeMath.sol": "75a7d67b1765b27cc84eed9c0f0496986a668e2fb06846b7f1f0e34faa635068",
+      "contracts/libs/ownership/Ownable.sol": "c6ea7b47ef384d6b5f9337e71f4f81ff73b0b5018bb8166951fad5ea4735a459",
+      "contracts/libs/utils/Utils.sol": "12895cf1cd39ab9b28ab03ddb6d5dd1f7af0b4cf5366c79233f3b1ccc1f949b2"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.5.15",
+        "file": "truffle-config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/core/cross_chain_manager/data/EthCrossChainData.sol",
+          "contracts/core/cross_chain_manager/interface/IEthCrossChainData.sol",
+          "contracts/core/cross_chain_manager/interface/IEthCrossChainManager.sol",
+          "contracts/core/cross_chain_manager/libs/EthCrossChainUtils.sol",
+          "contracts/core/cross_chain_manager/logic/EthCrossChainManager.sol",
+          "contracts/core/cross_chain_manager/upgrade/UpgradableECCM.sol",
+          "contracts/libs/common/ZeroCopySink.sol",
+          "contracts/libs/common/ZeroCopySource.sol",
+          "contracts/libs/lifecycle/Pausable.sol",
+          "contracts/libs/math/SafeMath.sol",
+          "contracts/libs/ownership/Ownable.sol",
+          "contracts/libs/utils/Utils.sol"
+        ],
+        "pragmas": [
+          "^0.5.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.15",
+            "reason": "project_config:truffle-config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.15",
+          "selected_by": "project_config:truffle-config.js",
+          "version_string": "0.5.15+commit.6a57276f.Emscripten.clang",
+          "soljson_sha256": "5ec673e7ed29b0b23900d95ec926b3c32190831213f0d0b043e9112ef07534cf",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.15)"
+        },
+        "compiled_sources": [
+          "contracts/core/cross_chain_manager/data/EthCrossChainData.sol",
+          "contracts/core/cross_chain_manager/interface/IEthCrossChainData.sol",
+          "contracts/core/cross_chain_manager/interface/IEthCrossChainManager.sol",
+          "contracts/core/cross_chain_manager/interface/IUpgradableECCM.sol",
+          "contracts/core/cross_chain_manager/libs/EthCrossChainUtils.sol",
+          "contracts/core/cross_chain_manager/logic/EthCrossChainManager.sol",
+          "contracts/core/cross_chain_manager/upgrade/UpgradableECCM.sol",
+          "contracts/libs/GSN/Context.sol",
+          "contracts/libs/common/ZeroCopySink.sol",
+          "contracts/libs/common/ZeroCopySource.sol",
+          "contracts/libs/lifecycle/Pausable.sol",
+          "contracts/libs/math/SafeMath.sol",
+          "contracts/libs/ownership/Ownable.sol",
+          "contracts/libs/utils/Utils.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 14
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 12,
+      "compiled": 12,
+      "slither_ir": 12,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 6.0
+  },
+  "n_files": 12,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [],
+  "refuted": [],
+  "ms": 6037.6,
+  "eval_files_opened": [
+    "dataset/polynetwork_bridge/BUILD.json",
+    "dataset/polynetwork_bridge/contracts/EthCrossChainData.sol",
+    "dataset/polynetwork_bridge/contracts/EthCrossChainManager.sol",
+    "dataset/polynetwork_bridge/contracts/EthCrossChainUtils.sol",
+    "dataset/polynetwork_bridge/contracts/IEthCrossChainData.sol",
+    "dataset/polynetwork_bridge/contracts/IEthCrossChainManager.sol",
+    "dataset/polynetwork_bridge/contracts/Ownable.sol",
+    "dataset/polynetwork_bridge/contracts/Pausable.sol",
+    "dataset/polynetwork_bridge/contracts/SafeMath.sol",
+    "dataset/polynetwork_bridge/contracts/UpgradableECCM.sol",
+    "dataset/polynetwork_bridge/contracts/Utils.sol",
+    "dataset/polynetwork_bridge/contracts/ZeroCopySink.sol",
+    "dataset/polynetwork_bridge/contracts/ZeroCopySource.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}

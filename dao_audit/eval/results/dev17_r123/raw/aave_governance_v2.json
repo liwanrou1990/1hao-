@@ -1,0 +1,268 @@
+{
+  "case": "aave_governance_v2",
+  "engine": "baseline17",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "AaveGovernanceV2",
+      "function": "create",
+      "file": "AaveGovernanceV2.sol",
+      "line": 78,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_proposals",
+        "_proposalsCount"
+      ],
+      "checked_in": [
+        "AaveGovernanceV2.cancel(uint256)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "AaveGovernanceV2",
+      "function": "queue",
+      "file": "AaveGovernanceV2.sol",
+      "line": 191,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_proposals"
+      ],
+      "checked_in": [
+        "AaveGovernanceV2.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "AaveGovernanceV2",
+      "function": "execute",
+      "file": "AaveGovernanceV2.sol",
+      "line": 215,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_proposals"
+      ],
+      "checked_in": [
+        "AaveGovernanceV2.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "AaveGovernanceV2",
+      "function": "submitVoteBySignature",
+      "file": "AaveGovernanceV2.sol",
+      "line": 249,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "_proposals"
+      ],
+      "checked_in": [
+        "AaveGovernanceV2.cancel(uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "aave_governance_v2",
+    "repo": "https://github.com/aave/governance-v2",
+    "commit": "d4e5ae0c31824b9ec9aec4e06a3ee2c3c34ae431",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "AaveGovernanceV2.sol": true,
+      "ExecutorWithTimelock.sol": true,
+      "GovernanceStrategy.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2023-03-30T17:40:04+02:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/dependencies/open-zeppelin/Context.sol": "0fcd3ac3308286a3a4b8de299d154515ebd5ce2e03093e155584ed61cc813f6c",
+      "contracts/dependencies/open-zeppelin/Ownable.sol": "dd1b5c8d5c474f91f578088c7a36511dd9b8690d951c04b2a3647a518b0eb378",
+      "contracts/dependencies/open-zeppelin/SafeMath.sol": "137dd8322b8f10f572d4d9ebf83d22a33b7a7ae4714e8dba11c1019a49208ad1",
+      "contracts/governance/AaveGovernanceV2.sol": "c168692730029257ee585865e7f1e8eec0a5cb05d7d0db809983533319ec3bac",
+      "contracts/governance/ExecutorWithTimelock.sol": "35522eef734c559e9799d80b6c5855105213a5e6462082d1178aae8c29460587",
+      "contracts/governance/GovernanceStrategy.sol": "fe8a9dbb5b264f8b9812d929e788e65098d3078ed09acb9c83f74eddaa7036b3",
+      "contracts/interfaces/IAaveGovernanceV2.sol": "228e21122c451753f6b797ebbe28a5dfe570ee455b3d7b860cc3c2d57653bce6",
+      "contracts/interfaces/IERC20.sol": "57a0565a012befd90c8fb6d652b4c8986ab16bb687006094c5f6c8a67a76dd3b",
+      "contracts/interfaces/IExecutorWithTimelock.sol": "174caea4e67b9a2dc449c2b868830b91c15e6827390d196543c7a29d36025e9e",
+      "contracts/interfaces/IGovernancePowerDelegationToken.sol": "229dc0dfc84ac94a578d6a776420d03c7660440a2e97a00e006dae25bcb9b949",
+      "contracts/interfaces/IGovernanceStrategy.sol": "080d57db1bcdce57dbe68a0069eb40206c9e46b83a7fc4f5904b01f01a01417a",
+      "contracts/interfaces/IProposalValidator.sol": "4fbb89f21b977abd415b7500249a66605a001c0026237aed43e6bb7e6286bea0",
+      "contracts/interfaces/IVotingStrategy.sol": "f7d7601b96d85848509de725d3567a41ea2af69fb636c3ebb6af9bfaf45ff5f9",
+      "contracts/misc/Helpers.sol": "ca59d1124876e3967d0fe02fb83e1b94fab93c830ba53440f31acab03236ab09"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.7.5",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.6.10",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.6.12",
+        "file": "hardhat.config.ts"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/governance/AaveGovernanceV2.sol",
+          "contracts/governance/ExecutorWithTimelock.sol",
+          "contracts/governance/GovernanceStrategy.sol"
+        ],
+        "pragmas": [
+          "0.7.5"
+        ],
+        "attempts": [
+          {
+            "version": "0.7.5",
+            "reason": "project_config:hardhat.config.ts",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.7.5",
+          "selected_by": "project_config:hardhat.config.ts",
+          "version_string": "0.7.5+commit.eb77ed08.Emscripten.clang",
+          "soljson_sha256": "2ee1c6434a32a40b137ac28be12ceeba64701bfad5e80239690803d9c139908e",
+          "frontend": "solc-js (official emscripten build, npm solc@0.7.5)"
+        },
+        "compiled_sources": [
+          "contracts/dependencies/open-zeppelin/Context.sol",
+          "contracts/dependencies/open-zeppelin/Ownable.sol",
+          "contracts/dependencies/open-zeppelin/SafeMath.sol",
+          "contracts/governance/AaveGovernanceV2.sol",
+          "contracts/governance/ExecutorWithTimelock.sol",
+          "contracts/governance/GovernanceStrategy.sol",
+          "contracts/interfaces/IAaveGovernanceV2.sol",
+          "contracts/interfaces/IERC20.sol",
+          "contracts/interfaces/IExecutorWithTimelock.sol",
+          "contracts/interfaces/IGovernancePowerDelegationToken.sol",
+          "contracts/interfaces/IGovernanceStrategy.sol",
+          "contracts/interfaces/IProposalValidator.sol",
+          "contracts/interfaces/IVotingStrategy.sol",
+          "contracts/misc/Helpers.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 13
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 3,
+      "compiled": 3,
+      "slither_ir": 3,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 2.6
+  },
+  "n_files": 3,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "profile": "v17",
+  "review_queue": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "controlled-delegatecall",
+      "contract": "ExecutorWithTimelock",
+      "function": "executeTransaction",
+      "line": 178,
+      "title": "controlled-delegatecall",
+      "evidence": "ExecutorWithTimelock.executeTransaction(address,uint256,string,bytes,uint256,bool) (contracts/governance/ExecutorWithTimelock.sol#178-228) uses delegatecall to a input-controlled function id\n\t- (success,resultData) = target.delegatecall(callData) (contracts/governance/ExecutorWithTimelock.sol#208)",
+      "file": "ExecutorWithTimelock.sol",
+      "in_dataset": true,
+      "permission_evidence": {
+        "function": "ExecutorWithTimelock.executeTransaction(address,uint256,string,bytes,uint256,bool)",
+        "visibility": "public",
+        "detector": "controlled-delegatecall",
+        "entries": [
+          {
+            "entry": "ExecutorWithTimelock.executeTransaction(address,uint256,string,bytes,uint256,bool)",
+            "visibility": "public",
+            "self_checked_state": [
+              "_queuedTransactions"
+            ],
+            "modifiers": [
+              "onlyAdmin"
+            ],
+            "sender_conditions": [
+              {
+                "at": "ExecutorWithTimelock.onlyAdmin:L58",
+                "expr": "require(bool,string)(msg.sender == _admin,ONLY_BY_ADMIN)"
+              }
+            ],
+            "n_sender_conditions": 1,
+            "signature_checks": [],
+            "n_signature_checks": 0
+          }
+        ],
+        "status": "PROTECTION_EVIDENCE",
+        "reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review"
+      }
+    }
+  ],
+  "refuted": [],
+  "ms": 2563.0,
+  "eval_files_opened": [
+    "dataset/aave_governance_v2/BUILD.json",
+    "dataset/aave_governance_v2/contracts/AaveGovernanceV2.sol",
+    "dataset/aave_governance_v2/contracts/ExecutorWithTimelock.sol",
+    "dataset/aave_governance_v2/contracts/GovernanceStrategy.sol"
+  ],
+  "freeze_checked": false,
+  "run_kind": "dev"
+}
