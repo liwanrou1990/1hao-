@@ -1,0 +1,14 @@
+{
+  "repo": "https://github.com/llamaxyz/llama",
+  "commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
+  "files": {
+    "Enums.sol": "src/lib/Enums.sol",
+    "ILlamaStrategy.sol": "src/interfaces/ILlamaStrategy.sol",
+    "LlamaCore.sol": "src/LlamaCore.sol",
+    "LlamaPolicy.sol": "src/LlamaPolicy.sol",
+    "LlamaRelativeQuorum.sol": "src/strategies/LlamaRelativeQuorum.sol",
+    "Structs.sol": "src/lib/Structs.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "src"
+}

@@ -1,0 +1,14 @@
+{
+ "case": "lifi_cbridge_facet_fixed",
+ "project": "lifi",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "lifi_cbridge_facet",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/lifinance/contracts",
+  "commit": "d69b896281df944cd1ab1b2da409afb2e0a0ece4",
+  "pragma": "^0.8.7",
+  "rationale": "swap targets (callTo/approveTo) must be in the owner-managed dexWhitelist before LibSwap.swap is invoked"
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "case": "sandbox_land",
+ "project": "sandbox",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "missing-access-control",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "ERC721BaseToken",
+   "function": "_burn",
+   "line": [
+    355,
+    360
+   ],
+   "treasury_risk": true,
+   "governance_relation": "_burn(from, owner, id) is public and only checks from == owner, both caller-supplied; anyone can destroy any holder's LAND NFT (asset-destruction without authorization)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/thesandboxgame/sandbox-smart-contracts",
+  "vuln_commit": "fdf99fef15dcd68d18672e60e3a0a81804fdfc8e",
+  "fixed_commit": "4239515728476cff55458b3ef53dfafc4a38fda0",
+  "incident_date": "2022-02-08",
+  "pragma": "0.5.9",
+  "reports": [
+   "https://slowmist.medium.com/the-vulnerability-behind-the-sandbox-land-migration-2abf68933170",
+   "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2022-02/Sandbox_exp.sol"
+  ]
+ }
+}

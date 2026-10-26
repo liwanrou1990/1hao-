@@ -1,0 +1,43 @@
+{
+ "case": "daostack_ucontroller",
+ "project": "daostack",
+ "kind": "vulnerable",
+ "is_chain_case": true,
+ "root_cause_group": "permissionless-registration-takeover",
+ "truth": [
+  {
+   "vuln": "VULN-1",
+   "contract": "UController",
+   "function": "newOrganization",
+   "line": [
+    90,
+    108
+   ],
+   "treasury_risk": false,
+   "governance_relation": "permissionless; registers msg.sender as a full-permission (0x1F) scheme for a caller-supplied avatar and re-reads _avatar.nativeReputation()/nativeToken() separately for the uniqueness check and for storage, so a shape-shifting fake avatar binds the victim DAO's real Reputation to an attacker-controlled org (mintReputation authority over the victim's voting power)"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "UController",
+   "function": "sendEther",
+   "line": [
+    388,
+    395
+   ],
+   "treasury_risk": true,
+   "governance_relation": "after minting a reputation majority and self-voting itself in as a scheme on the real avatar, the attacker scheme calls sendEther to an arbitrary recipient and drains the Genesis Alpha treasury (4.025 ETH)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/daostack/arc",
+  "vuln_commit": "14acc6f93c4ec27fe71d11aedda04652c7095ca2",
+  "fixed_commit": "e6f7582392829c4964b77b6710b47ed2fd074cc1",
+  "incident_date": "2026-09-26",
+  "pragma": "^0.5.2",
+  "reports": [
+   "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/DAOstack_exp.sol",
+   "https://etherscan.io/tx/0xcfff7b060a7fb881f4bd8d2498dbe4e09454f7afaf5328fc12b59812f6737cc1",
+   "https://github.com/daostack/arc/commit/e6f7582392829c4964b77b6710b47ed2fd074cc1"
+  ]
+ }
+}

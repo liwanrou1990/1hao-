@@ -1,0 +1,12 @@
+{
+  "repo": "https://github.com/88mphapp/88mph-contracts",
+  "commit": "a4c48d61661ae3d8ce5aadfda6e4de27c4f07a9e",
+  "files": {
+    "CloneFactory.sol": "contracts/libs/CloneFactory.sol",
+    "DInterest.sol": "contracts/DInterest.sol",
+    "NFT.sol": "contracts/NFT.sol",
+    "NFTFactory.sol": "contracts/NFTFactory.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

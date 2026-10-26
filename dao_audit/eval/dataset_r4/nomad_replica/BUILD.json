@@ -1,0 +1,15 @@
+{
+  "repo": "https://github.com/nomad-xyz/monorepo",
+  "commit": "2b80ba83755a43e046c65d303d087094b58e8da9",
+  "files": {
+    "IMessageRecipient.sol": "packages/contracts-core/contracts/interfaces/IMessageRecipient.sol",
+    "Merkle.sol": "packages/contracts-core/contracts/libs/Merkle.sol",
+    "Message.sol": "packages/contracts-core/contracts/libs/Message.sol",
+    "NomadBase.sol": "packages/contracts-core/contracts/NomadBase.sol",
+    "Replica.sol": "packages/contracts-core/contracts/Replica.sol",
+    "TypeCasts.sol": "packages/contracts-core/contracts/libs/TypeCasts.sol",
+    "Version0.sol": "packages/contracts-core/contracts/Version0.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "packages/contracts-core/contracts"
+}

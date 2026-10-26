@@ -1,0 +1,14 @@
+{
+ "case": "nomad_replica_fixed",
+ "project": "nomad",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "nomad_replica",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/nomad-xyz/monorepo",
+  "commit": "0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e",
+  "pragma": "0.7.6",
+  "rationale": "initialize no longer pre-approves the zero root and acceptableRoot rejects the zero/none status; process() can no longer execute unproven messages"
+ }
+}

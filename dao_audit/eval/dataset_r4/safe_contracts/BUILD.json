@@ -1,0 +1,25 @@
+{
+  "repo": "https://github.com/safe-global/safe-contracts",
+  "commit": "186a21a74b327f17fc41217a927dea7064f74604",
+  "files": {
+    "Enum.sol": "contracts/common/Enum.sol",
+    "EtherPaymentFallback.sol": "contracts/common/EtherPaymentFallback.sol",
+    "Executor.sol": "contracts/base/Executor.sol",
+    "FallbackManager.sol": "contracts/base/FallbackManager.sol",
+    "GnosisSafe.sol": "contracts/GnosisSafe.sol",
+    "GnosisSafeMath.sol": "contracts/external/GnosisSafeMath.sol",
+    "GnosisSafeProxy.sol": "contracts/proxies/GnosisSafeProxy.sol",
+    "GnosisSafeProxyFactory.sol": "contracts/proxies/GnosisSafeProxyFactory.sol",
+    "GuardManager.sol": "contracts/base/GuardManager.sol",
+    "IProxyCreationCallback.sol": "contracts/proxies/IProxyCreationCallback.sol",
+    "ModuleManager.sol": "contracts/base/ModuleManager.sol",
+    "OwnerManager.sol": "contracts/base/OwnerManager.sol",
+    "SecuredTokenTransfer.sol": "contracts/common/SecuredTokenTransfer.sol",
+    "SelfAuthorized.sol": "contracts/common/SelfAuthorized.sol",
+    "SignatureDecoder.sol": "contracts/common/SignatureDecoder.sol",
+    "Singleton.sol": "contracts/common/Singleton.sol",
+    "StorageAccessible.sol": "contracts/common/StorageAccessible.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

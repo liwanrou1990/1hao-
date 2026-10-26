@@ -1,0 +1,17 @@
+# Bancor BancorNetwork 0.6.4 (helpers internal) — fixed sample (round4)
+
+- repo: https://github.com/bancorprotocol/contracts-solidity
+- commit: 47d8663d720d49aed55710039875070d514baca4
+- paired vulnerable case: bancor_network
+- pragma (main file TokenHandler.sol): 0.4.26
+- files (dataset name -> in-repo path, byte-identical, verified by git blob hash in BUILD.json):
+  - BancorNetwork.sol -> solidity/contracts/BancorNetwork.sol
+  - ITokenHolder.sol -> solidity/contracts/utility/interfaces/ITokenHolder.sol
+  - Owned.sol -> solidity/contracts/utility/Owned.sol
+  - TokenHandler.sol -> solidity/contracts/utility/TokenHandler.sol
+  - TokenHolder.sol -> solidity/contracts/utility/TokenHolder.sol
+  - Utils.sol -> solidity/contracts/utility/Utils.sol
+
+## Description
+
+Fixed version (commit 47d8663d, 2020-06-18).

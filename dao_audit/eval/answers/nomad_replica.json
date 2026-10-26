@@ -1,0 +1,44 @@
+{
+ "case": "nomad_replica",
+ "project": "nomad",
+ "kind": "vulnerable",
+ "is_chain_case": true,
+ "root_cause_group": "zero-root-trusted-initialization",
+ "truth": [
+  {
+   "vuln": "VULN-1",
+   "contract": "Replica",
+   "function": "initialize",
+   "line": [
+    103,
+    117
+   ],
+   "treasury_risk": false,
+   "governance_relation": "initialize unconditionally pre-approves confirmAt[_committedRoot]=1; the upgrade initialized committedRoot=0x00, and acceptableRoot does not reject the zero root, so the default (unproven) message status 0x00 becomes an accepted root - message-execution authority is granted to everyone"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "Replica",
+   "function": "process",
+   "line": [
+    186,
+    211
+   ],
+   "treasury_risk": true,
+   "governance_relation": "process() only checks acceptableRoot(messages[hash]) and then calls handle() on the attacker-supplied recipient with attacker-supplied body; forged BridgeRouter messages released ~$190M of bridged tokens to arbitrary recipients"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/nomad-xyz/monorepo",
+  "vuln_commit": "2b80ba83755a43e046c65d303d087094b58e8da9",
+  "fixed_commit": "0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e",
+  "incident_date": "2022-08-01",
+  "pragma": "0.7.6",
+  "reports": [
+   "https://immunefi.com/blog/bug-fix-reviews/hack-analysis-nomad-bridge-august-2022/",
+   "https://www.certik.com/resources/blog/28fMavD63CpZJOKOjb9DX3-nomad-bridge-exploit-incident-analysis",
+   "https://halborn.com/explained-the-nomad-hack-august-2022/",
+   "https://github.com/nomad-xyz/monorepo/commit/0e02cc1f09d16f809f5d2d8f05abbeea6d1af04e"
+  ]
+ }
+}

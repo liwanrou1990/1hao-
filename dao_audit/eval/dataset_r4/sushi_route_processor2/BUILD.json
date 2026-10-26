@@ -1,0 +1,11 @@
+{
+  "repo": "https://github.com/sushiswap/sushiswap",
+  "commit": "ab5297698b1284667684393b8b9add48ba979c00",
+  "files": {
+    "IUniswapV3Pool.sol": "protocols/route-processor/interfaces/IUniswapV3Pool.sol",
+    "InputStream.sol": "protocols/route-processor/contracts/InputStream.sol",
+    "RouteProcessor2.sol": "protocols/route-processor/contracts/RouteProcessor2.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "protocols/route-processor"
+}

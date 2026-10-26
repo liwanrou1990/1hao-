@@ -1,0 +1,42 @@
+{
+ "case": "lifi_cbridge_facet",
+ "project": "lifi",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "arbitrary-external-call",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "CBridgeFacet",
+   "function": "swapAndStartBridgeTokensViaCBridge",
+   "line": [
+    93,
+    139
+   ],
+   "treasury_risk": true,
+   "governance_relation": "public entry passes caller-supplied SwapData (callTo/approveTo/callData) to LibSwap.swap without any DEX whitelist; attacker used it to call token.transferFrom(victim, attacker) in the diamond's context against users' infinite approvals (~$600K, 29 wallets)"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "LibSwap",
+   "function": "swap",
+   "line": [
+    30,
+    59
+   ],
+   "treasury_risk": true,
+   "governance_relation": "performs approve(approveTo) and callTo.call(callData) with fully attacker-controlled target and calldata"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/lifinance/contracts",
+  "vuln_commit": "7b41d7d3306f213480b167e9487071d1c959d4fb",
+  "fixed_commit": "d69b896281df944cd1ab1b2da409afb2e0a0ece4",
+  "incident_date": "2022-03-20",
+  "pragma": "^0.8.7",
+  "reports": [
+   "https://blog.li.fi/20th-march-the-exploit-e9e1c5c03eb9",
+   "https://blocksecteam.medium.com/li-fi-attack-a-cross-chain-bridge-vulnerability-no-its-due-to-unchecked-external-call-c31e7dadf60f"
+  ]
+ }
+}

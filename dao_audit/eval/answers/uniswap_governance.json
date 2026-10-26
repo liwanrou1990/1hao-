@@ -1,0 +1,13 @@
+{
+ "case": "uniswap_governance",
+ "project": "uniswap",
+ "kind": "secure_control",
+ "is_chain_case": false,
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/Uniswap/governance",
+  "commit": "ab22c084bacb2636a1aebf9759890063eb6e4946",
+  "pragma": "^0.5.16",
+  "rationale": "deployed Uniswap governance (2020-09); snapshot voting via getPriorVotes, 2-day+ timelock, admin = timelock; no known vulnerability"
+ }
+}

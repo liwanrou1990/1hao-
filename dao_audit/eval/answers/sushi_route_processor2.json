@@ -1,0 +1,43 @@
+{
+ "case": "sushi_route_processor2",
+ "project": "sushiswap",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "arbitrary-external-call",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "RouteProcessor2",
+   "function": "swapUniV3",
+   "line": [
+    309,
+    323
+   ],
+   "treasury_risk": true,
+   "governance_relation": "processRoute stream lets the caller name any 'pool'; swapUniV3 records it as lastCalledPool and calls it, so an attacker contract becomes the trusted callback caller"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "RouteProcessor2",
+   "function": "uniswapV3SwapCallback",
+   "line": [
+    334,
+    347
+   ],
+   "treasury_risk": true,
+   "governance_relation": "callback trusts msg.sender == lastCalledPool and decodes `from` from pool-supplied data, then safeTransferFrom(from, msg.sender, amount): the fake pool pulls tokens from any address that approved RouteProcessor2 (~$3.3M)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/sushiswap/sushiswap",
+  "vuln_commit": "ab5297698b1284667684393b8b9add48ba979c00",
+  "fixed_commit": "bb343a0c70ab070dbcb299ab993c25815e2d1083",
+  "incident_date": "2023-04-09",
+  "pragma": "0.8.10",
+  "reports": [
+   "https://rekt.news/sushi-yoink-rekt",
+   "https://blocksec.com/blog/8-sushi-swap-incident-a-clumsy-rescue-attempt-leads-to-a-series-of-copycat-attacks",
+   "https://github.com/sushiswap/sushiswap/commit/bb343a0c70ab070dbcb299ab993c25815e2d1083"
+  ]
+ }
+}

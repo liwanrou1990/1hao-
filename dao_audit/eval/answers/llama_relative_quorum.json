@@ -1,0 +1,32 @@
+{
+ "case": "llama_relative_quorum",
+ "project": "llama",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "unprotected-quorum-snapshot-reset",
+ "truth": [
+  {
+   "vuln": "VULN-2",
+   "contract": "LlamaRelativeQuorum",
+   "function": "validateActionCreation",
+   "line": [
+    199,
+    210
+   ],
+   "treasury_risk": false,
+   "governance_relation": "external and callable by anyone; it overwrites the per-action approval/disapproval role-supply snapshot that defines the quorum, so after role revocations anyone can re-snapshot and flip an action to Approved (or block disapprovals)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/llamaxyz/llama",
+  "vuln_commit": "0f72fd894cf24109677ebcefd6891806b6068575",
+  "fixed_commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
+  "incident_date": "2023-06-06",
+  "pragma": "0.8.19",
+  "reports": [
+   "https://code4rena.com/reports/2023-06-llama",
+   "https://github.com/code-423n4/2023-06-llama-findings/issues/62",
+   "https://github.com/llamaxyz/llama/commit/c053b8654c38462f49642c6d67ee83a1d32c1e3e"
+  ]
+ }
+}

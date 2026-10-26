@@ -1,0 +1,14 @@
+{
+ "case": "daostack_ucontroller_fixed",
+ "project": "daostack",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "daostack_ucontroller",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/daostack/arc",
+  "commit": "e6f7582392829c4964b77b6710b47ed2fd074cc1",
+  "pragma": "^0.5.2",
+  "rationale": "nativeReputation/nativeToken are read once and the uniqueness check applies to the stored addresses, so an already-registered Reputation cannot be re-bound to a new org"
+ }
+}

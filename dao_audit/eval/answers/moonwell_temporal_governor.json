@@ -1,0 +1,31 @@
+{
+ "case": "moonwell_temporal_governor",
+ "project": "moonwell",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "timelock-bypass",
+ "truth": [
+  {
+   "vuln": "VULN-3",
+   "contract": "TemporalGovernor",
+   "function": "fastTrackProposalExecution",
+   "line": [
+    264,
+    266
+   ],
+   "treasury_risk": true,
+   "governance_relation": "emergency path calls _executeProposal(VAA, true) which skips the queue/timelock checks; it lacks whenPaused, so the guardian can bypass the cross-chain governance delay at any time, not only during the documented emergency pause"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/moonwell-fi/moonwell-contracts-v2",
+  "vuln_commit": "004c0f1920a873d64717a75393433a8e3daa358b",
+  "fixed_commit": "4580996b7cdb831701c62d13042665161ac26ec4",
+  "incident_date": "2023-07-24",
+  "pragma": "0.8.19",
+  "reports": [
+   "https://code4rena.com/reports/2023-07-moonwell",
+   "https://github.com/code-423n4/2023-07-moonwell-findings/issues/276"
+  ]
+ }
+}

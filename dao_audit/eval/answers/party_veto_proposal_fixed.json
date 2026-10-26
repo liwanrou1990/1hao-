@@ -1,0 +1,14 @@
+{
+ "case": "party_veto_proposal_fixed",
+ "project": "party",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "party_veto_proposal",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/PartyDAO/party-protocol",
+  "commit": "48300a88e06921274fab567b8973f3b597bd9069",
+  "pragma": "0.8.17",
+  "rationale": "each voter can veto a proposal once (hasVoted[party][proposalId][voter])"
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "case": "llama_relative_quorum_fixed",
+ "project": "llama",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "llama_relative_quorum",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/llamaxyz/llama",
+  "commit": "c053b8654c38462f49642c6d67ee83a1d32c1e3e",
+  "pragma": "0.8.19",
+  "rationale": "validateActionCreation callable only by LlamaCore at action creation; snapshot cannot be refreshed"
+ }
+}

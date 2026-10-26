@@ -1,0 +1,15 @@
+{
+  "repo": "https://github.com/thesandboxgame/sandbox-smart-contracts",
+  "commit": "fdf99fef15dcd68d18672e60e3a0a81804fdfc8e",
+  "files": {
+    "Admin.sol": "src/solc_0.5/contracts_common/BaseWithStorage/Admin.sol",
+    "ERC721BaseToken.sol": "src/solc_0.5/Land/erc721/ERC721BaseToken.sol",
+    "ERC721Events.sol": "src/solc_0.5/contracts_common/Interfaces/ERC721Events.sol",
+    "Land.sol": "src/solc_0.5/Land.sol",
+    "LandBaseToken.sol": "src/solc_0.5/Land/erc721/LandBaseToken.sol",
+    "MetaTransactionReceiver.sol": "src/solc_0.5/contracts_common/BaseWithStorage/MetaTransactionReceiver.sol",
+    "SuperOperators.sol": "src/solc_0.5/contracts_common/BaseWithStorage/SuperOperators.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "src/solc_0.5"
+}

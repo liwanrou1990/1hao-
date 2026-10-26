@@ -1,0 +1,16 @@
+{
+  "repo": "https://github.com/daostack/arc",
+  "commit": "14acc6f93c4ec27fe71d11aedda04652c7095ca2",
+  "files": {
+    "Avatar.sol": "contracts/controller/Avatar.sol",
+    "ControllerInterface.sol": "contracts/controller/ControllerInterface.sol",
+    "DAOToken.sol": "contracts/controller/DAOToken.sol",
+    "GlobalConstraintInterface.sol": "contracts/globalConstraints/GlobalConstraintInterface.sol",
+    "SchemeRegistrar.sol": "contracts/universalSchemes/SchemeRegistrar.sol",
+    "UController.sol": "contracts/controller/UController.sol",
+    "UniversalScheme.sol": "contracts/universalSchemes/UniversalScheme.sol",
+    "UniversalSchemeInterface.sol": "contracts/universalSchemes/UniversalSchemeInterface.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

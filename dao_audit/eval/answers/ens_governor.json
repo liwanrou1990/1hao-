@@ -1,0 +1,13 @@
+{
+ "case": "ens_governor",
+ "project": "ens",
+ "kind": "secure_control",
+ "is_chain_case": false,
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/ensdomains/governance",
+  "commit": "4097bef720d55b83cc1b637a7e0af6d0b37cbbfa",
+  "pragma": "^0.8.2",
+  "rationale": "OZ-Governor-based ENSGovernor with ERC20Votes snapshot voting and TimelockController; audited, no known vulnerability at the deployment commit"
+ }
+}

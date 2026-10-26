@@ -1,0 +1,14 @@
+{
+ "case": "sandbox_land_fixed",
+ "project": "sandbox",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "sandbox_land",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/thesandboxgame/sandbox-smart-contracts",
+  "commit": "4239515728476cff55458b3ef53dfafc4a38fda0",
+  "pragma": "0.5.9",
+  "rationale": "_burn is internal; burn/burnFrom enforce owner/operator checks"
+ }
+}

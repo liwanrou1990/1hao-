@@ -1,0 +1,32 @@
+{
+ "case": "party_veto_proposal",
+ "project": "party",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "double-vote-counting",
+ "truth": [
+  {
+   "vuln": "VULN-2",
+   "contract": "VetoProposal",
+   "function": "voteToVeto",
+   "line": [
+    19,
+    60
+   ],
+   "treasury_risk": false,
+   "governance_relation": "no per-voter record: the same member's snapshot voting power is added to vetoVotes on every call, so any member with a small stake can reach passThresholdBps alone and veto every proposal"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/PartyDAO/party-protocol",
+  "vuln_commit": "34bd3a2d65b157d04a7a16ab860a864bf7faa8bc",
+  "fixed_commit": "48300a88e06921274fab567b8973f3b597bd9069",
+  "incident_date": "2023-04-03",
+  "pragma": "0.8.17",
+  "reports": [
+   "https://code4rena.com/reports/2023-04-party",
+   "https://github.com/code-423n4/2023-04-party-findings/issues/2",
+   "https://github.com/PartyDAO/party-protocol/commit/48300a88e06921274fab567b8973f3b597bd9069"
+  ]
+ }
+}

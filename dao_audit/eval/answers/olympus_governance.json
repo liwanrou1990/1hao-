@@ -1,0 +1,43 @@
+{
+ "case": "olympus_governance",
+ "project": "olympus",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "no-snapshot-voting",
+ "truth": [
+  {
+   "vuln": "VULN-2",
+   "contract": "OlympusGovernance",
+   "function": "endorseProposal",
+   "line": [
+    180,
+    201
+   ],
+   "treasury_risk": false,
+   "governance_relation": "endorsement weight is the live VOTES.balanceOf(msg.sender) with no snapshot and no lock; votes can be transferred and the same balance endorses again from another address (double counting) to reach the activation threshold (C4 M-06)"
+  },
+  {
+   "vuln": "VULN-3",
+   "contract": "OlympusGovernance",
+   "function": "executeProposal",
+   "line": [
+    265,
+    289
+   ],
+   "treasury_risk": true,
+   "governance_relation": "execution threshold is relative to VOTES.totalSupply(); while supply is 0 any submitted/activated proposal executes with zero votes, letting anyone run ChangeAdmin/ChangeExecutor on the Kernel and take over modules and treasury (C4 H-02)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/code-423n4/2022-08-olympus",
+  "vuln_commit": "2a0b515012b4a40076f6eac487f7816aafb8724a",
+  "fixed_commit": null,
+  "incident_date": "2022-08-25",
+  "pragma": "0.8.15",
+  "reports": [
+   "https://code4rena.com/reports/2022-08-olympus",
+   "https://github.com/code-423n4/2022-08-olympus-findings/issues/392",
+   "https://github.com/code-423n4/2022-08-olympus-findings/issues/239"
+  ]
+ }
+}

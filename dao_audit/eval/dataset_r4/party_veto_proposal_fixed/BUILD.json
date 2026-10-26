@@ -1,0 +1,11 @@
+{
+  "repo": "https://github.com/PartyDAO/party-protocol",
+  "commit": "48300a88e06921274fab567b8973f3b597bd9069",
+  "files": {
+    "Party.sol": "contracts/party/Party.sol",
+    "PartyGovernance.sol": "contracts/party/PartyGovernance.sol",
+    "VetoProposal.sol": "contracts/proposals/VetoProposal.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

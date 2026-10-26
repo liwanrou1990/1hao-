@@ -1,0 +1,18 @@
+{
+  "repo": "https://github.com/wormhole-foundation/wormhole",
+  "commit": "1175eb1315ef0bc03da55c3b61236e12953e81cb",
+  "files": {
+    "BytesLib.sol": "ethereum/contracts/libraries/external/BytesLib.sol",
+    "Getters.sol": "ethereum/contracts/Getters.sol",
+    "Governance.sol": "ethereum/contracts/Governance.sol",
+    "GovernanceStructs.sol": "ethereum/contracts/GovernanceStructs.sol",
+    "Implementation.sol": "ethereum/contracts/Implementation.sol",
+    "Messages.sol": "ethereum/contracts/Messages.sol",
+    "Setters.sol": "ethereum/contracts/Setters.sol",
+    "State.sol": "ethereum/contracts/State.sol",
+    "Structs.sol": "ethereum/contracts/Structs.sol",
+    "Wormhole.sol": "ethereum/contracts/Wormhole.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "ethereum/contracts"
+}

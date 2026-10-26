@@ -1,0 +1,43 @@
+{
+ "case": "wormhole_core_impl",
+ "project": "wormhole",
+ "kind": "vulnerable",
+ "is_chain_case": true,
+ "root_cause_group": "uninitialized-logic-selfdestruct",
+ "truth": [
+  {
+   "vuln": "VULN-1",
+   "contract": "Implementation",
+   "function": "initialize",
+   "line": [
+    33,
+    48
+   ],
+   "treasury_risk": false,
+   "governance_relation": "initializer guard keys on ERC1967 _getImplementation() read from the contract's own storage; on the bare logic contract that slot is empty, so anyone can call initialize directly on the implementation and install their own guardian set (governance seat takeover of the logic contract)"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "Governance",
+   "function": "upgradeImplementation",
+   "line": [
+    91,
+    102
+   ],
+   "treasury_risk": true,
+   "governance_relation": "with self-installed guardians the attacker signs a ContractUpgrade VAA; submitContractUpgrade -> upgradeImplementation delegatecalls initialize() on an attacker-chosen contract which can SELFDESTRUCT the shared logic, bricking the proxy and freezing ~$736M of bridged assets"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/wormhole-foundation/wormhole",
+  "vuln_commit": "1175eb1315ef0bc03da55c3b61236e12953e81cb",
+  "fixed_commit": null,
+  "incident_date": "2022-02-24",
+  "pragma": "^0.8.0",
+  "reports": [
+   "https://immunefi.com/blog/bug-fix-reviews/wormhole-uninitialized-proxy-bugfix-review/",
+   "https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a",
+   "https://github.com/immunefi-team/bugfix-reviews-pocs/tree/main/src/Wormhole"
+  ]
+ }
+}

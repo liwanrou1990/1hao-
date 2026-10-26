@@ -1,0 +1,54 @@
+{
+ "case": "mph88_deposit_nft",
+ "project": "88mph",
+ "kind": "vulnerable",
+ "is_chain_case": true,
+ "root_cause_group": "unprotected-initializer",
+ "truth": [
+  {
+   "vuln": "VULN-1",
+   "contract": "NFT",
+   "function": "init",
+   "line": [
+    39,
+    57
+   ],
+   "treasury_risk": false,
+   "governance_relation": "external init(newOwner,...) has no initializer guard and no access control; anyone can re-call it on a pool's deposit NFT clone and become its owner"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "NFT",
+   "function": "mint",
+   "line": [
+    79,
+    81
+   ],
+   "treasury_risk": true,
+   "governance_relation": "as owner the attacker can mint any depositID to himself; DInterest authorizes withdrawals by depositNFT.ownerOf(depositID), so deposits (~$6.5M at risk) become claimable"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "NFT",
+   "function": "burn",
+   "line": [
+    83,
+    85
+   ],
+   "treasury_risk": true,
+   "governance_relation": "as owner the attacker can burn victims' deposit NFTs (then re-mint them to himself), destroying/redirecting depositors' claims"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/88mphapp/88mph-contracts",
+  "vuln_commit": "a4c48d61661ae3d8ce5aadfda6e4de27c4f07a9e",
+  "fixed_commit": null,
+  "incident_date": "2021-06-07",
+  "pragma": "0.5.17",
+  "reports": [
+   "https://immunefi.com/blog/bug-fix-reviews/88mph-function-initialization-bugfix-review/",
+   "https://medium.com/immunefi/88mph-function-initialization-bug-fix-postmortem-c3a2282894d3",
+   "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2021-06/88mph_exp.sol"
+  ]
+ }
+}

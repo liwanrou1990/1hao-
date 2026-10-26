@@ -1,0 +1,14 @@
+{
+  "repo": "https://github.com/bancorprotocol/contracts-solidity",
+  "commit": "d4b1dc7b2e4d46a555b48ad34fd0fe235abad7b4",
+  "files": {
+    "BancorNetwork.sol": "solidity/contracts/BancorNetwork.sol",
+    "ITokenHolder.sol": "solidity/contracts/utility/interfaces/ITokenHolder.sol",
+    "Owned.sol": "solidity/contracts/utility/Owned.sol",
+    "TokenHandler.sol": "solidity/contracts/utility/TokenHandler.sol",
+    "TokenHolder.sol": "solidity/contracts/utility/TokenHolder.sol",
+    "Utils.sol": "solidity/contracts/utility/Utils.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "solidity/contracts"
+}

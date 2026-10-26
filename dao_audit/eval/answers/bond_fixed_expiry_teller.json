@@ -1,0 +1,32 @@
+{
+ "case": "bond_fixed_expiry_teller",
+ "project": "bond_protocol",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "unvalidated-token-parameter",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "BondFixedExpiryTeller",
+   "function": "redeem",
+   "line": [
+    137,
+    142
+   ],
+   "treasury_risk": true,
+   "governance_relation": "redeem(token_, amount_) accepts any ERC20BondToken-shaped contract; burn and underlying() are attacker-implemented, so the teller transfers arbitrary amounts of the real underlying (30,437 OHM ~ $292K) to the caller"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/Bond-Protocol/bond-contracts",
+  "vuln_commit": "2c0311249e2356bf1b5f27c08e7b6d5e5872cd7f",
+  "fixed_commit": "cc252d658c1cdab2e56bde6d95cf03c9f357b49d",
+  "incident_date": "2022-10-21",
+  "pragma": "0.8.15",
+  "reports": [
+   "https://medium.com/@Bond_Protocol/bond-protocol-incident-report-e0aa1dfdeab",
+   "https://www.theblock.co/news/markets/2022-10-21-hacker-drains-olympus-dao-178927",
+   "https://halborn.com/explained-the-olympusdao-hack-october-2022/"
+  ]
+ }
+}

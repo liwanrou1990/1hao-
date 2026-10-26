@@ -1,0 +1,54 @@
+{
+ "case": "bancor_network",
+ "project": "bancor",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "missing-access-control",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "TokenHandler",
+   "function": "safeTransferFrom",
+   "line": [
+    45,
+    47
+   ],
+   "treasury_risk": true,
+   "governance_relation": "helper inherited by BancorNetwork (via TokenHolder) is public with no access control; anyone could make BancorNetwork transferFrom any user who had approved it to an arbitrary recipient (~$545K drained/rescued)"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "TokenHandler",
+   "function": "safeTransfer",
+   "line": [
+    31,
+    33
+   ],
+   "treasury_risk": true,
+   "governance_relation": "same defect: public helper lets anyone transfer tokens held by the inheriting contract to any address (fixed to internal in the same commit)"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "TokenHandler",
+   "function": "safeApprove",
+   "line": [
+    18,
+    20
+   ],
+   "treasury_risk": true,
+   "governance_relation": "same defect: public helper lets anyone set allowances on tokens held by the inheriting contract (fixed to internal in the same commit)"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/bancorprotocol/contracts-solidity",
+  "vuln_commit": "d4b1dc7b2e4d46a555b48ad34fd0fe235abad7b4",
+  "fixed_commit": "47d8663d720d49aed55710039875070d514baca4",
+  "incident_date": "2020-06-18",
+  "pragma": "0.4.26",
+  "reports": [
+   "https://blog.bancor.network/bancors-response-to-today-s-smart-contract-vulnerability-dc888c589fe4",
+   "https://blog.1inch.com/bancor-network-hack-2020",
+   "https://decrypt.co/32720/a-cryptocurrency-bug-put-545000-of-defi-funds-at-risk/"
+  ]
+ }
+}

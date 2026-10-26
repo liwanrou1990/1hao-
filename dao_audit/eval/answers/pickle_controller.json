@@ -1,0 +1,44 @@
+{
+ "case": "pickle_controller",
+ "project": "pickle",
+ "kind": "vulnerable",
+ "is_chain_case": false,
+ "root_cause_group": "arbitrary-external-call",
+ "truth": [
+  {
+   "vuln": "VULN-4",
+   "contract": "ControllerV4",
+   "function": "swapExactJarForJar",
+   "line": [
+    251,
+    336
+   ],
+   "treasury_risk": true,
+   "governance_relation": "permissionless; _fromJar/_toJar are not validated, so attacker jars make the controller call strategy.withdrawForSwap on the real cDAI strategy and then delegatecall converter logic with attacker data, moving ~19.7M DAI of jar funds"
+  },
+  {
+   "vuln": "VULN-4",
+   "contract": "CurveProxyLogic",
+   "function": "add_liquidity",
+   "line": [
+    27,
+    54
+   ],
+   "treasury_risk": true,
+   "governance_relation": "delegatecalled 'approved converter' that approves and low-level calls an attacker-chosen address/selector (curve, curveFunctionSig, underlying) in the controller's context - used to hand the controller's cDAI to the attacker's fake jar"
+  }
+ ],
+ "evidence": {
+  "repo": "https://github.com/pickle-finance/protocol",
+  "vuln_commit": "024e89e70272d6320445cbb491c3fe2ffed41b88",
+  "fixed_commit": null,
+  "incident_date": "2020-11-21",
+  "pragma": "^0.6.7",
+  "reports": [
+   "https://rekt.news/pickle-finance-rekt",
+   "https://slowmist.medium.com/slowmist-a981b3a2a3dc",
+   "https://github.com/banteg/evil-jar",
+   "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2020-11/Pickle_exp.sol"
+  ]
+ }
+}

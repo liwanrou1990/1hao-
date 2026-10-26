@@ -1,0 +1,17 @@
+{
+  "repo": "https://github.com/lifinance/contracts",
+  "commit": "7b41d7d3306f213480b167e9487071d1c959d4fb",
+  "files": {
+    "CBridgeFacet.sol": "src/Facets/CBridgeFacet.sol",
+    "ICBridge.sol": "src/Interfaces/ICBridge.sol",
+    "ILiFi.sol": "src/Interfaces/ILiFi.sol",
+    "LiFiDiamond.sol": "src/LiFiDiamond.sol",
+    "LibAsset.sol": "src/Libraries/LibAsset.sol",
+    "LibBytes.sol": "src/Libraries/LibBytes.sol",
+    "LibDiamond.sol": "src/Libraries/LibDiamond.sol",
+    "LibSwap.sol": "src/Libraries/LibSwap.sol",
+    "LibUtil.sol": "src/Libraries/LibUtil.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "src"
+}

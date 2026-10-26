@@ -1,0 +1,15 @@
+{
+  "repo": "https://github.com/pickle-finance/protocol",
+  "commit": "024e89e70272d6320445cbb491c3fe2ffed41b88",
+  "files": {
+    "controller-v4.sol": "src/controller-v4.sol",
+    "curve.sol": "src/proxy-logic/curve.sol",
+    "jar-converter.sol": "src/interfaces/jar-converter.sol",
+    "jar.sol": "src/interfaces/jar.sol",
+    "strategy-base.sol": "src/strategies/strategy-base.sol",
+    "strategy-cmpd-dai-v2.sol": "src/strategies/compound/strategy-cmpd-dai-v2.sol",
+    "strategy.sol": "src/interfaces/strategy.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "src"
+}

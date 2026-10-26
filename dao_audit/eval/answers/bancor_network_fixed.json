@@ -1,0 +1,14 @@
+{
+ "case": "bancor_network_fixed",
+ "project": "bancor",
+ "kind": "fixed",
+ "is_chain_case": false,
+ "pair_of": "bancor_network",
+ "truth": [],
+ "evidence": {
+  "repo": "https://github.com/bancorprotocol/contracts-solidity",
+  "commit": "47d8663d720d49aed55710039875070d514baca4",
+  "pragma": "0.4.26",
+  "rationale": "safeApprove/safeTransfer/safeTransferFrom are internal; no public asset-moving entry without the network's own checks"
+ }
+}
