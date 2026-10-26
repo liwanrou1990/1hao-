@@ -1,0 +1,198 @@
+{
+  "case": "wormhole_core_impl",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "Governance",
+      "function": "submitTransferFees",
+      "line": 73,
+      "title": "arbitrary-send-eth",
+      "evidence": "Governance.submitTransferFees(bytes) (contracts/Governance.sol#73-89) sends eth to arbitrary user\n\tDangerous calls:\n\t- recipient.transfer(transfer.amount) (contracts/Governance.sol#88)",
+      "file": "Governance.sol",
+      "in_dataset": true,
+      "triage": "every entry point is time/lifecycle-gated; timelock not analysable",
+      "entries": [
+        "Governance.submitTransferFees(bytes)"
+      ]
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "controlled-delegatecall",
+      "contract": "Governance",
+      "function": "upgradeImplementation",
+      "line": 91,
+      "title": "controlled-delegatecall",
+      "evidence": "Governance.upgradeImplementation(address) (contracts/Governance.sol#91-102) uses delegatecall to a input-controlled function id\n\t- (success,reason) = newImplementation.delegatecall(abi.encodeWithSignature(initialize())) (contracts/Governance.sol#97)",
+      "file": "Governance.sol",
+      "in_dataset": true,
+      "triage": "every entry point is time/lifecycle-gated; timelock not analysable",
+      "entries": [
+        "Governance.submitContractUpgrade(bytes)"
+      ]
+    }
+  ],
+  "build": {
+    "case": "wormhole_core_impl",
+    "repo": "https://github.com/wormhole-foundation/wormhole",
+    "commit": "1175eb1315ef0bc03da55c3b61236e12953e81cb",
+    "mode": "original_project_snapshot",
+    "project_root": "ethereum",
+    "build_config": "ethereum/truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "BytesLib.sol": true,
+      "Getters.sol": true,
+      "Governance.sol": true,
+      "GovernanceStructs.sol": true,
+      "Implementation.sol": true,
+      "Messages.sol": true,
+      "Setters.sol": true,
+      "State.sol": true,
+      "Structs.sol": true,
+      "Wormhole.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-08-18T13:42:51+00:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "4.1.0",
+        "declared_in": "ethereum/package-lock.json",
+        "installed": "4.1.0",
+        "status": "ok",
+        "files_sha256": {
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol": "13d890d68e3dba5ffa21db23a4a1cf77e691e3325dea87dd0c77e25e4fb27a85",
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol": "284497022a4580c053a0fd7eb13d6f65f5cd9bcdd6ae542afe88def305c9c31e",
+          "@openzeppelin/contracts/proxy/Proxy.sol": "779ea8a3b6f79496aaf5db95d308a733537f919e543fca914e21f28af3ddd899",
+          "@openzeppelin/contracts/proxy/beacon/IBeacon.sol": "312cb1d7e14511ac958fe4963fb2e4154f42d9939f005d5703def1a1a1f21aa5",
+          "@openzeppelin/contracts/utils/Address.sol": "3cd9dd62a5fdc865d8b069f36ee9977c726932b1f6ad9e9bb3acb819dfa6fa59",
+          "@openzeppelin/contracts/utils/StorageSlot.sol": "40020f75929aa61b29ad51505de865754bac2d0939050b61ae076255609783af"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol": "13d890d68e3dba5ffa21db23a4a1cf77e691e3325dea87dd0c77e25e4fb27a85",
+      "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol": "284497022a4580c053a0fd7eb13d6f65f5cd9bcdd6ae542afe88def305c9c31e",
+      "@openzeppelin/contracts/proxy/Proxy.sol": "779ea8a3b6f79496aaf5db95d308a733537f919e543fca914e21f28af3ddd899",
+      "@openzeppelin/contracts/proxy/beacon/IBeacon.sol": "312cb1d7e14511ac958fe4963fb2e4154f42d9939f005d5703def1a1a1f21aa5",
+      "@openzeppelin/contracts/utils/Address.sol": "3cd9dd62a5fdc865d8b069f36ee9977c726932b1f6ad9e9bb3acb819dfa6fa59",
+      "@openzeppelin/contracts/utils/StorageSlot.sol": "40020f75929aa61b29ad51505de865754bac2d0939050b61ae076255609783af",
+      "contracts/Getters.sol": "91d24680fc1885a1004de52b0f4a28501a2d630713c056cb9b83a1f2e92c44dd",
+      "contracts/Governance.sol": "fec9ef082f1a655060bacb9ee1151dcd698bdeaaeb6880e58a40213f9e822cbc",
+      "contracts/GovernanceStructs.sol": "ea357d4da8221fda40832faa5bbef4dbbf967455fb9b2b5757584e1cc092a73c",
+      "contracts/Implementation.sol": "e41af265a0a1a5e7ad5a1902a76c5a19adae5baf3b0b2245d9b7a89366af042c",
+      "contracts/Messages.sol": "4c2eda92e8d086e87ab97c85ab8a2553acba8e90177d83f9725e4b00102f37ef",
+      "contracts/Setters.sol": "5ddca9c7addeea7e4c95459b3125ffc4456ef942dd4929bd0ed82d1fe54335e9",
+      "contracts/State.sol": "ab237ec95c2e4dc6ca650ea4f3d8874111fdd53b452406578e14e15313b634bd",
+      "contracts/Structs.sol": "d6da02e4ddf08e94417e007863b4b8904084481e83587acfe6b134061ee1a98a",
+      "contracts/Wormhole.sol": "26634ca2acef63547c767d681055172ebd53f53c096828a8ba234284bed78a08",
+      "contracts/libraries/external/BytesLib.sol": "1b6f2ba238f9af311f917ddbf412edc565cfde02398d08727e8bbb98ad14d819"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.4",
+        "file": "ethereum/truffle-config.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/Getters.sol",
+          "contracts/Governance.sol",
+          "contracts/GovernanceStructs.sol",
+          "contracts/Implementation.sol",
+          "contracts/Messages.sol",
+          "contracts/Setters.sol",
+          "contracts/State.sol",
+          "contracts/Structs.sol",
+          "contracts/Wormhole.sol",
+          "contracts/libraries/external/BytesLib.sol"
+        ],
+        "pragmas": [
+          ">=0.8.0 <0.9.0",
+          "^0.8.0",
+          "^0.8.2"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.4",
+            "reason": "project_config:ethereum/truffle-config.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.8.4",
+          "selected_by": "project_config:ethereum/truffle-config.js",
+          "version_string": "0.8.4+commit.c7e474f2.Emscripten.clang",
+          "soljson_sha256": "4a14c7bcaf0d988a829db2174b8f7731898aa8633216490603ad74bff64eca3c",
+          "frontend": "solc-js (official emscripten build, npm solc@0.8.4)"
+        },
+        "compiled_sources": [
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol",
+          "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
+          "@openzeppelin/contracts/proxy/Proxy.sol",
+          "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
+          "@openzeppelin/contracts/utils/Address.sol",
+          "@openzeppelin/contracts/utils/StorageSlot.sol",
+          "contracts/Getters.sol",
+          "contracts/Governance.sol",
+          "contracts/GovernanceStructs.sol",
+          "contracts/Implementation.sol",
+          "contracts/Messages.sol",
+          "contracts/Setters.sol",
+          "contracts/State.sol",
+          "contracts/Structs.sol",
+          "contracts/Wormhole.sol",
+          "contracts/libraries/external/BytesLib.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 18
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 10,
+      "compiled": 10,
+      "slither_ir": 10,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 8.3
+  },
+  "n_files": 10,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 8275.6,
+  "eval_files_opened": [
+    "dataset_r4/wormhole_core_impl/BUILD.json",
+    "dataset_r4/wormhole_core_impl/contracts/BytesLib.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Getters.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Governance.sol",
+    "dataset_r4/wormhole_core_impl/contracts/GovernanceStructs.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Implementation.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Messages.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Setters.sol",
+    "dataset_r4/wormhole_core_impl/contracts/State.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Structs.sol",
+    "dataset_r4/wormhole_core_impl/contracts/Wormhole.sol"
+  ]
+}

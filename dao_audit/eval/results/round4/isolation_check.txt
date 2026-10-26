@@ -1,0 +1,3 @@
+static: cases=28 identifiers_checked=71 generic_words_skipped=['bridge', 'contracts', 'core', 'governance', 'monorepo', 'network', 'protocol', 'router', 'safe', 'smart', 'solidity', 'token', 'voting'] failures=0
+runtime: raw_outputs=28 failures=0
+ISOLATION PASS

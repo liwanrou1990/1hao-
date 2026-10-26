@@ -1,0 +1,2508 @@
+{
+  "round": "round4",
+  "n_cases": 28,
+  "missing_answers": [],
+  "unanalysable": [
+    {
+      "case": "bond_fixed_expiry_teller",
+      "data_status": "ANALYSIS_INCOMPLETE",
+      "reason": "src/BondFixedExpiryTeller.sol,src/ERC20BondToken.sol: ParserError: Source \"lib/solmate/src/tokens/ERC20.sol\" not found: File not found: lib/solmate/src/tokens/ERC20.sol\n --> src/BondFixedExpiryTeller.sol:4:1:\n  |\n4 | import {ERC20} from \"solmate/tokens/ERC20.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^"
+    },
+    {
+      "case": "ens_governor",
+      "data_status": "ANALYSIS_INCOMPLETE",
+      "reason": "contracts/ENSGovernor.sol,contracts/ENSToken.sol: TypeError: Data locations of parameters have to be the same when overriding non-external functions, but they differ.\n  --> @openzeppelin/contracts/governance/Governor.sol:92:5:\n   |\n92 |     function hashProposal(\n   |     ^ (Relevant sourc"
+    },
+    {
+      "case": "olympus_governance",
+      "data_status": "ANALYSIS_INCOMPLETE",
+      "reason": "src/Kernel.sol,src/modules/INSTR.sol: ParserError: Source \"src/modulesINSTR.sol\" not found: File not found: src/modulesINSTR.sol\n --> src/policies/Governance.sol:6:1:\n  |\n6 | import {OlympusInstructions} from \"modules/INSTR.sol\";\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    },
+    {
+      "case": "sushi_route_processor2",
+      "data_status": "ANALYSIS_INCOMPLETE",
+      "reason": "contracts/InputStream.sol,contracts/RouteProcessor2.sol: ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr"
+    },
+    {
+      "case": "sushi_route_processor2_fixed",
+      "data_status": "ANALYSIS_INCOMPLETE",
+      "reason": "contracts/InputStream.sol,contracts/RouteProcessor2.sol: ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr"
+    }
+  ],
+  "classes_not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "tracks": {
+    "primary": {
+      "track": "primary",
+      "aggregate": {
+        "per_class": {
+          "VULN-1": {
+            "tp": 0,
+            "fn": 4,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.4899
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-2": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-3": {
+            "tp": 0,
+            "fn": 2,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.6576
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-4": {
+            "tp": 0,
+            "fn": 16,
+            "fp": 6,
+            "recall": [
+              0.0,
+              0.0,
+              0.1936
+            ],
+            "precision": [
+              0.0,
+              0.0,
+              0.3903
+            ]
+          },
+          "VULN-5": {
+            "tp": 0,
+            "fn": 0,
+            "fp": 0,
+            "recall": [
+              null,
+              null,
+              null
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "overall": {
+          "tp": 0,
+          "fn": 25,
+          "fp": 6,
+          "recall": [
+            0.0,
+            0.0,
+            0.1332
+          ],
+          "precision": [
+            0.0,
+            0.0,
+            0.3903
+          ],
+          "fnr": [
+            1.0,
+            0.8668,
+            1.0
+          ]
+        },
+        "safe_cases": 14,
+        "safe_fp_cases": 4,
+        "fpr": [
+          0.2857,
+          0.1172,
+          0.5465
+        ],
+        "chain_cases": 4,
+        "chain_identified": 0,
+        "chain_rate": [
+          0.0,
+          0.0,
+          0.4899
+        ]
+      },
+      "ordinary_detection": {
+        "vulnerable_cases": 14,
+        "cases_with_located_truth": 0,
+        "case_detection_rate": [
+          0.0,
+          0.0,
+          0.2153
+        ]
+      },
+      "safe_fpr": {
+        "safe_cases": 14,
+        "with_gov_finding": 4,
+        "rate": [
+          0.2857,
+          0.1172,
+          0.5465
+        ],
+        "counted": "gov_high_findings"
+      },
+      "fixed_discrimination": {
+        "pairs": [
+          {
+            "vulnerable": "bancor_network",
+            "fixed": "bancor_network_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "bond_fixed_expiry_teller",
+            "fixed": "bond_fixed_expiry_teller_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "daostack_ucontroller",
+            "fixed": "daostack_ucontroller_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "lifi_cbridge_facet",
+            "fixed": "lifi_cbridge_facet_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "llama_relative_quorum",
+            "fixed": "llama_relative_quorum_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "moonwell_temporal_governor",
+            "fixed": "moonwell_temporal_governor_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "nomad_replica",
+            "fixed": "nomad_replica_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "party_veto_proposal",
+            "fixed": "party_veto_proposal_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "sandbox_land",
+            "fixed": "sandbox_land_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "sushi_route_processor2",
+            "fixed": "sushi_route_processor2_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          }
+        ],
+        "discriminated": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.2775
+        ]
+      },
+      "full_chain": {
+        "chain_cases": [
+          {
+            "case": "daostack_ucontroller",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "mph88_deposit_nft",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "nomad_replica",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "wormhole_core_impl",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          }
+        ],
+        "identified": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.4899
+        ],
+        "confirmed_by_engine": 0,
+        "engine_links_on_non_chain_cases": []
+      },
+      "by_source": {
+        "exploited_incident/verified": {
+          "n": 6,
+          "case_hit": 0
+        },
+        "exploited_incident/uncertain": {
+          "n": 2,
+          "case_hit": 0
+        },
+        "audit_finding/verified": {
+          "n": 3,
+          "case_hit": 0
+        },
+        "bug_bounty/uncertain": {
+          "n": 2,
+          "case_hit": 0
+        },
+        "audit_finding/uncertain": {
+          "n": 1,
+          "case_hit": 0
+        }
+      },
+      "per_case": [
+        {
+          "case": "bancor_network",
+          "project": "bancor",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 3,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bancor_network_fixed",
+          "project": "bancor",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bond_fixed_expiry_teller",
+          "project": "bond_protocol",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bond_fixed_expiry_teller_fixed",
+          "project": "bond_protocol",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "BondBaseTeller",
+              "function": "_handleTransfers",
+              "line": 177,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "daostack_ucontroller",
+          "project": "daostack",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Avatar",
+              "function": "externalTokenTransferFrom",
+              "line": 95,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "daostack_ucontroller_fixed",
+          "project": "daostack",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Avatar",
+              "function": "externalTokenTransferFrom",
+              "line": 95,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "ens_governor",
+          "project": "ens",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "lido_voting",
+          "project": "lido",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "lifi_cbridge_facet",
+          "project": "lifi",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LibAsset",
+              "function": "transferFromERC20",
+              "line": 94,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "lifi_cbridge_facet_fixed",
+          "project": "lifi",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LibAsset",
+              "function": "transferFromERC20",
+              "line": 94,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "llama_relative_quorum",
+          "project": "llama",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "llama_relative_quorum_fixed",
+          "project": "llama",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "moonwell_temporal_governor",
+          "project": "moonwell",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "moonwell_temporal_governor_fixed",
+          "project": "moonwell",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "mph88_deposit_nft",
+          "project": "88mph",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "bug_bounty",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "nomad_replica",
+          "project": "nomad",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "nomad_replica_fixed",
+          "project": "nomad",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "olympus_governance",
+          "project": "olympus",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "audit_finding",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "party_veto_proposal",
+          "project": "party",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "party_veto_proposal_fixed",
+          "project": "party",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "pickle_controller",
+          "project": "pickle",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "safe_contracts",
+          "project": "safe",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "GnosisSafe",
+              "function": "handlePayment",
+              "line": 196,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "sandbox_land",
+          "project": "sandbox",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sandbox_land_fixed",
+          "project": "sandbox",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sushi_route_processor2",
+          "project": "sushiswap",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sushi_route_processor2_fixed",
+          "project": "sushiswap",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "uniswap_governance",
+          "project": "uniswap",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "wormhole_core_impl",
+          "project": "wormhole",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "bug_bounty",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        }
+      ]
+    },
+    "with_heuristic": {
+      "track": "with_heuristic",
+      "aggregate": {
+        "per_class": {
+          "VULN-1": {
+            "tp": 0,
+            "fn": 4,
+            "fp": 46,
+            "recall": [
+              0.0,
+              0.0,
+              0.4899
+            ],
+            "precision": [
+              0.0,
+              0.0,
+              0.0771
+            ]
+          },
+          "VULN-2": {
+            "tp": 0,
+            "fn": 3,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.5615
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-3": {
+            "tp": 0,
+            "fn": 2,
+            "fp": 0,
+            "recall": [
+              0.0,
+              0.0,
+              0.6576
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          },
+          "VULN-4": {
+            "tp": 2,
+            "fn": 14,
+            "fp": 21,
+            "recall": [
+              0.125,
+              0.035,
+              0.3602
+            ],
+            "precision": [
+              0.087,
+              0.0242,
+              0.268
+            ]
+          },
+          "VULN-5": {
+            "tp": 0,
+            "fn": 0,
+            "fp": 0,
+            "recall": [
+              null,
+              null,
+              null
+            ],
+            "precision": [
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "overall": {
+          "tp": 2,
+          "fn": 23,
+          "fp": 67,
+          "recall": [
+            0.08,
+            0.0222,
+            0.2497
+          ],
+          "precision": [
+            0.029,
+            0.008,
+            0.0997
+          ],
+          "fnr": [
+            0.92,
+            0.7503,
+            0.9778
+          ]
+        },
+        "safe_cases": 14,
+        "safe_fp_cases": 6,
+        "fpr": [
+          0.4286,
+          0.2138,
+          0.6741
+        ],
+        "chain_cases": 4,
+        "chain_identified": 0,
+        "chain_rate": [
+          0.0,
+          0.0,
+          0.4899
+        ]
+      },
+      "ordinary_detection": {
+        "vulnerable_cases": 14,
+        "cases_with_located_truth": 2,
+        "case_detection_rate": [
+          0.1429,
+          0.0401,
+          0.3994
+        ]
+      },
+      "safe_fpr": {
+        "safe_cases": 14,
+        "with_gov_finding": 9,
+        "rate": [
+          0.6429,
+          0.3876,
+          0.8366
+        ],
+        "counted": "gov_findings"
+      },
+      "fixed_discrimination": {
+        "pairs": [
+          {
+            "vulnerable": "bancor_network",
+            "fixed": "bancor_network_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "bond_fixed_expiry_teller",
+            "fixed": "bond_fixed_expiry_teller_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "daostack_ucontroller",
+            "fixed": "daostack_ucontroller_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 10,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "lifi_cbridge_facet",
+            "fixed": "lifi_cbridge_facet_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 1,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "llama_relative_quorum",
+            "fixed": "llama_relative_quorum_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 6,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "moonwell_temporal_governor",
+            "fixed": "moonwell_temporal_governor_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 3,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "nomad_replica",
+            "fixed": "nomad_replica_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "party_veto_proposal",
+            "fixed": "party_veto_proposal_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 4,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "sandbox_land",
+            "fixed": "sandbox_land_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          },
+          {
+            "vulnerable": "sushi_route_processor2",
+            "fixed": "sushi_route_processor2_fixed",
+            "vuln_located": [],
+            "fixed_gov_findings": 0,
+            "discriminated": false
+          }
+        ],
+        "discriminated": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.2775
+        ]
+      },
+      "full_chain": {
+        "chain_cases": [
+          {
+            "case": "daostack_ucontroller",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "mph88_deposit_nft",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "nomad_replica",
+            "located_classes": [],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          },
+          {
+            "case": "wormhole_core_impl",
+            "located_classes": [
+              "VULN-4"
+            ],
+            "chain_identified": false,
+            "engine_links": 0,
+            "engine_link_status": "NONE"
+          }
+        ],
+        "identified": 0,
+        "rate": [
+          0.0,
+          0.0,
+          0.4899
+        ],
+        "confirmed_by_engine": 0,
+        "engine_links_on_non_chain_cases": [
+          "moonwell_temporal_governor",
+          "moonwell_temporal_governor_fixed"
+        ]
+      },
+      "by_source": {
+        "exploited_incident/verified": {
+          "n": 6,
+          "case_hit": 1
+        },
+        "exploited_incident/uncertain": {
+          "n": 2,
+          "case_hit": 0
+        },
+        "audit_finding/verified": {
+          "n": 3,
+          "case_hit": 0
+        },
+        "bug_bounty/uncertain": {
+          "n": 2,
+          "case_hit": 1
+        },
+        "audit_finding/uncertain": {
+          "n": 1,
+          "case_hit": 0
+        }
+      },
+      "per_case": [
+        {
+          "case": "bancor_network",
+          "project": "bancor",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 3,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bancor_network_fixed",
+          "project": "bancor",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bond_fixed_expiry_teller",
+          "project": "bond_protocol",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "bond_fixed_expiry_teller_fixed",
+          "project": "bond_protocol",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "BondBaseTeller",
+              "function": "_handleTransfers",
+              "line": 177,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "daostack_ucontroller",
+          "project": "daostack",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 10,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 9
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Avatar",
+              "function": "externalTokenTransferFrom",
+              "line": 95,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "propose",
+              "line": 169,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "executeBoosted",
+              "line": 223,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "setParameters",
+              "line": 256,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "redeem",
+              "line": 312,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "redeemDaoBounty",
+              "line": 391,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocol",
+              "function": "stakeWithSignature",
+              "line": 61,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocol",
+              "function": "execute",
+              "line": 146,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "SchemeRegistrar",
+              "function": "proposeScheme",
+              "line": 124,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "SchemeRegistrar",
+              "function": "proposeToRemoveScheme",
+              "line": 175,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 10,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "daostack_ucontroller_fixed",
+          "project": "daostack",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 10,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 9
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Avatar",
+              "function": "externalTokenTransferFrom",
+              "line": 95,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "propose",
+              "line": 169,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "executeBoosted",
+              "line": 223,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "setParameters",
+              "line": 256,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "redeem",
+              "line": 312,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocolLogic",
+              "function": "redeemDaoBounty",
+              "line": 391,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocol",
+              "function": "stakeWithSignature",
+              "line": 61,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GenesisProtocol",
+              "function": "execute",
+              "line": 146,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "SchemeRegistrar",
+              "function": "proposeScheme",
+              "line": 124,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "SchemeRegistrar",
+              "function": "proposeToRemoveScheme",
+              "line": 175,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 10,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "ens_governor",
+          "project": "ens",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "lido_voting",
+          "project": "lido",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 2,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "MiniMeToken",
+              "function": "approve",
+              "line": 229,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "MiniMeToken",
+              "function": "approveAndCall",
+              "line": 265,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 2,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "lifi_cbridge_facet",
+          "project": "lifi",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LibAsset",
+              "function": "transferFromERC20",
+              "line": 94,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "lifi_cbridge_facet_fixed",
+          "project": "lifi",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LibAsset",
+              "function": "transferFromERC20",
+              "line": 94,
+              "severity": "high"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "llama_relative_quorum",
+          "project": "llama",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 5,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 4
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LlamaExecutor",
+              "function": "execute",
+              "line": 28,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaCore",
+              "function": "initialize",
+              "line": 224,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "initialize",
+              "line": 143,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "finalizeInitialization",
+              "line": 180,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "revokeExpiredRole",
+              "line": 217,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 5,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "llama_relative_quorum_fixed",
+          "project": "llama",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 6,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 5
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "LlamaExecutor",
+              "function": "execute",
+              "line": 28,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaCore",
+              "function": "initialize",
+              "line": 224,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "initialize",
+              "line": 143,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "finalizeInitialization",
+              "line": 180,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaPolicy",
+              "function": "revokeExpiredRole",
+              "line": 217,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "LlamaRelativeQuorum",
+              "function": "initialize",
+              "line": 159,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 6,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "moonwell_temporal_governor",
+          "project": "moonwell",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 3,
+          "per_class": {
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "TemporalGovernor",
+              "function": "_executeProposal",
+              "line": 342,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "TemporalGovernor",
+              "function": "executeProposal",
+              "line": 398,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "TemporalGovernor",
+              "function": "permissionlessUnpause",
+              "line": 240,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 3,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "moonwell_temporal_governor_fixed",
+          "project": "moonwell",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 3,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "TemporalGovernor",
+              "function": "_executeProposal",
+              "line": 342,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "TemporalGovernor",
+              "function": "executeProposal",
+              "line": 398,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "TemporalGovernor",
+              "function": "permissionlessUnpause",
+              "line": 240,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 3,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "mph88_deposit_nft",
+          "project": "88mph",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 5,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 4
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "MPHMinter",
+              "function": "takeBackDepositorReward",
+              "line": 133,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DInterest",
+              "function": "deposit",
+              "line": 195,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DInterest",
+              "function": "multiDeposit",
+              "line": 216,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DInterest",
+              "function": "fundAll",
+              "line": 259,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "DInterest",
+              "function": "fundMultiple",
+              "line": 292,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "bug_bounty",
+          "source_certainty": "uncertain",
+          "gov_findings": 5,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "nomad_replica",
+          "project": "nomad",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "nomad_replica_fixed",
+          "project": "nomad",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "olympus_governance",
+          "project": "olympus",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-3": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "audit_finding",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "party_veto_proposal",
+          "project": "party",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 4,
+          "per_class": {
+            "VULN-2": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 3
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "ReadOnlyDelegateCall",
+              "function": "delegateCallAndRevert",
+              "line": 16,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721",
+              "function": "setApprovalForAll",
+              "line": 73,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "PartyGovernance",
+              "function": "abdicate",
+              "line": 450,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Party",
+              "function": "initialize",
+              "line": 34,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 4,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "party_veto_proposal_fixed",
+          "project": "party",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 4,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 3
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "ReadOnlyDelegateCall",
+              "function": "delegateCallAndRevert",
+              "line": 16,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721",
+              "function": "setApprovalForAll",
+              "line": 73,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "PartyGovernance",
+              "function": "abdicate",
+              "line": 450,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Party",
+              "function": "initialize",
+              "line": 34,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "audit_finding",
+          "source_certainty": "verified",
+          "gov_findings": 4,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "pickle_controller",
+          "project": "pickle",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 1,
+              "fn": 1,
+              "fp": 0
+            }
+          },
+          "located_classes": [
+            "VULN-4"
+          ],
+          "fp_findings": [],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 1,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "safe_contracts",
+          "project": "safe",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 7,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 5
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "GnosisSafe",
+              "function": "handlePayment",
+              "line": 196,
+              "severity": "high"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "StorageAccessible",
+              "function": "simulateAndRevert",
+              "line": 39,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GnosisSafe",
+              "function": "setup",
+              "line": 75,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "GnosisSafe",
+              "function": "requiredTxGas",
+              "line": 23,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "GnosisSafe",
+              "function": "requiredTxGas",
+              "line": 18,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "GnosisSafe",
+              "function": "approveHash",
+              "line": 333,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-4",
+              "contract": "GnosisSafeProxyFactory",
+              "function": "createProxy",
+              "line": 20,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 1,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 7,
+          "gov_high_findings": 1
+        },
+        {
+          "case": "sandbox_land",
+          "project": "sandbox",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 1,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-1",
+              "contract": "ERC721BaseToken",
+              "function": "_burn",
+              "line": 355,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 1,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sandbox_land_fixed",
+          "project": "sandbox",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "exploited_incident",
+          "source_certainty": "uncertain",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sushi_route_processor2",
+          "project": "sushiswap",
+          "kind": "vulnerable",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 2,
+              "fp": 0
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "sushi_route_processor2_fixed",
+          "project": "sushiswap",
+          "kind": "fixed",
+          "is_chain_case": false,
+          "n_findings": 0,
+          "per_class": {},
+          "located_classes": [],
+          "fp_findings": [],
+          "auto_found": false,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "ANALYSIS_INCOMPLETE",
+          "source_type": "exploited_incident",
+          "source_certainty": "verified",
+          "gov_findings": 0,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "uniswap_governance",
+          "project": "uniswap",
+          "kind": "secure_control",
+          "is_chain_case": false,
+          "n_findings": 3,
+          "per_class": {
+            "VULN-4": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            },
+            "VULN-1": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 2
+            }
+          },
+          "located_classes": [],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "GovernorAlpha",
+              "function": "execute",
+              "line": 188,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Uni",
+              "function": "transferFrom",
+              "line": 222,
+              "severity": "medium"
+            },
+            {
+              "rule_id": "VULN-1",
+              "contract": "Uni",
+              "function": "delegateBySig",
+              "line": 255,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "control",
+          "source_certainty": "verified",
+          "gov_findings": 3,
+          "gov_high_findings": 0
+        },
+        {
+          "case": "wormhole_core_impl",
+          "project": "wormhole",
+          "kind": "vulnerable",
+          "is_chain_case": true,
+          "n_findings": 2,
+          "per_class": {
+            "VULN-1": {
+              "tp": 0,
+              "fn": 1,
+              "fp": 0
+            },
+            "VULN-4": {
+              "tp": 1,
+              "fn": 0,
+              "fp": 1
+            }
+          },
+          "located_classes": [
+            "VULN-4"
+          ],
+          "fp_findings": [
+            {
+              "rule_id": "VULN-4",
+              "contract": "Governance",
+              "function": "submitTransferFees",
+              "line": 73,
+              "severity": "medium"
+            }
+          ],
+          "auto_found": true,
+          "safe_fp_highsev": 0,
+          "chain_identified": false,
+          "data_status": "OK",
+          "source_type": "bug_bounty",
+          "source_certainty": "uncertain",
+          "gov_findings": 2,
+          "gov_high_findings": 0
+        }
+      ]
+    }
+  }
+}

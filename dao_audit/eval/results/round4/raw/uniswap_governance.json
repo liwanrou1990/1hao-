@@ -1,0 +1,166 @@
+{
+  "case": "uniswap_governance",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "INCONCLUSIVE",
+      "detector": "arbitrary-send-eth",
+      "contract": "GovernorAlpha",
+      "function": "execute",
+      "line": 188,
+      "title": "arbitrary-send-eth",
+      "evidence": "GovernorAlpha.execute(uint256) (GovernorAlpha.sol#188-196) sends eth to arbitrary user\n\tDangerous calls:\n\t- timelock.executeTransaction.value(proposal.values[i])(proposal.targets[i],proposal.values[i],proposal.signatures[i],proposal.calldatas[i],proposal.eta) (GovernorAlpha.sol#193)",
+      "file": "GovernorAlpha.sol",
+      "in_dataset": true,
+      "triage": "every entry point is time/lifecycle-gated; timelock not analysable",
+      "entries": [
+        "GovernorAlpha.execute(uint256)"
+      ]
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Uni",
+      "function": "transferFrom",
+      "file": "Uni.sol",
+      "line": 222,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "checkpoints"
+      ],
+      "checked_in": [
+        "Uni.mint(address,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "Uni",
+      "function": "delegateBySig",
+      "file": "Uni.sol",
+      "line": 255,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "checkpoints"
+      ],
+      "checked_in": [
+        "Uni.mint(address,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    }
+  ],
+  "build": {
+    "case": "uniswap_governance",
+    "repo": "https://github.com/Uniswap/governance",
+    "commit": "ab22c084bacb2636a1aebf9759890063eb6e4946",
+    "mode": "original_project_snapshot",
+    "project_root": "contracts",
+    "build_config": null,
+    "dataset_identical_to_snapshot": {
+      "GovernorAlpha.sol": true,
+      "SafeMath.sol": true,
+      "Timelock.sol": true,
+      "Uni.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2020-09-24T14:15:46-05:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "GovernorAlpha.sol": "b5b3265263d3591deb5a6c199bfdeaa655be10ab7392c36edd77986d704b9036",
+      "SafeMath.sol": "c73fcff372d8199b723463fbb403c43a7ed99a80dc0ec64a245516492e02e94b",
+      "Timelock.sol": "ea4204fc8c5c72a5f4984177c209a16be5d538f1a3ee826744c901c21d27e382",
+      "Uni.sol": "2c5e81aece21281888de638d37783cb9eca11649bbdf310e30ca0f8dbc6eb728"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.5.16",
+        "file": "package.json"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "GovernorAlpha.sol",
+          "SafeMath.sol",
+          "Timelock.sol",
+          "Uni.sol"
+        ],
+        "pragmas": [
+          "^0.5.16"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.16",
+            "reason": "project_config:package.json",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.16",
+          "selected_by": "project_config:package.json",
+          "version_string": "0.5.16+commit.9c3226ce.Emscripten.clang",
+          "soljson_sha256": "52ad76de0634e875ac3d50e09a0057532ff53c6d851ef61204af1b0d620797b6",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.16)"
+        },
+        "compiled_sources": [
+          "GovernorAlpha.sol",
+          "SafeMath.sol",
+          "Timelock.sol",
+          "Uni.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 6
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 4,
+      "compiled": 4,
+      "slither_ir": 4,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 8.2
+  },
+  "n_files": 4,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 8170.5,
+  "eval_files_opened": [
+    "dataset_r4/uniswap_governance/BUILD.json",
+    "dataset_r4/uniswap_governance/contracts/GovernorAlpha.sol",
+    "dataset_r4/uniswap_governance/contracts/SafeMath.sol",
+    "dataset_r4/uniswap_governance/contracts/Timelock.sol",
+    "dataset_r4/uniswap_governance/contracts/Uni.sol"
+  ]
+}

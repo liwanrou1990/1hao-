@@ -1,0 +1,416 @@
+{
+  "case": "daostack_ucontroller_fixed",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "high",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-erc20",
+      "contract": "Avatar",
+      "function": "externalTokenTransferFrom",
+      "line": 95,
+      "title": "arbitrary-send-erc20",
+      "evidence": "Avatar.externalTokenTransferFrom(IERC20,address,address,uint256) (contracts/controller/Avatar.sol#95-106) uses arbitrary from in transferFrom: address(_externalToken).safeTransferFrom(_from,_to,_value) (contracts/controller/Avatar.sol#103)",
+      "file": "Avatar.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocolLogic",
+      "function": "propose",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+      "line": 169,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocolLogic",
+      "function": "executeBoosted",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+      "line": 223,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "orgBoostedProposalsCnt",
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocolLogic",
+      "function": "setParameters",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+      "line": 256,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "parameters"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocolLogic",
+      "function": "redeem",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+      "line": 312,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocolLogic",
+      "function": "redeemDaoBounty",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+      "line": 391,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocol",
+      "function": "stakeWithSignature",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocol.sol",
+      "line": 61,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "orgBoostedProposalsCnt",
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GenesisProtocol",
+      "function": "execute",
+      "file": "node_modules/@daostack/infra/contracts/votingMachines/GenesisProtocol.sol",
+      "line": 146,
+      "in_dataset": false,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "orgBoostedProposalsCnt",
+        "proposals"
+      ],
+      "checked_in": [
+        "GenesisProtocol.vote(bytes32,uint256,uint256,address)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "SchemeRegistrar",
+      "function": "proposeScheme",
+      "file": "SchemeRegistrar.sol",
+      "line": 124,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposalsInfo"
+      ],
+      "checked_in": [
+        "VotingMachineCallbacks.mintReputation(uint256,address,bytes32)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "SchemeRegistrar",
+      "function": "proposeToRemoveScheme",
+      "file": "SchemeRegistrar.sol",
+      "line": 175,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "proposalsInfo"
+      ],
+      "checked_in": [
+        "VotingMachineCallbacks.mintReputation(uint256,address,bytes32)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    }
+  ],
+  "build": {
+    "case": "daostack_ucontroller_fixed",
+    "repo": "https://github.com/daostack/arc",
+    "commit": "e6f7582392829c4964b77b6710b47ed2fd074cc1",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "truffle.js",
+    "dataset_identical_to_snapshot": {
+      "Avatar.sol": true,
+      "ControllerInterface.sol": true,
+      "DAOToken.sol": true,
+      "GlobalConstraintInterface.sol": true,
+      "SchemeRegistrar.sol": true,
+      "UController.sol": true,
+      "UniversalScheme.sol": true,
+      "UniversalSchemeInterface.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2019-02-07T10:04:32+02:00",
+    "npm_dependencies": [
+      {
+        "package": "@daostack/infra",
+        "declared": "0.0.1-rc.9",
+        "declared_in": "package-lock.json",
+        "installed": "0.0.1-rc.9",
+        "status": "ok",
+        "files_sha256": {
+          "@daostack/infra/contracts/Reputation.sol": "44b4830278c014ecc0083d54373d063daa48feef0c87db55e2e496e1495200be",
+          "@daostack/infra/contracts/libs/RealMath.sol": "172f01f498882e3254af53824f06617396ac1ae80ee60664975e2b8335e90f50",
+          "@daostack/infra/contracts/votingMachines/GenesisProtocol.sol": "013480a0002458a4cfb862230c6cc34cb4b57e9b5497841e397bcda7e50349a6",
+          "@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol": "357a1b3f1e71ecef2a74a5ad628ca470874fe53a86b9512c2e95cd0882f52981",
+          "@daostack/infra/contracts/votingMachines/IntVoteInterface.sol": "fc2b493a5f3a9ed6e714882144d97149b7c1a3c478c80ae41e620557128833db",
+          "@daostack/infra/contracts/votingMachines/ProposalExecuteInterface.sol": "28cba373af75109b255aac4a6adde9ebab64cd8d78e7c35861203c662f57e5e1",
+          "@daostack/infra/contracts/votingMachines/VotingMachineCallbacksInterface.sol": "cd40dc8fa1b337bb34674ccbe17dc5a8f669cf6fefaf7c7f001892f950273d4d"
+        }
+      },
+      {
+        "package": "openzeppelin-solidity",
+        "declared": "2.1.1",
+        "declared_in": "package-lock.json",
+        "installed": "2.1.1",
+        "status": "ok",
+        "files_sha256": {
+          "openzeppelin-solidity/contracts/cryptography/ECDSA.sol": "8c2256eb822fd743fd6cc9a5bcfaf8060b823b048335431d6b25f21085361e4d",
+          "openzeppelin-solidity/contracts/math/Math.sol": "5b75e3317a0b61ed560defc6bcb094018a036de96eec6a0af72bf07403924b51",
+          "openzeppelin-solidity/contracts/math/SafeMath.sol": "47bbdbcf270260bcf15ddfbca3690beff4bf2345016ab920d9a105d3cd8e8630",
+          "openzeppelin-solidity/contracts/ownership/Ownable.sol": "72be81c2fb0200a4668b6e795cfc08f0cceaa147cde75c3cca988ff968b77e71",
+          "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": "4381af9c4f9a279ec7e7911792e102d0481ed53d78c1438ca70fa00f56d93d64",
+          "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol": "a9cfdcf1c1dbd8e674eed7a0d24a9acf1e3fae97fdb74b8dcb2f121826a9ec5a",
+          "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": "f6d9557041367d82dbffe0204f2b23d8830cdcf21e296cc4001cd5246273c1c5",
+          "openzeppelin-solidity/contracts/utils/Address.sol": "2cafa788ef7aa41699e07041bdf66f8439f5a330d9cc5a3a9b4953d6ec4b5733"
+        }
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "@daostack/infra/contracts/Reputation.sol": "44b4830278c014ecc0083d54373d063daa48feef0c87db55e2e496e1495200be",
+      "@daostack/infra/contracts/libs/RealMath.sol": "172f01f498882e3254af53824f06617396ac1ae80ee60664975e2b8335e90f50",
+      "@daostack/infra/contracts/votingMachines/GenesisProtocol.sol": "013480a0002458a4cfb862230c6cc34cb4b57e9b5497841e397bcda7e50349a6",
+      "@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol": "357a1b3f1e71ecef2a74a5ad628ca470874fe53a86b9512c2e95cd0882f52981",
+      "@daostack/infra/contracts/votingMachines/IntVoteInterface.sol": "fc2b493a5f3a9ed6e714882144d97149b7c1a3c478c80ae41e620557128833db",
+      "@daostack/infra/contracts/votingMachines/ProposalExecuteInterface.sol": "28cba373af75109b255aac4a6adde9ebab64cd8d78e7c35861203c662f57e5e1",
+      "@daostack/infra/contracts/votingMachines/VotingMachineCallbacksInterface.sol": "cd40dc8fa1b337bb34674ccbe17dc5a8f669cf6fefaf7c7f001892f950273d4d",
+      "contracts/controller/Avatar.sol": "d423c5a662a5d91e6b182a8ed54ab12e7ba08dcd8777c819774a1454a9ea50b8",
+      "contracts/controller/ControllerInterface.sol": "97ba611b8b99bf5fee8cf5b4856e957c32ebf3deddd4edda86aa04de103ff6ed",
+      "contracts/controller/DAOToken.sol": "bb959c7ee7e119bd49b0731d55cb707fb26ef0979b309d6eeefd812ef9ef9e77",
+      "contracts/controller/UController.sol": "7770449721d46ad3a27e8af3e5719c8f2d62eb166fff526b7a9ce02986d07b01",
+      "contracts/globalConstraints/GlobalConstraintInterface.sol": "ff163ce46cc520151f2cad1829aa5389c6327a7d20afb7d2a9ebb0d510b3fb6c",
+      "contracts/libs/SafeERC20.sol": "28257a72747aad58edbfea41de7d97f27e5657fc438906984348634791ed6739",
+      "contracts/universalSchemes/SchemeRegistrar.sol": "d549a6fb390c092397af756a50087cd396c064b01bb231b02e094f827324533e",
+      "contracts/universalSchemes/UniversalScheme.sol": "2d6f9d46ce0aad1c274b6674d0366009a6f20ccb2f74de405bedf46ee64ff749",
+      "contracts/universalSchemes/UniversalSchemeInterface.sol": "162081708d9574031abd655117d9e7c632dfcb14d2da0a090c5d483511abdba6",
+      "contracts/votingMachines/VotingMachineCallbacks.sol": "33913ae6738240e5da7fe141a3b91c7ff7926197a8e6e0d885eb0918fc935a8f",
+      "openzeppelin-solidity/contracts/cryptography/ECDSA.sol": "8c2256eb822fd743fd6cc9a5bcfaf8060b823b048335431d6b25f21085361e4d",
+      "openzeppelin-solidity/contracts/math/Math.sol": "5b75e3317a0b61ed560defc6bcb094018a036de96eec6a0af72bf07403924b51",
+      "openzeppelin-solidity/contracts/math/SafeMath.sol": "47bbdbcf270260bcf15ddfbca3690beff4bf2345016ab920d9a105d3cd8e8630",
+      "openzeppelin-solidity/contracts/ownership/Ownable.sol": "72be81c2fb0200a4668b6e795cfc08f0cceaa147cde75c3cca988ff968b77e71",
+      "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol": "4381af9c4f9a279ec7e7911792e102d0481ed53d78c1438ca70fa00f56d93d64",
+      "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol": "a9cfdcf1c1dbd8e674eed7a0d24a9acf1e3fae97fdb74b8dcb2f121826a9ec5a",
+      "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol": "f6d9557041367d82dbffe0204f2b23d8830cdcf21e296cc4001cd5246273c1c5",
+      "openzeppelin-solidity/contracts/utils/Address.sol": "2cafa788ef7aa41699e07041bdf66f8439f5a330d9cc5a3a9b4953d6ec4b5733"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.5.2",
+        "file": "truffle.js"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/controller/Avatar.sol",
+          "contracts/controller/ControllerInterface.sol",
+          "contracts/controller/DAOToken.sol",
+          "contracts/controller/UController.sol",
+          "contracts/globalConstraints/GlobalConstraintInterface.sol",
+          "contracts/universalSchemes/SchemeRegistrar.sol",
+          "contracts/universalSchemes/UniversalScheme.sol",
+          "contracts/universalSchemes/UniversalSchemeInterface.sol"
+        ],
+        "pragmas": [
+          "^0.5.0",
+          "^0.5.2"
+        ],
+        "attempts": [
+          {
+            "version": "0.5.2",
+            "reason": "project_config:truffle.js",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.5.2",
+          "selected_by": "project_config:truffle.js",
+          "version_string": "0.5.2+commit.1df8f40c.Emscripten.clang",
+          "soljson_sha256": "f855a1e0816ac4426b8a9eebf37273b89acbb18b076a519935a05ca212c71f34",
+          "frontend": "solc-js (official emscripten build, npm solc@0.5.2)"
+        },
+        "compiled_sources": [
+          "@daostack/infra/contracts/Reputation.sol",
+          "@daostack/infra/contracts/libs/RealMath.sol",
+          "@daostack/infra/contracts/votingMachines/GenesisProtocol.sol",
+          "@daostack/infra/contracts/votingMachines/GenesisProtocolLogic.sol",
+          "@daostack/infra/contracts/votingMachines/IntVoteInterface.sol",
+          "@daostack/infra/contracts/votingMachines/ProposalExecuteInterface.sol",
+          "@daostack/infra/contracts/votingMachines/VotingMachineCallbacksInterface.sol",
+          "contracts/controller/Avatar.sol",
+          "contracts/controller/ControllerInterface.sol",
+          "contracts/controller/DAOToken.sol",
+          "contracts/controller/UController.sol",
+          "contracts/globalConstraints/GlobalConstraintInterface.sol",
+          "contracts/libs/SafeERC20.sol",
+          "contracts/universalSchemes/SchemeRegistrar.sol",
+          "contracts/universalSchemes/UniversalScheme.sol",
+          "contracts/universalSchemes/UniversalSchemeInterface.sol",
+          "contracts/votingMachines/VotingMachineCallbacks.sol",
+          "openzeppelin-solidity/contracts/cryptography/ECDSA.sol",
+          "openzeppelin-solidity/contracts/math/Math.sol",
+          "openzeppelin-solidity/contracts/math/SafeMath.sol",
+          "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+          "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
+          "openzeppelin-solidity/contracts/token/ERC20/ERC20Burnable.sol",
+          "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol",
+          "openzeppelin-solidity/contracts/utils/Address.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 25
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 8,
+      "compiled": 8,
+      "slither_ir": 8,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 9.5
+  },
+  "n_files": 8,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 9527.8,
+  "eval_files_opened": [
+    "dataset_r4/daostack_ucontroller_fixed/BUILD.json",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/Avatar.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/ControllerInterface.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/DAOToken.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/GlobalConstraintInterface.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/SchemeRegistrar.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/UController.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/UniversalScheme.sol",
+    "dataset_r4/daostack_ucontroller_fixed/contracts/UniversalSchemeInterface.sol"
+  ]
+}

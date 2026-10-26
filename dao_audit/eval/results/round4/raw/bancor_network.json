@@ -1,0 +1,136 @@
+{
+  "case": "bancor_network",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "bancor_network",
+    "repo": "https://github.com/bancorprotocol/contracts-solidity",
+    "commit": "d4b1dc7b2e4d46a555b48ad34fd0fe235abad7b4",
+    "mode": "original_project_snapshot",
+    "project_root": "solidity",
+    "build_config": "solidity/truffle-config.js",
+    "dataset_identical_to_snapshot": {
+      "BancorNetwork.sol": true,
+      "ITokenHolder.sol": true,
+      "Owned.sol": true,
+      "TokenHandler.sol": true,
+      "TokenHolder.sol": true,
+      "Utils.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2020-06-17T12:52:22+03:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/BancorNetwork.sol": "954016af2626ffebeed498aac85d29ba58651b41b91bf6d1a55f2f1c6e30d88c",
+      "contracts/IBancorNetwork.sol": "fc5e060e148941dea788133fbdf0177e12e3ea01719a5274f9543d911e2ea0b6",
+      "contracts/IConversionPathFinder.sol": "1881f4b50834f4bb4678b809c41da3af18f98810588787bed96c7b2eb38701bd",
+      "contracts/bancorx/interfaces/IBancorX.sol": "274fde08034109abbb54150bb5b8bbbcc04990767ff5fb01d84ca207a3e339d3",
+      "contracts/converter/interfaces/IBancorFormula.sol": "cfc2f74419c6bcc802190d77e70e9f81fe64213a9778222c1832178016792534",
+      "contracts/converter/interfaces/IConverter.sol": "9075848dc2169d3ac07f508f2481000690e686a982c310010c9b1112cd48552e",
+      "contracts/converter/interfaces/IConverterAnchor.sol": "822ee22d952a827aeb2b8b10d39afd4d62e128afe9a3aa40f58efd32b75343ae",
+      "contracts/token/interfaces/IERC20Token.sol": "980ed31920a412ef51661a1ac3477ea19e0d9cdf118024ecab9c45594ad93c65",
+      "contracts/token/interfaces/IEtherToken.sol": "5cbed07830bc3ff61e8e59a2a008895d37cb11187bdf1496c95531896d7167a3",
+      "contracts/token/interfaces/ISmartToken.sol": "edb8bbc5a617370605c6d3cda399b2d7220a2f17f67b41188a76dac82e24664b",
+      "contracts/utility/ContractRegistryClient.sol": "5feb46883cfd1fbf2e9aceeff59765b1c1ccb6be5920a42ebca2dd616ad05ae7",
+      "contracts/utility/Owned.sol": "278c96ae996226a4d1fa5d7d46674fc91eb142f445b1c7ae7185bb0f695a22c8",
+      "contracts/utility/ReentrancyGuard.sol": "3c5f0c9d987b74a9e6ce503f2d5e6315f51f604f83bdcb0576526fcd16a88d3a",
+      "contracts/utility/SafeMath.sol": "83d50c07f57948f3c93b1214f4532905348d5c6387693b4f99ef7dd10b9c196b",
+      "contracts/utility/TokenHandler.sol": "b4f9bbeac5b85c743041eddd18aee2bbc4dbe03719d2b7762968dabcb2e00fc6",
+      "contracts/utility/TokenHolder.sol": "fc2c41e823c350afb8a030b9706a02763cc0169185ce0ddcd4962840106409c6",
+      "contracts/utility/Utils.sol": "c112eb3108828607a2f04d9e3cad3e0fbca6cb9a58e9eda895d2427660810e30",
+      "contracts/utility/interfaces/IContractRegistry.sol": "e196a68b8dbf9b249c492c03d51f655e9e48b70830b60614d1b65d4024b16303",
+      "contracts/utility/interfaces/IOwned.sol": "53dc21ec0e9aacf4ce0bc34e1f770a70de86c239bdec6b801d12949c3fa6b5e3",
+      "contracts/utility/interfaces/ITokenHolder.sol": "2aa362961e76294fc4dcaac54ee409f8ab0cb01fab3db23346938605a05090ab",
+      "contracts/utility/interfaces/IWhitelist.sol": "1cd43686dedd01c8b11cfdb16236b54a4aaa4383234a8987ee79ef31e74b4263"
+    },
+    "configured_compilers": [],
+    "units": [
+      {
+        "targets": [
+          "contracts/BancorNetwork.sol",
+          "contracts/utility/Owned.sol",
+          "contracts/utility/TokenHandler.sol",
+          "contracts/utility/TokenHolder.sol",
+          "contracts/utility/Utils.sol",
+          "contracts/utility/interfaces/ITokenHolder.sol"
+        ],
+        "pragmas": [
+          "0.4.26"
+        ],
+        "attempts": [
+          {
+            "version": "0.4.26",
+            "reason": "pragma:newest_compiling",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.4.26",
+          "selected_by": "pragma:newest_compiling",
+          "version_string": "0.4.26+commit.4563c3fc.Emscripten.clang",
+          "soljson_sha256": "357adb49bb74c9eabaa034db28f96b4105def2b052c7795db8e30ad9a34cc551",
+          "frontend": "solc-js (official emscripten build, npm solc@0.4.26)"
+        },
+        "compiled_sources": [
+          "contracts/BancorNetwork.sol",
+          "contracts/IBancorNetwork.sol",
+          "contracts/IConversionPathFinder.sol",
+          "contracts/bancorx/interfaces/IBancorX.sol",
+          "contracts/converter/interfaces/IBancorFormula.sol",
+          "contracts/converter/interfaces/IConverter.sol",
+          "contracts/converter/interfaces/IConverterAnchor.sol",
+          "contracts/token/interfaces/IERC20Token.sol",
+          "contracts/token/interfaces/IEtherToken.sol",
+          "contracts/token/interfaces/ISmartToken.sol",
+          "contracts/utility/ContractRegistryClient.sol",
+          "contracts/utility/Owned.sol",
+          "contracts/utility/ReentrancyGuard.sol",
+          "contracts/utility/SafeMath.sol",
+          "contracts/utility/TokenHandler.sol",
+          "contracts/utility/TokenHolder.sol",
+          "contracts/utility/Utils.sol",
+          "contracts/utility/interfaces/IContractRegistry.sol",
+          "contracts/utility/interfaces/IOwned.sol",
+          "contracts/utility/interfaces/ITokenHolder.sol",
+          "contracts/utility/interfaces/IWhitelist.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 22
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 6,
+      "compiled": 6,
+      "slither_ir": 6,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 6.6
+  },
+  "n_files": 6,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 6591.5,
+  "eval_files_opened": [
+    "dataset_r4/bancor_network/BUILD.json",
+    "dataset_r4/bancor_network/contracts/BancorNetwork.sol",
+    "dataset_r4/bancor_network/contracts/ITokenHolder.sol",
+    "dataset_r4/bancor_network/contracts/Owned.sol",
+    "dataset_r4/bancor_network/contracts/TokenHandler.sol",
+    "dataset_r4/bancor_network/contracts/TokenHolder.sol",
+    "dataset_r4/bancor_network/contracts/Utils.sol"
+  ]
+}

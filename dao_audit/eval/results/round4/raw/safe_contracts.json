@@ -1,0 +1,322 @@
+{
+  "case": "safe_contracts",
+  "engine": "baseline",
+  "findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "high",
+      "confidence": "medium",
+      "status": "SLITHER_DETECTOR",
+      "detector": "arbitrary-send-eth",
+      "contract": "GnosisSafe",
+      "function": "handlePayment",
+      "line": 196,
+      "title": "arbitrary-send-eth",
+      "evidence": "GnosisSafe.handlePayment(uint256,uint256,uint256,address,address) (contracts/GnosisSafe.sol#196-213) sends eth to arbitrary user\n\tDangerous calls:\n\t- require(bool,string)(receiver.send(payment),GS011) (contracts/GnosisSafe.sol#208)",
+      "file": "GnosisSafe.sol",
+      "in_dataset": true
+    }
+  ],
+  "heuristic_findings": [
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-delegatecall-to-parameter-derived-target",
+      "contract": "StorageAccessible",
+      "function": "simulateAndRevert",
+      "file": "StorageAccessible.sol",
+      "line": 39,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "targetContract"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "INCONCLUSIVE",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GnosisSafe",
+      "function": "setup",
+      "file": "GnosisSafe.sol",
+      "line": 75,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "modules",
+        "ownerCount",
+        "owners",
+        "threshold"
+      ],
+      "checked_in": [
+        "ModuleManager.enableModule(address)",
+        "OwnerManager.addOwnerWithThreshold(address,uint256)"
+      ],
+      "note": "function also checks a variable it writes (possible one-shot initializer); init/proxy state not analysable by baseline"
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "GnosisSafe",
+      "function": "requiredTxGas",
+      "file": "Executor.sol",
+      "line": 23,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "to"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-delegatecall-to-parameter-derived-target",
+      "contract": "GnosisSafe",
+      "function": "requiredTxGas",
+      "file": "Executor.sol",
+      "line": 18,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "to"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    },
+    {
+      "rule_id": "VULN-1",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-writer-of-sender-checked-state",
+      "contract": "GnosisSafe",
+      "function": "approveHash",
+      "file": "GnosisSafe.sol",
+      "line": 333,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "principals": [
+        "approvedHashes"
+      ],
+      "checked_in": [
+        "GnosisSafe.execTransaction(address,uint256,bytes,Enum.Operation,uint256,uint256,uint256,address,address,bytes)"
+      ],
+      "note": "is_protected()=False; writes state used in msg.sender checks elsewhere"
+    },
+    {
+      "rule_id": "VULN-4",
+      "severity": "medium",
+      "status": "HEURISTIC_ONLY",
+      "kind": "unprotected-call-to-parameter-derived-target",
+      "contract": "GnosisSafeProxyFactory",
+      "function": "createProxy",
+      "file": "GnosisSafeProxyFactory.sol",
+      "line": 20,
+      "in_dataset": true,
+      "protection": {
+        "is_protected": false,
+        "sender_in_conditions": false,
+        "protected_only_by_modifier_name": false
+      },
+      "target_from": [
+        "singleton"
+      ],
+      "note": "target depends on caller input; whitelist / custom checks not analysed"
+    }
+  ],
+  "build": {
+    "case": "safe_contracts",
+    "repo": "https://github.com/safe-global/safe-contracts",
+    "commit": "186a21a74b327f17fc41217a927dea7064f74604",
+    "mode": "original_project_snapshot",
+    "project_root": ".",
+    "build_config": "hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "Enum.sol": true,
+      "EtherPaymentFallback.sol": true,
+      "Executor.sol": true,
+      "FallbackManager.sol": true,
+      "GnosisSafe.sol": true,
+      "GnosisSafeMath.sol": true,
+      "GnosisSafeProxy.sol": true,
+      "GnosisSafeProxyFactory.sol": true,
+      "GuardManager.sol": true,
+      "IProxyCreationCallback.sol": true,
+      "ModuleManager.sol": true,
+      "OwnerManager.sol": true,
+      "SecuredTokenTransfer.sol": true,
+      "SelfAuthorized.sol": true,
+      "SignatureDecoder.sol": true,
+      "Singleton.sol": true,
+      "StorageAccessible.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2021-05-06T12:58:39+02:00",
+    "npm_dependencies": [],
+    "remappings": [],
+    "unresolved_imports": [],
+    "sources_sha256": {
+      "contracts/GnosisSafe.sol": "744af6600164990c36b32ccac95d105280450d0f7aa159a7b99e870752e29f9b",
+      "contracts/base/Executor.sol": "87c8c6cb45069e68dfb58c2347e69b43ab8b5a31f34adcf5c0705b9f595a7815",
+      "contracts/base/FallbackManager.sol": "7ac83eac33c7020b80c024cbfb90df1087f9658b2eb68e050b11b0a13e1d011a",
+      "contracts/base/GuardManager.sol": "30bdb9512f4304f815e923123d14c4cd1766c8a183ee12c4b9773c72c2c2ed25",
+      "contracts/base/ModuleManager.sol": "63ac8b6e0556ab32dee207b168916751982f4dc20efb9544740f5e35ff3ce6a5",
+      "contracts/base/OwnerManager.sol": "ba9726f488471f69def4ca08c30dfc0fe033b19e2a55a825a8aa0e1d8c69ea19",
+      "contracts/common/Enum.sol": "9beffe49e2ddcc6548f16883c9333daa607a7d21eda1cc5b7af8cefef034f64c",
+      "contracts/common/EtherPaymentFallback.sol": "cc288699c1632ca3f3aab7715265ae941570a27f8b11a64a830131bff13d72e3",
+      "contracts/common/SecuredTokenTransfer.sol": "ae5b0c85a607fbe4963c3cfc5724e073cd33f418d4b491df41a5eacff7473113",
+      "contracts/common/SelfAuthorized.sol": "24764612bf5539179a07a7655ec6ccb22eab6ffdd0b7c77730c79e1995b64326",
+      "contracts/common/SignatureDecoder.sol": "e02f9ec7b1c9b704614715fd36b3604bba2acf42b1e8663f0c42e55f7fc18365",
+      "contracts/common/Singleton.sol": "f016efcb4d1a78cb316ab024bade9f14278169765995207e8d00a4261b2a588b",
+      "contracts/common/StorageAccessible.sol": "4d162739165dab25175d65496846e14ef23cc1c3b25d16bfcc988862c5657c2c",
+      "contracts/external/GnosisSafeMath.sol": "c2aa6bd7987121b67160c2b7a61dcc241d8c6f6082c8397ccf87fa896128b95d",
+      "contracts/interfaces/ISignatureValidator.sol": "1be7e26bbbe0dfdadf2fbb834c6f2c6c4acc8ad08eac17cfcccadd10d59d495d",
+      "contracts/proxies/GnosisSafeProxy.sol": "13a8cd723b5a4fa5585f04d1cda2d46c6b2b66e15769ba3c14852c59d3ab5a8d",
+      "contracts/proxies/GnosisSafeProxyFactory.sol": "2e58cab4388dcadd0da0dcd690d4152ea04913e2c8ded57ad659f5da0a8c857c",
+      "contracts/proxies/IProxyCreationCallback.sol": "a22596645893245f4ce64fad041ac9025a77e44d1765f8e7fd99b0acb4efd5db"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.6.12",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.5.17",
+        "file": "hardhat.config.ts"
+      },
+      {
+        "version": "0.7.6",
+        "file": "package.json"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/GnosisSafe.sol",
+          "contracts/base/Executor.sol",
+          "contracts/base/FallbackManager.sol",
+          "contracts/base/GuardManager.sol",
+          "contracts/base/ModuleManager.sol",
+          "contracts/base/OwnerManager.sol",
+          "contracts/common/Enum.sol",
+          "contracts/common/EtherPaymentFallback.sol",
+          "contracts/common/SecuredTokenTransfer.sol",
+          "contracts/common/SelfAuthorized.sol",
+          "contracts/common/SignatureDecoder.sol",
+          "contracts/common/Singleton.sol",
+          "contracts/common/StorageAccessible.sol",
+          "contracts/external/GnosisSafeMath.sol",
+          "contracts/proxies/GnosisSafeProxy.sol",
+          "contracts/proxies/GnosisSafeProxyFactory.sol",
+          "contracts/proxies/IProxyCreationCallback.sol"
+        ],
+        "pragmas": [
+          ">=0.7.0 <0.9.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.7.6",
+            "reason": "project_config:package.json",
+            "result": "ok"
+          }
+        ],
+        "status": "COMPILED",
+        "compiler": {
+          "version": "0.7.6",
+          "selected_by": "project_config:package.json",
+          "version_string": "0.7.6+commit.7338295f.Emscripten.clang",
+          "soljson_sha256": "b94e69dfb056b3e26080f805ab43b668afbc0ac70bf124bfb7391ecfc0172ad2",
+          "frontend": "solc-js (official emscripten build, npm solc@0.7.6)"
+        },
+        "compiled_sources": [
+          "contracts/GnosisSafe.sol",
+          "contracts/base/Executor.sol",
+          "contracts/base/FallbackManager.sol",
+          "contracts/base/GuardManager.sol",
+          "contracts/base/ModuleManager.sol",
+          "contracts/base/OwnerManager.sol",
+          "contracts/common/Enum.sol",
+          "contracts/common/EtherPaymentFallback.sol",
+          "contracts/common/SecuredTokenTransfer.sol",
+          "contracts/common/SelfAuthorized.sol",
+          "contracts/common/SignatureDecoder.sol",
+          "contracts/common/Singleton.sol",
+          "contracts/common/StorageAccessible.sol",
+          "contracts/external/GnosisSafeMath.sol",
+          "contracts/interfaces/ISignatureValidator.sol",
+          "contracts/proxies/GnosisSafeProxy.sol",
+          "contracts/proxies/GnosisSafeProxyFactory.sol",
+          "contracts/proxies/IProxyCreationCallback.sol"
+        ],
+        "slither": {
+          "status": "OK",
+          "contracts": 21
+        }
+      }
+    ],
+    "coverage": {
+      "targets": 17,
+      "compiled": 17,
+      "slither_ir": 17,
+      "ratio": 1.0
+    },
+    "status": "OK",
+    "build_seconds": 3.1
+  },
+  "n_files": 17,
+  "data_status": "OK",
+  "chain_links": {
+    "detector": [],
+    "heuristic": []
+  },
+  "not_covered": {
+    "VULN-2": "no Slither capability for voting-power snapshot / weight source analysis",
+    "VULN-3": "no Slither capability for timelock / proposal-execution condition analysis"
+  },
+  "ms": 3060.8,
+  "eval_files_opened": [
+    "dataset_r4/safe_contracts/BUILD.json",
+    "dataset_r4/safe_contracts/contracts/Enum.sol",
+    "dataset_r4/safe_contracts/contracts/EtherPaymentFallback.sol",
+    "dataset_r4/safe_contracts/contracts/Executor.sol",
+    "dataset_r4/safe_contracts/contracts/FallbackManager.sol",
+    "dataset_r4/safe_contracts/contracts/GnosisSafe.sol",
+    "dataset_r4/safe_contracts/contracts/GnosisSafeMath.sol",
+    "dataset_r4/safe_contracts/contracts/GnosisSafeProxy.sol",
+    "dataset_r4/safe_contracts/contracts/GnosisSafeProxyFactory.sol",
+    "dataset_r4/safe_contracts/contracts/GuardManager.sol",
+    "dataset_r4/safe_contracts/contracts/IProxyCreationCallback.sol",
+    "dataset_r4/safe_contracts/contracts/ModuleManager.sol",
+    "dataset_r4/safe_contracts/contracts/OwnerManager.sol",
+    "dataset_r4/safe_contracts/contracts/SecuredTokenTransfer.sol",
+    "dataset_r4/safe_contracts/contracts/SelfAuthorized.sol",
+    "dataset_r4/safe_contracts/contracts/SignatureDecoder.sol",
+    "dataset_r4/safe_contracts/contracts/Singleton.sol",
+    "dataset_r4/safe_contracts/contracts/StorageAccessible.sol"
+  ]
+}

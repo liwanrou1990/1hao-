@@ -1,0 +1,600 @@
+engine freeze OK
+[blind:baseline] bancor_network: 6 files, 0 findings, 0 heuristic, OK
+[blind:baseline] bancor_network_fixed: 6 files, 0 findings, 0 heuristic, OK
+[blind:baseline] bond_fixed_expiry_teller: 6 files, 0 findings, 0 heuristic, ANALYSIS_INCOMPLETE
+[blind:baseline] bond_fixed_expiry_teller_fixed: 6 files, 1 findings, 0 heuristic, OK
+[blind:baseline] daostack_ucontroller: 8 files, 1 findings, 9 heuristic, OK
+[blind:baseline] daostack_ucontroller_fixed: 8 files, 1 findings, 9 heuristic, OK
+[blind:baseline] ens_governor: 4 files, 0 findings, 0 heuristic, ANALYSIS_INCOMPLETE
+WARNING:CryticCompile:Warning: @aragon/minime/contracts/MiniMeToken.sol:37:5: Warning: Defining constructors as functions with the same name as the contract is deprecated. Use "constructor(...) { ... }" instead.
+    function Controlled()  public { controller = msg.sender;}
+    ^-------------------------------------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:123:5: Warning: Defining constructors as functions with the same name as the contract is deprecated. Use "constructor(...) { ... }" instead.
+    function MiniMeToken(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:195:9: Warning: Use of the "var" keyword is deprecated.
+        var previousBalanceFrom = balanceOfAt(_from, block.number);
+        ^---------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:209:9: Warning: Use of the "var" keyword is deprecated.
+        var previousBalanceTo = balanceOfAt(_to, block.number);
+        ^-------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:213:9: Warning: Invoking events without "emit" prefix is deprecated.
+        Transfer(_from, _to, _amount);
+        ^---------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:245:9: Warning: Invoking events without "emit" prefix is deprecated.
+        Approval(msg.sender, _spender, _amount);
+        ^-------------------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:373:9: Warning: Invoking events without "emit" prefix is deprecated.
+        NewCloneToken(address(cloneToken), snapshot);
+        ^------------------------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:392:9: Warning: Invoking events without "emit" prefix is deprecated.
+        Transfer(0, _owner, _amount);
+        ^--------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:408:9: Warning: Invoking events without "emit" prefix is deprecated.
+        Transfer(_owner, 0, _amount);
+        ^--------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:511:33: Warning: Using contract member "balance" inherited from the address type is deprecated. Convert the contract to "address" type to access the member, for example use "address(contract).balance" instead.
+            controller.transfer(this.balance);
+                                ^----------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:518:9: Warning: Invoking events without "emit" prefix is deprecated.
+        ClaimedTokens(_token, controller, balance);
+        ^----------------------------------------^
+
+Warning: @aragon/minime/contracts/MiniMeToken.sol:576:9: Warning: Invoking events without "emit" prefix is deprecated.
+        NewFactoryCloneToken(address(newToken), address(_parentToken), _snapshotBlock);
+        ^----------------------------------------------------------------------------^
+
+Warning: @aragon/os/contracts/acl/IACL.sol:13:5: Warning: Functions in interfaces should be declared external.
+    function hasPermission(address who, address where, bytes32 what, bytes how) public view returns (bool);
+    ^-----------------------------------------------------------------------------------------------------^
+
+Warning: @aragon/os/contracts/evmscript/IEVMScriptRegistry.sol:24:5: Warning: Functions in interfaces should be declared external.
+    function getScriptExecutor(bytes script) public view returns (IEVMScriptExecutor);
+    ^--------------------------------------------------------------------------------^
+
+Warning: @aragon/os/contracts/common/IForwarder.sol:13:5: Warning: Functions in interfaces should be declared external.
+    function canForward(address sender, bytes evmCallScript) public view returns (bool);
+    ^----------------------------------------------------------------------------------^
+
+Warning: @aragon/os/contracts/common/IForwarder.sol:17:5: Warning: Functions in interfaces should be declared external.
+    function forward(bytes evmCallScript) public;
+    ^-------------------------------------------^
+
+Warning: @aragon/os/contracts/common/VaultRecoverable.sol:49:34: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+    function allowRecoverability(address token) public view returns (bool) {
+                                 ^-----------^
+
+Warning: contracts/Voting.sol:183:80: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+    function newVote(bytes _executionScript, string _metadata, bool _castVote, bool _executesIfDecided_deprecated)
+                                                                               ^--------------------------------^
+
+Warning: contracts/Voting.sol:200:52: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+    function vote(uint256 _voteId, bool _supports, bool _executesIfDecided_deprecated) external voteExists(_voteId) {
+                                                   ^--------------------------------^
+
+
+[blind:baseline] lido_voting: 1 files, 0 findings, 2 heuristic, OK
+WARNING:CryticCompile:Warning: Warning: "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> src/Libraries/LibDiamond.sol:194:28:
+    |
+194 |             (bool success, bytes memory error) = _init.delegatecall(_calldata);
+    |                            ^^^^^^^^^^^^^^^^^^
+
+
+
+[blind:baseline] lifi_cbridge_facet: 9 files, 1 findings, 0 heuristic, OK
+WARNING:CryticCompile:Warning: Warning: "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> src/Libraries/LibDiamond.sol:194:28:
+    |
+194 |             (bool success, bytes memory error) = _init.delegatecall(_calldata);
+    |                            ^^^^^^^^^^^^^^^^^^
+
+
+
+[blind:baseline] lifi_cbridge_facet_fixed: 11 files, 1 findings, 0 heuristic, OK
+WARNING:CryticCompile:Warning: Warning: Contract code size is 28044 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> src/LlamaCore.sol:20:1:
+   |
+20 | contract LlamaCore is Initializable {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+
+[blind:baseline] llama_relative_quorum: 6 files, 0 findings, 5 heuristic, OK
+WARNING:CryticCompile:Warning: Warning: Contract code size is 28044 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> src/LlamaCore.sol:20:1:
+   |
+20 | contract LlamaCore is Initializable {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+
+[blind:baseline] llama_relative_quorum_fixed: 6 files, 0 findings, 6 heuristic, OK
+ERROR:Slither:Failed to resolved name for reference id 2378 in /root/.cache/dao_audit/snapshots/moonwell-fi_moonwell-contracts-v2@004c0f1920a8/src/core/Governance/TemporalGovernor.sol.
+[blind:baseline] moonwell_temporal_governor: 2 files, 0 findings, 3 heuristic, OK
+ERROR:Slither:Failed to resolved name for reference id 2380 in /root/.cache/dao_audit/snapshots/moonwell-fi_moonwell-contracts-v2@4580996b7cdb/src/core/Governance/TemporalGovernor.sol.
+[blind:baseline] moonwell_temporal_governor_fixed: 2 files, 0 findings, 3 heuristic, OK
+WARNING:CryticCompile:Warning: contracts/DInterest.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+
+Warning: contracts/NFTFactory.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+
+Warning: contracts/rewards/Vesting.sol:81:9: Warning: This declaration shadows an existing declaration.
+        Vest storage vest = accountVestList[account][vestIdx];
+        ^---------------^
+contracts/rewards/Vesting.sol:25:5: The shadowed declaration is here:
+    function vest(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+
+[blind:baseline] mph88_deposit_nft: 4 files, 0 findings, 5 heuristic, OK
+[blind:baseline] nomad_replica: 7 files, 0 findings, 0 heuristic, OK
+[blind:baseline] nomad_replica_fixed: 7 files, 0 findings, 0 heuristic, OK
+[blind:baseline] olympus_governance: 6 files, 0 findings, 0 heuristic, ANALYSIS_INCOMPLETE
+WARNING:CryticCompile:Warning: Warning: Contract code size is 37410 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> contracts/party/PartyGovernanceNFT.sol:14:1:
+   |
+14 | contract PartyGovernanceNFT is PartyGovernance, ERC721, IERC2981 {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Warning: Warning: Contract code size is 41086 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> contracts/party/Party.sol:11:1:
+   |
+11 | contract Party is PartyGovernanceNFT {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+
+[blind:baseline] party_veto_proposal: 3 files, 0 findings, 4 heuristic, OK
+WARNING:CryticCompile:Warning: Warning: Contract code size is 37410 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> contracts/party/PartyGovernanceNFT.sol:14:1:
+   |
+14 | contract PartyGovernanceNFT is PartyGovernance, ERC721, IERC2981 {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Warning: Warning: Contract code size is 41086 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+  --> contracts/party/Party.sol:11:1:
+   |
+11 | contract Party is PartyGovernanceNFT {
+   | ^ (Relevant source part starts here and spans across multiple lines).
+
+
+
+[blind:baseline] party_veto_proposal_fixed: 3 files, 0 findings, 4 heuristic, OK
+WARNING:CryticCompile:Warning: controller-v4.sol: Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing "SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED" for non-open-source code. Please see https://spdx.org for more information.
+
+Warning: proxy-logic/curve.sol: Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing "SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED" for non-open-source code. Please see https://spdx.org for more information.
+
+Warning: strategies/strategy-base.sol: Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing "SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED" for non-open-source code. Please see https://spdx.org for more information.
+
+Warning: lib/exponential.sol: Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing "SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED" for non-open-source code. Please see https://spdx.org for more information.
+
+Warning: lib/careful-math.sol: Warning: SPDX license identifier not provided in source file. Before publishing, consider adding a comment containing "SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED" for non-open-source code. Please see https://spdx.org for more information.
+
+Warning: strategies/compound/strategy-cmpd-dai-v2.sol:15:1: Warning: Contract code size exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
+contract StrategyCmpdDaiV2 is StrategyBase, Exponential {
+^ (Relevant source part starts here and spans across multiple lines).
+
+
+[blind:baseline] pickle_controller: 7 files, 0 findings, 1 heuristic, OK
+WARNING:CryticCompile:Warning: contracts/GnosisSafe.sol:340:5: Warning: Function state mutability can be restricted to pure
+    function getChainId() public view returns (uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+
+[blind:baseline] safe_contracts: 17 files, 1 findings, 6 heuristic, OK
+WARNING:CryticCompile:Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:81:49: Warning: This declaration shadows an existing declaration.
+    function mintQuad(address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:81:60: Warning: This declaration shadows an existing declaration.
+    function mintQuad(address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                           ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:148:13: Warning: This declaration shadows an existing declaration.
+            uint256 id = _idInPath(i, size, x, y);
+            ^--------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:91:9: The shadowed declaration is here:
+        uint256 id = x + y * GRID_SIZE;
+        ^--------^
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:159:49: Warning: This declaration shadows an existing declaration.
+    function _idInPath(uint256 i, uint256 size, uint256 x, uint256 y) internal pure returns(uint256) {
+                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:159:60: Warning: This declaration shadows an existing declaration.
+    function _idInPath(uint256 i, uint256 size, uint256 x, uint256 y) internal pure returns(uint256) {
+                                                           ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:175:67: Warning: This declaration shadows an existing declaration.
+    function transferQuad(address from, address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                                  ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:175:78: Warning: This declaration shadows an existing declaration.
+    function transferQuad(address from, address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                                             ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:198:9: Warning: This declaration shadows an existing declaration.
+        uint256 x,
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:199:9: Warning: This declaration shadows an existing declaration.
+        uint256 y,
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:266:68: Warning: This declaration shadows an existing declaration.
+    function _transferQuad(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:266:79: Warning: This declaration shadows an existing declaration.
+    function _transferQuad(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:291:63: Warning: This declaration shadows an existing declaration.
+    function _regroup(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:291:74: Warning: This declaration shadows an existing declaration.
+    function _regroup(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                         ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:308:52: Warning: This declaration shadows an existing declaration.
+    function _regroup3x3(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:308:63: Warning: This declaration shadows an existing declaration.
+    function _regroup3x3(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:332:52: Warning: This declaration shadows an existing declaration.
+    function _regroup6x6(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:332:63: Warning: This declaration shadows an existing declaration.
+    function _regroup6x6(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:364:54: Warning: This declaration shadows an existing declaration.
+    function _regroup12x12(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                     ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:364:65: Warning: This declaration shadows an existing declaration.
+    function _regroup12x12(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:395:54: Warning: This declaration shadows an existing declaration.
+    function _regroup24x24(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                     ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:395:65: Warning: This declaration shadows an existing declaration.
+    function _regroup24x24(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:428:9: Warning: This declaration shadows an existing declaration.
+        uint256 x = id % GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:429:9: Warning: This declaration shadows an existing declaration.
+        uint256 y = id / GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:456:9: Warning: This declaration shadows an existing declaration.
+        uint256 x = id % GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:457:9: Warning: This declaration shadows an existing declaration.
+        uint256 y = id / GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:47:5: Warning: Function state mutability can be restricted to pure
+    function width() external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:53:5: Warning: Function state mutability can be restricted to pure
+    function height() external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: Warning: Function state mutability can be restricted to view
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: Warning: Function state mutability can be restricted to view
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+
+[blind:baseline] sandbox_land: 7 files, 0 findings, 1 heuristic, OK
+WARNING:CryticCompile:Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:81:49: Warning: This declaration shadows an existing declaration.
+    function mintQuad(address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:81:60: Warning: This declaration shadows an existing declaration.
+    function mintQuad(address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                           ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:148:13: Warning: This declaration shadows an existing declaration.
+            uint256 id = _idInPath(i, size, x, y);
+            ^--------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:91:9: The shadowed declaration is here:
+        uint256 id = x + y * GRID_SIZE;
+        ^--------^
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:159:49: Warning: This declaration shadows an existing declaration.
+    function _idInPath(uint256 i, uint256 size, uint256 x, uint256 y) internal pure returns(uint256) {
+                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:159:60: Warning: This declaration shadows an existing declaration.
+    function _idInPath(uint256 i, uint256 size, uint256 x, uint256 y) internal pure returns(uint256) {
+                                                           ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:175:67: Warning: This declaration shadows an existing declaration.
+    function transferQuad(address from, address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                                  ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:175:78: Warning: This declaration shadows an existing declaration.
+    function transferQuad(address from, address to, uint256 size, uint256 x, uint256 y, bytes calldata data) external {
+                                                                             ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:198:9: Warning: This declaration shadows an existing declaration.
+        uint256 x,
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:199:9: Warning: This declaration shadows an existing declaration.
+        uint256 y,
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:266:68: Warning: This declaration shadows an existing declaration.
+    function _transferQuad(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:266:79: Warning: This declaration shadows an existing declaration.
+    function _transferQuad(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:291:63: Warning: This declaration shadows an existing declaration.
+    function _regroup(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:291:74: Warning: This declaration shadows an existing declaration.
+    function _regroup(address from, address to, uint256 size, uint256 x, uint256 y) internal {
+                                                                         ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:308:52: Warning: This declaration shadows an existing declaration.
+    function _regroup3x3(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:308:63: Warning: This declaration shadows an existing declaration.
+    function _regroup3x3(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:332:52: Warning: This declaration shadows an existing declaration.
+    function _regroup6x6(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                   ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:332:63: Warning: This declaration shadows an existing declaration.
+    function _regroup6x6(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                              ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:364:54: Warning: This declaration shadows an existing declaration.
+    function _regroup12x12(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                     ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:364:65: Warning: This declaration shadows an existing declaration.
+    function _regroup12x12(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:395:54: Warning: This declaration shadows an existing declaration.
+    function _regroup24x24(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                     ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:395:65: Warning: This declaration shadows an existing declaration.
+    function _regroup24x24(address from, address to, uint256 x, uint256 y, bool set) internal returns (bool) {
+                                                                ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:428:9: Warning: This declaration shadows an existing declaration.
+        uint256 x = id % GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:429:9: Warning: This declaration shadows an existing declaration.
+        uint256 y = id / GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:456:9: Warning: This declaration shadows an existing declaration.
+        uint256 x = id % GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: The shadowed declaration is here:
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:457:9: Warning: This declaration shadows an existing declaration.
+        uint256 y = id / GRID_SIZE;
+        ^-------^
+src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: The shadowed declaration is here:
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:47:5: Warning: Function state mutability can be restricted to pure
+    function width() external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:53:5: Warning: Function state mutability can be restricted to pure
+    function height() external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:60:5: Warning: Function state mutability can be restricted to view
+    function x(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning: src/solc_0.5/Land/erc721/LandBaseToken.sol:68:5: Warning: Function state mutability can be restricted to view
+    function y(uint256 id) external returns(uint256) {
+    ^ (Relevant source part starts here and spans across multiple lines).
+
+
+[blind:baseline] sandbox_land_fixed: 7 files, 0 findings, 0 heuristic, OK
+[blind:baseline] sushi_route_processor2: 3 files, 0 findings, 0 heuristic, ANALYSIS_INCOMPLETE
+[blind:baseline] sushi_route_processor2_fixed: 3 files, 0 findings, 0 heuristic, ANALYSIS_INCOMPLETE
+WARNING:CryticCompile:Warning: GovernorAlpha.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+
+Warning: Uni.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+
+
+[blind:baseline] uniswap_governance: 4 files, 0 findings, 3 heuristic, OK
+[blind:baseline] wormhole_core_impl: 10 files, 0 findings, 2 heuristic, OK
+raw outputs -> /home/user/1hao-/dao_audit/eval/results/round4/raw

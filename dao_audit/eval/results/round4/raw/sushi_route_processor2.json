@@ -1,0 +1,98 @@
+{
+  "case": "sushi_route_processor2",
+  "engine": "baseline",
+  "findings": [],
+  "heuristic_findings": [],
+  "build": {
+    "case": "sushi_route_processor2",
+    "repo": "https://github.com/sushiswap/sushiswap",
+    "commit": "ab5297698b1284667684393b8b9add48ba979c00",
+    "mode": "original_project_snapshot",
+    "project_root": "protocols/route-processor",
+    "build_config": "protocols/route-processor/hardhat.config.ts",
+    "dataset_identical_to_snapshot": {
+      "IUniswapV3Pool.sol": true,
+      "InputStream.sol": true,
+      "RouteProcessor2.sol": true
+    },
+    "submodules": [],
+    "commit_date": "2023-04-08T13:09:08+03:00",
+    "npm_dependencies": [
+      {
+        "package": "@openzeppelin/contracts",
+        "declared": "3.1.0",
+        "declared_in": "pnpm-lock.yaml",
+        "installed": "3.1.0",
+        "status": "ok",
+        "files_sha256": {}
+      }
+    ],
+    "remappings": [],
+    "unresolved_imports": [
+      {
+        "import": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "from": "contracts/RouteProcessor2.sol"
+      }
+    ],
+    "sources_sha256": {
+      "contracts/InputStream.sol": "677349d201e533b0a69c16753e7279d67c7dbd11e87496406e50431ad5d8ccc3",
+      "contracts/RouteProcessor2.sol": "54c2c8d56ad15b9fcf53417d5465dd6652c4c81ea93ea0337528dc0fec3873d9",
+      "interfaces/IBentoBoxMinimal.sol": "dcaf9c476246ea3ad0171a714af4cea3dc31547018a7e5f72154187347a2ea0c",
+      "interfaces/IPool.sol": "9f4f71945e1474e635fdea08b44de05ce592bdc5afe4ad5b5bad83c4c11f2784",
+      "interfaces/ITridentCLPool.sol": "6e5dcf0c3bcc47dcae1cad31a5004696215a62e2f5e0e118032dbdeb7532fc67",
+      "interfaces/IUniswapV2Pair.sol": "70cd07216707dec28d716228ed208a836fa5a9c3541644adff32c7510a44ef7a",
+      "interfaces/IUniswapV3Pool.sol": "0d94ca288f11220c2908e5a72083eb12e39312a1bffdabfe5bc16511e3ec0a14",
+      "interfaces/IWETH.sol": "70be2b5e00eb4e7c15a08b5062fdaebd624c50e02b50fb521c320585ec91722b"
+    },
+    "configured_compilers": [
+      {
+        "version": "0.8.10",
+        "file": "protocols/route-processor/hardhat.config.ts"
+      },
+      {
+        "version": "0.6.12",
+        "file": "protocols/route-processor/hardhat.config.ts"
+      }
+    ],
+    "units": [
+      {
+        "targets": [
+          "contracts/InputStream.sol",
+          "contracts/RouteProcessor2.sol",
+          "interfaces/IUniswapV3Pool.sol"
+        ],
+        "pragmas": [
+          "0.8.10",
+          ">=0.5.0",
+          ">=0.8.0"
+        ],
+        "attempts": [
+          {
+            "version": "0.8.10",
+            "reason": "project_config:protocols/route-processor/hardhat.config.ts",
+            "result": "ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr"
+          }
+        ],
+        "status": "ANALYSIS_INCOMPLETE"
+      }
+    ],
+    "coverage": {
+      "targets": 3,
+      "compiled": 0,
+      "slither_ir": 0,
+      "ratio": 0.0
+    },
+    "status": "ANALYSIS_INCOMPLETE",
+    "reason": "contracts/InputStream.sol,contracts/RouteProcessor2.sol: ParserError: Source \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\" not found: File not found: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\n  --> contracts/RouteProcessor2.sol:12:1:\n   |\n12 | import '@openzeppelin/contr",
+    "build_seconds": 7.8
+  },
+  "n_files": 3,
+  "data_status": "ANALYSIS_INCOMPLETE",
+  "ms": 7810.8,
+  "eval_files_opened": [
+    "dataset_r4/sushi_route_processor2/BUILD.json",
+    "dataset_r4/sushi_route_processor2/contracts/IUniswapV3Pool.sol",
+    "dataset_r4/sushi_route_processor2/contracts/InputStream.sol",
+    "dataset_r4/sushi_route_processor2/contracts/RouteProcessor2.sol"
+  ]
+}
