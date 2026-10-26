@@ -1,0 +1,3 @@
+{"case":"nouns_dao","project":"nounsdao","kind":"secure_control","is_chain_case":false,"truth":[],
+ "evidence":{"repo":"https://github.com/nounsDAO/nouns-monorepo","commit":"2213eea1c15f331f786784c2621d53bdecf907e2",
+ "rationale":"Bravo-fork + NounsDAOExecutor timelock + ERC721 checkpoint snapshot voting -> secure; any high-sev gov finding is FP"}}
