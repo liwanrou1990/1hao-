@@ -1,0 +1,9 @@
+{
+  "repo": "https://github.com/paritytech/parity-ethereum",
+  "commit": "02d462e2636f1898df3e7556364260c594b112e6",
+  "files": {
+    "enhanced-wallet.sol": "js/src/contracts/snippets/enhanced-wallet.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "js/src/contracts/snippets"
+}

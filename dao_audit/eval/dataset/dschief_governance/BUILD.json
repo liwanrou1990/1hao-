@@ -1,0 +1,9 @@
+{
+  "repo": "https://github.com/dapphub/ds-chief",
+  "commit": "4a833cdaeb66313da0fb16108771a52135d23a04",
+  "files": {
+    "chief.sol": "src/chief.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "src"
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "https://github.com/dinngo/furucombo-contract",
+  "commit": "e416ad1baa1ec8dd6efbce98dd465a304ad3e818",
+  "files": {
+    "Config.sol": "contracts/Config.sol",
+    "HandlerBase.sol": "contracts/handlers/HandlerBase.sol",
+    "IProxy.sol": "contracts/interface/IProxy.sol",
+    "IRegistry.sol": "contracts/interface/IRegistry.sol",
+    "LibCache.sol": "contracts/lib/LibCache.sol",
+    "LibParam.sol": "contracts/lib/LibParam.sol",
+    "LibStack.sol": "contracts/lib/LibStack.sol",
+    "Proxy.sol": "contracts/Proxy.sol",
+    "Registry.sol": "contracts/Registry.sol",
+    "Storage.sol": "contracts/Storage.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

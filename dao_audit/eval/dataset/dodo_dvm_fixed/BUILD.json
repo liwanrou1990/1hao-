@@ -1,0 +1,13 @@
+{
+  "repo": "https://github.com/DODOEX/contractV2",
+  "commit": "01c544780291a5acc3e2be4980493e63065fb200",
+  "files": {
+    "DVM.sol": "contracts/DODOVendingMachine/impl/DVM.sol",
+    "DVMFunding.sol": "contracts/DODOVendingMachine/impl/DVMFunding.sol",
+    "DVMStorage.sol": "contracts/DODOVendingMachine/impl/DVMStorage.sol",
+    "DVMTrader.sol": "contracts/DODOVendingMachine/impl/DVMTrader.sol",
+    "DVMVault.sol": "contracts/DODOVendingMachine/impl/DVMVault.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts/DODOVendingMachine/impl"
+}

@@ -1,0 +1,11 @@
+{
+  "repo": "https://github.com/AudiusProject/audius-protocol",
+  "commit": "01f924a7762659141d3b32491b81ca6e0f63c822",
+  "files": {
+    "AudiusAdminUpgradeabilityProxy.sol": "eth-contracts/contracts/AudiusAdminUpgradeabilityProxy.sol",
+    "Governance.sol": "eth-contracts/contracts/Governance.sol",
+    "InitializableV2.sol": "eth-contracts/contracts/InitializableV2.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "eth-contracts/contracts"
+}

@@ -1,0 +1,16 @@
+{
+  "repo": "https://github.com/tornadocash/tornado-governance",
+  "commit": "6464973b108102b70efafa29e55da69bfb43b7b9",
+  "files": {
+    "Configuration.sol": "contracts/v1/Configuration.sol",
+    "Delegation.sol": "contracts/v1/Delegation.sol",
+    "GasCompensator.sol": "contracts/v2-vault-and-gas/GasCompensator.sol",
+    "Governance.sol": "contracts/v1/Governance.sol",
+    "GovernanceGasUpgrade.sol": "contracts/v2-vault-and-gas/GovernanceGasUpgrade.sol",
+    "GovernanceStakingUpgrade.sol": "contracts/v3-relayer-registry/GovernanceStakingUpgrade.sol",
+    "GovernanceVaultUpgrade.sol": "contracts/v2-vault-and-gas/GovernanceVaultUpgrade.sol",
+    "LoopbackProxy.sol": "contracts/v1/LoopbackProxy.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

@@ -1,0 +1,15 @@
+{
+  "repo": "https://github.com/PunkFinance/punk.protocol",
+  "commit": "6fcdda755a4b076e362d032ffe2b18850a6c208f",
+  "files": {
+    "CompoundModel.sol": "contracts/models/CompoundModel.sol",
+    "Forge.sol": "contracts/Forge.sol",
+    "ForgeProxy.sol": "contracts/ForgeProxy.sol",
+    "ForgeStorage.sol": "contracts/ForgeStorage.sol",
+    "ModelStorage.sol": "contracts/ModelStorage.sol",
+    "Ownable.sol": "contracts/Ownable.sol",
+    "OwnableStorage.sol": "contracts/OwnableStorage.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts"
+}

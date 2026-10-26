@@ -1,0 +1,11 @@
+{
+  "repo": "https://github.com/aave/governance-v2",
+  "commit": "d4e5ae0c31824b9ec9aec4e06a3ee2c3c34ae431",
+  "files": {
+    "AaveGovernanceV2.sol": "contracts/governance/AaveGovernanceV2.sol",
+    "ExecutorWithTimelock.sol": "contracts/governance/ExecutorWithTimelock.sol",
+    "GovernanceStrategy.sol": "contracts/governance/GovernanceStrategy.sol"
+  },
+  "unmatched_files": [],
+  "repo_root_hint": "contracts/governance"
+}
