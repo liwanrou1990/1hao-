@@ -25,6 +25,8 @@ ENGINE_FILES = [
     TOOL / "analysis" / "compile_backend.py",  # V0.14 compiler/Slither backend
     # V0.15 read-only baseline: exact-compiler build + Slither built-ins
     TOOL / "analysis" / "baseline.py",
+    TOOL / "analysis" / "evidence.py",          # V0.17 permission evidence tiers
+    TOOL / "analysis" / "perm" / "deps.py",     # V0.15 tested dependency gap fills
     TOOL / "compiler" / "build.py",
     TOOL / "compiler" / "project.py",
     TOOL / "compiler" / "toolchain.py",
@@ -34,6 +36,8 @@ ENGINE_FILES = [
     Path(__file__).resolve().parent / "evaluate.py",
     Path(__file__).resolve().parent / "evaluate_v15.py",
     Path(__file__).resolve().parent / "check_isolation.py",
+    Path(__file__).resolve().parent / "v17" / "review_queue.py",
+    Path(__file__).resolve().parent / "v17" / "coverage_and_plan.py",
 ]
 FREEZE = Path(__file__).resolve().parent / "engine_freeze.json"
 

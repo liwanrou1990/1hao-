@@ -137,7 +137,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 3.5
+    "build_seconds": 3.3
   },
   "n_files": 4,
   "data_status": "OK",
@@ -152,7 +152,7 @@
   "profile": "v17",
   "review_queue": [],
   "refuted": [],
-  "ms": 3549.4,
+  "ms": 3308.4,
   "eval_files_opened": [
     "dataset/beanstalk_governance/BUILD.json",
     "dataset/beanstalk_governance/contracts/Bip.sol",

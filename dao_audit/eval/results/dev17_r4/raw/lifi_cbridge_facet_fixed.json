@@ -137,7 +137,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 3.7
+    "build_seconds": 3.4
   },
   "n_files": 11,
   "data_status": "OK",
@@ -205,7 +205,7 @@
       }
     }
   ],
-  "ms": 3672.5,
+  "ms": 3364.9,
   "eval_files_opened": [
     "dataset_r4/lifi_cbridge_facet_fixed/BUILD.json",
     "dataset_r4/lifi_cbridge_facet_fixed/contracts/CBridgeFacet.sol",

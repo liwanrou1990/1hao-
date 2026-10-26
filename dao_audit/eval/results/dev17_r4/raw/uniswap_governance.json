@@ -125,7 +125,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 5.9
+    "build_seconds": 5.5
   },
   "n_files": 4,
   "data_status": "OK",
@@ -176,7 +176,7 @@
     }
   ],
   "refuted": [],
-  "ms": 5869.8,
+  "ms": 5541.4,
   "eval_files_opened": [
     "dataset_r4/uniswap_governance/BUILD.json",
     "dataset_r4/uniswap_governance/contracts/GovernorAlpha.sol",

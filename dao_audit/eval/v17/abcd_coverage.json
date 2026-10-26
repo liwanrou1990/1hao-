@@ -1,0 +1,82 @@
+{
+  "A": {
+    "truth_items": 9,
+    "auto_detected_v16": 0,
+    "auto_detected_v17": 0,
+    "in_review_queue_v17": 0,
+    "review_labeled_defect": 0,
+    "manual_cells_defect_r4": 3,
+    "manual_cells_protected_r4": 2,
+    "uncovered_by_tools": false,
+    "auto_recall_v16": [
+      0.0,
+      0.0,
+      0.2992
+    ],
+    "auto_recall_v17": [
+      0.0,
+      0.0,
+      0.2992
+    ]
+  },
+  "B": {
+    "truth_items": 6,
+    "auto_detected_v16": 0,
+    "auto_detected_v17": 0,
+    "in_review_queue_v17": 0,
+    "review_labeled_defect": 0,
+    "manual_cells_defect_r4": 2,
+    "manual_cells_protected_r4": 2,
+    "uncovered_by_tools": true,
+    "auto_recall_v16": [
+      0.0,
+      0.0,
+      0.3903
+    ],
+    "auto_recall_v17": [
+      0.0,
+      0.0,
+      0.3903
+    ]
+  },
+  "C": {
+    "truth_items": 5,
+    "auto_detected_v16": 0,
+    "auto_detected_v17": 0,
+    "in_review_queue_v17": 0,
+    "review_labeled_defect": 0,
+    "manual_cells_defect_r4": 1,
+    "manual_cells_protected_r4": 1,
+    "uncovered_by_tools": true,
+    "auto_recall_v16": [
+      0.0,
+      0.0,
+      0.4345
+    ],
+    "auto_recall_v17": [
+      0.0,
+      0.0,
+      0.4345
+    ]
+  },
+  "D": {
+    "truth_items": 22,
+    "auto_detected_v16": 3,
+    "auto_detected_v17": 0,
+    "in_review_queue_v17": 4,
+    "review_labeled_defect": 4,
+    "manual_cells_defect_r4": 6,
+    "manual_cells_protected_r4": 7,
+    "uncovered_by_tools": false,
+    "auto_recall_v16": [
+      0.1364,
+      0.0475,
+      0.3334
+    ],
+    "auto_recall_v17": [
+      0.0,
+      0.0,
+      0.1487
+    ]
+  }
+}

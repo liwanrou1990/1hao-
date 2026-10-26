@@ -124,7 +124,9 @@ def _transfer_from_calls(fn: Function):
 def from_origin(fn: Function) -> Dict:
     """For every transferFrom-style call in fn: is `from` msg.sender / this, or
     derived from a caller-supplied address parameter?"""
-    addr_params = [p for p in fn.parameters if str(p.type).startswith("address")]
+    # caller-supplied sources of an address: address parameters, and bytes
+    # parameters (an address can be abi-decoded from them)
+    addr_params = [p for p in fn.parameters if str(p.type).startswith(("address", "bytes"))]
     calls = []
     for n, frm in _transfer_from_calls(fn):
         if frm is None:

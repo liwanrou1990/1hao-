@@ -270,7 +270,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 7.0
+    "build_seconds": 6.9
   },
   "n_files": 6,
   "data_status": "OK",
@@ -285,7 +285,7 @@
   "profile": "v17",
   "review_queue": [],
   "refuted": [],
-  "ms": 7030.5,
+  "ms": 6896.7,
   "eval_files_opened": [
     "dataset_r4/llama_relative_quorum/BUILD.json",
     "dataset_r4/llama_relative_quorum/contracts/Enums.sol",

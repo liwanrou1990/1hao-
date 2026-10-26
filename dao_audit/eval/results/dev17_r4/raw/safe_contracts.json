@@ -271,7 +271,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 2.4
+    "build_seconds": 2.0
   },
   "n_files": 17,
   "data_status": "OK",
@@ -352,7 +352,7 @@
     }
   ],
   "refuted": [],
-  "ms": 2397.6,
+  "ms": 1970.0,
   "eval_files_opened": [
     "dataset_r4/safe_contracts/BUILD.json",
     "dataset_r4/safe_contracts/contracts/Enum.sol",

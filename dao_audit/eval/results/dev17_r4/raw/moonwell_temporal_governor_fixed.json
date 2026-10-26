@@ -149,7 +149,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 2.6
+    "build_seconds": 2.4
   },
   "n_files": 2,
   "data_status": "OK",
@@ -231,7 +231,7 @@
     }
   ],
   "refuted": [],
-  "ms": 2613.5,
+  "ms": 2440.3,
   "eval_files_opened": [
     "dataset_r4/moonwell_temporal_governor_fixed/BUILD.json",
     "dataset_r4/moonwell_temporal_governor_fixed/contracts/ITemporalGovernor.sol",

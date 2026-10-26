@@ -114,7 +114,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 2.6
+    "build_seconds": 2.0
   },
   "n_files": 3,
   "data_status": "OK",
@@ -215,19 +215,40 @@
               "from": "from",
               "from_is_sender": false,
               "from_is_this": false,
-              "from_depends_on_address_params": []
+              "from_depends_on_address_params": [
+                "data"
+              ]
             }
           ],
           "n_suspect_calls": 1,
-          "premise_unconfirmed": true
+          "premise_unconfirmed": false
         },
-        "status": "PREMISE_UNCONFIRMED",
-        "reason": "`from` is not derived from any caller-supplied address parameter (arbitrary-from premise unconfirmed) -> INCONCLUSIVE, manual review"
+        "entries": [
+          {
+            "entry": "RouteProcessor2.uniswapV3SwapCallback(int256,int256,bytes)",
+            "visibility": "external",
+            "self_checked_state": [
+              "lastCalledPool"
+            ],
+            "modifiers": [],
+            "sender_conditions": [
+              {
+                "at": "RouteProcessor2.uniswapV3SwapCallback:L339",
+                "expr": "require(bool,string)(msg.sender == lastCalledPool,RouteProcessor.uniswapV3SwapCallback: call from unknown source)"
+              }
+            ],
+            "n_sender_conditions": 1,
+            "signature_checks": [],
+            "n_signature_checks": 0
+          }
+        ],
+        "status": "PROTECTION_EVIDENCE",
+        "reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review"
       }
     }
   ],
   "refuted": [],
-  "ms": 2572.0,
+  "ms": 2048.9,
   "eval_files_opened": [
     "dataset_r4/sushi_route_processor2/BUILD.json",
     "dataset_r4/sushi_route_processor2/contracts/IUniswapV3Pool.sol",

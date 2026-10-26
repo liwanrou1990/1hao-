@@ -374,7 +374,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 8.2
+    "build_seconds": 7.6
   },
   "n_files": 8,
   "data_status": "OK",
@@ -445,7 +445,7 @@
     }
   ],
   "refuted": [],
-  "ms": 8240.5,
+  "ms": 7589.2,
   "eval_files_opened": [
     "dataset_r4/daostack_ucontroller_fixed/BUILD.json",
     "dataset_r4/daostack_ucontroller_fixed/contracts/Avatar.sol",

@@ -148,7 +148,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 6.6
+    "build_seconds": 6.0
   },
   "n_files": 7,
   "data_status": "OK",
@@ -163,7 +163,7 @@
   "profile": "v17",
   "review_queue": [],
   "refuted": [],
-  "ms": 6639.6,
+  "ms": 5998.1,
   "eval_files_opened": [
     "dataset_r4/sandbox_land/BUILD.json",
     "dataset_r4/sandbox_land/contracts/Admin.sol",

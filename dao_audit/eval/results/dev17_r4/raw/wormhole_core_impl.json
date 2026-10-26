@@ -132,7 +132,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 4.3
+    "build_seconds": 3.8
   },
   "n_files": 10,
   "data_status": "OK",
@@ -228,7 +228,7 @@
     }
   ],
   "refuted": [],
-  "ms": 4339.6,
+  "ms": 3779.6,
   "eval_files_opened": [
     "dataset_r4/wormhole_core_impl/BUILD.json",
     "dataset_r4/wormhole_core_impl/contracts/BytesLib.sol",

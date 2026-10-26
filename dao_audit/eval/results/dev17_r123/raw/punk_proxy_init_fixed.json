@@ -155,7 +155,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 4.1
+    "build_seconds": 4.0
   },
   "n_files": 7,
   "data_status": "OK",
@@ -170,7 +170,7 @@
   "profile": "v17",
   "review_queue": [],
   "refuted": [],
-  "ms": 4076.9,
+  "ms": 4005.2,
   "eval_files_opened": [
     "dataset/punk_proxy_init_fixed/BUILD.json",
     "dataset/punk_proxy_init_fixed/contracts/CompoundModel.sol",

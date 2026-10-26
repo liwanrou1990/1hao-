@@ -151,7 +151,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 2.6
+    "build_seconds": 2.4
   },
   "n_files": 7,
   "data_status": "OK",
@@ -166,7 +166,7 @@
   "profile": "v17",
   "review_queue": [],
   "refuted": [],
-  "ms": 2612.8,
+  "ms": 2381.5,
   "eval_files_opened": [
     "dataset_r4/nomad_replica_fixed/BUILD.json",
     "dataset_r4/nomad_replica_fixed/contracts/IMessageRecipient.sol",

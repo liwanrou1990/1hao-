@@ -1,0 +1,498 @@
+{
+  "n": 25,
+  "by_category_v17_status": {
+    "NO_RULE": {
+      "NOT_DETECTED": 12
+    },
+    "PARSE_FAIL": {
+      "ANALYSIS_INCOMPLETE": 1,
+      "NOT_DETECTED": 3,
+      "IN_REVIEW_QUEUE": 1
+    },
+    "SEMANTICS_UNDETERMINED": {
+      "NOT_DETECTED": 5
+    },
+    "INSUFFICIENT_EVIDENCE": {
+      "HEURISTIC_SIGNAL_ONLY": 1,
+      "NOT_DETECTED": 1,
+      "IN_REVIEW_QUEUE": 1
+    }
+  },
+  "items": [
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "TokenHandler.safeTransferFrom",
+      "lines": [
+        45,
+        47
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "transferFrom is issued as a low-level call with an encoded selector (execute(token, abi.encodeWithSelector(...))); arbitrary-send-erc20 only matches high-level transferFrom calls; no detector flags a public asset helper that should be internal",
+      "pattern": "public helper issuing transferFrom via encoded low-level call",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "TokenHandler.safeTransfer",
+      "lines": [
+        31,
+        33
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "same encoded low-level call; no detector for a public helper moving the contract's own tokens",
+      "pattern": "public helper moving the contract's own tokens",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "bancor_network",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "TokenHandler.safeApprove",
+      "lines": [
+        18,
+        20
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "same encoded low-level call; no detector for public approve helpers",
+      "pattern": "public helper setting allowances of the contract's tokens",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "bond_fixed_expiry_teller",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "BondFixedExpiryTeller.redeem",
+      "lines": [
+        137,
+        142
+      ],
+      "v16_category": "PARSE_FAIL",
+      "category_title": "code not analysable",
+      "root_cause": "vulnerable commit has no recorded submodules/lockfile for solmate and clones-with-immutable-args; dependency versions unknown -> ANALYSIS_INCOMPLETE (still after V0.16 toolchain fixes)",
+      "pattern": null,
+      "handling_plan": "toolchain fix + regression; dependencies must be verifiable from the repository at the commit, never guessed; afterwards re-classify the item by what the analysis then shows",
+      "v17_status": "ANALYSIS_INCOMPLETE",
+      "build_status_v17": "ANALYSIS_INCOMPLETE",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "daostack_ucontroller",
+      "vuln": "VULN-1",
+      "dimension": "A",
+      "function": "UController.newOrganization",
+      "lines": [
+        90,
+        108
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "permissionless registration that trusts values re-read from a caller-supplied contract; no detector models time-of-check/time-of-use on external getters",
+      "pattern": "check-then-use of values re-read from a caller-supplied contract",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "daostack_ucontroller",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "UController.sendEther",
+      "lines": [
+        388,
+        395
+      ],
+      "v16_category": "SEMANTICS_UNDETERMINED",
+      "category_title": "permission semantics undetermined",
+      "root_cause": "sendEther is guarded by a scheme-permission modifier; Slither treats it as protected and cannot tell that the permission itself is obtainable through newOrganization (chain through a role)",
+      "pattern": null,
+      "handling_plan": "manual review with the V0.17 evidence record (entry points, msg.sender conditions, signature checks); an automatic verified-semantics module is not available (its development was stopped by the platform safety check) -> stays manual",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "CBridgeFacet.swapAndStartBridgeTokensViaCBridge",
+      "lines": [
+        93,
+        139
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "no Slither detector for an arbitrary low-level call (callTo.call(callData)) without ETH value; baseline heuristic missed it because the target flows through a library function parameter (inter-procedural)",
+      "pattern": "arbitrary low-level call target/calldata from caller (entry)",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "lifi_cbridge_facet",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "LibSwap.swap",
+      "lines": [
+        30,
+        59
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "same: arbitrary call with caller-controlled target and calldata has no detector",
+      "pattern": "arbitrary low-level call target/calldata from caller (library)",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "llama_relative_quorum",
+      "vuln": "VULN-2",
+      "dimension": "B",
+      "function": "LlamaRelativeQuorum.validateActionCreation",
+      "lines": [
+        199,
+        210
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "VULN-2: no Slither capability for quorum / voting-supply snapshot semantics",
+      "pattern": "unrestricted overwrite of quorum snapshot (B)",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "audit_finding",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "moonwell_temporal_governor",
+      "vuln": "VULN-3",
+      "dimension": "C",
+      "function": "TemporalGovernor.fastTrackProposalExecution",
+      "lines": [
+        264,
+        266
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "VULN-3: no Slither capability for timelock / emergency-path conditions (fix adds whenPaused)",
+      "pattern": "emergency execution path without pause/delay condition (C)",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "audit_finding",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-1",
+      "dimension": "A",
+      "function": "NFT.init",
+      "lines": [
+        39,
+        57
+      ],
+      "v16_category": "SEMANTICS_UNDETERMINED",
+      "category_title": "permission semantics undetermined",
+      "root_cause": "init is unprotected and writes _owner, but onlyOwner checks require(isOwner()) whose msg.sender comparison is inside an internal call; all_conditional_solidity_variables_read does not follow it, so _owner is not seen as a sender-checked variable",
+      "pattern": null,
+      "handling_plan": "manual review with the V0.17 evidence record (entry points, msg.sender conditions, signature checks); an automatic verified-semantics module is not available (its development was stopped by the platform safety check) -> stays manual",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "NFT.mint",
+      "lines": [
+        79,
+        81
+      ],
+      "v16_category": "SEMANTICS_UNDETERMINED",
+      "category_title": "permission semantics undetermined",
+      "root_cause": "onlyOwner-protected; the risk exists only through the init takeover (chain), which Slither cannot link",
+      "pattern": null,
+      "handling_plan": "manual review with the V0.17 evidence record (entry points, msg.sender conditions, signature checks); an automatic verified-semantics module is not available (its development was stopped by the platform safety check) -> stays manual",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "mph88_deposit_nft",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "NFT.burn",
+      "lines": [
+        83,
+        85
+      ],
+      "v16_category": "SEMANTICS_UNDETERMINED",
+      "category_title": "permission semantics undetermined",
+      "root_cause": "same as mint",
+      "pattern": null,
+      "handling_plan": "manual review with the V0.17 evidence record (entry points, msg.sender conditions, signature checks); an automatic verified-semantics module is not available (its development was stopped by the platform safety check) -> stays manual",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "nomad_replica",
+      "vuln": "VULN-1",
+      "dimension": "A",
+      "function": "Replica.initialize",
+      "lines": [
+        103,
+        117
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "initialize is protected by an initializer guard; the defect is the trusted value (zero root pre-approved), which no detector reasons about",
+      "pattern": "trusted default/zero value pre-approved at initialisation",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "nomad_replica",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "Replica.process",
+      "lines": [
+        186,
+        211
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "message-acceptance semantics (acceptableRoot on the default value) have no detector",
+      "pattern": "message acceptance of default root value",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "olympus_governance",
+      "vuln": "VULN-2",
+      "dimension": "B",
+      "function": "OlympusGovernance.endorseProposal",
+      "lines": [
+        180,
+        201
+      ],
+      "v16_category": "PARSE_FAIL",
+      "category_title": "code not analysable",
+      "root_cause": "blind run: foundry.toml remappings without trailing slash -> ANALYSIS_INCOMPLETE (fixed in V0.16 toolchain; on dev rerun it compiles, and VULN-2 is then NO_RULE)",
+      "pattern": null,
+      "handling_plan": "toolchain fix + regression; dependencies must be verifiable from the repository at the commit, never guessed; afterwards re-classify the item by what the analysis then shows",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "audit_finding",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "olympus_governance",
+      "vuln": "VULN-3",
+      "dimension": "C",
+      "function": "OlympusGovernance.executeProposal",
+      "lines": [
+        265,
+        289
+      ],
+      "v16_category": "PARSE_FAIL",
+      "category_title": "code not analysable",
+      "root_cause": "same build failure in the blind run (on dev rerun: VULN-3 NO_RULE)",
+      "pattern": null,
+      "handling_plan": "toolchain fix + regression; dependencies must be verifiable from the repository at the commit, never guessed; afterwards re-classify the item by what the analysis then shows",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "audit_finding",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "party_veto_proposal",
+      "vuln": "VULN-2",
+      "dimension": "B",
+      "function": "VetoProposal.voteToVeto",
+      "lines": [
+        19,
+        60
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "VULN-2 double counting: no detector for missing per-voter records",
+      "pattern": "missing per-voter record (double counting, B)",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "audit_finding",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "pickle_controller",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "ControllerV4.swapExactJarForJar",
+      "lines": [
+        251,
+        336
+      ],
+      "v16_category": "NO_RULE",
+      "category_title": "no Slither rule",
+      "root_cause": "unvalidated contract parameters (_fromJar/_toJar) used as call targets; no detector for untrusted-contract parameters",
+      "pattern": "unvalidated contract parameters used as call targets",
+      "handling_plan": "evaluate a mature external static-analysis ruleset for the specific pattern on the dev item; accept only if it fires on the vulnerable item AND is silent on the fixed version and on the secure controls; otherwise keep NOT_COVERED and add the pattern to the manual checklist",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "pickle_controller",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "CurveProxyLogic.add_liquidity",
+      "lines": [
+        27,
+        54
+      ],
+      "v16_category": "INSUFFICIENT_EVIDENCE",
+      "category_title": "evidence insufficient",
+      "root_cause": "baseline heuristic located it (unprotected call to parameter-derived target) but it is HEURISTIC_ONLY, not a scored finding",
+      "pattern": null,
+      "handling_plan": "keep in the manual review queue with the evidence record; a reviewer conclusion (with code location) is required before it counts anywhere, and only in the manual layer",
+      "v17_status": "HEURISTIC_SIGNAL_ONLY",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "sandbox_land",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "ERC721BaseToken._burn",
+      "lines": [
+        355,
+        360
+      ],
+      "v16_category": "INSUFFICIENT_EVIDENCE",
+      "category_title": "evidence insufficient",
+      "root_cause": "heuristic flagged exactly _burn (public, unprotected writer of ownership state) but as VULN-1 and HEURISTIC_ONLY; label is VULN-4",
+      "pattern": null,
+      "handling_plan": "keep in the manual review queue with the evidence record; a reviewer conclusion (with code location) is required before it counts anywhere, and only in the manual layer",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "sushi_route_processor2",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "RouteProcessor2.swapUniV3",
+      "lines": [
+        309,
+        323
+      ],
+      "v16_category": "PARSE_FAIL",
+      "category_title": "code not analysable",
+      "root_cause": "blind run: monorepo yarn.lock lookup installed OpenZeppelin 3.1.0 instead of declared 4.8.0 (fixed in V0.16; dev rerun compiles, swapUniV3 itself still has no detector)",
+      "pattern": null,
+      "handling_plan": "toolchain fix + regression; dependencies must be verifiable from the repository at the commit, never guessed; afterwards re-classify the item by what the analysis then shows",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "sushi_route_processor2",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "RouteProcessor2.uniswapV3SwapCallback",
+      "lines": [
+        334,
+        347
+      ],
+      "v16_category": "PARSE_FAIL",
+      "category_title": "code not analysable",
+      "root_cause": "same build failure in the blind run; on the dev rerun arbitrary-send-erc20 DOES locate this function",
+      "pattern": null,
+      "handling_plan": "toolchain fix + regression; dependencies must be verifiable from the repository at the commit, never guessed; afterwards re-classify the item by what the analysis then shows",
+      "v17_status": "IN_REVIEW_QUEUE",
+      "build_status_v17": "OK",
+      "source_type": "exploited_incident",
+      "source_certainty": "verified"
+    },
+    {
+      "case": "wormhole_core_impl",
+      "vuln": "VULN-1",
+      "dimension": "A",
+      "function": "Implementation.initialize",
+      "lines": [
+        33,
+        48
+      ],
+      "v16_category": "SEMANTICS_UNDETERMINED",
+      "category_title": "permission semantics undetermined",
+      "root_cause": "custom initializer guard keyed on the ERC1967 implementation slot; Slither unprotected-upgrade only activates for contracts named/inheriting 'Initializable' or '*upgradeable*' and only recognises a modifier named 'initializer'",
+      "pattern": null,
+      "handling_plan": "manual review with the V0.17 evidence record (entry points, msg.sender conditions, signature checks); an automatic verified-semantics module is not available (its development was stopped by the platform safety check) -> stays manual",
+      "v17_status": "NOT_DETECTED",
+      "build_status_v17": "OK",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain"
+    },
+    {
+      "case": "wormhole_core_impl",
+      "vuln": "VULN-4",
+      "dimension": "D",
+      "function": "Governance.upgradeImplementation",
+      "lines": [
+        91,
+        102
+      ],
+      "v16_category": "INSUFFICIENT_EVIDENCE",
+      "category_title": "evidence insufficient",
+      "root_cause": "controlled-delegatecall fired, but the V0.15 baseline triage demoted it to INCONCLUSIVE because the guardian-signature verification reads block.timestamp (a time condition is not a timelock)",
+      "pattern": null,
+      "handling_plan": "keep in the manual review queue with the evidence record; a reviewer conclusion (with code location) is required before it counts anywhere, and only in the manual layer",
+      "v17_status": "IN_REVIEW_QUEUE",
+      "build_status_v17": "OK",
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain"
+    }
+  ]
+}

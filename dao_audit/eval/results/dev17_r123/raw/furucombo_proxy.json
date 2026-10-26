@@ -161,7 +161,7 @@
       "ratio": 1.0
     },
     "status": "OK",
-    "build_seconds": 1.7
+    "build_seconds": 2.3
   },
   "n_files": 10,
   "data_status": "OK",
@@ -221,7 +221,7 @@
     }
   ],
   "refuted": [],
-  "ms": 1709.9,
+  "ms": 2347.5,
   "eval_files_opened": [
     "dataset/furucombo_proxy/BUILD.json",
     "dataset/furucombo_proxy/contracts/Config.sol",

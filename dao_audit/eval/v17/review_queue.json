@@ -1,0 +1,885 @@
+{
+  "n_items": 19,
+  "summary": {
+    "INCONCLUSIVE": 11,
+    "LABELED_DEFECT": 4,
+    "FP_PROTECTION_CONFIRMED": 4
+  },
+  "note": "manual layer; labels visible; not an automatic detection score",
+  "items": [
+    {
+      "dev_set": "dev17_r123",
+      "case": "aave_governance_v2",
+      "case_kind": "secure_control",
+      "detector": "controlled-delegatecall",
+      "function": "ExecutorWithTimelock.executeTransaction",
+      "file": "ExecutorWithTimelock.sol",
+      "line": 178,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "ExecutorWithTimelock.executeTransaction(address,uint256,string,bytes,uint256,bool)",
+          "modifiers": [
+            "onlyAdmin"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "ExecutorWithTimelock.onlyAdmin:L58",
+              "expr": "require(bool,string)(msg.sender == _admin,ONLY_BY_ADMIN)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "_queuedTransactions"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "audius_governance",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-eth",
+      "function": "Governance._executeTransaction",
+      "file": "Governance.sol",
+      "line": 970,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Governance.evaluateProposalOutcome(uint256)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "inProgressProposals",
+            "proposals"
+          ]
+        },
+        {
+          "entry": "Governance.guardianExecuteTransaction(bytes32,uint256,string,bytes)",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "Governance.guardianExecuteTransaction:L727",
+              "expr": "require(bool,string)(msg.sender == guardianAddress,Governance: Only guardian.)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        }
+      ],
+      "from_origin": null,
+      "historical_label": [
+        {
+          "vuln": "VULN-4",
+          "function": "guardianExecuteTransaction"
+        }
+      ],
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "LABELED_DEFECT",
+      "review_evidence": "guardian check exists on guardianExecuteTransaction; defeated by the re-initialisable guardian (proxy storage collision, VULN-1 at initialize)",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "compound_governance",
+      "case_kind": "secure_control",
+      "detector": "arbitrary-send-eth",
+      "function": "GovernorBravoDelegate.execute",
+      "file": "GovernorBravoDelegate.sol",
+      "line": 143,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "GovernorBravoDelegate.execute(uint256)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "proposals"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "furucombo_proxy",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-eth",
+      "function": "Proxy._postProcess",
+      "file": "Proxy.sol",
+      "line": 269,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Proxy.batchExec(address[],bytes32[],bytes[])",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "Proxy._exec:L214",
+              "expr": "require(bool,string)(_isValid(_to),Invalid handler)"
+            },
+            {
+              "at": "Proxy._execs:L123",
+              "expr": "require(bool,string)(newIndex == index + num,Return num and parsed return num not matched)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "stack"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "furucombo_proxy_fixed",
+      "case_kind": "fixed",
+      "detector": "arbitrary-send-eth",
+      "function": "Proxy._postProcess",
+      "file": "Proxy.sol",
+      "line": 293,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Proxy.batchExec(address[],bytes32[],bytes[])",
+          "modifiers": [
+            "isNotHalted",
+            "isNotBanned"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Proxy.isNotBanned:L22",
+              "expr": "require(bool,string)(registry.bannedAgents(agent) == 0,Banned)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "stack"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "parity_wallet",
+      "case_kind": "vulnerable",
+      "detector": "suicidal",
+      "function": "WalletLibrary.kill",
+      "file": "enhanced-wallet.sol",
+      "line": 225,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "WalletLibrary.kill(address)",
+          "modifiers": [
+            "onlymanyowners"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "WalletLibrary.onlymanyowners:L92",
+              "expr": "confirmAndCheck(_operation)"
+            },
+            {
+              "at": "WalletLibrary.confirmAndCheck:L291",
+              "expr": "ownerIndex == 0"
+            },
+            {
+              "at": "WalletLibrary.confirmAndCheck:L306",
+              "expr": "pending.ownersDone & ownerIndexBit == 0"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "m_pending"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": [
+        {
+          "vuln": "VULN-4",
+          "function": "kill"
+        }
+      ],
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "LABELED_DEFECT",
+      "review_evidence": "owner-confirmation check exists (onlymanyowners); defeated because the shared library's owner set can be initialised by anyone (separate VULN-1 at initWallet)",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r123",
+      "case": "tornado_governance",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-erc20",
+      "function": "Governance._transferTokens",
+      "file": "Governance.sol",
+      "line": 253,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Governance.lock(address,uint256,uint256,uint8,bytes32,bytes32)",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "Governance._transferTokens:L254",
+              "expr": "require(bool,string)(torn.transferFrom(owner,address(this),amount),TORN: transferFrom failed)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        },
+        {
+          "entry": "Governance.lockWithApproval(uint256)",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "Governance._transferTokens:L254",
+              "expr": "require(bool,string)(torn.transferFrom(owner,address(this),amount),TORN: transferFrom failed)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        },
+        {
+          "entry": "GovernanceStakingUpgrade.lock(address,uint256,uint256,uint8,bytes32,bytes32)",
+          "modifiers": [
+            "updateRewards"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Governance._transferTokens:L254",
+              "expr": "require(bool,string)(torn.transferFrom(owner,address(this),amount),TORN: transferFrom failed)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        },
+        {
+          "entry": "GovernanceStakingUpgrade.lockWithApproval(uint256)",
+          "modifiers": [
+            "updateRewards"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Governance._transferTokens:L254",
+              "expr": "require(bool,string)(torn.transferFrom(owner,address(this),amount),TORN: transferFrom failed)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        }
+      ],
+      "from_origin": {
+        "calls": [
+          {
+            "at": "Governance._transferTokens:L254",
+            "from": "owner",
+            "from_is_sender": true,
+            "from_is_this": false,
+            "from_depends_on_address_params": [
+              "owner"
+            ]
+          }
+        ],
+        "n_suspect_calls": 0,
+        "premise_unconfirmed": false
+      },
+      "historical_label": null,
+      "source_type": null,
+      "source_certainty": null,
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "bond_fixed_expiry_teller_fixed",
+      "case_kind": "fixed",
+      "detector": "arbitrary-send-erc20",
+      "function": "BondBaseTeller._handleTransfers",
+      "file": "BondBaseTeller.sol",
+      "line": 177,
+      "evidence_status": "PREMISE_UNCONFIRMED",
+      "evidence_reason": "`from` is not derived from any caller-supplied address parameter (arbitrary-from premise unconfirmed) -> INCONCLUSIVE, manual review",
+      "entries": [],
+      "from_origin": {
+        "calls": [
+          {
+            "at": "BondBaseTeller._handleTransfers:L195",
+            "from": "msg.sender",
+            "from_is_sender": true,
+            "from_is_this": false,
+            "from_depends_on_address_params": []
+          },
+          {
+            "at": "BondBaseTeller._handleTransfers:L218",
+            "from": "owner",
+            "from_is_sender": false,
+            "from_is_this": false,
+            "from_depends_on_address_params": []
+          }
+        ],
+        "n_suspect_calls": 1,
+        "premise_unconfirmed": true
+      },
+      "historical_label": null,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "review_conclusion": "FP_PROTECTION_CONFIRMED",
+      "review_evidence": "from = market owner returned by the auctioneer registry for market id_ (BondBaseTeller.sol:184-218), not a caller-chosen address",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "daostack_ucontroller",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-erc20",
+      "function": "Avatar.externalTokenTransferFrom",
+      "file": "Avatar.sol",
+      "line": 95,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Avatar.externalTokenTransferFrom(IERC20,address,address,uint256)",
+          "modifiers": [
+            "onlyOwner"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Ownable.onlyOwner:L33",
+              "expr": "require(bool)(isOwner())"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        }
+      ],
+      "from_origin": {
+        "calls": [
+          {
+            "at": "Avatar.externalTokenTransferFrom:L103",
+            "from": "_from",
+            "from_is_sender": false,
+            "from_is_this": false,
+            "from_depends_on_address_params": [
+              "_from"
+            ]
+          }
+        ],
+        "n_suspect_calls": 1,
+        "premise_unconfirmed": false
+      },
+      "historical_label": null,
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "review_conclusion": "FP_PROTECTION_CONFIRMED",
+      "review_evidence": "onlyOwner (Avatar.sol:101); owner is the Controller; _from is chosen only by the owner",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "daostack_ucontroller_fixed",
+      "case_kind": "fixed",
+      "detector": "arbitrary-send-erc20",
+      "function": "Avatar.externalTokenTransferFrom",
+      "file": "Avatar.sol",
+      "line": 95,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Avatar.externalTokenTransferFrom(IERC20,address,address,uint256)",
+          "modifiers": [
+            "onlyOwner"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Ownable.onlyOwner:L33",
+              "expr": "require(bool)(isOwner())"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": []
+        }
+      ],
+      "from_origin": {
+        "calls": [
+          {
+            "at": "Avatar.externalTokenTransferFrom:L103",
+            "from": "_from",
+            "from_is_sender": false,
+            "from_is_this": false,
+            "from_depends_on_address_params": [
+              "_from"
+            ]
+          }
+        ],
+        "n_suspect_calls": 1,
+        "premise_unconfirmed": false
+      },
+      "historical_label": null,
+      "source_type": "exploited_incident",
+      "source_certainty": "uncertain",
+      "review_conclusion": "FP_PROTECTION_CONFIRMED",
+      "review_evidence": "same code as vulnerable version: onlyOwner (Avatar.sol:101)",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "moonwell_temporal_governor",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-eth",
+      "function": "TemporalGovernor._executeProposal",
+      "file": "TemporalGovernor.sol",
+      "line": 342,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "TemporalGovernor.executeProposal(bytes)",
+          "modifiers": [
+            "whenNotPaused"
+          ],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "queuedTransactions"
+          ]
+        },
+        {
+          "entry": "TemporalGovernor.fastTrackProposalExecution(bytes)",
+          "modifiers": [
+            "onlyOwner"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Ownable._checkOwner:L51",
+              "expr": "require(bool,string)(owner() == _msgSender(),Ownable: caller is not the owner)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "queuedTransactions"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "moonwell_temporal_governor_fixed",
+      "case_kind": "fixed",
+      "detector": "arbitrary-send-eth",
+      "function": "TemporalGovernor._executeProposal",
+      "file": "TemporalGovernor.sol",
+      "line": 342,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "TemporalGovernor.executeProposal(bytes)",
+          "modifiers": [
+            "whenNotPaused"
+          ],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "queuedTransactions"
+          ]
+        },
+        {
+          "entry": "TemporalGovernor.fastTrackProposalExecution(bytes)",
+          "modifiers": [
+            "onlyOwner",
+            "whenPaused"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "Ownable._checkOwner:L51",
+              "expr": "require(bool,string)(owner() == _msgSender(),Ownable: caller is not the owner)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "queuedTransactions"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "audit_finding",
+      "source_certainty": "verified",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "safe_contracts",
+      "case_kind": "secure_control",
+      "detector": "arbitrary-send-eth",
+      "function": "GnosisSafe.handlePayment",
+      "file": "GnosisSafe.sol",
+      "line": 196,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "GnosisSafe.setup(address[],uint256,address,bytes,address,address,uint256,address)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "modules",
+            "owners",
+            "threshold"
+          ]
+        },
+        {
+          "entry": "GnosisSafe.execTransaction(address,uint256,bytes,Enum.Operation,uint256,uint256,uint256,address,address,bytes)",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "GnosisSafe.checkNSignatures:L291",
+              "expr": "require(bool,string)(msg.sender == currentOwner || approvedHashes[currentOwner][dataHash] != 0,GS025)"
+            }
+          ],
+          "signature_checks": [
+            {
+              "at": "GnosisSafe.checkNSignatures:L285",
+              "kind": "isValidSignature (ERC-1271)"
+            },
+            {
+              "at": "GnosisSafe.checkNSignatures:L295",
+              "kind": "ecrecover"
+            }
+          ],
+          "self_checked_state": []
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "control",
+      "source_certainty": "verified",
+      "review_conclusion": "FP_PROTECTION_CONFIRMED",
+      "review_evidence": "private; called from execTransaction after checkSignatures (GnosisSafe.sol:145, refund parameters are signed) and from setup, which is guarded by a one-time threshold check",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "sushi_route_processor2",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-eth",
+      "function": "RouteProcessor2.wrapNative",
+      "file": "RouteProcessor2.sol",
+      "line": 217,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "RouteProcessor2.processRoute(address,uint256,address,uint256,address,bytes)",
+          "modifiers": [
+            "lock"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "RouteProcessor2.processRouteInternal:L116",
+              "expr": "require(bool,string)(balanceInFinal + amountIn >= balanceInInitial,RouteProcessor: Minimal imput balance violation)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "lastCalledPool",
+            "unlocked"
+          ]
+        },
+        {
+          "entry": "RouteProcessor2.transferValueAndprocessRoute(address,uint256,address,uint256,address,uint256,address,bytes)",
+          "modifiers": [
+            "lock"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "RouteProcessor2.processRouteInternal:L116",
+              "expr": "require(bool,string)(balanceInFinal + amountIn >= balanceInInitial,RouteProcessor: Minimal imput balance violation)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "lastCalledPool",
+            "unlocked"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "sushi_route_processor2",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-erc20",
+      "function": "RouteProcessor2.uniswapV3SwapCallback",
+      "file": "RouteProcessor2.sol",
+      "line": 334,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "RouteProcessor2.uniswapV3SwapCallback(int256,int256,bytes)",
+          "modifiers": [],
+          "msg_sender_conditions": [
+            {
+              "at": "RouteProcessor2.uniswapV3SwapCallback:L339",
+              "expr": "require(bool,string)(msg.sender == lastCalledPool,RouteProcessor.uniswapV3SwapCallback: call from unknown source)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "lastCalledPool"
+          ]
+        }
+      ],
+      "from_origin": {
+        "calls": [
+          {
+            "at": "RouteProcessor2.uniswapV3SwapCallback:L346",
+            "from": "from",
+            "from_is_sender": false,
+            "from_is_this": false,
+            "from_depends_on_address_params": [
+              "data"
+            ]
+          }
+        ],
+        "n_suspect_calls": 1,
+        "premise_unconfirmed": false
+      },
+      "historical_label": [
+        {
+          "vuln": "VULN-4",
+          "function": "uniswapV3SwapCallback"
+        }
+      ],
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "review_conclusion": "LABELED_DEFECT",
+      "review_evidence": "msg.sender == lastCalledPool check exists; lastCalledPool is set from the caller-supplied route, and `from` is decoded from pool-supplied data; fix (diff) requires from == msg.sender",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "sushi_route_processor2_fixed",
+      "case_kind": "fixed",
+      "detector": "arbitrary-send-eth",
+      "function": "RouteProcessor2.wrapNative",
+      "file": "RouteProcessor2.sol",
+      "line": 217,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "RouteProcessor2.processRoute(address,uint256,address,uint256,address,bytes)",
+          "modifiers": [
+            "lock"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "RouteProcessor2.processRouteInternal:L116",
+              "expr": "require(bool,string)(balanceInFinal + amountIn >= balanceInInitial,RouteProcessor: Minimal imput balance violation)"
+            },
+            {
+              "at": "RouteProcessor2.swapUniV3:L315",
+              "expr": "require(bool,string)(from == msg.sender,swapUniV3: unexpected from address)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "lastCalledPool",
+            "unlocked"
+          ]
+        },
+        {
+          "entry": "RouteProcessor2.transferValueAndprocessRoute(address,uint256,address,uint256,address,uint256,address,bytes)",
+          "modifiers": [
+            "lock"
+          ],
+          "msg_sender_conditions": [
+            {
+              "at": "RouteProcessor2.processRouteInternal:L116",
+              "expr": "require(bool,string)(balanceInFinal + amountIn >= balanceInInitial,RouteProcessor: Minimal imput balance violation)"
+            },
+            {
+              "at": "RouteProcessor2.swapUniV3:L315",
+              "expr": "require(bool,string)(from == msg.sender,swapUniV3: unexpected from address)"
+            }
+          ],
+          "signature_checks": [],
+          "self_checked_state": [
+            "lastCalledPool",
+            "unlocked"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "exploited_incident",
+      "source_certainty": "verified",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "uniswap_governance",
+      "case_kind": "secure_control",
+      "detector": "arbitrary-send-eth",
+      "function": "GovernorAlpha.execute",
+      "file": "GovernorAlpha.sol",
+      "line": 188,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "GovernorAlpha.execute(uint256)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [],
+          "self_checked_state": [
+            "proposals"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "control",
+      "source_certainty": "verified",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "wormhole_core_impl",
+      "case_kind": "vulnerable",
+      "detector": "arbitrary-send-eth",
+      "function": "Governance.submitTransferFees",
+      "file": "Governance.sol",
+      "line": 73,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Governance.submitTransferFees(bytes)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [
+            {
+              "at": "Messages.verifySignatures:L51",
+              "kind": "ecrecover"
+            }
+          ],
+          "self_checked_state": [
+            "_state"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": null,
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "review_conclusion": "INCONCLUSIVE",
+      "review_evidence": "not determined by review; protection evidence present but effectiveness unverified",
+      "isolated_confirmation": "NOT_RUN"
+    },
+    {
+      "dev_set": "dev17_r4",
+      "case": "wormhole_core_impl",
+      "case_kind": "vulnerable",
+      "detector": "controlled-delegatecall",
+      "function": "Governance.upgradeImplementation",
+      "file": "Governance.sol",
+      "line": 91,
+      "evidence_status": "PROTECTION_EVIDENCE",
+      "evidence_reason": "every entry point has a msg.sender-dependent condition, a signature check, or a condition on state it writes itself (possible one-shot guard); effectiveness not verified -> INCONCLUSIVE, manual review",
+      "entries": [
+        {
+          "entry": "Governance.submitContractUpgrade(bytes)",
+          "modifiers": [],
+          "msg_sender_conditions": [],
+          "signature_checks": [
+            {
+              "at": "Messages.verifySignatures:L51",
+              "kind": "ecrecover"
+            }
+          ],
+          "self_checked_state": [
+            "_state"
+          ]
+        }
+      ],
+      "from_origin": null,
+      "historical_label": [
+        {
+          "vuln": "VULN-4",
+          "function": "upgradeImplementation"
+        }
+      ],
+      "source_type": "bug_bounty",
+      "source_certainty": "uncertain",
+      "review_conclusion": "LABELED_DEFECT",
+      "review_evidence": "reached only via a guardian-signed message (signature check present); defeated if the guardian set of the bare logic contract is initialised by anyone (VULN-1 at initialize)",
+      "isolated_confirmation": "NOT_RUN"
+    }
+  ]
+}
