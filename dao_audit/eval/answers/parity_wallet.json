@@ -1,0 +1,9 @@
+{"case":"parity_wallet","project":"parity","kind":"vulnerable","is_chain_case":true,
+ "truth":[
+   {"vuln":"VULN-1","contract":"WalletLibrary","function":"initWallet","line":[219,224],"treasury_risk":false,
+    "governance_relation":"独立库上 only_uninitialized(m_numOwners>0)守卫失效,任意人直接 initWallet/initMultiowned 成唯一owner"},
+   {"vuln":"VULN-4","contract":"WalletLibrary","function":"kill","line":[225,227],"treasury_risk":true,
+    "governance_relation":"成为owner后 onlymanyowners 下 kill→suicide 自毁共享库,所有 delegatecall 代理钱包资金永久冻结"}],
+ "evidence":{"repo":"https://github.com/paritytech/parity-ethereum","vuln_commit":"02d462e2636f1898df3e7556364260c594b112e6",
+   "fixed_commit":null,"incident_date":"2017-11-06","pragma":"^0.4.9",
+   "reports":["https://www.parity.io/security-alert-2/","https://github.com/paritytech/parity-ethereum/issues/6995"]}}
