@@ -127,3 +127,55 @@ def predict_table(enriched_row: pd.Series, grid=(1, 2, 3, 5, 8, 10)) -> list[dic
     F = _features(e, np.array(grid, dtype=float))
     probs = pack["model"].predict(F)
     return [{"折价%": d, "限价": float(enriched_row["close"]) * (1 - d / 100), "14天成交概率": float(pr)} for d, pr in zip(grid, probs)]
+
+
+def audit(block_days: int = 24, n_boot: int = 400, seed: int = 11) -> dict:
+    """最终审计：重叠样本（同一决策日 12 档折价、相邻日 14 天窗口重叠）对统计误差的影响 —— 按日期块（block_days 天）做块自助，
+    给 AUC / Brier / ECE 的 95% CI；按年份给“整体校准偏差”（预测均值 − 真实率）；与“按折价档的无条件历史成交率”基准比较 Brier 技能。"""
+    import joblib
+    from ..backtest.dataset import load_bars
+    bars = load_bars()
+    ds = dataset(bars); ds = ds[ds["z"].notna()].reset_index(drop=True)
+    folds = fold_schedule(ds["ts"]); gap = timedelta(days=24)
+    ds["p_lr"] = np.nan; ds["p_naive"] = np.nan
+    for k, (s, e) in enumerate(folds):
+        tr = ds["ts"] <= s - gap; te = (ds["ts"] >= s) & (ds["ts"] < e)
+        if tr.sum() < 1000 or te.sum() == 0:
+            continue
+        m = FillModel().fit(ds.loc[tr, FEATS], ds.loc[tr, "filled"].to_numpy())
+        ds.loc[te, "p_lr"] = m.predict(ds.loc[te, FEATS])
+        naive = ds[tr].groupby("d_pct")["filled"].mean()
+        ds.loc[te, "p_naive"] = ds.loc[te, "d_pct"].map(naive).to_numpy()
+    oos = ds[ds["p_lr"].notna()].copy()
+    y = oos["filled"].to_numpy(float); p = oos["p_lr"].to_numpy(float); pn = oos["p_naive"].to_numpy(float)
+    # 块自助（按日期块重采样全部行）
+    days = oos["ts"].dt.floor("D"); uniq = np.sort(days.unique()); day_idx = {d: i for i, d in enumerate(uniq)}
+    blk = np.array([day_idx[d] // block_days for d in days]); n_blk = blk.max() + 1
+    rng = np.random.default_rng(seed); stats = {"auc": [], "brier": [], "ece": [], "brier_skill_vs_naive": []}
+    groups = [np.where(blk == b)[0] for b in range(n_blk)]
+    for _ in range(n_boot):
+        pick = rng.integers(0, n_blk, size=n_blk); idx = np.concatenate([groups[b] for b in pick])
+        yy, pp, pnn = y[idx], p[idx], pn[idx]
+        if len(np.unique(yy)) < 2:
+            continue
+        r = _report(pp, yy); bn = brier_score_loss(yy, np.clip(pnn, 1e-6, 1 - 1e-6))
+        stats["auc"].append(r["auc"]); stats["brier"].append(r["brier"]); stats["ece"].append(r["ece"]); stats["brier_skill_vs_naive"].append(1 - r["brier"] / bn)
+    ci = {k: [float(np.quantile(v, 0.025)), float(np.quantile(v, 0.975))] for k, v in stats.items()}
+    full = _report(p, y); full.pop("reliability", None)
+    naive_full = _report(pn, y); naive_full.pop("reliability", None)
+    by_year = {}
+    for yr, g in oos.groupby(oos["ts"].dt.year):
+        r = _report(g["p_lr"].to_numpy(float), g["filled"].to_numpy(float)); r.pop("reliability", None)
+        rn = _report(g["p_naive"].to_numpy(float), g["filled"].to_numpy(float))
+        r["calib_bias_pred_minus_obs"] = r.get("pred_mean", np.nan) - r.get("obs_rate", np.nan); r["brier_naive"] = rn.get("brier"); by_year[str(yr)] = r
+    by_state = {}
+    for stt, g in oos.groupby("state"):
+        r = _report(g["p_lr"].to_numpy(float), g["filled"].to_numpy(float)); r.pop("reliability", None)
+        rn = _report(g["p_naive"].to_numpy(float), g["filled"].to_numpy(float)); r["brier_naive"] = rn.get("brier"); by_state[str(stt)] = r
+    n_eff = int(n_blk)
+    res = {"n_rows": int(len(oos)), "n_decision_days": int(len(uniq)), "n_blocks": n_eff, "block_days": block_days,
+           "note": "行数 57k 高度重叠（每个决策日 12 档折价共用同一条价格路径，相邻决策日的 14 天窗口重叠 13 天）；有效独立样本约等于块数，置信区间按块自助给出。",
+           "logistic": full, "naive_per_d": naive_full, "brier_skill_vs_naive": float(1 - full["brier"] / naive_full["brier"]), "ci95_blockboot": ci,
+           "by_year": by_year, "by_state": by_state}
+    (report_dir() / "monitor" / "fill_model_audit.json").write_text(json.dumps(res, ensure_ascii=False, indent=2, default=float))
+    return res

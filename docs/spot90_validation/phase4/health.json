@@ -1,0 +1,153 @@
+{
+  "run_ts": "2026-10-28T23:57:19.628144+00:00",
+  "overall": "WARN",
+  "n_fail": 0,
+  "n_warn": 1,
+  "checks": [
+    {
+      "check": "BTCUSDT 日线无重复",
+      "status": "OK",
+      "detail": "duplicates=0"
+    },
+    {
+      "check": "BTCUSDT 日线无缺口",
+      "status": "OK",
+      "detail": "缺 0 根"
+    },
+    {
+      "check": "BTCUSDT 日线新鲜度",
+      "status": "OK",
+      "detail": "最后日线 2026-10-27，延迟 0 天"
+    },
+    {
+      "check": "BTCUSDT OHLC 合法",
+      "status": "OK",
+      "detail": "high≥max(open,close)≥min≥low>0"
+    },
+    {
+      "check": "BTCUSDT 近 5 日无异常跳变",
+      "status": "OK",
+      "detail": "最大单日绝对涨跌 0.9%"
+    },
+    {
+      "check": "ETHUSDT 日线无重复",
+      "status": "OK",
+      "detail": "duplicates=0"
+    },
+    {
+      "check": "ETHUSDT 日线无缺口",
+      "status": "OK",
+      "detail": "缺 0 根"
+    },
+    {
+      "check": "ETHUSDT 日线新鲜度",
+      "status": "OK",
+      "detail": "最后日线 2026-10-27，延迟 0 天"
+    },
+    {
+      "check": "ETHUSDT OHLC 合法",
+      "status": "OK",
+      "detail": "high≥max(open,close)≥min≥low>0"
+    },
+    {
+      "check": "ETHUSDT 近 5 日无异常跳变",
+      "status": "OK",
+      "detail": "最大单日绝对涨跌 1.2%"
+    },
+    {
+      "check": "采集状态为近 30 小时内",
+      "status": "OK",
+      "detail": "data_status run_ts=2026-10-28T23:51:04"
+    },
+    {
+      "check": "Bitget 可达",
+      "status": "WARN",
+      "detail": "api.bitget.com 不可达或拒绝：BitgetUnreachable: ProxyError: 403 Forbidden；已使用备用源"
+    },
+    {
+      "check": "快照新鲜度 ≤ 30 小时",
+      "status": "OK",
+      "detail": "生成于 2026-10-28T23:51:15，0.1 小时前"
+    },
+    {
+      "check": "BTCUSDT 均线/风险评分",
+      "status": "OK",
+      "detail": "MA200=73069.32405, risk=16.0"
+    },
+    {
+      "check": "BTCUSDT 成交概率表",
+      "status": "OK",
+      "detail": "6 行"
+    },
+    {
+      "check": "BTCUSDT 方案摘要",
+      "status": "OK",
+      "detail": "plans_comparison 已载入"
+    },
+    {
+      "check": "BTCUSDT 参考价",
+      "status": "OK",
+      "detail": "defillama_coingecko_current 正常 延迟 81 秒"
+    },
+    {
+      "check": "BTCUSDT 参考价与最后收盘偏差 < 15%",
+      "status": "OK",
+      "detail": "0.40%"
+    },
+    {
+      "check": "BTCUSDT 数据延迟标志",
+      "status": "OK",
+      "detail": "data_delayed=False"
+    },
+    {
+      "check": "ETHUSDT 均线/风险评分",
+      "status": "OK",
+      "detail": "MA200=2159.6927, risk=20.4"
+    },
+    {
+      "check": "ETHUSDT 成交概率表",
+      "status": "OK",
+      "detail": "6 行"
+    },
+    {
+      "check": "ETHUSDT 方案摘要",
+      "status": "OK",
+      "detail": "plans_comparison 已载入"
+    },
+    {
+      "check": "ETHUSDT 参考价",
+      "status": "OK",
+      "detail": "defillama_coingecko_current 正常 延迟 81 秒"
+    },
+    {
+      "check": "ETHUSDT 参考价与最后收盘偏差 < 15%",
+      "status": "OK",
+      "detail": "0.27%"
+    },
+    {
+      "check": "ETHUSDT 数据延迟标志",
+      "status": "OK",
+      "detail": "data_delayed=False"
+    },
+    {
+      "check": "成交概率模型文件",
+      "status": "OK",
+      "detail": "/home/user/1hao-/models_out/spot90/fill_model_logistic.joblib"
+    },
+    {
+      "check": "成交模型验证报告",
+      "status": "OK",
+      "detail": "fill_model_validation.json"
+    },
+    {
+      "check": "方案比较结果",
+      "status": "OK",
+      "detail": "plans_comparison.json"
+    },
+    {
+      "check": "只读模式（无下单/提现接口）",
+      "status": "OK",
+      "detail": "未发现"
+    }
+  ]
+}

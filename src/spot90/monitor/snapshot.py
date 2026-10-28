@@ -15,7 +15,7 @@ from ..data.store import BarStore
 from .fill_model import predict_table
 from .live import daily_bar_freshness, fetch_live_prices
 from .position import scenario_table
-from .rules import conditional_history, enrich, risk_components
+from .rules import conditional_history, enrich, risk_components, risk_level_history
 
 
 def _f(x):
@@ -32,7 +32,8 @@ def build_snapshot(symbols: list[str] | None = None, store: BarStore | None = No
     live = live if live is not None else fetch_live_prices(symbols)
     st = load_status() or {}
     now = datetime.now(timezone.utc)
-    snap = {"generated_at": now.isoformat(), "disclaimer": "仅供研究；不执行交易；不含任何上涨概率预测或 AI 买点。", "symbols": {}}
+    snap = {"generated_at": now.isoformat(), "generated_date_utc": now.date().isoformat(), "snapshot_max_age_hours": 30,
+            "disclaimer": "仅供研究；不执行交易；不含任何上涨概率预测或 AI 买点。", "ingest_status_run_ts": st.get("run_ts"), "fallback_used": st.get("fallback_used"), "symbols": {}}
     mdir = report_dir() / "monitor"
     fv = json.loads((mdir / "fill_model_validation.json").read_text()) if (mdir / "fill_model_validation.json").exists() else None
     plans = json.loads((mdir / "plans_comparison.json").read_text()) if (mdir / "plans_comparison.json").exists() else None
@@ -67,6 +68,7 @@ def build_snapshot(symbols: list[str] | None = None, store: BarStore | None = No
                  "rule_text": "趋势：close/MA50/MA200 相对位置 + MA200 30日斜率；风险 = 波动率分位 + 趋势状态 + 偏离MA200过热 + 30日动量极端，各 0~25 分",
                  "state_history_30d": e["state"].tail(30).tolist(), "risk_history_90d": [_f(x) for x in e["risk_score"].tail(90)], "risk_dates_90d": [str(d.date()) for d in e["ts"].tail(90)]}
         cond = conditional_history(b, e).replace({np.nan: None}).to_dict(orient="records")
+        rl_hist = risk_level_history(b, e).replace({np.nan: None}).to_dict(orient="records")
         fills = predict_table(r)
         fill_val = None
         if fv:
@@ -78,7 +80,9 @@ def build_snapshot(symbols: list[str] | None = None, store: BarStore | None = No
         plan_sum = (plans or {}).get("results", {}).get(sym)
         series = e.tail(400)[["ts", "close", "ma20", "ma50", "ma90", "ma200", "risk_score"]].copy(); series["ts"] = series["ts"].dt.strftime("%Y-%m-%d")
         snap["symbols"][sym] = {"market": market, "indicators": ind, "distances": dist, "windows": windows, "trend_risk": trend, "conditional_history_90d": cond,
+                                "risk_level_history_90d": rl_hist,
                                 "limit_fill_table": fills, "fill_model_validation": fill_val, "position_scenarios": pos, "plans": plan_sum,
+                                "plans_method_note": "三方案为独立滚动模拟：每个历史起始日各自以 10,000 USDT 开一个假想账户、相同手续费/滑点/现金收益假设、窗口末平仓；不是一个连续资金账户的可执行净值曲线，不同起始日之间资金不滚存。",
                                 "series_400d": series.replace({np.nan: None}).to_dict(orient="list")}
     out = report_dir() / "monitor"; (out / "history").mkdir(parents=True, exist_ok=True)
     txt = json.dumps(snap, ensure_ascii=False, indent=1, default=lambda o: None if isinstance(o, float) and not np.isfinite(o) else (float(o) if isinstance(o, (np.floating,)) else str(o)))

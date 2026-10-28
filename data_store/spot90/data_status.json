@@ -1,5 +1,5 @@
 {
-  "run_ts": "2026-10-28T23:25:02.889927+00:00",
+  "run_ts": "2026-10-28T23:51:04.018489+00:00",
   "primary_source_requested": "bitget",
   "symbols": {
     "BTCUSDT": {
@@ -40,7 +40,9 @@
             "binance_spot_via_static_klines": 3359
           }
         },
-        "meets_history_requirement": true
+        "meets_history_requirement": true,
+        "effective_source": "binance_spot_via_static_klines",
+        "updated_at": "2026-10-28T23:51:11.393349+00:00"
       },
       "4h": {
         "attempts": [
@@ -120,7 +122,9 @@
             "binance_spot_via_static_klines": 20139
           }
         },
-        "meets_history_requirement": true
+        "meets_history_requirement": true,
+        "effective_source": "binance_spot_via_static_klines",
+        "updated_at": "2026-10-28T23:51:11.785488+00:00"
       }
     },
     "ETHUSDT": {
@@ -161,7 +165,9 @@
             "binance_spot_via_static_klines": 3359
           }
         },
-        "meets_history_requirement": true
+        "meets_history_requirement": true,
+        "effective_source": "binance_spot_via_static_klines",
+        "updated_at": "2026-10-28T23:51:12.017454+00:00"
       },
       "4h": {
         "attempts": [
@@ -241,7 +247,9 @@
             "binance_spot_via_static_klines": 20139
           }
         },
-        "meets_history_requirement": true
+        "meets_history_requirement": true,
+        "effective_source": "binance_spot_via_static_klines",
+        "updated_at": "2026-10-28T23:51:12.343739+00:00"
       }
     }
   },
@@ -254,5 +262,6 @@
       "ok": true,
       "detail": "raw.githubusercontent.com HTTP 200"
     }
-  }
+  },
+  "fallback_used": true
 }

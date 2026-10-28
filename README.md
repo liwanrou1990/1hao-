@@ -256,3 +256,12 @@ bash scripts/spot90_monitor_daily.sh                                   # 每日�
 python -m streamlit run src/spot90/dashboard/app.py --server.port 8501  # 打开 http://localhost:8501
 pytest tests/test_spot90_monitor.py tests/test_spot90_data.py tests/test_spot90_phase2.py -q
 ```
+
+### spot90 第五阶段（2026-10-28）：上线验收与稳定性
+
+> 健康检查（日线完整性/新鲜度/OHLC/采集状态/快照/参考价/模型文件/只读扫描）+ alerts.log + 可选 webhook；快照过期横幅；参考价与最新完整日线分列并带 UTC/北京时间与延迟；风险等级历史 90 天回撤分布；成交模型重叠误差审计（相对折价档历史成交率的 Brier 技能 ≈ 0）；三方案口径审计（独立滚动模拟）。24 项自动化测试 + Playwright 8 轮页面测试通过。报告 `docs/18_spot90_上线验收与稳定性报告.md`。
+
+```bash
+bash scripts/spot90_monitor_daily.sh && PYTHONPATH=src python -m streamlit run src/spot90/dashboard/app.py
+node scripts/spot90_ui_test.js http://127.0.0.1:8501/ 3
+```

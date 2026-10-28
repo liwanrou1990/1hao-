@@ -37,7 +37,7 @@ def _splice(primary: pd.DataFrame, backfill: pd.DataFrame, tol_pct: float) -> tu
 
 
 def run_ingest(symbols: list[str] | None = None, timeframes: list[str] | None = None, source: str | None = None,
-               skip_crosscheck: bool = False, store: BarStore | None = None) -> dict:
+               skip_crosscheck: bool = False, store: BarStore | None = None, bitget_client=None, sk_client=None, llama_client=None) -> dict:
     c = cfg()
     symbols = symbols or c["symbols"]
     timeframes = timeframes or c["timeframes"]
@@ -45,10 +45,11 @@ def run_ingest(symbols: list[str] | None = None, timeframes: list[str] | None = 
     store = store or BarStore()
     status: dict = {"run_ts": datetime.now(timezone.utc).isoformat(), "primary_source_requested": source, "symbols": {}, "probes": {}}
 
-    bitget = BitgetSpotHistoryClient()
+    bitget = bitget_client or BitgetSpotHistoryClient()
     status["probes"]["bitget"] = bitget.probe()
-    sk = StaticKlinesClient()
+    sk = sk_client or StaticKlinesClient()
     status["probes"]["static_klines"] = sk.probe()
+    status["fallback_used"] = bool(source == "bitget" and not status["probes"]["bitget"]["ok"] and status["probes"]["static_klines"]["ok"])
     tol = float(c["data"].get("splice_tolerance_pct", 0.8))
     years_req = float(c.get("history_years_required", 5))
 
@@ -85,9 +86,11 @@ def run_ingest(symbols: list[str] | None = None, timeframes: list[str] | None = 
             rep = continuity_report(merged_all, tf)
             entry["continuity"] = rep
             entry["meets_history_requirement"] = bool(rep["years"] >= years_req)
+            entry["effective_source"] = (max(rep["sources"], key=rep["sources"].get) if rep.get("sources") else None)
+            entry["updated_at"] = datetime.now(timezone.utc).isoformat()
             if tf == "1d" and not skip_crosscheck and not merged_all.empty:
                 try:
-                    ref = LlamaClient().daily_close(sym)
+                    ref = (llama_client or LlamaClient()).daily_close(sym)
                     entry["cross_check"] = cross_check(merged_all, ref)
                     if not ref.empty:
                         ref.to_parquet(store.root / "bars" / f"{sym}_ref_daily_close.parquet", index=False)

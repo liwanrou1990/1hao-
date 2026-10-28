@@ -83,3 +83,20 @@ def conditional_history(bars_1d: pd.DataFrame, enriched: pd.DataFrame, H: int = 
                      "收益5%分位": g["ret_A"].quantile(0.05), "收益95%分位": g["ret_A"].quantile(0.95),
                      "浮亏>10%": (g["mae_A"] < -0.10).mean(), "浮亏>15%": (g["mae_A"] < -0.15).mean(), "浮亏>20%": (g["mae_A"] < -0.20).mean(), "平均最大浮亏": g["mae_A"].mean()})
     return pd.DataFrame(rows)
+
+
+def risk_level_history(bars_1d: pd.DataFrame, enriched: pd.DataFrame, H: int = 90) -> pd.DataFrame:
+    """各风险等级（决策日可知）之后 H 天买入持有的历史分布：最大浮亏分位数、浮亏>10/15/20% 频率、收益分位数。
+    这是“历史上处于该等级的日子后来发生了什么”的描述，不是“现在处于该等级未来会亏的概率”。"""
+    wide, _ = build_labels(bars_1d, H=H, W=14)
+    m = wide.merge(enriched[["ts", "risk_level", "risk_score"]], on="ts", how="left")
+    rows = []
+    order = ["低", "中", "高", "极高"]
+    for lv in order + ["全部"]:
+        g = m if lv == "全部" else m[m["risk_level"] == lv]
+        if len(g) == 0:
+            continue
+        rows.append({"风险等级": lv, "样本日": int(len(g)), "样本占比": len(g) / len(m), "最大浮亏中位": g["mae_A"].median(), "最大浮亏5%分位(最差)": g["mae_A"].quantile(0.05),
+                     "浮亏>10%": (g["mae_A"] < -0.10).mean(), "浮亏>15%": (g["mae_A"] < -0.15).mean(), "浮亏>20%": (g["mae_A"] < -0.20).mean(),
+                     "峰谷回撤中位": g["mdd_A"].median(), "90天收益中位": g["ret_A"].median(), "90天收益5%分位": g["ret_A"].quantile(0.05), "90天盈利频率": g["profit_A"].mean()})
+    return pd.DataFrame(rows)

@@ -39,7 +39,13 @@ st.title("BTC / ETH 中长期现货投资：风险监测与仓位管理（研究
 if snap is None:
     st.error("未找到快照。请先运行：PYTHONPATH=src python -m spot90.cli ingest && PYTHONPATH=src python -m spot90.monitor.snapshot")
     st.stop()
-st.caption(f"快照生成时间 {snap['generated_at'][:19]} UTC · {snap['disclaimer']} · 本页不显示任何上涨概率、必涨价格或 AI 买入区间（三阶段样本外验证均未通过，见 docs/14-16）。")
+from datetime import datetime, timezone, timedelta  # noqa: E402
+_gen = datetime.fromisoformat(snap["generated_at"]); _age_h = (datetime.now(timezone.utc) - _gen).total_seconds() / 3600
+_bj = (_gen + timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
+if _age_h > snap.get("snapshot_max_age_hours", 30):
+    st.error(f"快照已过期：生成于 {snap['generated_at'][:16]} UTC（北京时间 {_bj}），{_age_h:.0f} 小时前。下方所有价格都是过期数据，不是实时价。请运行 scripts/spot90_monitor_daily.sh。")
+st.caption(f"快照生成时间 {snap['generated_at'][:19]} UTC（北京时间 {_bj}，{_age_h:.1f} 小时前）· {snap['disclaimer']} · 本页不显示任何上涨概率、必涨价格或 AI 买入区间（三阶段样本外验证均未通过，见 docs/14-16）。"
+           + ("· 本次日线来自备用源（Bitget 不可达）" if snap.get("fallback_used") else ""))
 
 tabs = st.tabs(["BTC", "ETH", "方案历史比较", "数据来源与验证"])
 for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
@@ -48,8 +54,13 @@ for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
         if not v or "error" in v:
             st.error(f"{sym} 无数据"); continue
         m, t, d, w = v["market"], v["trend_risk"], v["distances"], v["windows"]
-        if m["data_delayed"]:
-            st.warning(f"数据延迟：日线 {m['daily_bar']['freshness']['status']}；参考价 {m['live'].get('status')}。下方价格不是实时价。")
+        stale_snap = _age_h > snap.get("snapshot_max_age_hours", 30)
+        if m["data_delayed"] or stale_snap:
+            st.warning(f"数据延迟：日线 {m['daily_bar']['freshness']['status']}；参考价 {m['live'].get('status')}" + ("；快照过期" if stale_snap else "") + "。下方价格不是实时价。")
+        lv = m["live"]; db = m["daily_bar"]
+        _pts = lv.get("price_ts"); _pts_bj = (datetime.fromisoformat(_pts) + timedelta(hours=8)).strftime("%m-%d %H:%M") if _pts else "—"
+        st.markdown(f"<small>参考价：<b>{money(lv.get('price'))}</b>（{lv.get('source')}，价格时间 {str(_pts)[:19]} UTC / 北京 {_pts_bj}，延迟 {lv.get('age_s')} 秒，状态 {lv.get('status')}）　|　"
+                    f"最新完整日线：<b>{db['date']}</b>（UTC 日，收盘 {money(db['close'])}，来源 {db['source']}，{db['freshness']['status']}）。两者口径不同：参考价为聚合即时价，日线收盘用于所有指标计算。</small>", unsafe_allow_html=True)
         c1, c2, c3, c4, c5, c6, c7 = st.columns([1.6, 1, 1, 0.8, 0.8, 0.8, 1])
         c1.metric(f"{sym[:3]} {m['price_label']}", money(m["price_for_display"]), help=f"参考价来源 {m['live'].get('source')}，价格时间 {m['live'].get('price_ts')}，延迟 {m['live'].get('age_s')} 秒；日线来源 {m['daily_bar']['source']}，最后收盘日 {m['daily_bar']['date']}")
         c2.metric("趋势状态（固定规则）", t["state"])
@@ -82,6 +93,14 @@ for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
             fig2 = go.Figure(go.Scatter(x=rh["日期"], y=rh["风险评分"], line=dict(color="#d26a3f", width=2), name="风险评分"))
             fig2.update_layout(height=200, margin=dict(l=10, r=10, t=30, b=10), title="最近 90 天风险评分（0~100）", yaxis=dict(range=[0, 100]), template="simple_white")
             st.plotly_chart(fig2, use_container_width=True)
+        st.subheader("各风险等级的历史 90 天回撤分布（参考；风险评分是规则度量，不是未来亏损概率）")
+        rl = pd.DataFrame(v.get("risk_level_history_90d", []))
+        if not rl.empty:
+            show = rl.copy()
+            for c_ in ("样本占比", "最大浮亏中位", "最大浮亏5%分位(最差)", "浮亏>10%", "浮亏>15%", "浮亏>20%", "峰谷回撤中位", "90天收益中位", "90天收益5%分位", "90天盈利频率"):
+                show[c_] = show[c_].map(lambda x: pct(x))
+            st.dataframe(show, hide_index=True, use_container_width=True)
+            st.caption(f"当前等级：{t['risk_level']}（{t['risk_score']:.0f} 分）。表中是历史上处于各等级的日子之后 90 天实际发生的回撤与收益分布，用于校准直觉；它不是条件概率预测，第三阶段已验证这类状态变量对 90 天结果几乎无区分力。")
         st.subheader("当前趋势状态下的历史 90 天持有统计（描述性，不是预测）")
         ch = pd.DataFrame(v["conditional_history_90d"])
         ch_show = ch.copy()
@@ -121,6 +140,7 @@ for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
 with tabs[2]:
     st.subheader("一次性买入 / 分批定投 / 等待回调：相同起始日、资金、手续费与现金收益假设下的历史比较")
     st.caption("每个历史起始日（2018-09 起）各跑一遍三种方案，窗口末按收盘卖出计净值；手续费 10 bps/边 + 市价滑点 5 bps；等待方案 14 天限价。数字是历史分布，不是对未来的预测。")
+    st.info(snap["symbols"]["BTCUSDT"].get("plans_method_note", "") + " 三方案在每个起始日使用完全相同的起始资金（10,000 USDT）、决策日期、费用与现金收益假设；差异只来自买入时点与仓位节奏。")
     for sym in ("BTCUSDT", "ETHUSDT"):
         pl = snap["symbols"][sym].get("plans")
         if not pl:
