@@ -220,3 +220,16 @@ pytest tests/test_spot90_data.py -q    # 数据层测试（MockTransport）
 ```
 - 目录：`src/spot90/data/`（bitget_v3 / static_klines / llama / store / quality / ingest）、`labels.py`（A 立即买入、B 限价 14 天等待后持有 90 天；成交=最低价触及，跳空按开盘）、`features.py`（全部因果）、`models/`（baserate、volboot、LightGBM、CatBoost、calibration）、`decision.py`（A/B/C 规则与门槛）、`backtest/`（walkforward、evaluate、audit、validation、report_md）、`pipeline.py`、`cli.py`；参数 `config/spot90.yaml`。
 - 已知限制：本容器对 `api.bitget.com` 返回 403，数据为 Binance 现货（GitHub `finom/static-klines` 缓存，每日更新）；链上/稳定币/ETF/宏观/衍生品数据源在本环境全部不可达，未接入也未伪造；Chronos-2 与 Streamlit 看板按用户要求暂缓；第一阶段无任何下单代码。
+
+### spot90 第二阶段（2026-10-28）：链上资金流数据对照实验 —— 失败，路线终止
+
+> 同一 14 折 Walk-Forward 上，A（技术指标）→ B_pit（+链上活跃度/MVRV/稳定币供应/Lido 质押，全部 Point-in-Time 安全）→ B_full（+交易所流量/储备、DeFi TVL，非 PIT）→ D_pit（+月度宏观）。
+> 合并样本外 AUC 0.602 → 0.463 → 0.470 → 0.449，Brier 0.2776 → 0.2970 → 0.3023 → 0.3117；16 个实验的按日配对 Brier 差没有一个在 95% 水平显著为负；交易所净流/储备单独加入与 A 无差别（+0.001 [−0.013, +0.020]）；回撤预测 AUC 0.35~0.43（反向）。
+> 完整报告 `docs/15_spot90_链上数据对照实验报告.md`，产物 `docs/spot90_validation/phase2/`。模型 C（衍生品）与 ETF 资金流因数据源在本环境全部不可达未运行（接口与可选客户端已写好：`src/spot90/data/derivatives.py`）。
+
+```bash
+python -c "from spot90.data.onchain import fetch_all; fetch_all()"   # Coin Metrics GitHub 归档(截至 2026-05-23) + DefiLlama + 月度宏观 → data_store/spot90/onchain/
+python -m spot90.backtest.experiments     # A/B_pit/B_full/D_pit + 11 组消融 + 滞后稳健性（约 1 小时）→ reports_out/spot90/phase2/
+python -m spot90.backtest.report_phase2   # 生成 docs/15
+pytest tests/test_spot90_phase2.py -q     # 链上滞后/PIT 分组/同窗口标签/衍生品客户端 Mock
+```
