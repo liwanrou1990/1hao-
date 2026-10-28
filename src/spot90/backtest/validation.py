@@ -91,6 +91,10 @@ def benchmarks(wide_s: pd.DataFrame, X_s: pd.DataFrame, oos_index, thr: float, s
     _stat((x["ma200_dist"] > 0).to_numpy(), "ma200_filter")
     _stat(((x["ma200_dist"] > 0) & (x["ma200_slope30"] > 0)).to_numpy(), "ma200_up_trend")
     _stat((x["ma50_dist"] > 0).to_numpy(), "ma50_filter")
+    # 波动率过滤：rv20 低于过去 365 天 rv20 中位数（决策日可知）才买
+    rv_med = x["rv20"].rolling(365, min_periods=120).median()
+    _stat((x["rv20"] < rv_med).to_numpy(), "low_vol_filter")
+    _stat(((x["rv20"] < rv_med) & (x["ma200_dist"] > 0)).to_numpy(), "low_vol_and_ma200")
     return res
 
 
