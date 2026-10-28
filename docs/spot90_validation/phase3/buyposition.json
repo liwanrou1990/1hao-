@@ -1,0 +1,1166 @@
+{
+  "rules": {
+    "BTCUSDT": {
+      "R1_立即买入": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1980,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6262626262626263,
+          "positions_mean_ret": 0.20024148047135953,
+          "positions_median_ret": 0.1081222099725484,
+          "positions_mean_mae": -0.18177502254290615,
+          "positions_p_mae15": 0.47929292929292927,
+          "all_days_mean_ret": 0.20024148047135953,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.0,
+            "n": 1980,
+            "ci950": [
+              0.0,
+              0.0
+            ],
+            "ci999": [
+              0.0,
+              0.0
+            ]
+          },
+          "equity": {
+            "ann_return": 0.5830501447695497,
+            "ann_vol": 0.612391689842629,
+            "sharpe": 0.7495840566655806,
+            "max_drawdown": -0.7662925431645934,
+            "avg_exposure": 0.9496402877697842
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 408,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.29901960784313725,
+          "positions_mean_ret": -0.07449789829275205,
+          "positions_median_ret": -0.1301620857652967,
+          "positions_mean_mae": -0.2039229069833805,
+          "positions_p_mae15": 0.6225490196078431,
+          "all_days_mean_ret": -0.07449789829275205,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.0,
+            "n": 408,
+            "ci950": [
+              0.0,
+              0.0
+            ],
+            "ci999": [
+              0.0,
+              0.0
+            ]
+          },
+          "equity": {
+            "ann_return": -0.25687129544561116,
+            "ann_vol": 0.3718636229130057,
+            "sharpe": -0.7978269471816497,
+            "max_drawdown": -0.5297176591351067,
+            "avg_exposure": 0.796875
+          }
+        }
+      },
+      "R2_等待1%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1778,
+          "fill_rate_of_orders": 0.897979797979798,
+          "positions_win_rate": 0.6186726659167604,
+          "positions_mean_ret": 0.18450655300285437,
+          "positions_median_ret": 0.09841816334370901,
+          "positions_mean_mae": -0.186134902957216,
+          "positions_p_mae15": 0.4876265466816648,
+          "all_days_mean_ret": 0.16568315719145207,
+          "missed_when_unfilled": 0.4671437853798951,
+          "diff_vs_R1": {
+            "mean": -0.03455832327990745,
+            "n": 1980,
+            "ci950": [
+              -0.06804091184048454,
+              -0.009417111321001353
+            ],
+            "ci999": [
+              -0.09396097695544932,
+              0.001528255328761362
+            ]
+          },
+          "equity": {
+            "ann_return": 0.38578230126356217,
+            "ann_vol": 0.5553708944424126,
+            "sharpe": 0.5870698407147609,
+            "max_drawdown": -0.753264776547898,
+            "avg_exposure": 0.8524273914201973
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 365,
+          "fill_rate_of_orders": 0.8946078431372549,
+          "positions_win_rate": 0.2958904109589041,
+          "positions_mean_ret": -0.06895890357328245,
+          "positions_median_ret": -0.12919928717620266,
+          "positions_mean_mae": -0.20276731463935468,
+          "positions_p_mae15": 0.6301369863013698,
+          "all_days_mean_ret": -0.061691175990804155,
+          "missed_when_unfilled": -0.033520411963090004,
+          "diff_vs_R1": {
+            "mean": 0.01280672230194789,
+            "n": 408,
+            "ci950": [
+              0.014321541789370987,
+              0.02406154095612767
+            ],
+            "ci999": [
+              0.011422135891324322,
+              0.02689564465671326
+            ]
+          },
+          "equity": {
+            "ann_return": -0.25123263490184133,
+            "ann_vol": 0.33907182213399495,
+            "sharpe": -0.8527069645244048,
+            "max_drawdown": -0.499654515450634,
+            "avg_exposure": 0.7126085069444446
+          }
+        }
+      },
+      "R3_等待3%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1422,
+          "fill_rate_of_orders": 0.7181818181818181,
+          "positions_win_rate": 0.60056258790436,
+          "positions_mean_ret": 0.16315746543801132,
+          "positions_median_ret": 0.06710483128793931,
+          "positions_mean_mae": -0.1934535615063894,
+          "positions_p_mae15": 0.5063291139240507,
+          "all_days_mean_ret": 0.11717672517820815,
+          "missed_when_unfilled": 0.39857461936375993,
+          "diff_vs_R1": {
+            "mean": -0.08306475529315137,
+            "n": 1980,
+            "ci950": [
+              -0.16398448122168433,
+              -0.021063984528664557
+            ],
+            "ci999": [
+              -0.2289330096967969,
+              0.005743329475393512
+            ]
+          },
+          "equity": {
+            "ann_return": 0.17786243615823705,
+            "ann_vol": 0.46967427184649235,
+            "sharpe": 0.3483036294036514,
+            "max_drawdown": -0.728003848847665,
+            "avg_exposure": 0.6818598454569679
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 292,
+          "fill_rate_of_orders": 0.7156862745098039,
+          "positions_win_rate": 0.3013698630136986,
+          "positions_mean_ret": -0.05375819717551698,
+          "positions_median_ret": -0.1131696191245094,
+          "positions_mean_mae": -0.1982045933628681,
+          "positions_p_mae15": 0.6232876712328768,
+          "all_days_mean_ret": -0.038474003860909205,
+          "missed_when_unfilled": -0.04951226979256663,
+          "diff_vs_R1": {
+            "mean": 0.036023894431842826,
+            "n": 408,
+            "ci950": [
+              0.037667028375935246,
+              0.06475972067894967
+            ],
+            "ci999": [
+              0.03138831001825152,
+              0.0713405991173837
+            ]
+          },
+          "equity": {
+            "ann_return": -0.20215443725069548,
+            "ann_vol": 0.28094400714093043,
+            "sharpe": -0.8033118546805973,
+            "max_drawdown": -0.42787425477959007,
+            "avg_exposure": 0.5703124999999999
+          }
+        }
+      },
+      "R4_等待5%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1102,
+          "fill_rate_of_orders": 0.5565656565656566,
+          "positions_win_rate": 0.6088929219600726,
+          "positions_mean_ret": 0.15209477249769193,
+          "positions_median_ret": 0.05990363200235527,
+          "positions_mean_mae": -0.20013867518061618,
+          "positions_p_mae15": 0.5090744101633394,
+          "all_days_mean_ret": 0.08465072691538207,
+          "missed_when_unfilled": 0.3396951591319356,
+          "diff_vs_R1": {
+            "mean": -0.11559075355597744,
+            "n": 1980,
+            "ci950": [
+              -0.228510737287446,
+              -0.028287629786814695
+            ],
+            "ci999": [
+              -0.3202756168588856,
+              0.016015007745074347
+            ]
+          },
+          "equity": {
+            "ann_return": 0.09022871254328235,
+            "ann_vol": 0.3961270463858612,
+            "sharpe": 0.21793102494885205,
+            "max_drawdown": -0.6614793384360368,
+            "avg_exposure": 0.5285105249134026
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 217,
+          "fill_rate_of_orders": 0.5318627450980392,
+          "positions_win_rate": 0.3225806451612903,
+          "positions_mean_ret": -0.054506106034145234,
+          "positions_median_ret": -0.10495305307260505,
+          "positions_mean_mae": -0.20416225294182933,
+          "positions_p_mae15": 0.6728110599078341,
+          "all_days_mean_ret": -0.028989767179925283,
+          "missed_when_unfilled": -0.040121258515383194,
+          "diff_vs_R1": {
+            "mean": 0.04550813111282676,
+            "n": 408,
+            "ci950": [
+              0.05557188177060415,
+              0.08636323639500625
+            ],
+            "ci999": [
+              0.04554152300084275,
+              0.09327741158591234
+            ]
+          },
+          "equity": {
+            "ann_return": -0.1636730853106677,
+            "ann_vol": 0.22757533444096223,
+            "sharpe": -0.7848537653662152,
+            "max_drawdown": -0.3604782288109847,
+            "avg_exposure": 0.423828125
+          }
+        }
+      },
+      "R5_趋势": {
+        "selection": {
+          "share_ordered": 0.5626262626262626,
+          "n_filled": 1114,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6552962298025135,
+          "positions_mean_ret": 0.2448521708394618,
+          "positions_median_ret": 0.09561164819383805,
+          "positions_mean_mae": -0.16171058605159627,
+          "positions_p_mae15": 0.46768402154398564,
+          "all_days_mean_ret": 0.1377602617753336,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.062481218696025936,
+            "n": 1980,
+            "ci950": [
+              -0.14106267803970038,
+              0.014005413449122355
+            ],
+            "ci999": [
+              -0.1792589090266207,
+              0.08000391176998675
+            ]
+          },
+          "equity": {
+            "ann_return": 0.3774360284688161,
+            "ann_vol": 0.405214927022318,
+            "sharpe": 0.7897158225270547,
+            "max_drawdown": -0.5376503328988289,
+            "avg_exposure": 0.5342925659472422
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.36519607843137253,
+          "n_filled": 149,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.26174496644295303,
+          "positions_mean_ret": -0.10671467257009884,
+          "positions_median_ret": -0.14491734683776492,
+          "positions_mean_mae": -0.18696809555551883,
+          "positions_p_mae15": 0.5637583892617449,
+          "all_days_mean_ret": -0.038971779933688055,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.03552611835906399,
+            "n": 408,
+            "ci950": [
+              0.018800725797029388,
+              0.1341423753514869
+            ],
+            "ci999": [
+              -0.006101932642374047,
+              0.17094399179823946
+            ]
+          },
+          "equity": {
+            "ann_return": -0.13155075711402175,
+            "ann_vol": 0.1807094780025498,
+            "sharpe": -0.7799789918059492,
+            "max_drawdown": -0.291535461398042,
+            "avg_exposure": 0.291015625
+          }
+        }
+      },
+      "R6_趋势+低波动": {
+        "selection": {
+          "share_ordered": 0.2878787878787879,
+          "n_filled": 570,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6280701754385964,
+          "positions_mean_ret": 0.18497633136430833,
+          "positions_median_ret": 0.075536530271891,
+          "positions_mean_mae": -0.1666150306733003,
+          "positions_p_mae15": 0.5105263157894737,
+          "all_days_mean_ret": 0.0532507620594221,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.1469907184119374,
+            "n": 1980,
+            "ci950": [
+              -0.2700674377686285,
+              -0.03375857989426084
+            ],
+            "ci999": [
+              -0.3357148420804877,
+              0.03916365856101139
+            ]
+          },
+          "equity": {
+            "ann_return": 0.11966101952186836,
+            "ann_vol": 0.19700732295523857,
+            "sharpe": 0.5733219181623962,
+            "max_drawdown": -0.3172953462245225,
+            "avg_exposure": 0.2733812949640288
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.32107843137254904,
+          "n_filled": 131,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.29770992366412213,
+          "positions_mean_ret": -0.09619555170752137,
+          "positions_median_ret": -0.11830943825563367,
+          "positions_mean_mae": -0.17468535944788416,
+          "positions_p_mae15": 0.5038167938931297,
+          "all_days_mean_ret": -0.0308863168472679,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.04361158144548415,
+            "n": 408,
+            "ci950": [
+              0.02282897993224526,
+              0.14902506140322458
+            ],
+            "ci999": [
+              0.006485837834615151,
+              0.17898136088940803
+            ]
+          },
+          "equity": {
+            "ann_return": -0.10636436737089894,
+            "ann_vol": 0.16235144829934903,
+            "sharpe": -0.6922031500324805,
+            "max_drawdown": -0.2505261430679474,
+            "avg_exposure": 0.255859375
+          }
+        }
+      },
+      "R7_AI7天": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1789,
+          "fill_rate_of_orders": 0.9035353535353535,
+          "positions_win_rate": 0.6198993851313583,
+          "positions_mean_ret": 0.20182612468525252,
+          "positions_median_ret": 0.10545120913937356,
+          "positions_mean_mae": -0.183699534753935,
+          "positions_p_mae15": 0.48965902738960315,
+          "all_days_mean_ret": 0.18235703892015998,
+          "missed_when_unfilled": 0.2998816389131957,
+          "diff_vs_R1": {
+            "mean": -0.01788444155119953,
+            "n": 1980,
+            "ci950": [
+              -0.038915103262139955,
+              -0.0032568228375987164
+            ],
+            "ci999": [
+              -0.048749637850838856,
+              0.001435612892637434
+            ]
+          },
+          "equity": {
+            "ann_return": 0.4662158624459467,
+            "ann_vol": 0.5626838817014981,
+            "sharpe": 0.6796407671075082,
+            "max_drawdown": -0.7627924983690255,
+            "avg_exposure": 0.8577777777777778
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 389,
+          "fill_rate_of_orders": 0.9534313725490197,
+          "positions_win_rate": 0.29048843187660667,
+          "positions_mean_ret": -0.07569416391850248,
+          "positions_median_ret": -0.1359888618605759,
+          "positions_mean_mae": -0.20751389565069325,
+          "positions_p_mae15": 0.6452442159383034,
+          "all_days_mean_ret": -0.0721691905987683,
+          "missed_when_unfilled": 0.00450100675989125,
+          "diff_vs_R1": {
+            "mean": 0.0023287076939837487,
+            "n": 408,
+            "ci950": [
+              0.00019895120005283218,
+              0.00909472553850539
+            ],
+            "ci999": [
+              -0.00167671268959374,
+              0.012889085688899276
+            ]
+          },
+          "equity": {
+            "ann_return": -0.2572676746872016,
+            "ann_vol": 0.36237998259130244,
+            "sharpe": -0.8201777219663251,
+            "max_drawdown": -0.5203631155824846,
+            "avg_exposure": 0.7591579861111111
+          }
+        }
+      },
+      "R8_AI30天+风险": {
+        "selection": {
+          "share_ordered": 0.37676767676767675,
+          "n_filled": 746,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6099195710455764,
+          "positions_mean_ret": 0.25882602194652443,
+          "positions_median_ret": 0.10525044842988518,
+          "positions_mean_mae": -0.19508332535938352,
+          "positions_p_mae15": 0.5227882037533512,
+          "all_days_mean_ret": 0.09751727897581174,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.10272420149554776,
+            "n": 1980,
+            "ci950": [
+              -0.1842772325798893,
+              -0.0262993536090566
+            ],
+            "ci999": [
+              -0.2310376989454781,
+              0.006780608857340057
+            ]
+          },
+          "equity": {
+            "ann_return": 0.21927924320225656,
+            "ann_vol": 0.3251418406653262,
+            "sharpe": 0.6093469791269226,
+            "max_drawdown": -0.5109121091183945,
+            "avg_exposure": 0.3577937649880096
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.0,
+          "n_filled": 0,
+          "fill_rate_of_orders": null,
+          "positions_win_rate": null,
+          "positions_mean_ret": null,
+          "positions_median_ret": null,
+          "positions_mean_mae": null,
+          "positions_p_mae15": null,
+          "all_days_mean_ret": 0.0,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.07449789829275205,
+            "n": 408,
+            "ci950": [
+              0.05654564365744632,
+              0.20077393514556754
+            ],
+            "ci999": [
+              0.036611648400963,
+              0.22582932512677473
+            ]
+          },
+          "equity": {
+            "ann_return": 0.0,
+            "ann_vol": 0.0,
+            "sharpe": null,
+            "max_drawdown": 0.0,
+            "avg_exposure": 0.0
+          }
+        }
+      },
+      "R9_阶段一AI规则": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 418,
+          "fill_rate_of_orders": 0.2111111111111111,
+          "positions_win_rate": 0.7344497607655502,
+          "positions_mean_ret": 0.17801422524236687,
+          "positions_median_ret": 0.14096504983586722,
+          "positions_mean_mae": -0.1677332655355576,
+          "positions_p_mae15": 0.4904306220095694,
+          "all_days_mean_ret": 0.03758078088449968,
+          "missed_when_unfilled": 0.21779899573359776,
+          "diff_vs_R1": {
+            "mean": -0.16266069958685983,
+            "n": 1980,
+            "ci950": [
+              -0.3299039546417212,
+              -0.023451276061769628
+            ],
+            "ci999": [
+              -0.4672796317480842,
+              0.030530078482597194
+            ]
+          },
+          "equity": {
+            "ann_return": 0.08857167674432476,
+            "ann_vol": 0.21210156261431207,
+            "sharpe": 0.3998478825895854,
+            "max_drawdown": -0.3432728722746021,
+            "avg_exposure": 0.20047961630695443
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 0,
+          "fill_rate_of_orders": 0.0,
+          "positions_win_rate": null,
+          "positions_mean_ret": null,
+          "positions_median_ret": null,
+          "positions_mean_mae": null,
+          "positions_p_mae15": null,
+          "all_days_mean_ret": 0.0,
+          "missed_when_unfilled": -0.07449789829275205,
+          "diff_vs_R1": {
+            "mean": 0.07449789829275205,
+            "n": 408,
+            "ci950": [
+              0.05654564365744632,
+              0.20077393514556754
+            ],
+            "ci999": [
+              0.036611648400963,
+              0.22582932512677473
+            ]
+          },
+          "equity": {
+            "ann_return": 0.0,
+            "ann_vol": 0.0,
+            "sharpe": null,
+            "max_drawdown": 0.0,
+            "avg_exposure": 0.0
+          }
+        }
+      }
+    },
+    "ETHUSDT": {
+      "R1_立即买入": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1980,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6292929292929293,
+          "positions_mean_ret": 0.2468044743325286,
+          "positions_median_ret": 0.15542201761970242,
+          "positions_mean_mae": -0.22486474279791852,
+          "positions_p_mae15": 0.5565656565656566,
+          "all_days_mean_ret": 0.2468044743325286,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.0,
+            "n": 1980,
+            "ci950": [
+              0.0,
+              0.0
+            ],
+            "ci999": [
+              0.0,
+              0.0
+            ]
+          },
+          "equity": {
+            "ann_return": 0.6643191572369131,
+            "ann_vol": 0.8085992605297323,
+            "sharpe": 0.6295670472951673,
+            "max_drawdown": -0.7930253453633334,
+            "avg_exposure": 0.9496402877697842
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 408,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.3602941176470588,
+          "positions_mean_ret": -0.02388342483602189,
+          "positions_median_ret": -0.1902396023380123,
+          "positions_mean_mae": -0.2686255966478508,
+          "positions_p_mae15": 0.7083333333333334,
+          "all_days_mean_ret": -0.02388342483602189,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.0,
+            "n": 408,
+            "ci950": [
+              0.0,
+              0.0
+            ],
+            "ci999": [
+              0.0,
+              0.0
+            ]
+          },
+          "equity": {
+            "ann_return": -0.2273636800325355,
+            "ann_vol": 0.5596272126056104,
+            "sharpe": -0.4606106690651186,
+            "max_drawdown": -0.673340486801997,
+            "avg_exposure": 0.796875
+          }
+        }
+      },
+      "R2_等待1%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1840,
+          "fill_rate_of_orders": 0.9292929292929293,
+          "positions_win_rate": 0.6239130434782608,
+          "positions_mean_ret": 0.24670397959488843,
+          "positions_median_ret": 0.1533620913336744,
+          "positions_mean_mae": -0.2254803131685672,
+          "positions_p_mae15": 0.5608695652173913,
+          "all_days_mean_ret": 0.229260263865957,
+          "missed_when_unfilled": 0.430312392130759,
+          "diff_vs_R1": {
+            "mean": -0.01754421046657168,
+            "n": 1980,
+            "ci950": [
+              -0.04067417835611292,
+              -0.0007881338447741209
+            ],
+            "ci999": [
+              -0.05305979860573314,
+              0.005397264966720788
+            ]
+          },
+          "equity": {
+            "ann_return": 0.525085458314019,
+            "ann_vol": 0.7519018976661649,
+            "sharpe": 0.5609263259610816,
+            "max_drawdown": -0.7774472371883269,
+            "avg_exposure": 0.8820516919797496
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 371,
+          "fill_rate_of_orders": 0.9093137254901961,
+          "positions_win_rate": 0.3665768194070081,
+          "positions_mean_ret": -0.017968271685194517,
+          "positions_median_ret": -0.18085112779532841,
+          "positions_mean_mae": -0.2684271207616744,
+          "positions_p_mae15": 0.7115902964959568,
+          "all_days_mean_ret": -0.016338796066684244,
+          "missed_when_unfilled": 0.045038245260484326,
+          "diff_vs_R1": {
+            "mean": 0.0075446287693376355,
+            "n": 408,
+            "ci950": [
+              0.004578146026681207,
+              0.028872331133558204
+            ],
+            "ci999": [
+              -0.0062626873231180396,
+              0.03207145246320978
+            ]
+          },
+          "equity": {
+            "ann_return": -0.22764545784132761,
+            "ann_vol": 0.5083537548656267,
+            "sharpe": -0.5077857215902513,
+            "max_drawdown": -0.6448903338134866,
+            "avg_exposure": 0.7243489583333335
+          }
+        }
+      },
+      "R3_等待3%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1558,
+          "fill_rate_of_orders": 0.7868686868686868,
+          "positions_win_rate": 0.6193838254172015,
+          "positions_mean_ret": 0.2396225012583677,
+          "positions_median_ret": 0.13998261984618043,
+          "positions_mean_mae": -0.23139109202495536,
+          "positions_p_mae15": 0.5603337612323491,
+          "all_days_mean_ret": 0.18855144290936202,
+          "missed_when_unfilled": 0.4119670733546787,
+          "diff_vs_R1": {
+            "mean": -0.058253031423166575,
+            "n": 1980,
+            "ci950": [
+              -0.11171025666876841,
+              -0.009042898460841541
+            ],
+            "ci999": [
+              -0.1359521495382831,
+              0.006275675821248269
+            ]
+          },
+          "equity": {
+            "ann_return": 0.322426318268233,
+            "ann_vol": 0.653325125486891,
+            "sharpe": 0.4274699882060441,
+            "max_drawdown": -0.7653412461434912,
+            "avg_exposure": 0.7467945643485212
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 313,
+          "fill_rate_of_orders": 0.7671568627450981,
+          "positions_win_rate": 0.35782747603833864,
+          "positions_mean_ret": -0.024700753523515917,
+          "positions_median_ret": -0.17892247146048157,
+          "positions_mean_mae": -0.27107925439806235,
+          "positions_p_mae15": 0.7252396166134185,
+          "all_days_mean_ret": -0.018949352580540396,
+          "missed_when_unfilled": 0.09253741074349178,
+          "diff_vs_R1": {
+            "mean": 0.004934072255481505,
+            "n": 408,
+            "ci950": [
+              -0.006349095106734523,
+              0.06945794248271574
+            ],
+            "ci999": [
+              -0.03564955393359967,
+              0.0750872738357602
+            ]
+          },
+          "equity": {
+            "ann_return": -0.23757314873600388,
+            "ann_vol": 0.4380937456046539,
+            "sharpe": -0.6187329788849981,
+            "max_drawdown": -0.5932625093177102,
+            "avg_exposure": 0.6112847222222223
+          }
+        }
+      },
+      "R4_等待5%": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1282,
+          "fill_rate_of_orders": 0.6474747474747474,
+          "positions_win_rate": 0.6146645865834633,
+          "positions_mean_ret": 0.22889281370325623,
+          "positions_median_ret": 0.14724189949544186,
+          "positions_mean_mae": -0.23939416391332208,
+          "positions_p_mae15": 0.5569422776911076,
+          "all_days_mean_ret": 0.14820231675130027,
+          "missed_when_unfilled": 0.3917640534202494,
+          "diff_vs_R1": {
+            "mean": -0.09860215758122837,
+            "n": 1980,
+            "ci950": [
+              -0.18520224654914064,
+              -0.013933984284384944
+            ],
+            "ci999": [
+              -0.2406755054419393,
+              0.012098808664148029
+            ]
+          },
+          "equity": {
+            "ann_return": 0.1967975468421559,
+            "ann_vol": 0.5709387719573363,
+            "sharpe": 0.31444057412084553,
+            "max_drawdown": -0.7545831954198212,
+            "avg_exposure": 0.6148414601652011
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 260,
+          "fill_rate_of_orders": 0.6372549019607843,
+          "positions_win_rate": 0.35,
+          "positions_mean_ret": -0.02582128959444874,
+          "positions_median_ret": -0.17684299098067247,
+          "positions_mean_mae": -0.2726370635286267,
+          "positions_p_mae15": 0.7346153846153847,
+          "all_days_mean_ret": -0.01645474336901145,
+          "missed_when_unfilled": 0.07306546660514988,
+          "diff_vs_R1": {
+            "mean": 0.007428681467010431,
+            "n": 408,
+            "ci950": [
+              0.0056658924563498456,
+              0.09244960960934552
+            ],
+            "ci999": [
+              -0.029629789482395915,
+              0.09672743154979524
+            ]
+          },
+          "equity": {
+            "ann_return": -0.22044963169611753,
+            "ann_vol": 0.3818555514792106,
+            "sharpe": -0.651732096688586,
+            "max_drawdown": -0.5296301946342856,
+            "avg_exposure": 0.5078125
+          }
+        }
+      },
+      "R5_趋势": {
+        "selection": {
+          "share_ordered": 0.5444444444444444,
+          "n_filled": 1078,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6354359925788498,
+          "positions_mean_ret": 0.3349043746226954,
+          "positions_median_ret": 0.14608948563284163,
+          "positions_mean_mae": -0.20547726997902274,
+          "positions_p_mae15": 0.5528756957328386,
+          "all_days_mean_ret": 0.1823368261834675,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.06446764814906111,
+            "n": 1980,
+            "ci950": [
+              -0.1147900175429575,
+              0.02297478880034834
+            ],
+            "ci999": [
+              -0.15315755394042685,
+              0.09858656014328025
+            ]
+          },
+          "equity": {
+            "ann_return": 0.48157641339304336,
+            "ann_vol": 0.5718134734955993,
+            "sharpe": 0.6870030463733808,
+            "max_drawdown": -0.5697198597780064,
+            "avg_exposure": 0.5170263788968825
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.23284313725490197,
+          "n_filled": 95,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.0,
+          "positions_mean_ret": -0.28156220874245635,
+          "positions_median_ret": -0.2872199860310889,
+          "positions_mean_mae": -0.36653795098522884,
+          "positions_p_mae15": 0.9894736842105263,
+          "all_days_mean_ret": -0.06555982801601314,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.04167640317999123,
+            "n": 408,
+            "ci950": [
+              -0.0670408153828038,
+              0.179643484884493
+            ],
+            "ci999": [
+              -0.13956123824274286,
+              0.2296805288197414
+            ]
+          },
+          "equity": {
+            "ann_return": -0.22194456402762974,
+            "ann_vol": 0.24544390387486525,
+            "sharpe": -1.0217639463463024,
+            "max_drawdown": -0.36794349613145927,
+            "avg_exposure": 0.185546875
+          }
+        }
+      },
+      "R6_趋势+低波动": {
+        "selection": {
+          "share_ordered": 0.2803030303030303,
+          "n_filled": 555,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.6198198198198198,
+          "positions_mean_ret": 0.351866082340832,
+          "positions_median_ret": 0.10232947437667095,
+          "positions_mean_mae": -0.17415619715410008,
+          "positions_p_mae15": 0.5009009009009009,
+          "all_days_mean_ret": 0.09862912914099081,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.1481753451915378,
+            "n": 1980,
+            "ci950": [
+              -0.25890414406820134,
+              -0.015334751569158683
+            ],
+            "ci999": [
+              -0.3023526301308388,
+              0.06199844895359927
+            ]
+          },
+          "equity": {
+            "ann_return": 0.22618916654379384,
+            "ann_vol": 0.29167263028220647,
+            "sharpe": 0.6986310356621933,
+            "max_drawdown": -0.37914729530804225,
+            "avg_exposure": 0.26618705035971224
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.10294117647058823,
+          "n_filled": 42,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.0,
+          "positions_mean_ret": -0.2818680921103428,
+          "positions_median_ret": -0.2976892667730869,
+          "positions_mean_mae": -0.3640182719666444,
+          "positions_p_mae15": 0.9761904761904762,
+          "all_days_mean_ret": -0.02901583301135881,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.005132408175336922,
+            "n": 408,
+            "ci950": [
+              -0.0022532227452910013,
+              0.22087664630101508
+            ],
+            "ci999": [
+              -0.06963374848796268,
+              0.248985099620773
+            ]
+          },
+          "equity": {
+            "ann_return": -0.10507945535631236,
+            "ann_vol": 0.11703659001802832,
+            "sharpe": -0.9479458713136363,
+            "max_drawdown": -0.1912494756131653,
+            "avg_exposure": 0.08203124999999999
+          }
+        }
+      },
+      "R7_AI7天": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 1804,
+          "fill_rate_of_orders": 0.9111111111111111,
+          "positions_win_rate": 0.6241685144124168,
+          "positions_mean_ret": 0.2551453916002269,
+          "positions_median_ret": 0.15315577204862396,
+          "positions_mean_mae": -0.2281822599363784,
+          "positions_p_mae15": 0.5643015521064302,
+          "all_days_mean_ret": 0.2324658012357623,
+          "missed_when_unfilled": 0.257277016839276,
+          "diff_vs_R1": {
+            "mean": -0.014338673096766352,
+            "n": 1980,
+            "ci950": [
+              -0.029725965842174178,
+              0.002306070751069393
+            ],
+            "ci999": [
+              -0.039171903067784127,
+              0.011379285299782148
+            ]
+          },
+          "equity": {
+            "ann_return": 0.5539214043950058,
+            "ann_vol": 0.7547514504684582,
+            "sharpe": 0.5836093133138449,
+            "max_drawdown": -0.7930253453633334,
+            "avg_exposure": 0.8647055688782308
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 402,
+          "fill_rate_of_orders": 0.9852941176470589,
+          "positions_win_rate": 0.3582089552238806,
+          "positions_mean_ret": -0.025018639858936435,
+          "positions_median_ret": -0.18926815182771906,
+          "positions_mean_mae": -0.26968986991282173,
+          "positions_p_mae15": 0.7114427860696517,
+          "all_days_mean_ret": -0.024650718684540322,
+          "missed_when_unfilled": 0.0765169935614727,
+          "diff_vs_R1": {
+            "mean": -0.000767293848518434,
+            "n": 408,
+            "ci950": [
+              -0.002361381858690985,
+              0.006599287578893962
+            ],
+            "ci999": [
+              -0.0038855042089694747,
+              0.008046326784049696
+            ]
+          },
+          "equity": {
+            "ann_return": -0.22838056483769797,
+            "ann_vol": 0.5501517106610506,
+            "sharpe": -0.47093619579634627,
+            "max_drawdown": -0.6685837772366043,
+            "avg_exposure": 0.7850043402777778
+          }
+        }
+      },
+      "R8_AI30天+风险": {
+        "selection": {
+          "share_ordered": 0.4712121212121212,
+          "n_filled": 933,
+          "fill_rate_of_orders": 1.0,
+          "positions_win_rate": 0.5326902465166131,
+          "positions_mean_ret": 0.2663530207231422,
+          "positions_median_ret": 0.065500675049458,
+          "positions_mean_mae": -0.29047809886549203,
+          "positions_p_mae15": 0.6602357984994641,
+          "all_days_mean_ret": 0.1255087718862079,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": -0.12129570244632076,
+            "n": 1980,
+            "ci950": [
+              -0.18868495132284188,
+              -0.033890989346651426
+            ],
+            "ci999": [
+              -0.23365064844012817,
+              -0.011640845841222552
+            ]
+          },
+          "equity": {
+            "ann_return": 0.17095811852246,
+            "ann_vol": 0.5757516930147115,
+            "sharpe": 0.27392762684674504,
+            "max_drawdown": -0.8430437276857743,
+            "avg_exposure": 0.4474820143884892
+          }
+        },
+        "holdout": {
+          "share_ordered": 0.0,
+          "n_filled": 0,
+          "fill_rate_of_orders": null,
+          "positions_win_rate": null,
+          "positions_mean_ret": null,
+          "positions_median_ret": null,
+          "positions_mean_mae": null,
+          "positions_p_mae15": null,
+          "all_days_mean_ret": 0.0,
+          "missed_when_unfilled": null,
+          "diff_vs_R1": {
+            "mean": 0.02388342483602189,
+            "n": 408,
+            "ci950": [
+              0.022636050909989054,
+              0.2667388075088573
+            ],
+            "ci999": [
+              -0.03616368059102322,
+              0.30123398250689487
+            ]
+          },
+          "equity": {
+            "ann_return": 0.0,
+            "ann_vol": 0.0,
+            "sharpe": null,
+            "max_drawdown": 0.0,
+            "avg_exposure": 0.0
+          }
+        }
+      },
+      "R9_阶段一AI规则": {
+        "selection": {
+          "share_ordered": 1.0,
+          "n_filled": 343,
+          "fill_rate_of_orders": 0.17323232323232324,
+          "positions_win_rate": 0.673469387755102,
+          "positions_mean_ret": 0.13342195138726176,
+          "positions_median_ret": 0.11542338851413003,
+          "positions_mean_mae": -0.21165872170215147,
+          "positions_p_mae15": 0.5830903790087464,
+          "all_days_mean_ret": 0.023112994609005445,
+          "missed_when_unfilled": 0.27923553777824556,
+          "diff_vs_R1": {
+            "mean": -0.22369147972352318,
+            "n": 1980,
+            "ci950": [
+              -0.4308230791187662,
+              -0.0327660528543123
+            ],
+            "ci999": [
+              -0.5356035520028118,
+              0.042227529228644686
+            ]
+          },
+          "equity": {
+            "ann_return": 0.04596100325651786,
+            "ann_vol": 0.22315252465066457,
+            "sharpe": 0.20123153956625417,
+            "max_drawdown": -0.3472995090727262,
+            "avg_exposure": 0.1645083932853717
+          }
+        },
+        "holdout": {
+          "share_ordered": 1.0,
+          "n_filled": 0,
+          "fill_rate_of_orders": 0.0,
+          "positions_win_rate": null,
+          "positions_mean_ret": null,
+          "positions_median_ret": null,
+          "positions_mean_mae": null,
+          "positions_p_mae15": null,
+          "all_days_mean_ret": 0.0,
+          "missed_when_unfilled": -0.02388342483602189,
+          "diff_vs_R1": {
+            "mean": 0.02388342483602189,
+            "n": 408,
+            "ci950": [
+              0.022636050909989054,
+              0.2667388075088573
+            ],
+            "ci999": [
+              -0.03616368059102322,
+              0.30123398250689487
+            ]
+          },
+          "equity": {
+            "ann_return": 0.0,
+            "ann_vol": 0.0,
+            "sharpe": null,
+            "max_drawdown": 0.0,
+            "avg_exposure": 0.0
+          }
+        }
+      }
+    }
+  },
+  "n": {
+    "BTCUSDT|selection": 1980,
+    "BTCUSDT|holdout": 408,
+    "ETHUSDT|selection": 1980,
+    "ETHUSDT|holdout": 408
+  }
+}

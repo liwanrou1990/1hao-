@@ -233,3 +233,15 @@ python -m spot90.backtest.experiments     # A/B_pit/B_full/D_pit + 11 组消融 
 python -m spot90.backtest.report_phase2   # 生成 docs/15
 pytest tests/test_spot90_phase2.py -q     # 链上滞后/PIT 分组/同窗口标签/衍生品客户端 Mock
 ```
+
+### spot90 第三阶段（2026-10-28）：多周期（7/14/30/90 天）预测有效性 —— 全部周期无优势，项目转为监测系统
+
+> Purged Walk-Forward（选择期 2020-01 → 2025-06 用于选择，留出期 2025-06 → 2026-07 复核），A 技术 / B +交易所流量 / C +MVRV 活跃度 × LightGBM、CatBoost vs E 趋势×波动频率基准，Platt 因果校准，48 次比较 Bonferroni 控制。
+> 8 个（币种×周期）单元没有一个在预先登记流程中通过；短周期 AUC 0.45~0.58；链上数据任何周期无增益；以 90 天持有为目标的 9 条买入规则里没有任何 AI 规则在选择期优于立即买入，R5“收盘>MA200 且上行才买”是风险调整最好的无模型规则。
+> 报告 `docs/16_spot90_多周期预测有效性报告.md`，产物 `docs/spot90_validation/phase3/`。按预设规则停止新增预测模型，系统保留为行情/风险监测 + 限价单成交概率研究。
+
+```bash
+for H in 7 14 30 90; do python -m spot90.phase3.runner --horizon $H --threads 1 & done; wait   # 约 16 分钟（4 进程并行）
+python -c "from spot90.backtest.dataset import load_bars; from spot90.phase3.analysis import analyze; import json; json.dump(analyze(load_bars()), open('reports_out/spot90/phase3/analysis.json','w'), default=float)"
+python -c "from spot90.phase3.buyposition import run; run()"       # 9 条买入规则同口径比较
+```

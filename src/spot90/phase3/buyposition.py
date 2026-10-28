@@ -88,7 +88,7 @@ def run() -> dict:
             for name, (ordered, filled, r, mae, off) in spec.items():
                 o, f, rr, mm = ordered & pm, filled & pm, np.where(pm, r, 0.0), mae
                 pos = f
-                entries = pd.DataFrame({"entry_ts": w.loc[pos, "ts"].to_numpy() + pd.to_timedelta(np.nan_to_num(off[pos], nan=1), unit="D")})
+                entries = pd.DataFrame({"entry_ts": pd.to_datetime(w.loc[pos, "ts"].reset_index(drop=True), utc=True) + pd.to_timedelta(np.nan_to_num(off[pos], nan=1).astype(int), unit="D")})
                 cl = close[(close.index >= w.loc[pm, "ts"].min()) & (close.index <= w.loc[pm, "ts"].max() + pd.Timedelta(days=H + 15))]
                 res_rules.setdefault(name, {})[period] = {
                     "share_ordered": float(o.sum() / pm.sum()), "n_filled": int(pos.sum()), "fill_rate_of_orders": float(pos.sum() / o.sum()) if o.sum() else None,
