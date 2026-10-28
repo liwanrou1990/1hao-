@@ -11,6 +11,7 @@ from ..features import FEATURES
 from .common import A_COLS, B_COLS, QUANTILES
 
 B_FEATURES = FEATURES + ["d_pct"]
+DD_EXTRA = ("mae10_A", "mae20_A")
 
 
 def _lgb_params(extra: dict | None = None) -> dict:
@@ -28,9 +29,11 @@ def _cb_params(extra: dict | None = None) -> dict:
 class LightGBMModel:
     name = "lightgbm"
 
-    def __init__(self, quick: bool = False):
+    def __init__(self, quick: bool = False, features: list[str] | None = None):
         self.quick = quick
         self.models: dict = {}
+        self.features = list(features) if features is not None else list(FEATURES)
+        self.b_features = self.features + ["d_pct"]
 
     def _clf(self):
         import lightgbm as lgb
@@ -46,13 +49,16 @@ class LightGBMModel:
         return lgb.LGBMRegressor(**p)
 
     def fit(self, X: pd.DataFrame, wide: pd.DataFrame, XB: pd.DataFrame, long: pd.DataFrame) -> "LightGBMModel":
-        F = X[FEATURES]
+        F = X[self.features]
         self.models["A_profit"] = self._clf().fit(F, wide["profit_A"])
         self.models["A_dd"] = self._clf().fit(F, wide["dd_A_flag"])
+        for t in DD_EXTRA:
+            if t in wide:
+                self.models[f"A_{t}"] = self._clf().fit(F, wide[t])
         self.models["A_ret"] = self._reg("huber").fit(F, wide["ret_A"])
         for q in QUANTILES:
             self.models[f"A_q{q}"] = self._reg("quantile", q).fit(F, wide["ret_A"])
-        FB = XB[B_FEATURES]
+        FB = XB[self.b_features]
         self.models["B_fill"] = self._clf().fit(FB, long["filled"])
         f = long["filled"] == 1
         self.models["B_profit"] = self._clf().fit(FB[f], long.loc[f, "profit_B"].astype(int))
@@ -62,10 +68,13 @@ class LightGBMModel:
         return self
 
     def predict(self, X: pd.DataFrame, XB: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-        F, FB = X[FEATURES], XB[B_FEATURES]
+        F, FB = X[self.features], XB[self.b_features]
         pa = pd.DataFrame(index=X.index, columns=A_COLS, dtype=float)
         pa["p_profit"] = self.models["A_profit"].predict_proba(F)[:, 1]
         pa["p_dd"] = self.models["A_dd"].predict_proba(F)[:, 1]
+        for t in DD_EXTRA:
+            if f"A_{t}" in self.models:
+                pa[f"p_{t}"] = self.models[f"A_{t}"].predict_proba(F)[:, 1]
         pa["ret_mean"] = self.models["A_ret"].predict(F)
         qs = np.column_stack([self.models[f"A_q{q}"].predict(F) for q in QUANTILES])
         qs = np.sort(qs, axis=1)                                   # 分位数交叉修正
@@ -81,15 +90,17 @@ class LightGBMModel:
 
     def feature_importance(self) -> pd.DataFrame:
         m = self.models["A_profit"]
-        return pd.DataFrame({"feature": FEATURES, "gain": m.booster_.feature_importance("gain")}).sort_values("gain", ascending=False)
+        return pd.DataFrame({"feature": self.features, "gain": m.booster_.feature_importance("gain")}).sort_values("gain", ascending=False)
 
 
 class CatBoostModel:
     name = "catboost"
 
-    def __init__(self, quick: bool = False):
+    def __init__(self, quick: bool = False, features: list[str] | None = None):
         self.quick = quick
         self.models: dict = {}
+        self.features = list(features) if features is not None else list(FEATURES)
+        self.b_features = self.features + ["d_pct"]
 
     def _clf(self):
         from catboost import CatBoostClassifier
@@ -102,12 +113,15 @@ class CatBoostModel:
         return CatBoostRegressor(**p, loss_function=loss, allow_writing_files=False, thread_count=4)
 
     def fit(self, X: pd.DataFrame, wide: pd.DataFrame, XB: pd.DataFrame, long: pd.DataFrame) -> "CatBoostModel":
-        F = X[FEATURES]
+        F = X[self.features]
         self.models["A_profit"] = self._clf().fit(F, wide["profit_A"])
         self.models["A_dd"] = self._clf().fit(F, wide["dd_A_flag"])
+        for t in DD_EXTRA:
+            if t in wide:
+                self.models[f"A_{t}"] = self._clf().fit(F, wide[t])
         self.models["A_ret"] = self._reg("Huber:delta=0.3").fit(F, wide["ret_A"])
         self.models["A_q"] = self._reg("MultiQuantile:alpha=" + ",".join(str(q) for q in QUANTILES)).fit(F, wide["ret_A"])
-        FB = XB[B_FEATURES]
+        FB = XB[self.b_features]
         self.models["B_fill"] = self._clf().fit(FB, long["filled"])
         f = long["filled"] == 1
         self.models["B_profit"] = self._clf().fit(FB[f], long.loc[f, "profit_B"].astype(int))
@@ -117,10 +131,13 @@ class CatBoostModel:
         return self
 
     def predict(self, X: pd.DataFrame, XB: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-        F, FB = X[FEATURES], XB[B_FEATURES]
+        F, FB = X[self.features], XB[self.b_features]
         pa = pd.DataFrame(index=X.index, columns=A_COLS, dtype=float)
         pa["p_profit"] = self.models["A_profit"].predict_proba(F)[:, 1]
         pa["p_dd"] = self.models["A_dd"].predict_proba(F)[:, 1]
+        for t in DD_EXTRA:
+            if f"A_{t}" in self.models:
+                pa[f"p_{t}"] = self.models[f"A_{t}"].predict_proba(F)[:, 1]
         pa["ret_mean"] = self.models["A_ret"].predict(F)
         qs = np.sort(np.asarray(self.models["A_q"].predict(F)), axis=1)
         for k, q in enumerate(QUANTILES):
@@ -135,7 +152,7 @@ class CatBoostModel:
 
     def feature_importance(self) -> pd.DataFrame:
         m = self.models["A_profit"]
-        return pd.DataFrame({"feature": FEATURES, "gain": m.get_feature_importance()}).sort_values("gain", ascending=False)
+        return pd.DataFrame({"feature": self.features, "gain": m.get_feature_importance()}).sort_values("gain", ascending=False)
 
 
 def ensemble(preds: dict[str, tuple[pd.DataFrame, pd.DataFrame]], members: tuple[str, ...] = ("lightgbm", "catboost")) -> tuple[pd.DataFrame, pd.DataFrame]:

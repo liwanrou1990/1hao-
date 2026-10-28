@@ -60,6 +60,9 @@ def build_labels(bars: pd.DataFrame, H: int | None = None, W: int | None = None,
     wide = pd.DataFrame({"ts": df["ts"].iloc[:n_valid].to_numpy(), "symbol": df["symbol"].iloc[0], "close": c[i], "entry_A": entry_A,
                          "ret_A": ret_A, "mdd_A": mdd_A, "mae_A": mae_A, "profit_A": (ret_A > 0).astype(int), "dd15_A": (mdd_A < -thr).astype(int),
                          "ret_after_wait": c[i + W] / c[i] - 1, "min_low_wait": sliding_window_view(l, W)[1:n_valid + 1].min(axis=1) / c[i] - 1})
+    for t in (10, 15, 20):
+        wide[f"mae{t}_A"] = (mae_A < -t / 100).astype(int)
+        wide[f"mdd{t}_A"] = (mdd_A < -t / 100).astype(int)
     # ---- B ----
     lw = sliding_window_view(l, W)[1:n_valid + 1]          # 行 i → 第 i+1 … i+W 天最低价
     frames = []
@@ -71,13 +74,16 @@ def build_labels(bars: pd.DataFrame, H: int | None = None, W: int | None = None,
         j = i + 1 + first
         fill_px = np.minimum(limit, o[j])
         ret_B = np.full(n_valid, np.nan); mdd_B = np.full(n_valid, np.nan); mae_B = np.full(n_valid, np.nan)
+        ret_A_same_window = np.full(n_valid, np.nan)          # A 从决策日持有到 B 的卖出日（同一日历窗口）的净收益
         if filled.any():
             r, m, a = _hold_stats(fill_px[filled], j[filled], c, l, H, cost["limit_in"], cost["out"])
             ret_B[filled], mdd_B[filled], mae_B[filled] = r, m, a
+            exit_idx = j[filled] + H - 1
+            ret_A_same_window[filled] = c[exit_idx] * (1 - cost["out"]) / (entry_A[filled] * (1 + cost["market_in"])) - 1
         frames.append(pd.DataFrame({"ts": wide["ts"], "symbol": df["symbol"].iloc[0], "d_pct": float(d), "limit_px": limit,
                                     "filled": filled.astype(int), "fill_offset": np.where(filled, first + 1, -1),
                                     "fill_px": np.where(filled, fill_px, np.nan), "ret_B": ret_B, "mdd_B": mdd_B, "mae_B": mae_B,
                                     "profit_B": np.where(filled, (ret_B > 0).astype(float), np.nan),
                                     "dd15_B": np.where(filled, (mdd_B < -thr).astype(float), np.nan),
-                                    "ret_A_counterfactual": ret_A}))
+                                    "ret_A_counterfactual": ret_A, "ret_A_same_window": np.where(filled, ret_A_same_window, ret_A)}))
     return wide, pd.concat(frames, ignore_index=True)

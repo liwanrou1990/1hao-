@@ -32,7 +32,9 @@ def fold_schedule(ts: pd.Series) -> list[tuple[pd.Timestamp, pd.Timestamp]]:
     return out
 
 
-def run_walkforward(ds: dict, bars: dict, quick: bool = False, log=print) -> dict:
+def run_walkforward(ds: dict, bars: dict, quick: bool = False, log=print, features: list[str] | None = None,
+                    ml_models: tuple[str, ...] = ("lightgbm", "catboost"), baselines: bool = True) -> dict:
+    """features：ML 模型使用的特征列（默认技术指标 FEATURES）；ml_models：要训练的 ML 模型；baselines：是否训练两个基准。"""
     c = cfg()
     W, H, emb = int(c["wait_days"]), int(c["horizon_days"]), int(c["backtest"]["embargo_days"])
     gap = timedelta(days=W + H + emb)
@@ -42,6 +44,7 @@ def run_walkforward(ds: dict, bars: dict, quick: bool = False, log=print) -> dic
     predA = {m: [] for m in MODEL_NAMES}
     predB = {m: [] for m in MODEL_NAMES}
     fold_log = []
+    fold_imp: dict = {}
     for k, (s, e) in enumerate(folds):
         tr = wide["ts"] <= s - gap
         te = (wide["ts"] >= s) & (wide["ts"] < e)
@@ -51,20 +54,25 @@ def run_walkforward(ds: dict, bars: dict, quick: bool = False, log=print) -> dic
         teB = (long["ts"] >= s) & (long["ts"] < e)
         t0 = time.time()
         # 基准
-        br = BaseRateModel().fit(wide[tr], long[trB])
-        pa, pb = br.predict(X[te], XB[teB])
-        predA["baserate"].append(pa.assign(fold=k)); predB["baserate"].append(pb.assign(fold=k))
-        vb = VolBootstrapModel(n_paths=600 if quick else 1500).fit({s_: b["1d"] for s_, b in bars.items()}, s - timedelta(days=1))
-        pa, pb = vb.predict(X[te], XB[teB])
-        predA["volboot"].append(pa.assign(fold=k)); predB["volboot"].append(pb.assign(fold=k))
+        if baselines:
+            br = BaseRateModel().fit(wide[tr], long[trB])
+            pa, pb = br.predict(X[te], XB[teB])
+            predA["baserate"].append(pa.assign(fold=k)); predB["baserate"].append(pb.assign(fold=k))
+            vb = VolBootstrapModel(n_paths=600 if quick else 1500).fit({s_: b["1d"] for s_, b in bars.items()}, s - timedelta(days=1))
+            pa, pb = vb.predict(X[te], XB[teB])
+            predA["volboot"].append(pa.assign(fold=k)); predB["volboot"].append(pb.assign(fold=k))
         # ML
         preds = {}
         for M in (LightGBMModel, CatBoostModel):
-            m = M(quick=quick).fit(X[tr], wide[tr], XB[trB], long[trB])
+            if M.name not in ml_models:
+                continue
+            m = M(quick=quick, features=features).fit(X[tr], wide[tr], XB[trB], long[trB])
             preds[m.name] = m.predict(X[te], XB[teB])
             predA[m.name].append(preds[m.name][0].assign(fold=k)); predB[m.name].append(preds[m.name][1].assign(fold=k))
-        pa, pb = ensemble(preds)
-        predA["ensemble"].append(pa.assign(fold=k)); predB["ensemble"].append(pb.assign(fold=k))
+            fold_imp.setdefault(m.name, []).append(m.feature_importance().assign(fold=k))
+        if len(preds) >= 2:
+            pa, pb = ensemble(preds)
+            predA["ensemble"].append(pa.assign(fold=k)); predB["ensemble"].append(pb.assign(fold=k))
         fold_log.append({"fold": k, "test_start": s.date().isoformat(), "test_end": e.date().isoformat(), "train_rows": int(tr.sum()),
                          "train_last_ts": wide.loc[tr, "ts"].max().date().isoformat(), "test_rows": int(te.sum()), "seconds": round(time.time() - t0, 1)})
         log(f"折 {k}: 测试 {s.date()}→{e.date()} 训练 {int(tr.sum())} 行(截至 {wide.loc[tr, 'ts'].max().date()}) 测试 {int(te.sum())} 行 {time.time()-t0:.0f}s")
@@ -81,18 +89,23 @@ def run_walkforward(ds: dict, bars: dict, quick: bool = False, log=print) -> dic
     for m in outA:
         a, b = outA[m], outB[m]
         yA = {"p_profit": wide.loc[a.index, "profit_A"].to_numpy(), "p_dd": wide.loc[a.index, "dd_A_flag"].to_numpy()}
+        for t in ("mae10_A", "mae20_A"):
+            if f"p_{t}" in a:
+                yA[f"p_{t}"] = wide.loc[a.index, t].to_numpy()
+        a_cols = [c_ for c_ in yA if c_ in a]
         yB = {"p_fill": long.loc[b.index, "filled"].to_numpy(), "p_profit": long.loc[b.index, "profit_B"].to_numpy(), "p_dd": long.loc[b.index, "dd_B_flag"].to_numpy()}
-        for col in ("p_profit", "p_dd"):
+        for col in a_cols:
             a[col + "_cal"] = a[col].to_numpy(dtype=float)
         for col in ("p_fill", "p_profit", "p_dd"):
             b[col + "_cal"] = b[col].to_numpy(dtype=float)
         for k in sorted(a["fold"].unique()):
             prevA, curA = (a["fold"] < k).to_numpy(), (a["fold"] == k).to_numpy()
             prevB, curB = (b["fold"] < k).to_numpy(), (b["fold"] == k).to_numpy()
-            for col in ("p_profit", "p_dd"):
+            for col in a_cols:
                 cal = fit_isotonic(a.loc[prevA, col].to_numpy(dtype=float), yA[col][prevA], min_n)
                 a.loc[curA, col + "_cal"] = apply_cal(cal, a.loc[curA, col].to_numpy(dtype=float))
             for col in ("p_fill", "p_profit", "p_dd"):
                 cal = fit_isotonic(b.loc[prevB, col].to_numpy(dtype=float), yB[col][prevB], min_n)
                 b.loc[curB, col + "_cal"] = apply_cal(cal, b.loc[curB, col].to_numpy(dtype=float))
-    return {"predA": outA, "predB": outB, "folds": fold_log}
+    imp = {m: pd.concat(v).groupby("feature")["gain"].mean().sort_values(ascending=False) for m, v in fold_imp.items()}
+    return {"predA": outA, "predB": outB, "folds": fold_log, "importance": imp}

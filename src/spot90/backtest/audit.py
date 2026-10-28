@@ -108,3 +108,43 @@ def run_audit(bars: dict, folds: list[dict], store) -> dict:
            "fold_isolation": fold_isolation_check(folds), "data_sources": data_source_audit(store, syms)}
     res["all_passed"] = bool(all(v["passed"] for v in res["feature_causality"].values()) and all(v["passed"] for v in res["label_recompute"].values()) and res["fold_isolation"]["passed"])
     return res
+
+
+def onchain_causality_check(n_checks: int = 6, seed: int = 5) -> dict:
+    """把链上原始表截断到日 i−lag（即日 i 决策时真实可见的最后一天），重算日 i 的链上特征，必须与全量计算一致。
+    若一致，说明特征只依赖 ≤ i−lag 的链上数据（无未来值、无双向填充）。"""
+    import spot90.data.onchain as OC
+    from ..features_onchain import build_onchain_features
+    keys = pd.DataFrame({"ts": pd.date_range("2021-01-01", "2026-05-01", tz="UTC"), "symbol": "BTCUSDT"})
+    keys = pd.concat([keys, keys.assign(symbol="ETHUSDT")], ignore_index=True)
+    full, groups = build_onchain_features(keys)
+    cols = [c for g in groups.values() for c in g["cols"]]
+    lag = int(cfg().get("onchain", {}).get("availability_lag_days", 1))
+    rng = np.random.default_rng(seed)
+    dates = pd.to_datetime(rng.choice(keys["ts"].unique()[400:-60], size=n_checks, replace=False))
+    orig = OC.load_table
+    details = []; worst = 0.0
+    for d in dates:
+        cut = d - pd.Timedelta(days=lag)
+
+        def trunc(name, _cut=cut):
+            t = orig(name)
+            if t.empty:
+                return t
+            # 月度宏观表按其自身滞后规则另行处理：截断到 cut - 40 天的月份
+            return t[t["time"] <= _cut] if not name.startswith("macro_") else t[t["time"] <= _cut - pd.Timedelta(days=40)]
+        OC.load_table = trunc
+        try:
+            part, _ = build_onchain_features(keys[keys["ts"] <= d])
+        finally:
+            OC.load_table = orig
+        for sym in ("BTCUSDT", "ETHUSDT"):
+            a = full[(full["ts"] == d) & (full["symbol"] == sym)][cols].iloc[0].to_numpy(float)
+            b = part[(part["ts"] == d) & (part["symbol"] == sym)][cols].iloc[0].to_numpy(float)
+            m = np.isfinite(a) & np.isfinite(b)
+            diff = float(np.max(np.abs(a[m] - b[m]))) if m.any() else 0.0
+            nan_mis = int((np.isfinite(a) != np.isfinite(b)).sum())
+            worst = max(worst, diff)
+            details.append({"ts": d.date().isoformat(), "symbol": sym, "max_abs_diff": diff, "nan_mismatch": nan_mis})
+    passed = bool(worst < 1e-9 and all(x["nan_mismatch"] == 0 for x in details))
+    return {"passed": passed, "worst_abs_diff": worst, "lag_days": lag, "checks": details}

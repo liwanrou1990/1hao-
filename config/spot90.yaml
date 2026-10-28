@@ -82,3 +82,8 @@ paths:
   data_dir: data_store/spot90
   report_dir: reports_out/spot90
   model_dir: models_out/spot90
+
+onchain:                            # 第二阶段：链上/资金面/宏观
+  availability_lag_days: 1          # 日 t 的链上数据对日 t 决策不可见；稳健性检验可设 2
+  macro_lag_days: 40
+  pit_main_only: true               # 可信主回测只用 pit_safe 特征组；非 PIT 组作为参考实验单独报告

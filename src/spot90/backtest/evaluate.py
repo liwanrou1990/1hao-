@@ -79,12 +79,15 @@ def simulate_decisions(wf: dict, ds: dict, model: str, use_cal: bool = True) -> 
     lb = long.set_index(["symbol", "ts", "d_pct"])
     ret = np.zeros(len(sig)); filled = np.zeros(len(sig), dtype=bool); entered = np.zeros(len(sig), dtype=bool)
     mdd = np.full(len(sig), np.nan); mae = np.full(len(sig), np.nan); fill_px = np.full(len(sig), np.nan); fill_off = np.full(len(sig), np.nan)
+    ret_A_same = sig["ret_A"].to_numpy(dtype=float).copy()      # 与 B 同一日历窗口的 A 收益（买入/观望时就是 ret_A）
     for i, (idx, r) in enumerate(sig.iterrows()):
         if r["action"] == "买入":
             ret[i], mdd[i], mae[i], entered[i], filled[i] = r["ret_A"], r["mdd_A"], r["mae_A"], True, True
             fill_px[i] = w.loc[idx, "entry_A"]; fill_off[i] = 1
         elif r["action"] == "等待":
             row = lb.loc[(r["symbol"], r["ts"], float(r["d_pct"]))]
+            if "ret_A_same_window" in row:
+                ret_A_same[i] = row["ret_A_same_window"]
             if int(row["filled"]) == 1:
                 ret[i], mdd[i], mae[i], entered[i], filled[i] = row["ret_B"], row["mdd_B"], row["mae_B"], True, True
                 fill_px[i], fill_off[i] = row["fill_px"], row["fill_offset"]
@@ -94,6 +97,7 @@ def simulate_decisions(wf: dict, ds: dict, model: str, use_cal: bool = True) -> 
     sig["order_placed"] = entered; sig["filled"] = filled; sig["fill_px"] = fill_px; sig["fill_offset_days"] = fill_off
     sig["realized_ret"] = np.where(filled, ret, 0.0); sig["realized_mdd"] = mdd; sig["realized_mae"] = mae
     sig["missed_ret_A_if_unfilled"] = np.where(entered & ~filled, sig["ret_A"], np.nan)
+    sig["ret_A_same_window"] = ret_A_same
     return sig
 
 
@@ -126,6 +130,13 @@ def summarize_signals(sig: pd.DataFrame, thr: float) -> dict:
         "positions_p_mae_gt_thr": float((pos["realized_mae"] < -thr).mean()) if len(pos) else None,
         "positions_p_mdd_gt_thr": float((pos["realized_mdd"] < -thr).mean()) if len(pos) else None,
         "strategy_mean_ret_all_days": float(sig["realized_ret"].mean()),
+        "positions_sharpe_like": float(pos["realized_ret"].mean() / pos["realized_ret"].std()) if len(pos) > 5 and pos["realized_ret"].std() > 0 else None,
+        "positions_sortino_like": float(pos["realized_ret"].mean() / np.sqrt((np.minimum(pos["realized_ret"], 0) ** 2).mean())) if len(pos) > 5 and (pos["realized_ret"] < 0).any() else None,
+        "positions_ret_over_mae": float(pos["realized_ret"].mean() / -pos["realized_mae"].mean()) if len(pos) > 5 and pos["realized_mae"].mean() < 0 else None,
+        "all_days_sharpe_like": float(sig["realized_ret"].mean() / sig["realized_ret"].std()) if sig["realized_ret"].std() > 0 else None,
+        "buyhold_sharpe_like": float(bh.mean() / bh.std()) if bh.std() > 0 else None,
+        "buyhold_ret_over_mae": float(bh.mean() / -sig["mae_A"].mean()),
+        "wait_vs_A_same_window_mean_diff": float((sig.loc[sig["action"] == "等待", "realized_ret"] - sig.loc[sig["action"] == "等待", "ret_A_same_window"]).mean()) if (sig["action"] == "等待").any() else None,
         "buyhold_win_rate": float((bh > 0).mean()), "buyhold_mean_ret": float(bh.mean()), "buyhold_median_ret": float(bh.median()),
         "buyhold_mean_mae": float(sig["mae_A"].mean()), "buyhold_p_mae_gt_thr": float((sig["mae_A"] < -thr).mean()),
         "buyhold_p_mdd_gt_thr": float((sig["mdd_A"] < -thr).mean()),
