@@ -203,3 +203,20 @@ tests/         按阶段组织的 pytest 用例
 docs/          环境与接口检查报告、使用文档、阶段报告、方法说明
 reports_out/   日报与图表（运行后生成，已 gitignore）
 ```
+
+## spot90：BTC / ETH 90 天现货投资 AI 预测与可信度验证（2026-10-28，第一版）
+
+> **结论先行（样本外 2020-01 → 2026-07，14 折 Walk-Forward）**：LightGBM / CatBoost 对 90 天涨跌的预测**没有**优于“每天买入持有”或“收盘>MA200 才买”；预测盈利概率 ≥65% 时真实盈利率 58%~67%，与同期市场自身上涨频率相同；挂低价限价单等待 14 天总体亏于立即买入。完整报告：`docs/14_spot90_90天预测可信度验证报告.md`，原始信号/预测：`docs/spot90_validation/`。系统因此把最终建议锁定为“暂不买入（模型未通过验证）”，不输出未经验证的高胜率。
+
+```bash
+pip install lightgbm catboost duckdb pyarrow scikit-learn httpx pyyaml pandas numpy joblib   # Mac Apple Silicon：先 brew install libomp
+export PYTHONPATH=src
+python -m spot90.cli ingest            # Bitget V3 现货历史 K 线（首选，api.bitget.com）→ 不可达时自动用 GitHub 公开 Binance 日线缓存；写 data_store/spot90/data_status.json
+python -m spot90.cli backtest          # 14 折 Walk-Forward（purge 90 天 + embargo 10 天）：基准 / LightGBM / CatBoost / 平均 → reports_out/spot90/backtest/
+python -m spot90.backtest.run_validation   # 泄漏审计 + BTC/ETH 分别验证 + 三基准 + 限价单分析 → reports_out/spot90/validation/
+python -m spot90.backtest.report_md    # 生成 docs/14 报告
+python -m spot90.cli train && python -m spot90.cli predict   # 最终模型 + 当日预测 JSON（reports_out/spot90/latest_prediction.json；未验证时建议=暂不买入）
+pytest tests/test_spot90_data.py -q    # 数据层测试（MockTransport）
+```
+- 目录：`src/spot90/data/`（bitget_v3 / static_klines / llama / store / quality / ingest）、`labels.py`（A 立即买入、B 限价 14 天等待后持有 90 天；成交=最低价触及，跳空按开盘）、`features.py`（全部因果）、`models/`（baserate、volboot、LightGBM、CatBoost、calibration）、`decision.py`（A/B/C 规则与门槛）、`backtest/`（walkforward、evaluate、audit、validation、report_md）、`pipeline.py`、`cli.py`；参数 `config/spot90.yaml`。
+- 已知限制：本容器对 `api.bitget.com` 返回 403，数据为 Binance 现货（GitHub `finom/static-klines` 缓存，每日更新）；链上/稳定币/ETF/宏观/衍生品数据源在本环境全部不可达，未接入也未伪造；Chronos-2 与 Streamlit 看板按用户要求暂缓；第一阶段无任何下单代码。

@@ -1,0 +1,84 @@
+# BTC / ETH 中长期现货投资 AI 预测系统（spot90）参数。全部为研究参数，不是收益承诺。
+symbols: [BTCUSDT, ETHUSDT]
+timeframes: [1d, 4h]
+history_years_required: 5          # 不足时只记录可用范围，不伪造
+horizon_days: 90                   # 持有期（成交后起算）
+wait_days: 14                      # 限价单等待窗口
+decision_time: close               # 每日收盘后决策，次日开盘价成交（买入即买）
+
+data:
+  primary_source: bitget           # bitget | static_klines
+  bitget:
+    base_url: https://api.bitget.com
+    v3_path: /api/v3/market/history-candles
+    v3_category: SPOT
+    v3_interval_candidates:
+      1d: ["1day", "1D", "1d"]
+      4h: ["4h", "4H"]
+    v2_path: /api/v2/spot/market/history-candles
+    v2_granularity_candidates:
+      1d: ["1Dutc", "1day"]
+      4h: ["4h"]
+    page_limit: 200
+    min_interval_s: 0.08           # 官方公开限频约 20 次/秒，留余量
+    timeout_s: 20
+  static_klines:                   # 备用：GitHub 上公开提交的 Binance 现货 K 线缓存（真实数据，非 Bitget）
+    raw_base: https://raw.githubusercontent.com/finom/static-klines/main/.klines-cache
+    window_anchor: {1d: "2016-01-01", 4h: "2017-07-01"}
+    window_months: {1d: 24, 4h: 3}
+  llama:                           # 交叉校验：DefiLlama（CoinGecko 聚合日收盘价，2013 年起）
+    base: https://coins.llama.fi
+    ids: {BTCUSDT: "coingecko:bitcoin", ETHUSDT: "coingecko:ethereum"}
+  splice_tolerance_pct: 0.8        # 不同来源拼接时重叠期中位数价差容忍（%）
+
+costs:                             # 现货费用假设（Bitget 现货基础费率 0.1%；可按 VIP 等级下调）
+  taker_fee_bps: 10
+  maker_fee_bps: 10
+  slippage_bps_market: 5           # 市价买入滑点（限价单成交无滑点）
+  slippage_bps_limit: 0
+
+limit_order:
+  discount_grid_pct: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15]   # 相对决策日收盘价的折价
+  min_fill_prob: 0.30              # 低于此成交概率的候选不推荐（等于白等）
+
+thresholds:                        # 初始研究门槛（候选，不代表模型必须达到）
+  min_profit_prob: 0.65
+  min_expected_net_return: 0.08
+  max_prob_drawdown_gt_15: 0.35    # 持有期峰谷回撤 >15% 的概率上限
+  drawdown_threshold: 0.15
+  drawdown_metric: mae             # mae=从买入价起算的最大浮亏（默认）；mdd=持有期峰谷回撤（BTC 90 天内 >15% 峰谷回撤历史频率约 87%）
+  return_metric: median            # 门槛用的收益口径：median（稳健）| mean
+  min_calibration_samples: 300     # 校准所需最少样本外样本；不足则不输出概率结论
+
+backtest:
+  first_test_date: "2020-01-01"
+  test_block_days: 180             # 每 180 天重训一次
+  embargo_days: 10                 # 标签窗口 90 天 + 额外 10 天隔离
+  min_train_days: 500
+  block_bootstrap_len: 90
+  bootstrap_n: 500
+  seed: 42
+
+models:
+  lightgbm:
+    n_estimators: 400
+    learning_rate: 0.02
+    num_leaves: 15
+    min_child_samples: 60
+    subsample: 0.8
+    subsample_freq: 1
+    colsample_bytree: 0.8
+    reg_lambda: 5.0
+    verbose: -1
+  catboost:
+    iterations: 500
+    learning_rate: 0.03
+    depth: 4
+    l2_leaf_reg: 6
+    verbose: 0
+  quantiles: [0.05, 0.25, 0.5, 0.75, 0.95]
+
+paths:
+  data_dir: data_store/spot90
+  report_dir: reports_out/spot90
+  model_dir: models_out/spot90

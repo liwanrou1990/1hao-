@@ -15,3 +15,5 @@ dist/
 .ruff_cache/
 models_out/
 data_in/
+data_store/spot90/raw_cache/
+logs/
