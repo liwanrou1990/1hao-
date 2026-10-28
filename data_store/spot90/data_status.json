@@ -1,5 +1,5 @@
 {
-  "run_ts": "2026-10-28T16:31:04.869967+00:00",
+  "run_ts": "2026-10-28T23:25:02.889927+00:00",
   "primary_source_requested": "bitget",
   "symbols": {
     "BTCUSDT": {
@@ -40,16 +40,7 @@
             "binance_spot_via_static_klines": 3359
           }
         },
-        "meets_history_requirement": true,
-        "cross_check": {
-          "available": true,
-          "n": 3255,
-          "median_abs_pct": 0.095,
-          "p95_abs_pct": 2.608,
-          "max_abs_pct": 27.22,
-          "ref_first": "2013-04-28",
-          "ref_last": "2026-10-28"
-        }
+        "meets_history_requirement": true
       },
       "4h": {
         "attempts": [
@@ -170,16 +161,7 @@
             "binance_spot_via_static_klines": 3359
           }
         },
-        "meets_history_requirement": true,
-        "cross_check": {
-          "available": true,
-          "n": 3320,
-          "median_abs_pct": 0.227,
-          "p95_abs_pct": 2.147,
-          "max_abs_pct": 29.21,
-          "ref_first": "2015-08-07",
-          "ref_last": "2026-10-28"
-        }
+        "meets_history_requirement": true
       },
       "4h": {
         "attempts": [

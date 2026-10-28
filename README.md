@@ -245,3 +245,14 @@ for H in 7 14 30 90; do python -m spot90.phase3.runner --horizon $H --threads 1 
 python -c "from spot90.backtest.dataset import load_bars; from spot90.phase3.analysis import analyze; import json; json.dump(analyze(load_bars()), open('reports_out/spot90/phase3/analysis.json','w'), default=float)"
 python -c "from spot90.phase3.buyposition import run; run()"       # 9 条买入规则同口径比较
 ```
+
+### spot90 第四阶段（2026-10-28）：风险监测与仓位管理系统 + 中文 Dashboard（当前主入口）
+
+> 不再有任何预测模型输出。页面提供：参考价与数据新鲜度（来源失效即提示“数据延迟”）、MA20/50/90/200 与 MA200 斜率、7/30/90 天收益-波动-回撤、固定规则的趋势状态与风险等级（公式公开）、距均线/高低点百分比、持仓成本/止损/潜在亏损计算器、已重新验证的 14 天限价成交概率（样本外 AUC 0.784、ECE 0.046；并列展示“成交后盈利率 56%~60% 与立即买入无异”）、一次性买入/分批定投/等待回调的同口径历史比较。报告 `docs/17_spot90_风险监测与仓位管理系统.md`，截图 `docs/spot90_validation/phase4/`。
+
+```bash
+export PYTHONPATH=src
+bash scripts/spot90_monitor_daily.sh                                   # 每日：ingest + snapshot
+python -m streamlit run src/spot90/dashboard/app.py --server.port 8501  # 打开 http://localhost:8501
+pytest tests/test_spot90_monitor.py tests/test_spot90_data.py tests/test_spot90_phase2.py -q
+```
