@@ -265,3 +265,13 @@ pytest tests/test_spot90_monitor.py tests/test_spot90_data.py tests/test_spot90_
 bash scripts/spot90_monitor_daily.sh && PYTHONPATH=src python -m streamlit run src/spot90/dashboard/app.py
 node scripts/spot90_ui_test.js http://127.0.0.1:8501/ 3
 ```
+
+### spot90 第六阶段（2026-10-29）：生产部署与手机远程访问
+
+> 当前开发环境是临时云容器（无 systemd/cron，会被回收），**不是生产部署**。交付：`deploy/install_mac.sh`（launchd KeepAlive + 每日两次）、`deploy/install_linux.sh`（systemd 服务 + 定时器）、便携守护、Tailscale 手机访问方案（`deploy/REMOTE_ACCESS.md`）、并发锁/幂等/原子写入、Webhook 告警去重与恢复、Dashboard 健康探测、手机精简视图 `?m=1`。本容器实测：kill -9 后 3 秒自动恢复、告警 发送→去重→恢复 正确、28 项测试通过。报告 `docs/19_spot90_生产部署与远程访问报告.md`。
+
+```bash
+bash deploy/install_mac.sh      # Mac 一键上线；Linux: bash deploy/install_linux.sh
+curl -s http://127.0.0.1:8501/_stcore/health   # ok
+tailscale serve --bg --https=443 http://127.0.0.1:8501   # iPhone: https://<主机>.<tailnet>.ts.net/?m=1
+```

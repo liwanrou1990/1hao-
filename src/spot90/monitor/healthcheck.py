@@ -16,6 +16,7 @@ from pathlib import Path
 import httpx
 import pandas as pd
 
+from ..atomic import atomic_write_json
 from ..config import cfg, data_dir, model_dir, report_dir
 from ..data.store import BarStore
 from ..data.quality import continuity_report
@@ -79,6 +80,14 @@ def run(now: datetime | None = None, send_alert: bool = True) -> dict:
     checks.append(_check("成交概率模型文件", (model_dir() / "fill_model_logistic.joblib").exists(), str(model_dir() / "fill_model_logistic.joblib")))
     checks.append(_check("成交模型验证报告", (mdir / "fill_model_validation.json").exists(), "fill_model_validation.json"))
     checks.append(_check("方案比较结果", (mdir / "plans_comparison.json").exists(), "plans_comparison.json", level="WARN"))
+    # 5b. Dashboard 进程健康（可选：SPOT90_DASHBOARD_URL，如 http://127.0.0.1:8501）
+    durl = os.environ.get("SPOT90_DASHBOARD_URL")
+    if durl:
+        try:
+            r = httpx.get(durl.rstrip("/") + "/_stcore/health", timeout=8)
+            checks.append(_check("Dashboard 进程健康", r.status_code == 200 and "ok" in r.text.lower(), f"{durl} → HTTP {r.status_code}"))
+        except Exception as e:  # noqa: BLE001
+            checks.append(_check("Dashboard 进程健康", False, f"{durl} 不可达：{type(e).__name__}"))
     # 6. 只读保证：代码中不存在下单/提现接口调用
     import re
     bad = []
@@ -90,29 +99,54 @@ def run(now: datetime | None = None, send_alert: bool = True) -> dict:
     fails = [c for c in checks if c["status"] == "FAIL"]; warns = [c for c in checks if c["status"] == "WARN"]
     result = {"run_ts": now.isoformat(), "overall": "FAIL" if fails else ("WARN" if warns else "OK"), "n_fail": len(fails), "n_warn": len(warns), "checks": checks}
     mdir.mkdir(parents=True, exist_ok=True)
-    (mdir / "health.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    atomic_write_json(mdir / "health.json", result, indent=2)
     with open(mdir / "health_history.jsonl", "a", encoding="utf-8") as fh:
         fh.write(json.dumps({"run_ts": result["run_ts"], "overall": result["overall"], "n_fail": len(fails), "n_warn": len(warns)}, ensure_ascii=False) + "\n")
     if fails or warns:
         with open(mdir / "alerts.log", "a", encoding="utf-8") as fh:
             for c in fails + warns:
                 fh.write(f"{now.isoformat()} {c['status']} {c['check']}: {c['detail']}\n")
-    if fails and send_alert:
-        hook = os.environ.get("SPOT90_ALERT_WEBHOOK")
+    if send_alert:
+        result["alert"] = notify(result, now)
+    return result
+
+
+def notify(result: dict, now: datetime, repeat_hours: float = 24.0) -> dict:
+    """去重告警：同一组 FAIL 指纹在 repeat_hours 内只发一次；状态由 FAIL 恢复为非 FAIL 时发一次“已恢复”。
+    Webhook 地址只从环境变量 SPOT90_ALERT_WEBHOOK 读取，绝不写入日志/页面/结果。"""
+    mdir = report_dir() / "monitor"; state_p = mdir / "alerts_state.json"
+    state = json.loads(state_p.read_text()) if state_p.exists() else {}
+    fails = [c for c in result["checks"] if c["status"] == "FAIL"]
+    fp = "|".join(sorted(c["check"] for c in fails))
+    hook = os.environ.get("SPOT90_ALERT_WEBHOOK")
+    out = {"webhook_configured": bool(hook), "action": "none"}
+    last_fp, last_ts = state.get("last_fingerprint", ""), state.get("last_sent_at")
+    hours_since = (now - datetime.fromisoformat(last_ts)).total_seconds() / 3600 if last_ts else 1e9
+    msg = None
+    if fails and (fp != last_fp or hours_since >= repeat_hours):
+        msg = {"level": "FAIL", "text": f"spot90 健康检查 FAIL×{len(fails)}（{now.isoformat()[:16]}Z）: " + "；".join(f"{c['check']}: {c['detail']}" for c in fails)[:1500]}
+        out["action"] = "sent_fail" if fp != last_fp else "resent_fail_after_repeat_window"
+    elif not fails and last_fp:
+        msg = {"level": "RECOVERED", "text": f"spot90 健康检查已恢复（{now.isoformat()[:16]}Z），总体 {result['overall']}"}
+        out["action"] = "sent_recovered"
+    elif fails:
+        out["action"] = "suppressed_duplicate"
+    if msg:
         if hook:
             try:
-                httpx.post(hook, json={"text": f"spot90 健康检查 FAIL×{len(fails)}: " + "；".join(c['check'] for c in fails)}, timeout=10)
-                result["alert_sent"] = True
+                r = httpx.post(hook, json=msg, timeout=10); out["delivered"] = r.status_code < 300; out["http_status"] = r.status_code
             except Exception as e:  # noqa: BLE001
-                result["alert_sent"] = f"失败 {type(e).__name__}"
+                out["delivered"] = False; out["error"] = type(e).__name__
         else:
-            result["alert_sent"] = "未配置 SPOT90_ALERT_WEBHOOK（已写 alerts.log）"
-    return result
+            out["delivered"] = False; out["note"] = "未配置 SPOT90_ALERT_WEBHOOK，仅写 alerts.log"
+        state = {"last_fingerprint": fp if fails else "", "last_sent_at": now.isoformat() if fails else None, "last_message_level": msg["level"]}
+        atomic_write_json(state_p, state, indent=2)
+    return out
 
 
 if __name__ == "__main__":
     r = run()
     for c in r["checks"]:
         print(f"[{c['status']}] {c['check']}: {c['detail']}")
-    print("overall:", r["overall"], "| alert:", r.get("alert_sent"))
+    print("overall:", r["overall"], "| alert:", r.get("alert"))
     sys.exit(1 if r["overall"] == "FAIL" else 0)

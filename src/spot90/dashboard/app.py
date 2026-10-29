@@ -15,7 +15,9 @@ sys.path.insert(0, str(ROOT))
 from spot90.config import report_dir  # noqa: E402
 from spot90.monitor.position import PositionPlan, Tranche  # noqa: E402
 
-st.set_page_config(page_title="BTC/ETH 风险监测与仓位管理", layout="wide")
+_qp = st.query_params
+MOBILE = str(_qp.get("m", "0")).lower() in ("1", "true", "yes")
+st.set_page_config(page_title="BTC/ETH 风险监测", layout="centered" if MOBILE else "wide", initial_sidebar_state="collapsed")
 C_PRICE, C_MA = "#2f6fdb", ["#8aa4c8", "#c9a227", "#d26a3f", "#3a3a3a"]
 RISK_COLOR = {"低": "#2e8b57", "中": "#c9a227", "高": "#d26a3f", "极高": "#b22222"}
 
@@ -35,7 +37,10 @@ def money(x, d=2):
 
 
 snap = load_snapshot()
-st.title("BTC / ETH 中长期现货投资：风险监测与仓位管理（研究用）")
+if MOBILE:
+    st.markdown("#### BTC / ETH 风险监测（研究用 · 手机视图）")
+else:
+    st.title("BTC / ETH 中长期现货投资：风险监测与仓位管理（研究用）")
 if snap is None:
     st.error("未找到快照。请先运行：PYTHONPATH=src python -m spot90.cli ingest && PYTHONPATH=src python -m spot90.monitor.snapshot")
     st.stop()
@@ -46,6 +51,41 @@ if _age_h > snap.get("snapshot_max_age_hours", 30):
     st.error(f"快照已过期：生成于 {snap['generated_at'][:16]} UTC（北京时间 {_bj}），{_age_h:.0f} 小时前。下方所有价格都是过期数据，不是实时价。请运行 scripts/spot90_monitor_daily.sh。")
 st.caption(f"快照生成时间 {snap['generated_at'][:19]} UTC（北京时间 {_bj}，{_age_h:.1f} 小时前）· {snap['disclaimer']} · 本页不显示任何上涨概率、必涨价格或 AI 买入区间（三阶段样本外验证均未通过，见 docs/14-16）。"
            + ("· 本次日线来自备用源（Bitget 不可达）" if snap.get("fallback_used") else ""))
+
+def render_mobile(snap: dict) -> None:
+    """手机精简视图：单列卡片，只放最需要的字段。"""
+    st.markdown("<style>div[data-testid='stMetricValue']{font-size:1.4rem} .block-container{padding-top:1rem;padding-left:0.8rem;padding-right:0.8rem}</style>", unsafe_allow_html=True)
+    for sym in ("BTCUSDT", "ETHUSDT"):
+        v = snap["symbols"].get(sym)
+        if not v or "error" in v:
+            st.error(f"{sym} 无数据"); continue
+        m, t, w, d = v["market"], v["trend_risk"], v["windows"], v["distances"]
+        color = RISK_COLOR.get(t["risk_level"], "#888")
+        st.markdown(f"<div style='border-left:6px solid {color};padding:6px 10px;background:#f6f6f6;margin-top:8px'><b>{sym[:3]}</b> {money(m['price_for_display'])} <small>（{m['price_label']}）</small><br>"
+                    f"<small>趋势 <b>{t['state']}</b> · 风险 <b>{t['risk_level']} {t['risk_score']:.0f}</b> · 日线 {m['daily_bar']['date']} {m['daily_bar']['freshness']['status']} · 参考价延迟 {m['live'].get('age_s')} 秒 {m['live'].get('status')}</small></div>", unsafe_allow_html=True)
+        if m["data_delayed"]:
+            st.warning("数据延迟，以上不是实时价")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("7 天", pct(w["7"]["ret"])); c2.metric("30 天", pct(w["30"]["ret"])); c3.metric("90 天", pct(w["90"]["ret"]))
+        c1, c2, c3 = st.columns(3)
+        c1.metric("距 MA200", pct(d["vs_ma200"])); c2.metric("距 365 日高", pct(w["365"]["dd_from_high"])); c3.metric("30 天波动", pct(w["30"]["rv_ann"], 0))
+        rl = pd.DataFrame(v.get("risk_level_history_90d", []))
+        if not rl.empty:
+            cur = rl[rl["风险等级"] == t["risk_level"]]
+            if not cur.empty:
+                r = cur.iloc[0]
+                st.caption(f"历史上“{t['risk_level']}”等级之后 90 天：最大浮亏中位 {pct(r['最大浮亏中位'])}，浮亏>15% 频率 {pct(r['浮亏>15%'],0)}，收益中位 {pct(r['90天收益中位'])}（样本 {int(r['样本日'])} 日；规则度量，非亏损概率）")
+        ft = pd.DataFrame(v["limit_fill_table"])
+        if not ft.empty:
+            ft = ft[ft["折价%"].isin([1, 3, 5, 10])].copy(); ft["限价"] = ft["限价"].map(money); ft["14天成交概率"] = ft["14天成交概率"].map(lambda x: pct(x, 0))
+            st.dataframe(ft, hide_index=True, use_container_width=True)
+            st.caption("成交概率 ≠ 盈利概率；该表相对简单历史统计无显著优势，仅作参考。")
+    st.caption("完整视图：去掉网址中的 ?m=1。")
+
+
+if MOBILE:
+    render_mobile(snap)
+    st.stop()
 
 tabs = st.tabs(["BTC", "ETH", "方案历史比较", "数据来源与验证"])
 for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
@@ -108,7 +148,8 @@ for tab, sym in zip(tabs[:2], ("BTCUSDT", "ETHUSDT")):
             ch_show[c_] = ch_show[c_].map(lambda x: pct(x))
         st.dataframe(ch_show, hide_index=True, use_container_width=True)
         st.caption("注意：第三阶段验证显示趋势状态对 90 天结果几乎没有区分力；此表只说明历史分布，不能当成当前条件下的概率。")
-        st.subheader("14 天限价单成交概率（已验证的唯一模型；成交概率 ≠ 盈利概率）")
+        st.subheader("14 天限价单成交概率（历史统计工具；成交概率 ≠ 盈利概率）")
+        st.caption("重要声明：该逻辑回归相对“按折价档的历史成交率”这一简单统计基准没有显著优势（样本外 Brier 技能 +0.003，95% CI −0.03~+0.03）；合并 AUC 0.78 几乎全部来自折价深度本身。它只是校准良好的参考，不是经验证的 AI 交易优势。")
         ft = pd.DataFrame(v["limit_fill_table"])
         if not ft.empty:
             fvv = v["fill_model_validation"] or {}

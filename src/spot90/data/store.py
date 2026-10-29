@@ -9,6 +9,7 @@ from typing import Any
 import duckdb
 import pandas as pd
 
+from ..atomic import atomic_to_parquet
 from ..config import data_dir
 from .schema import BAR_COLUMNS, empty_bars
 
@@ -45,7 +46,7 @@ class BarStore:
             replaced = len(new) - added
             merged = both
         merged = merged.sort_values("ts").reset_index(drop=True)
-        merged.to_parquet(self.path(symbol, tf), index=False)
+        atomic_to_parquet(merged, self.path(symbol, tf))
         return {"added": added, "replaced": replaced, "total": len(merged)}
 
     def duck(self) -> duckdb.DuckDBPyConnection:

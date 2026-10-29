@@ -1,5 +1,5 @@
 {
-  "run_ts": "2026-10-28T23:51:04.018489+00:00",
+  "run_ts": "2026-10-29T00:20:26.507624+00:00",
   "primary_source_requested": "bitget",
   "symbols": {
     "BTCUSDT": {
@@ -42,7 +42,7 @@
         },
         "meets_history_requirement": true,
         "effective_source": "binance_spot_via_static_klines",
-        "updated_at": "2026-10-28T23:51:11.393349+00:00"
+        "updated_at": "2026-10-29T00:20:34.140637+00:00"
       },
       "4h": {
         "attempts": [
@@ -124,7 +124,7 @@
         },
         "meets_history_requirement": true,
         "effective_source": "binance_spot_via_static_klines",
-        "updated_at": "2026-10-28T23:51:11.785488+00:00"
+        "updated_at": "2026-10-29T00:20:34.763788+00:00"
       }
     },
     "ETHUSDT": {
@@ -167,7 +167,7 @@
         },
         "meets_history_requirement": true,
         "effective_source": "binance_spot_via_static_klines",
-        "updated_at": "2026-10-28T23:51:12.017454+00:00"
+        "updated_at": "2026-10-29T00:20:34.962512+00:00"
       },
       "4h": {
         "attempts": [
@@ -249,7 +249,7 @@
         },
         "meets_history_requirement": true,
         "effective_source": "binance_spot_via_static_klines",
-        "updated_at": "2026-10-28T23:51:12.343739+00:00"
+        "updated_at": "2026-10-29T00:20:35.379904+00:00"
       }
     }
   },

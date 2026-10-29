@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from ..atomic import atomic_write_text
 from ..config import cfg, report_dir
 from ..data.ingest import load_status
 from ..data.store import BarStore
@@ -86,8 +87,8 @@ def build_snapshot(symbols: list[str] | None = None, store: BarStore | None = No
                                 "series_400d": series.replace({np.nan: None}).to_dict(orient="list")}
     out = report_dir() / "monitor"; (out / "history").mkdir(parents=True, exist_ok=True)
     txt = json.dumps(snap, ensure_ascii=False, indent=1, default=lambda o: None if isinstance(o, float) and not np.isfinite(o) else (float(o) if isinstance(o, (np.floating,)) else str(o)))
-    (out / "latest.json").write_text(txt)
-    (out / "history" / f"{now.date().isoformat()}.json").write_text(txt)
+    atomic_write_text(out / "history" / f"{now.date().isoformat()}.json", txt)   # 同一 UTC 日多次运行 → 覆盖（幂等）
+    atomic_write_text(out / "latest.json", txt)
     return snap
 
 

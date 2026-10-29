@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from ..atomic import atomic_write_json
 from ..config import cfg, data_dir
 from .bitget_v3 import BitgetSpotHistoryClient, BitgetUnreachable
 from .llama import LlamaClient
@@ -98,7 +99,7 @@ def run_ingest(symbols: list[str] | None = None, timeframes: list[str] | None = 
                     entry["cross_check"] = {"available": False, "error": f"{type(e).__name__}: {str(e)[:120]}"}
             status["symbols"][sym][tf] = entry
     out = data_dir() / "data_status.json"
-    out.write_text(json.dumps(status, ensure_ascii=False, indent=2, default=str))
+    atomic_write_json(out, json.loads(json.dumps(status, default=str)), indent=2)
     store.save_json("data_status", run_ts=datetime.now(timezone.utc), payload=status)
     return status
 
