@@ -1,0 +1,1239 @@
+{
+  "models": [
+    {
+      "contract": "ITWAP",
+      "file": "SafeOracleVault.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "IToken",
+      "file": "SafeOracleVault.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "SafeOracleVault",
+      "file": "SafeOracleVault.sol",
+      "assets": {
+        "collateral": {
+          "moved_in": [
+            "deposit"
+          ],
+          "moved_out": []
+        },
+        "payout": {
+          "moved_in": [],
+          "moved_out": [
+            "borrow"
+          ]
+        }
+      },
+      "accounting": [
+        {
+          "variable": "collateralOf",
+          "written_in": "deposit",
+          "at": "SafeOracleVault.sol:30",
+          "direction": "in"
+        },
+        {
+          "variable": "debtOf",
+          "written_in": "borrow",
+          "at": "SafeOracleVault.sol:41",
+          "direction": "out"
+        }
+      ],
+      "valuation_dependencies": [
+        {
+          "source": {
+            "target": "oracle",
+            "sig": "consult()",
+            "at": "SafeOracleVault.sol:36"
+          },
+          "guards": "SafeOracleVault.sol:42",
+          "via": "maxBorrow"
+        },
+        {
+          "source": {
+            "target": "oracle",
+            "sig": "consult()",
+            "at": "SafeOracleVault.sol:36"
+          },
+          "guards": "SafeOracleVault.sol:44",
+          "via": "maxBorrow"
+        }
+      ],
+      "outflows": [
+        {
+          "function": "borrow",
+          "at": "SafeOracleVault.sol:41",
+          "sinks": [
+            {
+              "target": "payout",
+              "sig": "transfer(address,uint256)",
+              "at": "SafeOracleVault.sol:44"
+            }
+          ],
+          "sender_conditions": [
+            {
+              "at": "SafeOracleVault.sol:44",
+              "sender_dependent": true,
+              "state_read": [
+                "payout"
+              ]
+            }
+          ],
+          "other_conditions": [
+            {
+              "at": "SafeOracleVault.sol:42",
+              "sender_dependent": false,
+              "state_read": [
+                "debtOf"
+              ]
+            }
+          ],
+          "state_written": [
+            "debtOf"
+          ]
+        }
+      ],
+      "privileged_entries": [
+        {
+          "function": "borrow",
+          "at": "SafeOracleVault.sol:41",
+          "conditions": [
+            "SafeOracleVault.sol:44"
+          ]
+        }
+      ],
+      "unguarded_state_writers": [
+        {
+          "function": "deposit",
+          "at": "SafeOracleVault.sol:30",
+          "writes": [
+            "collateralOf"
+          ]
+        }
+      ],
+      "external_dependencies": [
+        {
+          "target": "oracle",
+          "sig": "consult()",
+          "at": "SafeOracleVault.sol:36",
+          "function": "maxBorrow"
+        },
+        {
+          "target": "oracle",
+          "sig": "consult()",
+          "at": "SafeOracleVault.sol:36",
+          "function": "borrow"
+        }
+      ]
+    },
+    {
+      "contract": "IPastVotes",
+      "file": "SafeX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "ISafeTreasury",
+      "file": "SafeX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "SafeX100Governor",
+      "file": "SafeX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [
+        {
+          "function": "setTreasury",
+          "at": "SafeX100Governor.sol:61",
+          "conditions": [
+            "SafeX100Governor.sol:62"
+          ]
+        },
+        {
+          "function": "initializeCouncil",
+          "at": "SafeX100Governor.sol:67",
+          "conditions": [
+            "SafeX100Governor.sol:68"
+          ]
+        }
+      ],
+      "unguarded_state_writers": [
+        {
+          "function": "propose",
+          "at": "SafeX100Governor.sol:76",
+          "writes": [
+            "_proposals",
+            "proposalCount"
+          ]
+        },
+        {
+          "function": "castVote",
+          "at": "SafeX100Governor.sol:89",
+          "writes": [
+            "_proposals"
+          ]
+        },
+        {
+          "function": "queue",
+          "at": "SafeX100Governor.sol:101",
+          "writes": [
+            "_proposals"
+          ]
+        },
+        {
+          "function": "execute",
+          "at": "SafeX100Governor.sol:113",
+          "writes": [
+            "_proposals"
+          ]
+        }
+      ],
+      "external_dependencies": [
+        {
+          "target": "token",
+          "sig": "getPastVotes(address,uint256)",
+          "at": "SafeX100Governor.sol:95",
+          "function": "castVote"
+        },
+        {
+          "target": "treasury",
+          "sig": "execute(address,uint256,bytes)",
+          "at": "SafeX100Governor.sol:119",
+          "function": "execute"
+        }
+      ],
+      "weight_sources": [
+        {
+          "function": "castVote",
+          "at": "SafeX100Governor.sol:89",
+          "reads": [
+            {
+              "target": "token",
+              "sig": "getPastVotes(address,uint256)",
+              "at": "SafeX100Governor.sol:95"
+            }
+          ],
+          "snapshot_shaped": true,
+          "writes": [
+            "_proposals"
+          ]
+        }
+      ]
+    },
+    {
+      "contract": "IERC20Min",
+      "file": "SafeX100Treasury.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "SafeX100Treasury",
+      "file": "SafeX100Treasury.sol",
+      "assets": {
+        "TMP_77": {
+          "moved_in": [],
+          "moved_out": [
+            "payToken"
+          ]
+        },
+        "target": {
+          "moved_in": [],
+          "moved_out": [
+            "execute"
+          ]
+        }
+      },
+      "accounting": [
+        {
+          "variable": "tokenSpentThisEpoch",
+          "written_in": "payToken",
+          "at": "SafeX100Treasury.sol:53",
+          "direction": "out"
+        },
+        {
+          "variable": "_epochOfToken",
+          "written_in": "payToken",
+          "at": "SafeX100Treasury.sol:53",
+          "direction": "out"
+        }
+      ],
+      "valuation_dependencies": [],
+      "outflows": [
+        {
+          "function": "payToken",
+          "at": "SafeX100Treasury.sol:53",
+          "sinks": [
+            {
+              "target": "TMP_77",
+              "sig": "transfer(address,uint256)",
+              "at": "SafeX100Treasury.sol:60"
+            }
+          ],
+          "sender_conditions": [
+            {
+              "at": "SafeX100Treasury.sol:40",
+              "sender_dependent": true,
+              "state_read": [
+                "governor"
+              ]
+            }
+          ],
+          "other_conditions": [
+            {
+              "at": "SafeX100Treasury.sol:54",
+              "sender_dependent": false,
+              "state_read": [
+                "paused"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:55",
+              "sender_dependent": false,
+              "state_read": [
+                "allowedRecipient"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:57",
+              "sender_dependent": false,
+              "state_read": [
+                "_epochOfToken"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:58",
+              "sender_dependent": false,
+              "state_read": [
+                "tokenEpochCap",
+                "tokenSpentThisEpoch"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:60",
+              "sender_dependent": false,
+              "state_read": []
+            }
+          ],
+          "state_written": [
+            "_epochOfToken",
+            "tokenSpentThisEpoch"
+          ]
+        },
+        {
+          "function": "execute",
+          "at": "SafeX100Treasury.sol:65",
+          "sinks": [
+            {
+              "target": "target",
+              "sig": "low-level call",
+              "value": "value",
+              "at": "SafeX100Treasury.sol:72"
+            }
+          ],
+          "sender_conditions": [
+            {
+              "at": "SafeX100Treasury.sol:40",
+              "sender_dependent": true,
+              "state_read": [
+                "governor"
+              ]
+            }
+          ],
+          "other_conditions": [
+            {
+              "at": "SafeX100Treasury.sol:70",
+              "sender_dependent": false,
+              "state_read": [
+                "paused"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:71",
+              "sender_dependent": false,
+              "state_read": [
+                "allowedTarget"
+              ]
+            },
+            {
+              "at": "SafeX100Treasury.sol:73",
+              "sender_dependent": false,
+              "state_read": []
+            }
+          ],
+          "state_written": []
+        }
+      ],
+      "privileged_entries": [
+        {
+          "function": "setGovernor",
+          "at": "SafeX100Treasury.sol:42",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        },
+        {
+          "function": "setGuardian",
+          "at": "SafeX100Treasury.sol:43",
+          "conditions": [
+            "SafeX100Treasury.sol:43"
+          ]
+        },
+        {
+          "function": "setTargetAllowed",
+          "at": "SafeX100Treasury.sol:44",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        },
+        {
+          "function": "setRecipientAllowed",
+          "at": "SafeX100Treasury.sol:45",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        },
+        {
+          "function": "setTokenEpochCap",
+          "at": "SafeX100Treasury.sol:46",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        },
+        {
+          "function": "pause",
+          "at": "SafeX100Treasury.sol:47",
+          "conditions": [
+            "SafeX100Treasury.sol:47"
+          ]
+        },
+        {
+          "function": "payToken",
+          "at": "SafeX100Treasury.sol:53",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        },
+        {
+          "function": "execute",
+          "at": "SafeX100Treasury.sol:65",
+          "conditions": [
+            "SafeX100Treasury.sol:40"
+          ]
+        }
+      ],
+      "unguarded_state_writers": [],
+      "external_dependencies": []
+    },
+    {
+      "contract": "MockERC20",
+      "file": "MockERC20.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [
+        {
+          "function": "mint",
+          "at": "MockERC20.sol:24",
+          "writes": [
+            "balanceOf",
+            "totalSupply"
+          ]
+        },
+        {
+          "function": "approve",
+          "at": "MockERC20.sol:30",
+          "writes": [
+            "allowance"
+          ]
+        },
+        {
+          "function": "transfer",
+          "at": "MockERC20.sol:36",
+          "writes": [
+            "balanceOf"
+          ]
+        },
+        {
+          "function": "transferFrom",
+          "at": "MockERC20.sol:41",
+          "writes": [
+            "allowance",
+            "balanceOf"
+          ]
+        }
+      ],
+      "external_dependencies": []
+    },
+    {
+      "contract": "ISpotPair",
+      "file": "VulnOracleVault.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "IMintableToken",
+      "file": "VulnOracleVault.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "VulnOracleVault",
+      "file": "VulnOracleVault.sol",
+      "assets": {
+        "collateral": {
+          "moved_in": [
+            "deposit"
+          ],
+          "moved_out": []
+        },
+        "payout": {
+          "moved_in": [],
+          "moved_out": [
+            "borrow"
+          ]
+        }
+      },
+      "accounting": [
+        {
+          "variable": "collateralOf",
+          "written_in": "deposit",
+          "at": "VulnOracleVault.sol:40",
+          "direction": "in"
+        },
+        {
+          "variable": "debtOf",
+          "written_in": "borrow",
+          "at": "VulnOracleVault.sol:55",
+          "direction": "out"
+        }
+      ],
+      "valuation_dependencies": [
+        {
+          "source": {
+            "target": "pair",
+            "sig": "spotPrice0()",
+            "at": "VulnOracleVault.sol:50"
+          },
+          "guards": "VulnOracleVault.sol:56",
+          "via": "maxBorrow"
+        },
+        {
+          "source": {
+            "target": "pair",
+            "sig": "spotPrice0()",
+            "at": "VulnOracleVault.sol:50"
+          },
+          "guards": "VulnOracleVault.sol:58",
+          "via": "maxBorrow"
+        }
+      ],
+      "outflows": [
+        {
+          "function": "borrow",
+          "at": "VulnOracleVault.sol:55",
+          "sinks": [
+            {
+              "target": "payout",
+              "sig": "transfer(address,uint256)",
+              "at": "VulnOracleVault.sol:58"
+            }
+          ],
+          "sender_conditions": [
+            {
+              "at": "VulnOracleVault.sol:58",
+              "sender_dependent": true,
+              "state_read": [
+                "payout"
+              ]
+            }
+          ],
+          "other_conditions": [
+            {
+              "at": "VulnOracleVault.sol:56",
+              "sender_dependent": false,
+              "state_read": [
+                "debtOf"
+              ]
+            }
+          ],
+          "state_written": [
+            "debtOf"
+          ]
+        }
+      ],
+      "privileged_entries": [
+        {
+          "function": "borrow",
+          "at": "VulnOracleVault.sol:55",
+          "conditions": [
+            "VulnOracleVault.sol:58"
+          ]
+        }
+      ],
+      "unguarded_state_writers": [
+        {
+          "function": "deposit",
+          "at": "VulnOracleVault.sol:40",
+          "writes": [
+            "collateralOf"
+          ]
+        }
+      ],
+      "external_dependencies": [
+        {
+          "target": "pair",
+          "sig": "spotPrice0()",
+          "at": "VulnOracleVault.sol:50",
+          "function": "maxBorrow"
+        },
+        {
+          "target": "pair",
+          "sig": "spotPrice0()",
+          "at": "VulnOracleVault.sol:50",
+          "function": "borrow"
+        }
+      ]
+    },
+    {
+      "contract": "IVotesLike",
+      "file": "VulnX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "ITreasuryLike",
+      "file": "VulnX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [],
+      "external_dependencies": [],
+      "skipped": "interface/library/abstract"
+    },
+    {
+      "contract": "VulnX100Governor",
+      "file": "VulnX100Governor.sol",
+      "assets": {},
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [],
+      "privileged_entries": [],
+      "unguarded_state_writers": [
+        {
+          "function": "setTreasury",
+          "at": "VulnX100Governor.sol:62",
+          "writes": [
+            "treasury"
+          ]
+        },
+        {
+          "function": "initializeCouncil",
+          "at": "VulnX100Governor.sol:74",
+          "writes": [
+            "councilCount",
+            "councilInitialized",
+            "isCouncil"
+          ]
+        },
+        {
+          "function": "propose",
+          "at": "VulnX100Governor.sol:87",
+          "writes": [
+            "_proposals",
+            "proposalCount"
+          ]
+        },
+        {
+          "function": "castVote",
+          "at": "VulnX100Governor.sol:104",
+          "writes": [
+            "_proposals"
+          ]
+        },
+        {
+          "function": "execute",
+          "at": "VulnX100Governor.sol:122",
+          "writes": [
+            "_proposals"
+          ]
+        }
+      ],
+      "external_dependencies": [
+        {
+          "target": "treasury",
+          "sig": "execute(address,uint256,bytes)",
+          "at": "VulnX100Governor.sol:133",
+          "function": "execute"
+        }
+      ],
+      "weight_sources": [
+        {
+          "function": "castVote",
+          "at": "VulnX100Governor.sol:104",
+          "reads": [
+            {
+              "target": "token",
+              "sig": "balanceOf(address)",
+              "at": "VulnX100Governor.sol:110"
+            }
+          ],
+          "snapshot_shaped": false,
+          "writes": [
+            "_proposals"
+          ]
+        }
+      ]
+    },
+    {
+      "contract": "VulnX100Treasury",
+      "file": "VulnX100Treasury.sol",
+      "assets": {
+        "target": {
+          "moved_in": [],
+          "moved_out": [
+            "execute"
+          ]
+        }
+      },
+      "accounting": [],
+      "valuation_dependencies": [],
+      "outflows": [
+        {
+          "function": "execute",
+          "at": "VulnX100Treasury.sol:36",
+          "sinks": [
+            {
+              "target": "target",
+              "sig": "low-level call",
+              "value": "value",
+              "at": "VulnX100Treasury.sol:41"
+            }
+          ],
+          "sender_conditions": [
+            {
+              "at": "VulnX100Treasury.sol:40",
+              "sender_dependent": true,
+              "state_read": [
+                "governor"
+              ]
+            }
+          ],
+          "other_conditions": [
+            {
+              "at": "VulnX100Treasury.sol:42",
+              "sender_dependent": false,
+              "state_read": []
+            }
+          ],
+          "state_written": []
+        }
+      ],
+      "privileged_entries": [
+        {
+          "function": "setGovernor",
+          "at": "VulnX100Treasury.sol:23",
+          "conditions": [
+            "VulnX100Treasury.sol:24"
+          ]
+        },
+        {
+          "function": "execute",
+          "at": "VulnX100Treasury.sol:36",
+          "conditions": [
+            "VulnX100Treasury.sol:40"
+          ]
+        }
+      ],
+      "unguarded_state_writers": [],
+      "external_dependencies": []
+    }
+  ],
+  "candidate_properties": [
+    {
+      "id": "SafeOracleVault.ASSET_CONSERVATION.collateral",
+      "family": "asset_conservation",
+      "statement": "balanceOf(SafeOracleVault) of asset `collateral` >= sum over users of `collateralOf` minus assets legitimately paid out",
+      "assumptions": [
+        "the asset is a standard ERC20 without fee-on-transfer/rebasing",
+        "`collateralOf` is the only accounting of user claims on this asset"
+      ],
+      "legitimate_exceptions": [
+        "direct token donations to the contract (balance may exceed claims)"
+      ],
+      "evidence": [
+        "SafeOracleVault.sol:30",
+        "moved_in by deposit"
+      ],
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "SafeOracleVault.SOLVENCY",
+      "family": "collateral_solvency",
+      "statement": "after any operation sequence, sum of `debtOf` <= LTV * value of sum of `collateralOf` at the valuation source's quiescent reading",
+      "assumptions": [
+        "the valuation source reflects a fair price when no transaction is in flight",
+        "LTV is the constant used in the guarding comparison"
+      ],
+      "legitimate_exceptions": [
+        "price moves between operations by exogenous trading (bounded drift)"
+      ],
+      "evidence": [
+        "SafeOracleVault.sol:36",
+        "SafeOracleVault.sol:42",
+        "SafeOracleVault.sol:41"
+      ],
+      "risk_hint": "valuation depends on external call `consult()` (manipulable if spot)",
+      "check": "foundry_invariant+halmos"
+    },
+    {
+      "id": "SafeOracleVault.OUTFLOW_BOUND.borrow",
+      "family": "treasury_access_constraint",
+      "statement": "`borrow` is privileged; its outflow must additionally be bounded by a state-defined policy (allowlist / cap / delay)",
+      "assumptions": [
+        "a treasury has a spending policy expressible as state"
+      ],
+      "legitimate_exceptions": [
+        "a protocol whose governance is itself the only policy (documented)"
+      ],
+      "evidence": [
+        "SafeOracleVault.sol:41",
+        "SafeOracleVault.sol:42"
+      ],
+      "policy_conditions_found": 1,
+      "structural_note": null,
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "SafeOracleVault.STATE_WRITE_AUTH.deposit",
+      "family": "permission_effectiveness",
+      "statement": "`deposit` writes ['collateralOf'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "SafeOracleVault.sol:30"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "SafeX100Governor.VOTE_CONSERVATION.castVote",
+      "family": "vote_conservation",
+      "statement": "total weight recorded by `castVote` across all voters of one decision <= the token's total supply; the same token units are never counted twice",
+      "assumptions": [
+        "the weight token is transferable",
+        "one decision = one proposal id"
+      ],
+      "legitimate_exceptions": [
+        "non-transferable / soulbound weight tokens"
+      ],
+      "evidence": [
+        "SafeX100Governor.sol:89",
+        "SafeX100Governor.sol:95"
+      ],
+      "risk_hint": null,
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.propose",
+      "family": "permission_effectiveness",
+      "statement": "`propose` writes ['_proposals', 'proposalCount'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "SafeX100Governor.sol:76"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.castVote",
+      "family": "permission_effectiveness",
+      "statement": "`castVote` writes ['_proposals'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "SafeX100Governor.sol:89"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.queue",
+      "family": "permission_effectiveness",
+      "statement": "`queue` writes ['_proposals'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "SafeX100Governor.sol:101"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.execute",
+      "family": "permission_effectiveness",
+      "statement": "`execute` writes ['_proposals'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "SafeX100Governor.sol:113"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "SafeX100Treasury.OUTFLOW_BOUND.payToken",
+      "family": "treasury_access_constraint",
+      "statement": "`payToken` is privileged; its outflow must additionally be bounded by a state-defined policy (allowlist / cap / delay)",
+      "assumptions": [
+        "a treasury has a spending policy expressible as state"
+      ],
+      "legitimate_exceptions": [
+        "a protocol whose governance is itself the only policy (documented)"
+      ],
+      "evidence": [
+        "SafeX100Treasury.sol:53",
+        "SafeX100Treasury.sol:54",
+        "SafeX100Treasury.sol:55",
+        "SafeX100Treasury.sol:57",
+        "SafeX100Treasury.sol:58"
+      ],
+      "policy_conditions_found": 4,
+      "structural_note": null,
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "SafeX100Treasury.OUTFLOW_BOUND.execute",
+      "family": "treasury_access_constraint",
+      "statement": "`execute` is privileged; its outflow must additionally be bounded by a state-defined policy (allowlist / cap / delay)",
+      "assumptions": [
+        "a treasury has a spending policy expressible as state"
+      ],
+      "legitimate_exceptions": [
+        "a protocol whose governance is itself the only policy (documented)"
+      ],
+      "evidence": [
+        "SafeX100Treasury.sol:65",
+        "SafeX100Treasury.sol:70",
+        "SafeX100Treasury.sol:71"
+      ],
+      "policy_conditions_found": 2,
+      "structural_note": null,
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.mint",
+      "family": "permission_effectiveness",
+      "statement": "`mint` writes ['balanceOf', 'totalSupply'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "MockERC20.sol:24"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.approve",
+      "family": "permission_effectiveness",
+      "statement": "`approve` writes ['allowance'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "MockERC20.sol:30"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.transfer",
+      "family": "permission_effectiveness",
+      "statement": "`transfer` writes ['balanceOf'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "MockERC20.sol:36"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.transferFrom",
+      "family": "permission_effectiveness",
+      "statement": "`transferFrom` writes ['allowance', 'balanceOf'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "MockERC20.sol:41"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnOracleVault.ASSET_CONSERVATION.collateral",
+      "family": "asset_conservation",
+      "statement": "balanceOf(VulnOracleVault) of asset `collateral` >= sum over users of `collateralOf` minus assets legitimately paid out",
+      "assumptions": [
+        "the asset is a standard ERC20 without fee-on-transfer/rebasing",
+        "`collateralOf` is the only accounting of user claims on this asset"
+      ],
+      "legitimate_exceptions": [
+        "direct token donations to the contract (balance may exceed claims)"
+      ],
+      "evidence": [
+        "VulnOracleVault.sol:40",
+        "moved_in by deposit"
+      ],
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "VulnOracleVault.SOLVENCY",
+      "family": "collateral_solvency",
+      "statement": "after any operation sequence, sum of `debtOf` <= LTV * value of sum of `collateralOf` at the valuation source's quiescent reading",
+      "assumptions": [
+        "the valuation source reflects a fair price when no transaction is in flight",
+        "LTV is the constant used in the guarding comparison"
+      ],
+      "legitimate_exceptions": [
+        "price moves between operations by exogenous trading (bounded drift)"
+      ],
+      "evidence": [
+        "VulnOracleVault.sol:50",
+        "VulnOracleVault.sol:56",
+        "VulnOracleVault.sol:55"
+      ],
+      "risk_hint": "valuation depends on external call `spotPrice0()` (manipulable if spot)",
+      "check": "foundry_invariant+halmos"
+    },
+    {
+      "id": "VulnOracleVault.OUTFLOW_BOUND.borrow",
+      "family": "treasury_access_constraint",
+      "statement": "`borrow` is privileged; its outflow must additionally be bounded by a state-defined policy (allowlist / cap / delay)",
+      "assumptions": [
+        "a treasury has a spending policy expressible as state"
+      ],
+      "legitimate_exceptions": [
+        "a protocol whose governance is itself the only policy (documented)"
+      ],
+      "evidence": [
+        "VulnOracleVault.sol:55",
+        "VulnOracleVault.sol:56"
+      ],
+      "policy_conditions_found": 1,
+      "structural_note": null,
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "VulnOracleVault.STATE_WRITE_AUTH.deposit",
+      "family": "permission_effectiveness",
+      "statement": "`deposit` writes ['collateralOf'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnOracleVault.sol:40"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Governor.VOTE_CONSERVATION.castVote",
+      "family": "vote_conservation",
+      "statement": "total weight recorded by `castVote` across all voters of one decision <= the token's total supply; the same token units are never counted twice",
+      "assumptions": [
+        "the weight token is transferable",
+        "one decision = one proposal id"
+      ],
+      "legitimate_exceptions": [
+        "non-transferable / soulbound weight tokens"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:104",
+        "VulnX100Governor.sol:110"
+      ],
+      "risk_hint": "weight read is live balance, not a snapshot-shaped call",
+      "check": "foundry_invariant"
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.setTreasury",
+      "family": "permission_effectiveness",
+      "statement": "`setTreasury` writes ['treasury'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:62"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.initializeCouncil",
+      "family": "permission_effectiveness",
+      "statement": "`initializeCouncil` writes ['councilCount', 'councilInitialized', 'isCouncil'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:74"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.propose",
+      "family": "permission_effectiveness",
+      "statement": "`propose` writes ['_proposals', 'proposalCount'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:87"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.castVote",
+      "family": "permission_effectiveness",
+      "statement": "`castVote` writes ['_proposals'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:104"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.execute",
+      "family": "permission_effectiveness",
+      "statement": "`execute` writes ['_proposals'] without any msg.sender-dependent condition; if those variables define roles or accounting, writes must be bounded",
+      "assumptions": [
+        "variables written by anyone must not define roles or others' balances"
+      ],
+      "legitimate_exceptions": [
+        "self-service writes limited to msg.sender's own entries"
+      ],
+      "evidence": [
+        "VulnX100Governor.sol:122"
+      ],
+      "check": "manual_or_foundry"
+    },
+    {
+      "id": "VulnX100Treasury.OUTFLOW_BOUND.execute",
+      "family": "treasury_access_constraint",
+      "statement": "`execute` is privileged; its outflow must additionally be bounded by a state-defined policy (allowlist / cap / delay)",
+      "assumptions": [
+        "a treasury has a spending policy expressible as state"
+      ],
+      "legitimate_exceptions": [
+        "a protocol whose governance is itself the only policy (documented)"
+      ],
+      "evidence": [
+        "VulnX100Treasury.sol:36"
+      ],
+      "policy_conditions_found": 0,
+      "structural_note": "NO state-defined bound on this privileged outflow",
+      "check": "structural_only"
+    }
+  ]
+}
