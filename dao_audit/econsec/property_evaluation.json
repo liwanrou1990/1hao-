@@ -1,0 +1,339 @@
+{
+  "n": 26,
+  "verdict_counts": {
+    "SAFE_VERSION_PLAUSIBLE_UNVERIFIED": 2,
+    "PROVEN_SAFE": 4,
+    "FALSE_POSITIVE": 10,
+    "NEEDS_CONTEXT": 3,
+    "CANDIDATE_RISK": 7
+  },
+  "independence": {
+    "distinct_property_templates": 5,
+    "instances_per_template": {
+      "asset_conservation": 2,
+      "collateral_solvency": 2,
+      "treasury_access_constraint": 5,
+      "unguarded_state_writer": 15,
+      "vote_conservation": 2
+    },
+    "note": "permission_effectiveness is ONE over-broad rule firing 15x; not 15 independent signals"
+  },
+  "business_coverage": {
+    "produced": [
+      "asset_conservation",
+      "collateral_solvency",
+      "vote_conservation",
+      "treasury_access_constraint",
+      "permission_effectiveness"
+    ],
+    "promised_but_absent": [
+      "settlement_uniqueness",
+      "cross_contract_state_consistency",
+      "share_valuation_consistency"
+    ],
+    "note": "3 of 6 promised families produced 0 properties on the own contract set"
+  },
+  "auto_confirmed_real_defects": 0,
+  "rows": [
+    {
+      "id": "SafeOracleVault.ASSET_CONSERVATION.collateral",
+      "family": "asset_conservation",
+      "verdict": "SAFE_VERSION_PLAUSIBLE_UNVERIFIED",
+      "reason": "safe-version property; plausible but NOT executed as an invariant in MS0",
+      "source_rule": "asset_conservation",
+      "check": "foundry_invariant",
+      "evidence": [
+        "SafeOracleVault.sol:30",
+        "moved_in by deposit"
+      ]
+    },
+    {
+      "id": "SafeOracleVault.SOLVENCY",
+      "family": "collateral_solvency",
+      "verdict": "PROVEN_SAFE",
+      "reason": "executed on safe version in MS0 and held; incl. no-false-reject",
+      "source_rule": "collateral_solvency",
+      "check": "foundry_invariant+halmos",
+      "evidence": [
+        "SafeOracleVault.sol:36",
+        "SafeOracleVault.sol:42",
+        "SafeOracleVault.sol:41"
+      ]
+    },
+    {
+      "id": "SafeOracleVault.OUTFLOW_BOUND.borrow",
+      "family": "treasury_access_constraint",
+      "verdict": "SAFE_VERSION_PLAUSIBLE_UNVERIFIED",
+      "reason": "safe-version property; plausible but NOT executed as an invariant in MS0",
+      "source_rule": "treasury_access_constraint",
+      "check": "foundry_invariant",
+      "evidence": [
+        "SafeOracleVault.sol:41",
+        "SafeOracleVault.sol:42"
+      ]
+    },
+    {
+      "id": "SafeOracleVault.STATE_WRITE_AUTH.deposit",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "SafeOracleVault.sol:30"
+      ]
+    },
+    {
+      "id": "SafeX100Governor.VOTE_CONSERVATION.castVote",
+      "family": "vote_conservation",
+      "verdict": "PROVEN_SAFE",
+      "reason": "executed on safe version in MS0 and held; incl. no-false-reject",
+      "source_rule": "vote_conservation",
+      "check": "foundry_invariant",
+      "evidence": [
+        "SafeX100Governor.sol:89",
+        "SafeX100Governor.sol:95"
+      ]
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.propose",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "SafeX100Governor.sol:76"
+      ]
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.castVote",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "SafeX100Governor.sol:89"
+      ]
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.queue",
+      "family": "permission_effectiveness",
+      "verdict": "NEEDS_CONTEXT",
+      "reason": "trigger is permissionless but authorization is the proposal-state machine, not msg.sender; not an unguarded role/balance write",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "SafeX100Governor.sol:101"
+      ]
+    },
+    {
+      "id": "SafeX100Governor.STATE_WRITE_AUTH.execute",
+      "family": "permission_effectiveness",
+      "verdict": "NEEDS_CONTEXT",
+      "reason": "trigger is permissionless but authorization is the proposal-state machine, not msg.sender; not an unguarded role/balance write",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "SafeX100Governor.sol:113"
+      ]
+    },
+    {
+      "id": "SafeX100Treasury.OUTFLOW_BOUND.payToken",
+      "family": "treasury_access_constraint",
+      "verdict": "PROVEN_SAFE",
+      "reason": "executed on safe version in MS0 and held; incl. no-false-reject",
+      "source_rule": "treasury_access_constraint",
+      "check": "foundry_invariant",
+      "evidence": [
+        "SafeX100Treasury.sol:53",
+        "SafeX100Treasury.sol:54",
+        "SafeX100Treasury.sol:55"
+      ]
+    },
+    {
+      "id": "SafeX100Treasury.OUTFLOW_BOUND.execute",
+      "family": "treasury_access_constraint",
+      "verdict": "PROVEN_SAFE",
+      "reason": "executed on safe version in MS0 and held; incl. no-false-reject",
+      "source_rule": "treasury_access_constraint",
+      "check": "foundry_invariant",
+      "evidence": [
+        "SafeX100Treasury.sol:65",
+        "SafeX100Treasury.sol:70",
+        "SafeX100Treasury.sol:71"
+      ]
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.mint",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "unrestricted mint is intended in a test mock; correct property shape but out-of-scope contract",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "MockERC20.sol:24"
+      ]
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.approve",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "self-service write of caller's own balance/allowance — covered by the rule's own legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "MockERC20.sol:30"
+      ]
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.transfer",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "self-service write of caller's own balance/allowance — covered by the rule's own legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "MockERC20.sol:36"
+      ]
+    },
+    {
+      "id": "MockERC20.STATE_WRITE_AUTH.transferFrom",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "self-service write of caller's own balance/allowance — covered by the rule's own legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "MockERC20.sol:41"
+      ]
+    },
+    {
+      "id": "VulnOracleVault.ASSET_CONSERVATION.collateral",
+      "family": "asset_conservation",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "vulnerable-version structural signal; not auto-confirmed",
+      "source_rule": "asset_conservation",
+      "check": "foundry_invariant",
+      "evidence": [
+        "VulnOracleVault.sol:40",
+        "moved_in by deposit"
+      ]
+    },
+    {
+      "id": "VulnOracleVault.SOLVENCY",
+      "family": "collateral_solvency",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "structural signal on a vulnerable-version function; NOT auto-confirmed (would need a violating sequence = BLOCKED)",
+      "source_rule": "collateral_solvency",
+      "check": "foundry_invariant+halmos",
+      "evidence": [
+        "VulnOracleVault.sol:50",
+        "VulnOracleVault.sol:56",
+        "VulnOracleVault.sol:55"
+      ]
+    },
+    {
+      "id": "VulnOracleVault.OUTFLOW_BOUND.borrow",
+      "family": "treasury_access_constraint",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "vulnerable-version structural signal; not auto-confirmed",
+      "source_rule": "treasury_access_constraint",
+      "check": "foundry_invariant",
+      "evidence": [
+        "VulnOracleVault.sol:55",
+        "VulnOracleVault.sol:56"
+      ]
+    },
+    {
+      "id": "VulnOracleVault.STATE_WRITE_AUTH.deposit",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnOracleVault.sol:40"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.VOTE_CONSERVATION.castVote",
+      "family": "vote_conservation",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "structural signal on a vulnerable-version function; NOT auto-confirmed (would need a violating sequence = BLOCKED)",
+      "source_rule": "vote_conservation",
+      "check": "foundry_invariant",
+      "evidence": [
+        "VulnX100Governor.sol:104",
+        "VulnX100Governor.sol:110"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.setTreasury",
+      "family": "permission_effectiveness",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "structural signal on a vulnerable-version function; NOT auto-confirmed (would need a violating sequence = BLOCKED)",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnX100Governor.sol:62"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.initializeCouncil",
+      "family": "permission_effectiveness",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "structural signal on a vulnerable-version function; NOT auto-confirmed (would need a violating sequence = BLOCKED)",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnX100Governor.sol:74"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.propose",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnX100Governor.sol:87"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.castVote",
+      "family": "permission_effectiveness",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "writes only the caller's own entry / permissionless-by-design creation — legitimate exception",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnX100Governor.sol:104"
+      ]
+    },
+    {
+      "id": "VulnX100Governor.STATE_WRITE_AUTH.execute",
+      "family": "permission_effectiveness",
+      "verdict": "NEEDS_CONTEXT",
+      "reason": "trigger is permissionless but authorization is the proposal-state machine, not msg.sender; not an unguarded role/balance write",
+      "source_rule": "unguarded_state_writer",
+      "check": "manual_or_foundry",
+      "evidence": [
+        "VulnX100Governor.sol:122"
+      ]
+    },
+    {
+      "id": "VulnX100Treasury.OUTFLOW_BOUND.execute",
+      "family": "treasury_access_constraint",
+      "verdict": "CANDIDATE_RISK",
+      "reason": "structural signal on a vulnerable-version function; NOT auto-confirmed (would need a violating sequence = BLOCKED)",
+      "source_rule": "treasury_access_constraint",
+      "check": "structural_only",
+      "evidence": [
+        "VulnX100Treasury.sol:36"
+      ]
+    }
+  ]
+}
