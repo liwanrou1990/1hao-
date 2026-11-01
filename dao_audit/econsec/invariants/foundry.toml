@@ -1,0 +1,14 @@
+[profile.default]
+src = 'src'
+test = 'test'
+out = 'out'
+libs = ['lib']
+solc = "/root/.foundry/bin/solc"
+offline = true
+auto_detect_solc = false
+optimizer = true
+evm_version = "cancun"
+[invariant]
+runs = 200
+depth = 30
+fail_on_revert = false

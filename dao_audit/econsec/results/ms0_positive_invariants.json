@@ -1,0 +1,27 @@
+{
+  "generated": "forge test --offline (vendored solc 0.8.28, local isolated EVM)",
+  "forge": "1.5.1-stable",
+  "suites": {
+    "SafeGovernor_VoteConservation": {
+      "test_double_vote_rejected()": "Success",
+      "test_legitimate_vote_not_rejected()": "Success",
+      "test_snapshot_freezes_weight()": "Success",
+      "test_total_weight_within_snapshot_supply()": "Success"
+    },
+    "SafeOracleVault_Solvency": {
+      "invariant_debt_within_limit()": "Success",
+      "test_legitimate_borrow_not_rejected()": "Success",
+      "test_property_is_not_overly_strict()": "Success"
+    },
+    "SafeTreasury_Access": {
+      "test_epoch_cap_bounds_outflow()": "Success",
+      "test_legitimate_payout_not_rejected()": "Success",
+      "test_non_allowlisted_recipient_refused()": "Success",
+      "test_non_governor_refused()": "Success",
+      "test_pause_bounds_then_resumes()": "Success"
+    }
+  },
+  "halmos": {
+    "SafeTreasury_Halmos.check_epoch_cap_never_exceeded(uint256)": "PASS (symbolic, 2 paths, z3 4.12.6)"
+  }
+}
