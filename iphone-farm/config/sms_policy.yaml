@@ -1,0 +1,12 @@
+# 短信测试规范（硬性约束）：
+# 1. 只允许在自有测试设备与授权联系人之间收发短信；
+# 2. 短信类动作只允许单机执行，禁止广播；
+# 3. 任何短信结果在人工确认送达前一律记为 UNVERIFIED，程序不得自行标记“成功”。
+authorized_contacts:
+  # - name: "测试机 IF02"
+  #   number: "+86 1xx xxxx xxxx"
+  #   owner: "本项目自有 SIM"
+  #   authorized_by: "负责人姓名"
+  #   authorized_on: "2026-11-02"
+test_devices_only: true
+require_manual_delivery_confirmation: true

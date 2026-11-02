@@ -1,0 +1,44 @@
+# iPhone 群控主配置（Mac 上运行）
+api:
+  base_url: "http://127.0.0.1:7390"   # iPhone-use HTTP 服务（只监听回环地址；IPHONE_USE_PORT 可改端口）
+  timeout_s: 10
+  action_timeout_s: 20
+
+paths:
+  state_dir: "state"            # 注册表、锁文件、事件日志（相对 iphone-farm 目录）
+  reports_dir: "reports_out"    # 测试报告输出
+  registry_file: "state/registry.json"
+
+registration:
+  # 注册时要求 iPhone 的设备名符合该模式（在 iPhone 设置 → 通用 → 关于本机 → 名称 中改为 IF01、IF02 …）
+  name_pattern: "^IF(\\d{2})$"
+  require_udid_crosscheck: true  # 要求 system_profiler/usbmux 枚举到的 UDID 与注册表一致
+
+control:
+  # 每个动作必须显式指定完整设备 ID（capture_id），客户端会拒绝空设备
+  require_echo_match: true       # 校验响应中的 device 字段 == 请求的设备 ID
+  verify_host_before_action: true  # 动作前核对 /status 中 pointer.host == 注册的蓝牙 host
+  per_device_lock_timeout_s: 30
+
+broadcast:
+  max_parallel: 8                # 同时向多少台发指令（USB 2.0 总线 + 蓝牙队列共享，先保守）
+  stagger_ms: 50                 # 每台之间错开发送，避免 HID 单队列阻塞
+  allowed_actions: ["home", "open_app", "screenshot", "wake", "swipe", "tap", "type", "key"]
+  forbidden_in_broadcast: ["sms_open", "sms_compose", "power"]   # 短信类动作禁止广播
+
+monitor:
+  poll_interval_s: 3
+  usb_absent_alert_after_s: 60
+  no_frame_alert_after_s: 15
+  recovery:
+    enable_match: true           # BLE host 未匹配时自动 POST /match {force,probe}
+    enable_pair: true            # 注册表里有 host 且出现在 unmatchedHosts 时自动 POST /pair
+    enable_calibration: true     # pointer 未就绪且存在 calibration 问题时 POST /calibration/auto
+    enable_app_restart: false    # 最后手段：重启 iPhoneUse.app（会中断所有设备，默认关闭）
+    app_restart_cooldown_s: 600
+    max_recovery_attempts_per_10min: 3
+
+scale_test:
+  levels: [3, 5, 10, 15, 20, 30]
+  ble_stability_minutes: 10
+  screenshot_samples_per_device: 5

@@ -17,3 +17,6 @@ models_out/
 data_in/
 data_store/spot90/raw_cache/
 logs/
+iphone-farm/state/
+iphone-farm/reports_out/
+iphone-farm/.venv/
