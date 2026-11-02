@@ -1,0 +1,15 @@
+[profile.default]
+src = 'src'
+test = 'test'
+out = 'out'
+libs = ['lib']
+solc = "/root/.foundry/bin/solc"
+offline = true
+auto_detect_solc = false
+optimizer = true
+evm_version = "cancun"
+remappings = ['@openzeppelin/=lib/openzeppelin-contracts/', 'forge-std/=lib/forge-std/src/']
+[invariant]
+runs = 150
+depth = 20
+fail_on_revert = false

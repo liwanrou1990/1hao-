@@ -1,0 +1,23 @@
+{
+  "generated": "2026-11-02, authorized local isolated EVM only",
+  "compiler": "solc 0.8.28+commit.7893614a (vendored)",
+  "forge": "1.5.1-stable",
+  "halmos": "0.3.3 / z3 4.12.6",
+  "reference_impl": "OpenZeppelin Contracts 4.9.6 ERC4626 (public reference)",
+  "properties": {
+    "P1_share_accounting": {"source":"ERC-20 supply = sum of balances (ERC-4626 shares are ERC-20); does NOT reference asset token balance","check":"foundry invariant (150x20)"},
+    "P2_roundtrip_no_gain": {"source":"ERC-4626 security: redeem must not over-pay; conservation of purchasing power","check":"foundry fuzz 256"},
+    "P3_rounding_boundary": {"source":"ERC-4626 rounding rules: assets paid to users round DOWN","check":"foundry fuzz 256 + halmos symbolic"}
+  },
+  "foundry": {
+    "reference_vault": {"P1":"PASS","P2":"PASS","P2b_no_false_reject":"PASS","P3":"PASS","P3b_monotonic":"PASS"},
+    "buggy_teaching_vault": {"P1":"PASS (accounting intact)","P2":"FAIL (counterexample: deposit 1000003 -> redeem 1010003, +1%)","P2b_no_false_reject":"PASS","P3":"FAIL (counterexample: convertToAssets(convertToShares(a))=1.129e19 > a=1.118e19)","P3b_monotonic":"PASS"}
+  },
+  "halmos": {
+    "reference_vault_P3":"INCONCLUSIVE (TIMEOUT at 15-31s solver budget; external balanceOf + mulDiv; NOT a proof, NOT a pass)",
+    "buggy_teaching_vault_P3":"FAIL (symbolic counterexample a=0x80000000000000000000 found independently)"
+  },
+  "slither":"available (used for S2 facts in prior phases; not a property-verification tool, not re-run here)",
+  "unavailable_not_forced": ["echidna","medusa","certora"],
+  "blocked": "none in this run; the property-verification form (tools producing counterexamples on authorized own contracts) executed without being blocked"
+}
