@@ -450,3 +450,46 @@ trendsys:
   paper:
     state_file: reports_out/brando_pa/trendsys_paper/state.json
     log_dir: reports_out/brando_pa/trendsys_paper
+
+# ===================== 第七阶段：BTC/ETH/USDT 纯现货动态资金配置与最终 USDT 利润 =====================
+usdt:
+  symbols: [BTCUSDT, ETHUSDT]
+  exec_tf: 1h
+  initial_cash_usdt: 10000
+  trend: {sma: 200, confirm_days: 1}   # 各资产原始 SMA200（与第六阶段策略 A 相同）
+  models:                              # 预登记权重：(b,e) → {BTC, ETH}；其余为 USDT
+    A_equal_weight:   {both: {BTCUSDT: 0.5, ETHUSDT: 0.5}, btc_only: {BTCUSDT: 0.5}, eth_only: {ETHUSDT: 0.5}, none: {}}
+    B_full_single:    {both: {BTCUSDT: 0.5, ETHUSDT: 0.5}, btc_only: {BTCUSDT: 1.0}, eth_only: {ETHUSDT: 1.0}, none: {}}
+    C_cash_reserve:   {both: {BTCUSDT: 0.4, ETHUSDT: 0.4}, btc_only: {BTCUSDT: 0.8}, eth_only: {ETHUSDT: 0.8}, none: {}, max_total_exposure: 0.8}   # 硬上限：实际敞口 > 80% 即再平衡回目标
+  allocator:
+    drift_band: 0.10                   # 实际权重偏离目标 ≥ 10 个百分点 → 再平衡（每日线收盘检查）
+    min_rebalance_usdt: 10
+    min_rebalance_frac: 0.005          # 最小再平衡金额 = max(10 USDT, 权益 × 0.5%)
+    cash_buffer: 0.001
+  risk:
+    modes: [original_permanent, state_machine, none]   # 参数复用 trendsys.risk
+  risk_constraint:
+    max_drawdown: 0.30                 # 外部占位上限；未经用户批准，只用于排行榜标注
+    approved_by_user: false
+  costs:
+    round1: {fee_bps: 0, slippage_bps: 0}
+    round2: {fee_bps: 10, slippage_bps: 5}
+  windows:
+    train: ["2022-04-01", "2024-06-30"]
+    valid: ["2024-07-01", "2025-06-30"]
+    holdout: ["2025-07-01", null]
+    locked_unused_1h: ["2022-01-01", "2022-03-31"]
+    full_1h: ["2022-04-01", null]
+    full_4h: ["2018-06-01", null]
+  window_labels:
+    train: 训练（已观察）
+    valid: 验证（已观察）
+    holdout: 已被观察的测试窗（不是样本外）
+    locked_unused_1h: 真正未使用（3 个月，统计力极低）
+    full_1h: 全周期 1h（已观察）
+    full_4h: 长历史 4h（已观察）
+  regime_month_threshold: 0.03         # 月收益 > +3% 上涨、< −3% 下跌、其余横盘（诊断用）
+  paper:
+    log_dir: reports_out/brando_pa/usdt_paper
+    model: A_equal_weight
+    risk_mode: state_machine

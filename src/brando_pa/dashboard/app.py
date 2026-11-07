@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）", "USDT 利润与资产配置（第七阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -371,6 +371,45 @@ with tabs[13]:
         nav = pd.read_json(pdir / "nav.jsonl", lines=True)
         st.line_chart(nav.set_index("signal_ts")["equity"]) if len(nav) > 1 else st.json(nav.tail(1).to_dict("records"))
         for name in ("signals", "fills", "risk_state", "failures"):
+            fp = pdir / f"{name}.jsonl"
+            if fp.exists() and fp.stat().st_size:
+                st.caption(name); st.dataframe(pd.read_json(fp, lines=True).tail(20), use_container_width=True)
+
+with tabs[14]:
+    st.subheader("第七阶段：BTC/ETH/USDT 纯现货动态资金配置 · USDT 利润排行榜（禁止真实下单）")
+    P7 = RD / "phase7_usdt"; pj = load_json(str(P7 / "phase7_results.json")); la = load_json(str(P7 / "latest_allocation.json"))
+    st.warning("可信度：全部历史窗口在前六阶段已被观察，没有新的样本外数据；风险约束上限为占位值、未经用户批准，不得据此宣称适合真实交易。零成本结果不是可实际获得的收益。")
+    if la:
+        st.markdown(f"数据截至 {la['data_last_close']} · 趋势 {la['trend_on']} · " + " | ".join(f"{m}: {v['target']}" for m, v in la["models"].items()))
+    if not pj:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli phase7")
+    else:
+        rc = pj["risk_constraint"]; st.caption(f"风险约束占位：最大回撤 ≤ {rc['max_drawdown']:.0%}（approved_by_user = {rc['approved_by_user']}）")
+        cols = [("策略", "name"), ("期末权益USDT", "final_equity_usdt"), ("期末清仓USDT", "liquidation_usdt"), ("可实现利润USDT", "realizable_profit_usdt"), ("总收益率", "total_return"), ("最大回撤", "max_drawdown"), ("最大回撤USDT", "max_drawdown_usdt"), ("交易次数", "n_trades"), ("平均持仓", "avg_exposure"), ("BTC贡献", "contrib_btc_usdt"), ("ETH贡献", "contrib_eth_usdt"), ("成本USDT", "cost_usdt"), ("vs BTC SMA200 USDT", "excess_vs_btc_sma200_usdt"), ("满足约束", "meets_risk_constraint"), ("独立验证", "independently_validated"), ("最长空仓天", "longest_all_cash_days"), ("上涨月捕获", "up_month_capture"), ("熔断", "n_halts")]
+        def tbl(rows):
+            return pd.DataFrame([{c: (pct(r.get(k)) if k in ("total_return", "max_drawdown", "avg_exposure", "up_month_capture") else (f"{r.get(k):,.0f}" if isinstance(r.get(k), (int, float)) and k.endswith(("usdt", "_usdt")) else r.get(k))) for c, k in cols} for r in rows])
+        for w, d in pj["windows"].items():
+            with st.expander(f"窗口 {w}（{d.get('label')}，{d['exec_tf']}）：{d['period'][0]} → {d['period'][1] or '最新'}", expanded=(w == "full_1h")):
+                for rnd in ("round1", "round2"):
+                    if rnd not in d:
+                        continue
+                    st.markdown(f"**{'零成本（理想）' if rnd == 'round1' else '10 bps + 5 bps（压力假设）'} · 满足风险约束，按期末清仓 USDT 排序**"); st.dataframe(tbl(d[rnd]["leaderboard_ok"]), use_container_width=True)
+                    if d[rnd]["leaderboard_fail"]:
+                        st.markdown("**不满足风险约束（单独展示）**"); st.dataframe(tbl(d[rnd]["leaderboard_fail"]), use_container_width=True)
+                    if d[rnd].get("chart") and Path(d[rnd]["chart"]).exists():
+                        st.image(d[rnd]["chart"])
+                    st.caption("月度环境诊断（USDT 盈亏之和）"); st.dataframe(pd.DataFrame(d[rnd]["regime_months"]["pnl_usdt"]).T, use_container_width=True)
+                for k in ("position_chart", "contrib_chart"):
+                    if d.get(k) and Path(d[k]).exists():
+                        st.image(d[k])
+                al = P7 / f"{w}_round1_A_equal_weight_state_machine_alloc_log.csv"
+                if al.exists():
+                    a = pd.read_csv(al); st.caption("模型 A + 状态机：再平衡日志（最近 30 条）"); st.dataframe(a[a["rebalance"]].tail(30), use_container_width=True)
+    pdir = RD / "usdt_paper"
+    if (pdir / "nav.jsonl").exists():
+        st.markdown("**第七阶段前瞻模拟（追加写入、哈希链）**"); nav = pd.read_json(pdir / "nav.jsonl", lines=True)
+        st.dataframe(nav.tail(10), use_container_width=True)
+        for name in ("signals", "fills", "failures"):
             fp = pdir / f"{name}.jsonl"
             if fp.exists() and fp.stat().st_size:
                 st.caption(name); st.dataframe(pd.read_json(fp, lines=True).tail(20), use_container_width=True)

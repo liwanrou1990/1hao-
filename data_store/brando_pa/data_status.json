@@ -1,5 +1,5 @@
 {
-  "run_ts": "2026-11-07T12:53:21.740584+00:00",
+  "run_ts": "2026-11-07T13:45:21.405565+00:00",
   "adapter": "static_klines",
   "probe": {
     "ok": true,
@@ -9,8 +9,8 @@
     "BTCUSDT": {
       "1d": {
         "upsert": {
-          "added": 1,
-          "replaced": 3368,
+          "added": 0,
+          "replaced": 3369,
           "total": 3369
         },
         "result": "updated",
@@ -28,12 +28,12 @@
           }
         },
         "stale": false,
-        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 12.9 小时"
+        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 13.8 小时"
       },
       "1h": {
         "upsert": {
-          "added": 24,
-          "replaced": 42489,
+          "added": 0,
+          "replaced": 42513,
           "total": 42513
         },
         "result": "updated",
@@ -56,15 +56,15 @@
             "binance_spot_via_static_klines": 42513
           }
         },
-        "stale": false,
-        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 2.9 小时"
+        "stale": true,
+        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 3.8 小时（过期）"
       }
     },
     "ETHUSDT": {
       "1d": {
         "upsert": {
-          "added": 1,
-          "replaced": 3368,
+          "added": 0,
+          "replaced": 3369,
           "total": 3369
         },
         "result": "updated",
@@ -82,12 +82,12 @@
           }
         },
         "stale": false,
-        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 12.9 小时"
+        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 13.8 小时"
       },
       "1h": {
         "upsert": {
-          "added": 24,
-          "replaced": 42489,
+          "added": 0,
+          "replaced": 42513,
           "total": 42513
         },
         "result": "updated",
@@ -110,8 +110,8 @@
             "binance_spot_via_static_klines": 42513
           }
         },
-        "stale": false,
-        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 2.9 小时"
+        "stale": true,
+        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 3.8 小时（过期）"
       }
     }
   }

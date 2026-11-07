@@ -1,0 +1,36 @@
+{
+  "data_last_close": {
+    "BTCUSDT": "2026-11-07 10:00:00+00:00",
+    "ETHUSDT": "2026-11-07 10:00:00+00:00"
+  },
+  "trend_on": {
+    "BTCUSDT": true,
+    "ETHUSDT": true
+  },
+  "models": {
+    "A_equal_weight": {
+      "key": "both",
+      "target": {
+        "BTCUSDT": 0.5,
+        "ETHUSDT": 0.5,
+        "USDT": 0.0
+      }
+    },
+    "B_full_single": {
+      "key": "both",
+      "target": {
+        "BTCUSDT": 0.5,
+        "ETHUSDT": 0.5,
+        "USDT": 0.0
+      }
+    },
+    "C_cash_reserve": {
+      "key": "both",
+      "target": {
+        "BTCUSDT": 0.4,
+        "ETHUSDT": 0.4,
+        "USDT": 0.19999999999999996
+      }
+    }
+  }
+}

@@ -181,7 +181,7 @@ class TrendSysPaper:
 
     def _fill_pending(self, bars: dict, L: SpotLedger, out: dict) -> None:
         keep = []
-        for od in self.state["pending"]:
+        for od in sorted(self.state["pending"], key=lambda o: 0 if o["side"] == "SELL" else 1):
             s = od["symbol"]; e = bars[s][self.exec_tf]; m = e[e["ts"] >= pd.Timestamp(od["exec_after"])]
             if m.empty:
                 keep.append(od); continue
