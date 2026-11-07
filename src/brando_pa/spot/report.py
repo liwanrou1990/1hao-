@@ -30,9 +30,10 @@ def trade_stats(tr: pd.DataFrame) -> dict:
     for x in pnl:
         cur = cur + 1 if x < 0 else 0; streak = max(streak, cur)
     return {"n_trades": int(len(pnl)), "win_rate": float((pnl > 0).mean()), "avg_pnl": float(pnl.mean()), "avg_win": float(w.mean()) if len(w) else 0.0, "avg_loss": float(l.mean()) if len(l) else 0.0,
-            "profit_factor": float(w.sum() / abs(l.sum())) if len(l) and l.sum() != 0 else (float("inf") if len(w) else None), "expectancy_r": float(np.nanmean(r)), "avg_ret_pct": float(tr["ret_pct"].mean()),
+            "profit_factor": float(w.sum() / abs(l.sum())) if len(l) and l.sum() != 0 else (float("inf") if len(w) else None), "expectancy_r": float(np.nanmean(r)) if np.isfinite(r).any() else None, "avg_ret_pct": float(tr["ret_pct"].mean()),
             "max_consecutive_losses": int(streak), "total_net_pnl": float(pnl.sum()), "by_strategy": {k: {"n": int(len(g)), "win_rate": float((g["net_pnl"] > 0).mean()), "net_pnl": float(g["net_pnl"].sum()), "expectancy_r": float(g["r_multiple"].mean())} for k, g in tr.groupby("strategy")},
-            "by_exit": tr["exit_reason"].value_counts().to_dict(), "by_regime4": {k: {"n": int(len(g)), "net_pnl": float(g["net_pnl"].sum()), "expectancy_r": float(g["r_multiple"].mean()), "win_rate": float((g["net_pnl"] > 0).mean())} for k, g in tr.groupby("regime4")}}
+            "by_exit": tr["exit_reason"].value_counts().to_dict(), "by_regime4": ({k: {"n": int(len(g)), "net_pnl": float(g["net_pnl"].sum()), "expectancy_r": float(g["r_multiple"].mean()), "win_rate": float((g["net_pnl"] > 0).mean())} for k, g in tr.groupby("regime4")} if "regime4" in tr else {}),
+            "by_state_at_exit": ({k: {"n": int(len(g)), "net_pnl": float(g["net_pnl"].sum())} for k, g in tr.groupby("state_at_exit")} if "state_at_exit" in tr else {})}
 
 
 def utilization(eq: pd.DataFrame) -> dict:
