@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -333,3 +333,44 @@ with tabs[12]:
         if rec:
             st.markdown("**第四阶段 BTC 验证窗（买入持有 +73%，原策略 +7.9%）逐笔还原**")
             st.json(rec["exposure"]); st.json(rec["reconstruction"]["summary"]); st.dataframe(pd.DataFrame(rec["reconstruction"]["segments"]), use_container_width=True, height=300)
+
+with tabs[13]:
+    st.subheader("第六阶段：SMA200 审计 · 策略 A/B · 回撤熔断状态机 · 前瞻模拟（纯现货，禁止真实下单）")
+    P6 = RD / "phase6_spot"; pj = load_json(str(P6 / "phase6_results.json")); ls = load_json(str(P6 / "latest_trendsys_signal.json"))
+    st.warning("可信度：全部历史窗口在前五阶段已被观察（训练 / 验证 / 已被观察的测试窗），没有新的样本外数据；本页为历史稳健性研究。真正的新数据只来自前瞻模拟记录。")
+    if ls:
+        for s_, d in ls.items():
+            st.markdown(f"**{s_}** 数据截至 {str(d.get('data_last_close'))[:16]} UTC · 日线收盘 {d.get('daily_close')} · SMA200 {d.get('sma200'):.1f} · " + " | ".join(f"{k}: {'ON' if v['on'] else 'OFF'}（{v['signal_day']}）" for k, v in d["strategies"].items()) + f" · Brando 辅助信号 {'开' if d.get('brando_signals_enabled') else '关（默认）'}")
+    if not pj:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli phase6")
+    else:
+        acc = pj.get("acceptance", {})
+        st.success(acc.get("final", {}).get("statement", ""))
+        st.json({k: v.get("pass") for k, v in acc.get("criteria", {}).items()})
+        with st.expander("SMA200 基准审计（复现第五阶段 BTC +232% / ETH +114%）", expanded=False):
+            for s_, a in (pj.get("audit") or {}).items():
+                st.caption(f"{s_}: 第五阶段 {pct(a['phase5_benchmark']['total_return'])} · 独立复算 {pct(a['independent_reimpl']['total_return'])} · 三层引擎 {pct(a['trendsys_A_none']['total_return'])} · 最大相对差 {a['max_abs_rel_diff_phase5_vs_independent']:.1e} · 预热首日 {a['warmup']['first_sma_day']} · 成交均在日线收盘后首根开盘 {a.get('fill_timing', {}).get('all_fills_at_first_bar_after_daily_close')} · 截断一致 {a['lookahead']['truncation_identical']} · 若误用未收盘日线 {pct(a['lookahead']['if_used_unclosed_daily_bar_total_return'])}")
+        for w, d in pj["windows"].items():
+            with st.expander(f"窗口 {w}（{d.get('label')}，{d['exec_tf']}）：{d['period'][0]} → {d['period'][1] or '最新'}", expanded=(w == "full_1h")):
+                for rnd in ("round1", "round2"):
+                    if rnd not in d:
+                        continue
+                    st.markdown(f"**{'零成本' if rnd == 'round1' else '10 bps + 5 bps'}**")
+                    rows = [{"组合": r["name"], "总收益": pct(r.get("total_return")), "年化": pct(r.get("cagr")), "最大回撤": pct(r.get("max_drawdown")), "Sharpe": r.get("sharpe"), "Calmar": r.get("calmar"), "卖出次数": r.get("n_trades"), "平均仓位": pct(r.get("avg_exposure"), 0), "上涨月捕获": pct(r.get("up_month_capture"), 0), "下跌月捕获": pct(r.get("down_month_capture"), 0), "熔断次数": r.get("n_halts"), "禁买时间占比": pct((r.get("halt_episodes") or {}).get("share"), 0), "最长禁买天": (r.get("halt_episodes") or {}).get("longest_days"), "超额 vs B&H": pct(r.get("excess_vs_bh"))} for r in d[rnd]["rows"]]
+                    st.dataframe(pd.DataFrame(rows), use_container_width=True, height=560)
+                    if d[rnd].get("chart") and Path(d[rnd]["chart"]).exists():
+                        st.image(d[rnd]["chart"])
+                if d.get("state_chart") and Path(d["state_chart"]).exists():
+                    st.image(d["state_chart"])
+        if pj.get("phase5_tactical_frequency"):
+            st.markdown("**第五阶段模型 B 战术袖子 / 原 Brando 交易频率（只读历史产物）**")
+            st.dataframe(pd.DataFrame(pj["phase5_tactical_frequency"]).T.drop(columns=[c for c in ("by_exit", "by_strategy_net_pnl", "by_category") if c in pd.DataFrame(pj["phase5_tactical_frequency"]).T.columns]), use_container_width=True)
+    pdir = RD / "trendsys_paper"
+    if (pdir / "nav.jsonl").exists():
+        st.markdown("**前瞻模拟记录（追加写入、哈希链）**")
+        nav = pd.read_json(pdir / "nav.jsonl", lines=True)
+        st.line_chart(nav.set_index("signal_ts")["equity"]) if len(nav) > 1 else st.json(nav.tail(1).to_dict("records"))
+        for name in ("signals", "fills", "risk_state", "failures"):
+            fp = pdir / f"{name}.jsonl"
+            if fp.exists() and fp.stat().st_size:
+                st.caption(name); st.dataframe(pd.read_json(fp, lines=True).tail(20), use_container_width=True)

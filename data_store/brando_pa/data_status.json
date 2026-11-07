@@ -1,5 +1,5 @@
 {
-  "run_ts": "2026-11-07T06:38:42.189452+00:00",
+  "run_ts": "2026-11-07T12:53:21.740584+00:00",
   "adapter": "static_klines",
   "probe": {
     "ok": true,
@@ -7,53 +7,111 @@
   },
   "symbols": {
     "BTCUSDT": {
-      "30m": {
+      "1d": {
         "upsert": {
-          "added": 49941,
-          "replaced": 0,
-          "total": 49941
+          "added": 1,
+          "replaced": 3368,
+          "total": 3369
         },
         "result": "updated",
         "continuity": {
-          "n_bars": 49941,
-          "first": "2024-01-01T00:00:00+00:00",
-          "last": "2026-11-06T10:00:00+00:00",
-          "years": 2.85,
+          "n_bars": 3369,
+          "first": "2017-08-17T00:00:00+00:00",
+          "last": "2026-11-06T00:00:00+00:00",
+          "years": 9.22,
           "gaps": [],
           "n_gap_bars": 0,
           "duplicates": 0,
-          "outliers": 0,
+          "outliers": 1,
           "sources": {
-            "binance_spot_via_static_klines": 49941
+            "binance_spot_via_static_klines": 3369
           }
         },
-        "stale": true,
-        "freshness": "最新 30m 收盘 2026-11-06T10:30:00+00:00，落后 20.1 小时（过期）"
+        "stale": false,
+        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 12.9 小时"
+      },
+      "1h": {
+        "upsert": {
+          "added": 24,
+          "replaced": 42489,
+          "total": 42513
+        },
+        "result": "updated",
+        "continuity": {
+          "n_bars": 42513,
+          "first": "2022-01-01T00:00:00+00:00",
+          "last": "2026-11-07T09:00:00+00:00",
+          "years": 4.85,
+          "gaps": [
+            {
+              "after": "2023-03-24T12:00:00+00:00",
+              "before": "2023-03-24T14:00:00+00:00",
+              "missing_bars": 1
+            }
+          ],
+          "n_gap_bars": 1,
+          "duplicates": 0,
+          "outliers": 28,
+          "sources": {
+            "binance_spot_via_static_klines": 42513
+          }
+        },
+        "stale": false,
+        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 2.9 小时"
       }
     },
     "ETHUSDT": {
-      "30m": {
+      "1d": {
         "upsert": {
-          "added": 49941,
-          "replaced": 0,
-          "total": 49941
+          "added": 1,
+          "replaced": 3368,
+          "total": 3369
         },
         "result": "updated",
         "continuity": {
-          "n_bars": 49941,
-          "first": "2024-01-01T00:00:00+00:00",
-          "last": "2026-11-06T10:00:00+00:00",
-          "years": 2.85,
+          "n_bars": 3369,
+          "first": "2017-08-17T00:00:00+00:00",
+          "last": "2026-11-06T00:00:00+00:00",
+          "years": 9.22,
           "gaps": [],
           "n_gap_bars": 0,
           "duplicates": 0,
-          "outliers": 0,
+          "outliers": 1,
           "sources": {
-            "binance_spot_via_static_klines": 49941
+            "binance_spot_via_static_klines": 3369
           }
         },
-        "stale": true,
-        "freshness": "最新 30m 收盘 2026-11-06T10:30:00+00:00，落后 20.2 小时（过期）"
+        "stale": false,
+        "freshness": "最新 1d 收盘 2026-11-07T00:00:00+00:00，落后 12.9 小时"
+      },
+      "1h": {
+        "upsert": {
+          "added": 24,
+          "replaced": 42489,
+          "total": 42513
+        },
+        "result": "updated",
+        "continuity": {
+          "n_bars": 42513,
+          "first": "2022-01-01T00:00:00+00:00",
+          "last": "2026-11-07T09:00:00+00:00",
+          "years": 4.85,
+          "gaps": [
+            {
+              "after": "2023-03-24T12:00:00+00:00",
+              "before": "2023-03-24T14:00:00+00:00",
+              "missing_bars": 1
+            }
+          ],
+          "n_gap_bars": 1,
+          "duplicates": 0,
+          "outliers": 30,
+          "sources": {
+            "binance_spot_via_static_klines": 42513
+          }
+        },
+        "stale": false,
+        "freshness": "最新 1h 收盘 2026-11-07T10:00:00+00:00，落后 2.9 小时"
       }
     }
   }

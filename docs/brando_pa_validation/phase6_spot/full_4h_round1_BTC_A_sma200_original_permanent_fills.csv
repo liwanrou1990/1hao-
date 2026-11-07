@@ -1,0 +1,3 @@
+ts,symbol,side,qty,price,fee,cash_after,strategy,stop,lot_id,reason,gross_pnl,net_pnl,closed_lots
+2019-04-03 00:00:00+00:00,BTCUSDT,BUY,2.056744743359844,4857.19,0.0,10.0,trend_entry,0.0,BTCUSDT-1,,,,
+2019-09-27 00:00:00+00:00,BTCUSDT,SELL,2.056744743359844,8063.49,0.0,16594.54067063467,,,,trend_exit,6594.5406706346685,6594.5406706346685,"[{'lot_id': 'BTCUSDT-1', 'qty': 2.056744743359844, 'entry': 4857.19, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2019-04-03 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"

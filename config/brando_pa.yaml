@@ -396,3 +396,57 @@ trend:
     locked_unused_1h: ["2022-01-01", "2022-03-31"]
     full_1h: ["2022-04-01", null]
     full_4h: ["2018-06-01", null]       # 4h 执行的长历史（跨牛熊）
+
+# ===================== 第六阶段：三层现货趋势系统（趋势层 / 仓位层 / 风险层）=====================
+trendsys:
+  symbols: [BTCUSDT, ETHUSDT]
+  exec_tf: 1h
+  initial_cash_usdt: 10000
+  trend:                               # 趋势层：只用已收盘日线
+    sma: 200
+    strategies:
+      A_sma200: {confirm_days: 1}      # 对照组：日线收盘 > SMA200 即持有（与第五阶段 sma200_benchmark 完全一致）
+      B_sma200_confirm3: {confirm_days: 3}   # 唯一预登记的收盘确认方案：连续 3 个日线收盘在另一侧才切换
+    sensitivity_confirm_days: [2, 4]   # 事后 ±1 日敏感性，只报告不选择
+  position:                            # 仓位层
+    cash_buffer: 0.001                 # 买入保留 0.1% 现金（与第五阶段基准一致）
+    min_order_usdt: 10
+  risk:                                # 风险层：回撤熔断状态机（预登记参数）
+    modes: [original_permanent, state_machine, none]
+    original_permanent: {halt_dd: 0.20, resume_dd: 0.10}       # 第五阶段原规则（全程高水位、只暂停买入）
+    state_machine:
+      reduce_dd: 0.10                  # NORMAL → RISK_REDUCED
+      reduce_cap: 0.50                 # RISK_REDUCED / RECOVERY 允许的最大仓位
+      recover_dd: 0.05                 # RISK_REDUCED → NORMAL（滞后）
+      halt_dd: 0.20                    # → EMERGENCY_HALT（全部卖出）
+      cooldown_days_per_halt: 30       # 冷静期 = 30 × min(熔断计数, 3)
+      cooldown_max_multiplier: 3
+      recovery_days: 60                # 恢复期满 60 日未再触发 → NORMAL
+      recovery_retrigger_dd: 0.10      # 恢复期相对恢复期高点回撤 ≥ 10% → 再次熔断
+      halt_count_reset_days: 180       # NORMAL 连续 180 日无熔断 → 计数清零
+      crash_exit_daily_drop: 0.15      # 单日线跌幅 ≥ 15% → EMERGENCY_HALT
+    data_fault_max_bar_age_multiplier: 3
+  brando_signals:
+    enabled: false                     # 价格行为辅助模块默认关闭；保留第四、五阶段研究与可视化
+  audit:
+    phase5_data_cutoff: "2026-11-06 09:00"   # 第五阶段 sma200_benchmark 结果所用数据的最后一根 1h K 线（复现对比必须用同一截止）
+  costs:
+    round1: {fee_bps: 0, slippage_bps: 0}
+    round2: {fee_bps: 10, slippage_bps: 5}
+  windows:
+    train: ["2022-04-01", "2024-06-30"]
+    valid: ["2024-07-01", "2025-06-30"]
+    holdout: ["2025-07-01", null]
+    locked_unused_1h: ["2022-01-01", "2022-03-31"]
+    full_1h: ["2022-04-01", null]
+    full_4h: ["2018-06-01", null]
+  window_labels:
+    train: 训练（已观察）
+    valid: 验证（已观察）
+    holdout: 已被观察的测试窗（不是样本外）
+    locked_unused_1h: 真正未使用（3 个月，统计力极低）
+    full_1h: 全周期 1h（已观察）
+    full_4h: 长历史 4h（已观察）
+  paper:
+    state_file: reports_out/brando_pa/trendsys_paper/state.json
+    log_dir: reports_out/brando_pa/trendsys_paper

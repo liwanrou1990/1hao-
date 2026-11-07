@@ -220,6 +220,47 @@ def cmd_paper(a):
         _p(r.run_once())
 
 
+def cmd_phase6(a):
+    from .trendsys.phase6 import run_phase6
+    from .config import cfg, report_dir
+    c = cfg()
+    if a.set:
+        import yaml as _yaml
+        from .backtest.walkforward import set_path
+        for kv in a.set:
+            k, v = kv.split("=", 1); set_path(c, k, _yaml.safe_load(v))
+    od = report_dir(c) / ("phase6_spot" + (f"_{a.out_suffix}" if a.out_suffix else ""))
+    log = run_phase6(c, od, workers=a.workers, windows=a.windows)
+    _p(log.get("acceptance"))
+
+
+def cmd_sma200_audit(a):
+    from .backtest.runner import load_contexts
+    from .config import cfg
+    from .trendsys.audit import audit_symbol
+    c = cfg(); tc = c["trendsys"]; ctxs = load_contexts(tc["symbols"], "1h", c)
+    for s, mc in ctxs.items():
+        r = audit_symbol(mc, c, a.start or tc["windows"]["full_1h"][0], a.end, float(tc["initial_cash_usdt"]), a.fee, a.slip)
+        _p({k: v for k, v in r.items() if k not in ("equity_phase5", "fills_phase5", "trendsys_result", "hold_segments")} | {"hold_segments": {k: v for k, v in r.get("hold_segments", {}).items() if k != "segments"}})
+
+
+def cmd_trendsys_signal(a):
+    from .trendsys.phase6 import latest_trendsys_signal
+    _p(latest_trendsys_signal())
+
+
+def cmd_trendsys_paper(a):
+    from .trendsys.paper import TrendSysPaper
+    from pathlib import Path as _P
+    r = TrendSysPaper(log_dir=_P(a.log_dir) if a.log_dir else None, strategy=a.strategy, risk_mode=a.risk_mode)
+    if a.replay:
+        _p(r.replay(a.start, a.end))
+    elif a.verify:
+        _p(r.verify_all())
+    else:
+        _p(r.run_once())
+
+
 def cmd_dashboard(a):
     import subprocess
     app = Path(__file__).resolve().parent / "dashboard" / "app.py"
@@ -247,6 +288,10 @@ def main(argv=None):
     p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)
     p = sub.add_parser("phase5", help="第五阶段：趋势状态 + 模型 A/B/C + 三种退出 × 十组对照 × 窗口 × 成本轮次（预登记，一次性运行）"); p.add_argument("--workers", type=int); p.add_argument("--windows", nargs="*"); p.add_argument("--set", nargs="*", help="事后消融/敏感性用的配置覆盖，如 trend.exits.hard_limits.max_drawdown_halt=1.0"); p.add_argument("--out-suffix", dest="out_suffix"); p.set_defaults(f=cmd_phase5)
     p = sub.add_parser("trend-signal"); p.set_defaults(f=cmd_trend_signal)
+    p = sub.add_parser("phase6", help="第六阶段：SMA200 审计 + 策略 A/B × 熔断三模式 × BTC/ETH/等权 × 窗口 × 成本（预登记，一次性运行）"); p.add_argument("--workers", type=int); p.add_argument("--windows", nargs="*"); p.add_argument("--set", nargs="*"); p.add_argument("--out-suffix", dest="out_suffix"); p.set_defaults(f=cmd_phase6)
+    p = sub.add_parser("sma200-audit"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--fee", type=float, default=0.0); p.add_argument("--slip", type=float, default=0.0); p.set_defaults(f=cmd_sma200_audit)
+    p = sub.add_parser("trendsys-signal"); p.set_defaults(f=cmd_trendsys_signal)
+    p = sub.add_parser("trendsys-paper", help="前瞻模拟（只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--strategy", default="A_sma200"); p.add_argument("--risk-mode", dest="risk_mode", default="state_machine"); p.set_defaults(f=cmd_trendsys_paper)
     p = sub.add_parser("phase4", help="第四阶段纯现货：六组对照 × 窗口 × 成本模式（预登记，零自由度）"); p.add_argument("--no-charts", dest="no_charts", action="store_true"); p.set_defaults(f=cmd_phase4)
     p = sub.add_parser("spot-backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--with-cost", dest="with_cost", action="store_true"); p.set_defaults(f=cmd_spot_backtest)
     p = sub.add_parser("spot-signal"); p.set_defaults(f=cmd_spot_signal)

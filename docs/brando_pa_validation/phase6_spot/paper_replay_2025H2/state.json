@@ -1,0 +1,129 @@
+{
+ "cash": 6626.9292339506865,
+ "holdings": {
+  "BTCUSDT": 0.04087268102883315,
+  "ETHUSDT": 1.3898599745781441
+ },
+ "lots": {
+  "BTCUSDT": [
+   {
+    "qty": 0.04087268102883315,
+    "price": 69369.44739,
+    "ts": "2026-08-20 00:00:00+00:00",
+    "strategy": "trend_entry",
+    "stop": 0.0,
+    "init_stop": 0.0,
+    "atr": 0.0,
+    "risk_usd": 0.0,
+    "lot_id": "BTCUSDT-10",
+    "trailed": false,
+    "mae": 0.0,
+    "mfe": 0.0
+   }
+  ],
+  "ETHUSDT": [
+   {
+    "qty": 1.3898599745781441,
+    "price": 2253.936405,
+    "ts": "2026-08-20 00:00:00+00:00",
+    "strategy": "trend_entry",
+    "stop": 0.0,
+    "init_stop": 0.0,
+    "atr": 0.0,
+    "risk_usd": 0.0,
+    "lot_id": "ETHUSDT-11",
+    "trailed": false,
+    "mae": 0.0,
+    "mfe": 0.0
+   }
+  ]
+ },
+ "last_daily_ts": "2026-11-06 00:00:00+00:00",
+ "pending": [],
+ "fees_paid": 87.2525348727529,
+ "realized": 2640.1697013745975,
+ "strategy": "A_sma200",
+ "risk_mode": "state_machine",
+ "created_at": "2026-11-07 12:53:24.826646+00:00",
+ "n_runs": 495,
+ "seq": 11,
+ "last_run_at": "2026-11-07 00:00:00+00:00",
+ "last_data_check": {
+  "ok": true,
+  "issues": [],
+  "latest": {
+   "BTCUSDT": {
+    "1d": "2026-11-06 00:00:00+00:00",
+    "1h": "2026-11-07 09:00:00+00:00"
+   },
+   "ETHUSDT": {
+    "1d": "2026-11-06 00:00:00+00:00",
+    "1h": "2026-11-07 09:00:00+00:00"
+   }
+  }
+ },
+ "risk": {
+  "hwm_all": 14907.745360101651,
+  "data_fault": false,
+  "state": "RISK_REDUCED",
+  "hwm_ref": 14765.127036601196,
+  "halt_count": 0,
+  "state_since": "2026-10-24 00:00:00+00:00",
+  "cooldown_until": "2025-12-12 00:00:00+00:00",
+  "recovery_since": "2025-12-12 00:00:00+00:00",
+  "recovery_peak": 11918.531884563525,
+  "normal_since": "2026-02-10 00:00:00+00:00",
+  "transitions": [
+   {
+    "ts": "2025-08-20 00:00:00+00:00",
+    "from": "NORMAL",
+    "to": "RISK_REDUCED",
+    "equity": 13122.576245006292,
+    "why": "dd -0.120 ≤ −reduce_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-11-11 00:00:00+00:00",
+    "from": "RISK_REDUCED",
+    "to": "EMERGENCY_HALT",
+    "equity": 11922.981880408577,
+    "why": "dd -0.200 ≤ −halt_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-11-12 00:00:00+00:00",
+    "from": "EMERGENCY_HALT",
+    "to": "COOLDOWN",
+    "equity": 11918.531884563525,
+    "why": "halt executed → cooldown",
+    "halt_count": 1
+   },
+   {
+    "ts": "2025-12-12 00:00:00+00:00",
+    "from": "COOLDOWN",
+    "to": "RECOVERY",
+    "equity": 11918.531884563525,
+    "why": "cooldown expired",
+    "halt_count": 1
+   },
+   {
+    "ts": "2026-02-10 00:00:00+00:00",
+    "from": "RECOVERY",
+    "to": "NORMAL",
+    "equity": 11918.531884563525,
+    "why": "recovery completed",
+    "halt_count": 1
+   },
+   {
+    "ts": "2026-10-24 00:00:00+00:00",
+    "from": "NORMAL",
+    "to": "RISK_REDUCED",
+    "equity": 13273.718701211106,
+    "why": "dd -0.101 ≤ −reduce_dd",
+    "halt_count": 0
+   }
+  ],
+  "fault_why": ""
+ },
+ "saved_at": "2026-11-07 12:53:39.486112+00:00"
+}

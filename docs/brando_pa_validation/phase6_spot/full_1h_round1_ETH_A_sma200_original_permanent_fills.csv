@@ -1,0 +1,5 @@
+ts,symbol,side,qty,price,fee,cash_after,strategy,stop,lot_id,reason,gross_pnl,net_pnl,closed_lots
+2022-04-04 00:00:00+00:00,ETHUSDT,BUY,2.8365370964536187,3521.9,0.0,10.0,trend_entry,0.0,ETHUSDT-1,,,,
+2022-04-06 00:00:00+00:00,ETHUSDT,SELL,2.8365370964536187,3407.0,0.0,9674.08188761748,,,,trend_exit,-325.91811238252103,-325.91811238252103,"[{'lot_id': 'ETHUSDT-1', 'qty': 2.8365370964536187, 'entry': 3521.9, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2022-04-04 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"
+2023-01-13 00:00:00+00:00,ETHUSDT,BUY,6.8255805847333955,1415.91,0.0,9.674081887616921,trend_entry,0.0,ETHUSDT-2,,,,
+2023-08-18 00:00:00+00:00,ETHUSDT,SELL,6.8255805847333955,1681.49,0.0,11486.819579310973,,,,trend_exit,1812.7376916934948,1812.7376916934948,"[{'lot_id': 'ETHUSDT-2', 'qty': 6.8255805847333955, 'entry': 1415.91, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2023-01-13 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"

@@ -1,0 +1,3 @@
+ts,symbol,side,qty,price,fee,cash_after,strategy,stop,lot_id,reason,gross_pnl,net_pnl,closed_lots
+2019-04-05 00:00:00+00:00,ETHUSDT,BUY,63.497107989576044,157.33,0.0,10.0,trend_entry,0.0,ETHUSDT-1,,,,
+2019-08-17 00:00:00+00:00,ETHUSDT,SELL,63.497107989576044,184.83,0.0,11746.170469713341,,,,trend_exit,1746.1704697133412,1746.1704697133412,"[{'lot_id': 'ETHUSDT-1', 'qty': 63.497107989576044, 'entry': 157.33, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2019-04-05 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"

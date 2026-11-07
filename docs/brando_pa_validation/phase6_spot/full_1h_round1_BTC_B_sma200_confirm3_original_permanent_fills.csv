@@ -1,0 +1,5 @@
+ts,symbol,side,qty,price,fee,cash_after,strategy,stop,lot_id,reason,gross_pnl,net_pnl,closed_lots
+2023-01-16 00:00:00+00:00,BTCUSDT,BUY,0.4786089582757429,20872.99,0.0,10.0,trend_entry,0.0,BTCUSDT-1,,,,
+2023-08-20 00:00:00+00:00,BTCUSDT,SELL,0.4786089582757429,26100.01,0.0,12501.698597086472,,,,trend_exit,2501.698597086472,2501.698597086472,"[{'lot_id': 'BTCUSDT-1', 'qty': 0.4786089582757429, 'entry': 20872.99, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2023-01-16 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"
+2023-10-19 00:00:00+00:00,BTCUSDT,BUY,0.4410027153421393,28320.0,0.0,12.501698597086943,trend_entry,0.0,BTCUSDT-2,,,,
+2024-07-07 00:00:00+00:00,BTCUSDT,SELL,0.4410027153421393,58230.13,0.0,25692.14714332285,,,,trend_exit,13190.44854623638,13190.44854623638,"[{'lot_id': 'BTCUSDT-2', 'qty': 0.4410027153421393, 'entry': 28320.0, 'strategy': 'trend_entry', 'risk_usd': 0.0, 'init_stop': 0.0, 'entry_ts': '2023-10-19 00:00:00+00:00', 'mae': 0.0, 'mfe': 0.0}]"

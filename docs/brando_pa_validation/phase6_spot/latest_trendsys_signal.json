@@ -1,0 +1,54 @@
+{
+  "BTCUSDT": {
+    "data_last_close": "2026-11-07 10:00:00+00:00",
+    "daily_close": 75844.0,
+    "sma200": 73242.53195,
+    "strategies": {
+      "A_sma200": {
+        "on": true,
+        "above_sma": true,
+        "signal_day": "2026-11-06"
+      },
+      "B_sma200_confirm3": {
+        "on": true,
+        "above_sma": true,
+        "signal_day": "2026-11-06"
+      }
+    },
+    "action_if_flat": {
+      "A_sma200": "BUY",
+      "B_sma200_confirm3": "BUY"
+    },
+    "action_if_holding": {
+      "A_sma200": "HOLD",
+      "B_sma200_confirm3": "HOLD"
+    },
+    "brando_signals_enabled": false
+  },
+  "ETHUSDT": {
+    "data_last_close": "2026-11-07 10:00:00+00:00",
+    "daily_close": 2238.67,
+    "sma200": 2157.67055,
+    "strategies": {
+      "A_sma200": {
+        "on": true,
+        "above_sma": true,
+        "signal_day": "2026-11-06"
+      },
+      "B_sma200_confirm3": {
+        "on": true,
+        "above_sma": true,
+        "signal_day": "2026-11-06"
+      }
+    },
+    "action_if_flat": {
+      "A_sma200": "BUY",
+      "B_sma200_confirm3": "BUY"
+    },
+    "action_if_holding": {
+      "A_sma200": "HOLD",
+      "B_sma200_confirm3": "HOLD"
+    },
+    "brando_signals_enabled": false
+  }
+}
