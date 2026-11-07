@@ -281,3 +281,68 @@ evaluator:                          # Strategy Evaluator 最低门槛（样本�
   paper_requires_ci_lower_gt0: true # 进入模拟盘候选：置信下限 > 0 且交易数 ≥ paper_min_trades
   paper_min_trades: 50
   tf_policy: {4h: analysis_only}    # 4h 默认只做趋势/结构分析，不产生模拟盘开仓
+
+# ===================== 第四阶段：BTC/ETH 纯现货价格行为系统（src/brando_pa/spot/） =====================
+spot:
+  symbols: [BTCUSDT, ETHUSDT]
+  exec_tf: 1h                        # 执行周期（本地结构 / 入场 / 止损）；可用 4h 跑长历史对照
+  refine_tf: 15m                     # 可得时用 15m 已确认结构辅助定位（仅 2024-12-30 起有数据；缺失时自动跳过）
+  initial_cash_usdt: 10000
+  htf_context:                       # 高周期（1w/1d/4h）只做市场背景与机会判断，不作为 1h 止损距离
+    zone_tfs: [1w, 1d, 4h]
+    near_support_atr_1d: 1.0         # 价格距高周期支撑区 ≤ 1×ATR(1d) 视为“在高周期支撑附近”（机会背景）
+    block_buy_regimes: [强势下跌]     # 日线环境为强势下跌时不买（市场背景过滤，可配置为空）
+  local_structure:                   # 低周期执行区域：执行周期已确认摆动高低点
+    swing_k: 3
+    lookback_bars: 120               # 只用最近 120 根内的已确认摆动点作为本地支撑/阻力
+    level_tol_atr: 0.15              # 同一价位的容差（摆动点聚类 / 触及判定）
+    max_levels_each_side: 4
+    min_level_age_bars: 3            # 摆动点确认后至少再过 3 根才算“有效”阻力/支撑（避免刚形成的点）
+  strategies:
+    A_breakout_retest_buy:
+      enabled: true
+      break_buffer_atr: 0.10         # 收盘越过本地阻力 ≥ 0.10 ATR 算有效突破
+      max_wait_retest_bars: 24
+      retest_tol_atr: 0.20
+      confirm_close_pct: 0.60
+      confirm_within_bars: 6
+      stop_buffer_atr: 0.20          # 止损 = min(回踩低点, 阻力位) − 0.20 ATR（本地结构，不是高周期区域另一侧）
+    B_breakdown_reclaim_buy:
+      enabled: true
+      min_break_depth_atr: 0.15
+      max_break_depth_atr: 1.50
+      max_bars_outside: 6
+      reclaim_close_pct: 0.55
+      stop_buffer_atr: 0.20          # 止损 = 跌破期间最低价 − 0.20 ATR
+    C_resistance_rejection_sell:
+      enabled: true
+      wick_ratio_min: 0.55
+      close_pct_max: 0.35
+      range_atr_min: 0.80
+      sell_fraction: 0.5             # 阻力拒绝时卖出持仓的比例（0.5 = 减半；1.0 = 清仓）
+      use_htf_resistance: true       # 高周期阻力区也算“关键阻力”（背景用途）
+      cooldown_bars: 12
+  exits:
+    hard_stop: true                  # 结构失效硬止损（入场时确定，只能上移）
+    breakeven_after_r: 1.0           # 浮盈 ≥ 1R 后止损上移到保本
+    trail_to_swing_low_after_r: 1.5  # 浮盈 ≥ 1.5R 后，止损跟随最近已确认的 1h 摆动低点（只上移）
+    tp_at_htf_resistance: false      # 到达高周期阻力区是否直接止盈（默认关，由策略 C 处理）
+    max_hold_bars: null              # 现货不设时间退出（null）
+  risk:
+    risk_per_trade: 0.01             # 单笔风险预算 = 净值 × 1%（止损距离决定数量）
+    max_position_pct: 1.0            # 单资产持仓市值 ≤ 净值 × 比例（双资产模式各 0.5）
+    max_position_pct_dual: 0.5
+    max_drawdown_halt: 0.20          # 净值自峰值回撤 ≥ 20% → 暂停新买入，直至回撤收窄到一半
+    min_order_usdt: 10
+    qty_step: {BTCUSDT: 0.00001, ETHUSDT: 0.0001}
+  costs:
+    research_mode: true              # true：手续费 0、滑点 0（理想条件研究）
+    sensitivity: {fee_bps: 10, slippage_bps: 5}   # 成本敏感性开关使用的真实成本
+    entry_fill: next_open
+    same_bar_rule: stop_first
+  windows:                           # 预先登记（见 docs/brando_pa_validation/phase4_spot/preregistration.md）
+    train: ["2022-04-01", "2024-06-30"]
+    valid: ["2024-07-01", "2025-06-30"]
+    holdout: ["2025-07-01", null]
+    locked_unused_1h: ["2022-01-01", "2022-03-31"]
+    full_4h: ["2018-01-01", null]
