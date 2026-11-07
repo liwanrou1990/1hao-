@@ -199,18 +199,18 @@ with tabs[8]:
         st.info("运行：PYTHONPATH=src python -m brando_pa.cli evaluate")
     else:
         st.caption(f"门槛：{json.dumps(evj['thresholds'], ensure_ascii=False)}")
-        rows = [{"周期": r["exec_tf"], "策略": r["strategy"], "标的": r["symbol"], "方向": r["direction"], "状态": r["status"], "OOS交易": r["stats"].get("n_trades"), "ExpR": r["stats"].get("expectancy_r"), "PF": r["stats"].get("profit_factor"), "净收益": pct(r["stats"].get("net_return")), "回撤": pct(r["stats"].get("max_drawdown")), "均值R CI": r["stats"].get("ci_mean_r"), "折非负占比": r["stats"].get("fold_nonneg_share"), "原因": "；".join(r["reasons"])} for r in evj["rows"]]
+        rows = [{"运行": r.get("run"), "变体": r.get("variant"), "周期": r["exec_tf"], "策略": r["strategy"], "标的": r["symbol"], "方向": r["direction"], "状态": r["status"], "OOS交易": r["stats"].get("n_trades"), "ExpR": r["stats"].get("expectancy_r"), "PF": r["stats"].get("profit_factor"), "净收益": pct(r["stats"].get("net_return")), "回撤": pct(r["stats"].get("max_drawdown")), "均值R CI": r["stats"].get("ci_mean_r"), "折非负占比": r["stats"].get("fold_nonneg_share"), "原因": "；".join(r["reasons"])} for r in evj["rows"]]
         st.dataframe(pd.DataFrame(rows), use_container_width=True, height=500)
         st.success(f"模拟盘候选：{evj['qualified_paper'] or '无'}"); st.info(f"仅研究：{evj['research_only'] or '无'}")
 
 with tabs[9]:
     st.subheader("样本外详情：年度 / 方向 / 环境 / 费用敏感性 / Bootstrap / 参数扰动")
     wdir = RD / "walkforward"
-    names = sorted([p.name for p in wdir.glob("*_p2") if (p / "walkforward.json").exists()]) if wdir.exists() else []
+    names = sorted([p.name for p in wdir.glob("*_p2*") if (p / "walkforward.json").exists()]) if wdir.exists() else []
     if not names:
         st.info("运行：PYTHONPATH=src python -m brando_pa.cli walkforward --name h1_p2")
     for n in names:
-        wj = load_json(str(wdir / n / "walkforward.json")); st.markdown(f"### {n}（执行周期 {wj['exec_tf']}）")
+        wj = load_json(str(wdir / n / "walkforward.json")); st.markdown(f"### {n}（执行周期 {wj['exec_tf']}；覆盖 {wj.get('overrides')}；环境启停 {wj.get('regime_gating')}；窗口 {wj.get('windows')}）")
         for k, v in wj["results"].items():
             o = v["oos_stats"]
             with st.expander(f"{k} · OOS {o.get('n_trades', 0)} 笔 · ExpR {o.get('expectancy_r')} · PF {o.get('profit_factor')} · 回撤 {pct(o.get('max_drawdown'))}"):

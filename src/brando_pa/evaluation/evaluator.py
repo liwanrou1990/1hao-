@@ -49,24 +49,26 @@ def evaluate_one(stats: dict, ev: dict, tf: str, label: str) -> dict:
             "stats": {k: stats.get(k) for k in ("n_trades", "expectancy_r", "profit_factor", "net_return", "max_drawdown", "win_rate", "sharpe", "sortino", "max_consecutive_losses", "fold_nonneg_share")} | {"ci_mean_r": [ci.get("lower"), ci.get("upper")]}}
 
 
-def evaluate_walkforward_dir(wf_json_paths: dict[str, Path], c: dict | None = None) -> dict:
-    """wf_json_paths: {exec_tf: path to walkforward.json}。"""
+def evaluate_walkforward_dir(wf_json_paths: dict, c: dict | None = None) -> dict:
+    """wf_json_paths: {run_name: (exec_tf, path)} 或 {exec_tf: path}。"""
     c = c or cfg(); ev = c["evaluator"]
     rows = []
-    for tf, p in wf_json_paths.items():
+    for name, item in wf_json_paths.items():
+        tf, p = item if isinstance(item, tuple) else (name, item)
         if not Path(p).exists():
             continue
         wj = json.loads(Path(p).read_text())
+        variant = (("+环境启停" if wj.get("regime_gating") else "") + ("+" + ",".join(wj.get("overrides", [])) if wj.get("overrides") else "")) or "基线"
         for strat, r in wj["results"].items():
-            rows.append({"exec_tf": tf, "strategy": strat, "symbol": "ALL", "direction": "ALL"} | evaluate_one(r["oos_stats"], ev, tf, f"{tf}/{strat}/ALL/ALL"))
+            rows.append({"run": name, "variant": variant, "exec_tf": tf, "strategy": strat, "symbol": "ALL", "direction": "ALL"} | evaluate_one(r["oos_stats"], ev, tf, f"{name}/{strat}/ALL/ALL"))
             for key, st in (r.get("subsets") or {}).items():
                 if "/" in key:
                     sym, d = key.split("/")
-                    rows.append({"exec_tf": tf, "strategy": strat, "symbol": sym, "direction": d} | evaluate_one(st, ev, tf, f"{tf}/{strat}/{sym}/{d}"))
+                    rows.append({"run": name, "variant": variant, "exec_tf": tf, "strategy": strat, "symbol": sym, "direction": d} | evaluate_one(st, ev, tf, f"{name}/{strat}/{sym}/{d}"))
                 elif key.startswith("direction="):
-                    rows.append({"exec_tf": tf, "strategy": strat, "symbol": "ALL", "direction": key.split("=")[1]} | evaluate_one(st, ev, tf, f"{tf}/{strat}/ALL/{key.split('=')[1]}"))
+                    rows.append({"run": name, "variant": variant, "exec_tf": tf, "strategy": strat, "symbol": "ALL", "direction": key.split("=")[1]} | evaluate_one(st, ev, tf, f"{name}/{strat}/ALL/{key.split('=')[1]}"))
                 elif key.startswith("symbol="):
-                    rows.append({"exec_tf": tf, "strategy": strat, "symbol": key.split("=")[1], "direction": "ALL"} | evaluate_one(st, ev, tf, f"{tf}/{strat}/{key.split('=')[1]}/ALL"))
+                    rows.append({"run": name, "variant": variant, "exec_tf": tf, "strategy": strat, "symbol": key.split("=")[1], "direction": "ALL"} | evaluate_one(st, ev, tf, f"{name}/{strat}/{key.split('=')[1]}/ALL"))
     out = {"generated_at": datetime.now(timezone.utc).isoformat(), "thresholds": ev, "rows": rows,
            "qualified_paper": [r["label"] for r in rows if r["status"] == "qualified_paper"], "research_only": [r["label"] for r in rows if r["status"] == "research_only"],
            "unqualified": [r["label"] for r in rows if r["status"] == "unqualified"]}
@@ -87,9 +89,9 @@ def _f(x, pct=False, d=2):
 
 def evaluation_markdown(out: dict) -> str:
     L = [f"# Strategy Evaluator 结果（{out['generated_at'][:16]} UTC）", "", f"门槛（全部样本外）：{json.dumps(out['thresholds'], ensure_ascii=False)}", "",
-         "| 周期 | 策略 | 标的 | 方向 | 状态 | OOS 交易 | ExpR | PF | 净收益 | 最大回撤 | 均值R 95%CI | 折非负占比 | 未达标原因 |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+         "| 运行 | 周期 | 策略 | 标的 | 方向 | 状态 | OOS 交易 | ExpR | PF | 净收益 | 最大回撤 | 均值R 95%CI | 折非负占比 | 未达标原因 |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in out["rows"]:
         s = r["stats"]; ci = s.get("ci_mean_r", [None, None])
-        L.append(f"| {r['exec_tf']} | {r['strategy']} | {r['symbol']} | {r['direction']} | **{r['status']}** | {s.get('n_trades', 0)} | {_f(s.get('expectancy_r'), d=3)} | {_f(s.get('profit_factor'))} | {_f(s.get('net_return'), True)} | {_f(s.get('max_drawdown'), True)} | [{_f(ci[0], d=3)}, {_f(ci[1], d=3)}] | {_f(s.get('fold_nonneg_share'))} | {'；'.join(r['reasons'])} |")
+        L.append(f"| {r.get('run', '')}（{r.get('variant', '')}） | {r['exec_tf']} | {r['strategy']} | {r['symbol']} | {r['direction']} | **{r['status']}** | {s.get('n_trades', 0)} | {_f(s.get('expectancy_r'), d=3)} | {_f(s.get('profit_factor'))} | {_f(s.get('net_return'), True)} | {_f(s.get('max_drawdown'), True)} | [{_f(ci[0], d=3)}, {_f(ci[1], d=3)}] | {_f(s.get('fold_nonneg_share'))} | {'；'.join(r['reasons'])} |")
     L += ["", f"**合格（模拟盘候选）**：{out['qualified_paper'] or '无'}", f"**仅研究**：{out['research_only'] or '无'}", f"**不合格**：{len(out['unqualified'])} 项", ""]
     return "\n".join(L) + "\n"

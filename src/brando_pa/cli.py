@@ -86,12 +86,17 @@ def cmd_walkforward(a):
     for k in ("train_months", "valid_months", "test_months"):
         if getattr(a, k) is not None:
             c["backtest"]["walkforward"][k] = int(getattr(a, k))
+    if a.set:
+        import yaml as _yaml
+        from .backtest.walkforward import set_path
+        for kv in a.set:
+            k, v = kv.split("=", 1); set_path(c, k, _yaml.safe_load(v))
     ctxs = load_contexts(a.symbols or c["symbols"], exec_tf, c)
     strategies = a.strategy.split(",") if a.strategy else [k for k, v in c["strategies"].items() if isinstance(v, dict) and v.get("enabled", True)]
     out_dir = report_dir(c) / "walkforward" / a.name; out_dir.mkdir(parents=True, exist_ok=True)
     allres = {}
     for sk in strategies:
-        r = run_walkforward(ctxs, exec_tf, sk, c, not a.no_filters, a.start, a.end, a.workers, perturb=not a.no_perturb)
+        r = run_walkforward(ctxs, exec_tf, sk, c, not a.no_filters, a.start, a.end, a.workers, perturb=not a.no_perturb, regime_gating=a.regime_gating)
         d = wf_to_dict(r); allres[sk] = d
         if not r.oos_trades.empty:
             r.oos_trades.to_csv(out_dir / f"{sk}_oos_trades.csv", index=False)
@@ -100,7 +105,7 @@ def cmd_walkforward(a):
         print(f"{sk}: 折数 {len(r.folds)} OOS 交易 {r.oos_stats.get('n_trades', 0)} ExpR {r.oos_stats.get('expectancy_r')} PF {r.oos_stats.get('profit_factor')} 净收益 {r.oos_stats.get('net_return')} 回撤 {r.oos_stats.get('max_drawdown')} CI {r.oos_stats.get('bootstrap_mean_r_95ci')} | 默认参数全程 {r.default_full_stats} | 扰动 {r.perturbation.get('summary')}")
         for f in r.folds:
             print(f"   fold{f.fold} test {f.test[0]}→{f.test[1]} 参数 {f.chosen_params}{'（退回默认）' if f.fallback_to_default else ''} → {f.test_stats}")
-    atomic_write_json(out_dir / "walkforward.json", {"exec_tf": exec_tf, "symbols": a.symbols or c["symbols"], "results": allres}, indent=2, default=str)
+    atomic_write_json(out_dir / "walkforward.json", {"exec_tf": exec_tf, "symbols": a.symbols or c["symbols"], "overrides": a.set or [], "regime_gating": bool(a.regime_gating), "windows": {k: c["backtest"]["walkforward"][k] for k in ("train_months", "valid_months", "test_months", "embargo_days")}, "results": allres}, indent=2, default=str)
     print("已写入", out_dir / "walkforward.json")
 
 
@@ -145,7 +150,7 @@ def cmd_evaluate(a):
     paths = {}
     for n in names:
         tf = n.split("_")[0].replace("h1", "1h").replace("m15", "15m").replace("h4", "4h")
-        paths[tf] = rd / n / "walkforward.json"
+        paths[n] = (tf, rd / n / "walkforward.json")
     out = evaluate_walkforward_dir(paths, c)
     print(open(out["paths"]["md"], encoding="utf-8").read())
 
@@ -182,7 +187,7 @@ def main(argv=None):
     p = sub.add_parser("analyze"); p.set_defaults(f=cmd_analyze)
     p = sub.add_parser("signal"); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_signal)
     p = sub.add_parser("backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_const", const=True, default=None); p.set_defaults(f=cmd_backtest)
-    p = sub.add_parser("walkforward"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_true"); p.add_argument("--workers", type=int); p.add_argument("--train-months", dest="train_months", type=int); p.add_argument("--valid-months", dest="valid_months", type=int); p.add_argument("--test-months", dest="test_months", type=int); p.add_argument("--no-perturb", dest="no_perturb", action="store_true"); p.set_defaults(f=cmd_walkforward)
+    p = sub.add_parser("walkforward"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_true"); p.add_argument("--workers", type=int); p.add_argument("--train-months", dest="train_months", type=int); p.add_argument("--valid-months", dest="valid_months", type=int); p.add_argument("--test-months", dest="test_months", type=int); p.add_argument("--no-perturb", dest="no_perturb", action="store_true"); p.add_argument("--regime-gating", dest="regime_gating", action="store_true"); p.add_argument("--set", nargs="*", help="配置覆盖，如 mtf.mode=aligned"); p.set_defaults(f=cmd_walkforward)
     p = sub.add_parser("experiments"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--only"); p.add_argument("--set", nargs="*", help="配置覆盖，如 costs.funding.assumed_rate_8h=0.00004"); p.add_argument("--workers", type=int); p.set_defaults(f=cmd_experiments)
     p = sub.add_parser("audit"); p.set_defaults(f=cmd_audit)
     p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)

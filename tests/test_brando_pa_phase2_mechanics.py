@@ -116,3 +116,27 @@ def test_walkforward_windows_have_embargo_and_order():
     o = override_from_params({"strategies.A_breakout_retest.sl_buffer_atr": 0.3, "exits.breakeven_after_rr": None})
     assert o["strategies"]["A_breakout_retest"]["sl_buffer_atr"] == 0.3 and o["exits"]["breakeven_after_rr"] is None
     d = {}; set_path(d, "a.b.c", 1); assert get_path(d, "a.b.c") == 1 and get_path(d, "a.x", "dflt") == "dflt"
+
+
+def test_regime_policy_from_training_trades_only():
+    from brando_pa.backtest.walkforward import regime_policy_from_trades
+    tr = pd.DataFrame({"regime4": ["上涨趋势"] * 6 + ["下跌趋势"] * 6 + ["横盘震荡"] * 3, "r_multiple": [0.5] * 6 + [-0.4] * 6 + [1.0] * 3})
+    assert regime_policy_from_trades(tr) == ["上涨趋势"]          # 横盘仅 3 笔不足 5 → 不纳入
+    assert regime_policy_from_trades(pd.DataFrame({"regime4": ["上涨趋势"] * 6, "r_multiple": [0.5] * 6})) is None   # 全部环境都合格 → 不限制
+    assert regime_policy_from_trades(pd.DataFrame()) is None
+
+
+def test_funnel_table_stage_counts():
+    from brando_pa.diagnostics.funnel import funnel_table
+    sig = pd.DataFrame([
+        {"ts": 1, "symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "accepted": False, "fails": "regime_trend,cost_to_risk", "sizing_ok": None, "stop_distance_pct": 0.01, "stop_distance_atr": 1.0, "cost_to_risk": 0.3, "cost_share_of_reward": 0.1, "rr_gross": 2.5, "net_rr": 1.8, "order_created": False},
+        {"ts": 2, "symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "accepted": False, "fails": "volume", "sizing_ok": None, "stop_distance_pct": 0.01, "stop_distance_atr": 1.0, "cost_to_risk": 0.2, "cost_share_of_reward": 0.1, "rr_gross": 2.5, "net_rr": 2.1, "order_created": False},
+        {"ts": 3, "symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "accepted": False, "fails": "net_rr", "sizing_ok": None, "stop_distance_pct": 0.01, "stop_distance_atr": 1.0, "cost_to_risk": 0.2, "cost_share_of_reward": 0.1, "rr_gross": 2.0, "net_rr": 1.5, "order_created": False},
+        {"ts": 4, "symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "accepted": True, "fails": "", "sizing_ok": True, "stop_distance_pct": 0.01, "stop_distance_atr": 1.0, "cost_to_risk": 0.2, "cost_share_of_reward": 0.1, "rr_gross": 3.0, "net_rr": 2.4, "order_created": True},
+        {"ts": 5, "symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "accepted": False, "fails": "portfolio", "sizing_ok": True, "stop_distance_pct": 0.01, "stop_distance_atr": 1.0, "cost_to_risk": 0.2, "cost_share_of_reward": 0.1, "rr_gross": 3.0, "net_rr": 2.4, "order_created": False, "portfolio_block": "max"},
+    ])
+    trades = pd.DataFrame([{"symbol": "BTCUSDT", "strategy": "A_breakout_retest", "direction": "long", "net_pnl": 10.0}])
+    df = funnel_table(sig, trades, [], [], {"BTCUSDT": {"A_breakout_retest": {"setup_armed": 9}}})
+    r = df.iloc[0]
+    assert r["setup"] == 9 and r["candidate"] == 5 and r["after_trend"] == 4 and r["after_price"] == 3 and r["after_cost"] == 3 and r["after_rr"] == 2 and r["after_risk"] == 1 and r["order"] == 1 and r["fill"] == 1
+    assert r["avg_net_rr_valid"] == pytest.approx(2.4)

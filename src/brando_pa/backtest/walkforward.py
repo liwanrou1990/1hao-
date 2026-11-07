@@ -119,8 +119,22 @@ def _perturbations(default_params: dict, c: dict, strategy: str) -> list[tuple[s
     return out
 
 
+def regime_policy_from_trades(trades: pd.DataFrame, min_trades: int = 5) -> list[str] | None:
+    """由训练窗交易决定允许的市场环境：样本 ≥ min_trades 且 ExpR > 0 的环境；若没有任何环境满足或全部满足 → 不限制（None）。只用训练窗，测试窗固定。"""
+    if trades is None or trades.empty or "regime4" not in trades:
+        return None
+    ok = []
+    for k, g in trades.groupby("regime4"):
+        if len(g) >= min_trades and g["r_multiple"].mean() > 0:
+            ok.append(str(k))
+    all_classes = set(trades["regime4"].astype(str).unique())
+    if not ok or set(ok) == all_classes:
+        return None
+    return sorted(ok)
+
+
 def run_walkforward(contexts: dict, exec_tf: str, strategy: str, c: dict | None = None, filters_enabled: bool = True, start: str | None = None, end: str | None = None,
-                    workers: int | None = None, perturb: bool = True) -> WFResult:
+                    workers: int | None = None, perturb: bool = True, regime_gating: bool = False) -> WFResult:
     c = c or cfg(); wf = c["backtest"]["walkforward"]
     _init(contexts)
     ts_all = sorted(set().union(*[set(mc.ts.tolist()) for mc in contexts.values()]))
@@ -143,14 +157,22 @@ def run_walkforward(contexts: dict, exec_tf: str, strategy: str, c: dict | None 
             table = [{"params": r["job"]["params"], "n_trades": r["n_trades"], "expectancy_r": r["expectancy_r"], "profit_factor": r["profit_factor"], "net_pnl": r["net_pnl"]} for r in rows]
             eligible = [r for r in rows if r["n_trades"] >= int(wf["min_trades_select"]) and r["expectancy_r"] is not None]
             best = max(eligible, key=lambda r: r["expectancy_r"]) if eligible else None
-            chosen[fi] = [best["job"]["params"] if best else default_params, table, best is None]
+            params_sel = dict(best["job"]["params"] if best else default_params)
+            if regime_gating:
+                src = best if best else next((r for r in rows if r["job"]["params"] == default_params), None)
+                pol = regime_policy_from_trades(src["trades"]) if src is not None else None
+                params_sel[f"regime_policy.{strategy}"] = pol
+            chosen[fi] = [params_sel, table, best is None]
             val_jobs.append(base | {"params": chosen[fi][0], "start": str(va[0]), "end": str(va[1]), "fold": fi, "phase": "valid", "gi": -1})
         val_res = list(ex.map(_run_job, val_jobs))
         test_jobs = []
         for fi, (tr, va, te) in enumerate(wins):
             params, table, no_elig = chosen[fi]; vr = val_res[fi]
-            fallback = no_elig or (vr["expectancy_r"] is not None and vr["expectancy_r"] < 0 and params != default_params)
-            final = default_params if fallback else params
+            dflt = dict(default_params)
+            if regime_gating:
+                dflt[f"regime_policy.{strategy}"] = params.get(f"regime_policy.{strategy}")      # 退回默认参数时仍保留训练窗决定的环境策略
+            fallback = no_elig or (vr["expectancy_r"] is not None and vr["expectancy_r"] < 0 and {k: v for k, v in params.items() if not k.startswith("regime_policy")} != default_params)
+            final = dflt if fallback else params
             chosen[fi] = [final, table, fallback, vr]
             test_jobs.append(base | {"params": final, "start": str(te[0]), "end": str(te[1]), "fold": fi, "phase": "test", "gi": -1})
         test_res = list(ex.map(_run_job, test_jobs))
@@ -182,7 +204,7 @@ def run_walkforward(contexts: dict, exec_tf: str, strategy: str, c: dict | None 
         pert["summary"] = {"expectancy_r_min": float(min(exps)), "expectancy_r_max": float(max(exps)), "share_positive": float(np.mean([e > 0 for e in exps])), "n_variants": len(exps)}
     if not wins:
         notes.append("数据长度不足以构成一个 训练+验证+测试 窗口")
-    notes.append(f"训练 {wf['train_months']} 月 / 验证 {wf['valid_months']} 月 / 测试 {wf['test_months']} 月，隔离 {embargo} 天，滚动步长 = 测试窗；网格 {grid_def}；选参 Expectancy(R) 且 ≥ {wf['min_trades_select']} 笔；验证窗为负退回默认")
+    notes.append(f"训练 {wf['train_months']} 月 / 验证 {wf['valid_months']} 月 / 测试 {wf['test_months']} 月，隔离 {embargo} 天，滚动步长 = 测试窗；网格 {grid_def}；选参 Expectancy(R) 且 ≥ {wf['min_trades_select']} 笔；验证窗为负退回默认" + ("；环境启停由训练窗交易决定（≥5 笔且 ExpR>0 的环境）" if regime_gating else ""))
     return WFResult(strategy, folds, oos, oos_stats, {"n_trades": full["n_trades"], "expectancy_r": full["expectancy_r"], "net_pnl": full["net_pnl"], "profit_factor": full["profit_factor"], "span": [oos_start, str(last)]},
                     full["trades"], pert, subsets, notes)
 

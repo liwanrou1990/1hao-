@@ -102,4 +102,10 @@ python -m brando_pa.cli paper --once / --loop                   # 模拟盘单�
 python -m brando_pa.cli dashboard --port 8502                   # Streamlit 控制面板
 python -m brando_pa.cli export                                 # CSV / JSON / HTML 研究导出
 pytest tests/test_brando_pa_*.py -q                            # 单元测试：关键价位、跨周期对齐、三策略状态机、仓位/风控、保守成交规则、订单去重、无未来函数
+# ---- 第二阶段（docs/21）----
+python -m brando_pa.cli audit                                  # 数据质量与回测真实性审计（重复/缺口/错位/跨周期一致性/永续基差/资金费样本/成本假设）
+python -m brando_pa.cli --exec-tf 1h experiments --start 2022-04-01 --name h1      # 入场(市价/限价) × 多周期(single/aligned/zone_limit) × 退出方案 × 策略 实验矩阵 + 漏斗
+python -m brando_pa.cli --exec-tf 1h experiments --name h1_sens --only ALL__entry_market__mtf_single --set costs.funding.assumed_rate_8h=0.00004   # 成本敏感性
+python -m brando_pa.cli --exec-tf 1h walkforward --name h1_p2 [--regime-gating] [--set mtf.mode=aligned]   # Walk-Forward（隔离 7 天、退出参数入网格、Bootstrap、扰动）
+python -m brando_pa.cli evaluate --names h1_p2,m15_p2,h4_p2    # Strategy Evaluator：合格 / 仅研究 / 不合格
 ```
