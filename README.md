@@ -87,7 +87,7 @@ iphone-farm/
 
 # brando_pa — Brando Price Action 量化交易引擎（独立模块，研究/回测/模拟盘）
 
-> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)（第一阶段）、[docs/21_brando_pa_第二阶段_成本审计与样本外验证.md](docs/21_brando_pa_第二阶段_成本审计与样本外验证.md)（第二阶段：成本审计、入场/退出/多周期对比、严格样本外、Strategy Evaluator；结论：无合格策略，不满足进入模拟盘条件）。
+> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)（第一阶段）、[docs/21_brando_pa_第二阶段_成本审计与样本外验证.md](docs/21_brando_pa_第二阶段_成本审计与样本外验证.md)（第二阶段：成本审计、入场/退出/多周期对比、严格样本外、Strategy Evaluator；结论：无合格策略，不满足进入模拟盘条件）、[docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md](docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md)（第三阶段：止损距离根因、模式 A/B 结构入场、预登记锁定测试、成交事件审计；结论：三条假设全部失败，永续数据仍不可得）。
 > 不修改 spot90 / bgw_quant 的策略、数据与配置。**默认禁止真实下单**（仓库内没有任何交易所私有接口调用）。
 
 ```bash
@@ -108,4 +108,6 @@ python -m brando_pa.cli --exec-tf 1h experiments --start 2022-04-01 --name h1   
 python -m brando_pa.cli --exec-tf 1h experiments --name h1_sens --only ALL__entry_market__mtf_single --set costs.funding.assumed_rate_8h=0.00004   # 成本敏感性
 python -m brando_pa.cli --exec-tf 1h walkforward --name h1_p2 [--regime-gating] [--set mtf.mode=aligned]   # Walk-Forward（隔离 7 天、退出参数入网格、Bootstrap、扰动）
 python -m brando_pa.cli evaluate --names h1_p2,m15_p2,h4_p2    # Strategy Evaluator：合格 / 仅研究 / 不合格
+# ---- 第三阶段（docs/22）----
+python -m brando_pa.cli --exec-tf 1h phase3                    # 预登记流程：训练/验证选止损 → 锁定测试一次 → 压力测试 → 策略 A 止损距离诊断（reports_out/brando_pa/phase3/）
 ```

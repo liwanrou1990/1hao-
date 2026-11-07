@@ -1,0 +1,24 @@
+ts,symbol,event,setup_id,strategy,direction,ref_price,stop,tp,order_type,limit_price,expires_idx,fill_price,position_id,reason,exit_price
+2025-07-14 15:00:00+00:00,ETHUSDT,signal_generated,A3:1d:3020.01:short:30958,A3_breakout_second_confirm,short,3012.49,3073.000142857143,2841.635,,,,,,,
+2025-07-14 15:00:00+00:00,ETHUSDT,order_submitted,A3:1d:3020.01:short:30958,,,,,,market,,30983.0,,,,
+2025-07-14 16:00:00+00:00,ETHUSDT,order_filled,A3:1d:3020.01:short:30958,,,,,,market,,,3010.9737600000003,,,
+2025-07-15 17:00:00+00:00,ETHUSDT,position_exit,,,,,,,,,,,A3:1d:3020.01:short:30958@2025-07-14T16:00:00+00:00,stop,3077.609643071429
+2025-11-06 14:00:00+00:00,ETHUSDT,signal_generated,A3:1w:3435.00:short:33726,A3_breakout_second_confirm,short,3329.01,3423.3035714285716,3096.31155,,,,,,,
+2025-11-06 14:00:00+00:00,ETHUSDT,order_submitted,A3:1w:3435.00:short:33726,,,,,,market,,33742.0,,,,
+2025-11-06 15:00:00+00:00,ETHUSDT,order_filled,A3:1w:3435.00:short:33726,,,,,,market,,,3327.3454950000005,,,
+2025-11-07 18:00:00+00:00,ETHUSDT,position_exit,,,,,,,,,,,A3:1w:3435.00:short:33726@2025-11-06T15:00:00+00:00,stop,3428.4385267857147
+2026-03-24 07:00:00+00:00,ETHUSDT,signal_generated,A3:1w:2111.89:long:37026,A3_breakout_second_confirm,long,2165.61,2120.5735714285715,2353.47255,,,,,,,
+2026-03-24 07:00:00+00:00,ETHUSDT,order_submitted,A3:1w:2111.89:long:37026,,,,,,market,,37047.0,,,,
+2026-03-24 08:00:00+00:00,ETHUSDT,order_filled,A3:1w:2111.89:long:37026,,,,,,market,,,2166.692805,,,
+2026-03-24 14:00:00+00:00,ETHUSDT,position_exit,,,,,,,,,,,A3:1w:2111.89:long:37026@2026-03-24T08:00:00+00:00,stop,2117.392711071429
+2026-04-16 07:00:00+00:00,ETHUSDT,signal_generated,A3:1w:2386.02:short:37554,A3_breakout_second_confirm,short,2341.52,2388.9315714285717,2221.0001,,,,,,,
+2026-04-16 07:00:00+00:00,ETHUSDT,order_submitted,A3:1w:2386.02:short:37554,,,,,,market,,37599.0,,,,
+2026-04-16 08:00:00+00:00,ETHUSDT,order_cancelled,A3:1w:2386.02:short:37554,,,,,,,,,,,成交价 2340.35 使净盈亏比降至 1.99，取消入场,
+2026-06-06 04:00:00+00:00,BTCUSDT,signal_generated,A3:1d:62770.14:short:38794,A3_breakout_second_confirm,short,60101.27,62207.34442857143,40869.65,,,,,,,
+2026-06-06 04:00:00+00:00,BTCUSDT,order_submitted,A3:1d:62770.14:short:38794,,,,,,market,,38820.0,,,,
+2026-06-06 05:00:00+00:00,BTCUSDT,order_filled,A3:1d:62770.14:short:38794,,,,,,market,,,60071.229360000005,,,
+2026-06-07 06:00:00+00:00,BTCUSDT,position_exit,,,,,,,,,,,A3:1d:62770.14:short:38794@2026-06-06T05:00:00+00:00,stop,62300.65544521429
+2026-07-12 14:00:00+00:00,ETHUSDT,signal_generated,A3:1d:1789.95:long:39674,A3_breakout_second_confirm,long,1819.51,1787.5692857142858,2089.69625,,,,,,,
+2026-07-12 14:00:00+00:00,ETHUSDT,order_submitted,A3:1d:1789.95:long:39674,,,,,,market,,39694.0,,,,
+2026-07-12 15:00:00+00:00,ETHUSDT,order_filled,A3:1d:1789.95:long:39674,,,,,,market,,,1820.4097499999998,,,
+2026-07-13 03:00:00+00:00,ETHUSDT,position_exit,,,,,,,,,,,A3:1d:1789.95:long:39674@2026-07-12T15:00:00+00:00,stop,1784.8879317857145
