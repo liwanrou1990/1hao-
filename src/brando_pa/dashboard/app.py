@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场"])
 
 with tabs[0]:
     if not sig:
@@ -225,3 +225,44 @@ with tabs[9]:
                 if v.get("perturbation"):
                     st.markdown("**参数扰动稳定性（默认参数 ±20%，OOS 跨度）**"); st.dataframe(pd.DataFrame({k_: v_ for k_, v_ in v["perturbation"].items() if k_ != "summary"}).T, use_container_width=True); st.caption(str(v["perturbation"].get("summary")))
                 st.dataframe(pd.DataFrame([{"折": f["fold"], "训练": f"{f['train'][0]}→{f['train'][1]}", "测试": f"{f['test'][0]}→{f['test'][1]}", "参数": json.dumps(f["chosen_params"]), "退回默认": f["fallback_to_default"], **{f"测试_{kk}": vv for kk, vv in f["test_stats"].items()}} for f in v["folds"]]), use_container_width=True)
+
+
+with tabs[10]:
+    st.subheader("第三阶段：策略 A 止损距离诊断、模式 A/B 结构入场、预登记锁定测试")
+    P3 = RD / "phase3"; pj = load_json(str(P3 / "phase3_results.json"))
+    if not pj:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli --exec-tf 1h phase3")
+    else:
+        st.caption(f"窗口：{json.dumps(pj['windows'], ensure_ascii=False)}；预登记见 docs/brando_pa_validation/phase3/preregistration.md")
+        sd = pj.get("stop_diag")
+        if sd:
+            st.markdown("**策略 A 止损距离诊断（训练窗）**")
+            c1, c2 = st.columns([1, 1])
+            c1.json({"候选": sd["n_candidates"], "止损/ATR 中位": sd["stop_atr_all"].get("median"), "通过过滤中位": sd["stop_atr_accepted"].get("median"), "结构点在区域另一侧占比": sd.get("share_structure_on_zone_far_side"), "分解占比": sd["decomposition_share"], "结论": sd["verdict"]})
+            for ch in sd.get("charts", []):
+                if Path(ch).exists():
+                    c2.image(ch)
+        rows = []
+        for sk, d in pj["train_valid"].items():
+            for sm, r in d.items():
+                rows.append({"策略": sk, "止损": sm, "训练 n": r["train"].get("n_trades"), "训练 ExpR": r["train"].get("expectancy_r"), "验证 n": r["valid"].get("n_trades"), "验证 ExpR": r["valid"].get("expectancy_r"), "验证 PF": r["valid"].get("profit_factor"), "验证 被扫损": r["valid"].get("stopped_share")})
+        st.markdown("**训练 / 验证（选止损模式）**"); st.dataframe(pd.DataFrame(rows), use_container_width=True)
+        st.caption("选定：" + json.dumps({k: v["chosen"] for k, v in pj["selected_stop_mode"].items()}, ensure_ascii=False))
+        rows = []
+        for name, d in (("L2 保留集", pj["holdout"]), ("L1 锁定集", pj["locked"])):
+            for sk, r in d.items():
+                ci = r.get("bootstrap_mean_r_95ci") or {}
+                rows.append({"集合": name, "策略": sk, "止损": r.get("stop_mode"), "n": r.get("n_trades"), "ExpR": r.get("expectancy_r"), "胜率": r.get("win_rate"), "PF": r.get("profit_factor"), "净收益": pct(r.get("net_return")), "回撤": pct(r.get("max_drawdown")), "CI": [ci.get("lower"), ci.get("upper")], "候选→通过": f"{r.get('candidates')}→{r.get('accepted')}"})
+        st.markdown("**锁定测试（只运行一次）**"); st.dataframe(pd.DataFrame(rows), use_container_width=True)
+        rows = [{"策略": sk, "场景": n, **r} for sk, d in pj["stress"].items() for n, r in d.items()]
+        st.markdown("**压力测试（保留集）**"); st.dataframe(pd.DataFrame(rows), use_container_width=True)
+        for sk, r in pj["holdout"].items():
+            g = r.get("by_symbol_regime_direction")
+            if g:
+                st.markdown(f"**{sk}：标的 × 环境 × 方向（保留集）**"); st.dataframe(pd.DataFrame(g).T, use_container_width=True)
+        m15 = load_json(str(P3 / "m15_descriptive.json"))
+        if m15:
+            st.markdown("**15m 描述性对照（历史 22 个月，不参与选型）**"); st.dataframe(pd.DataFrame({k: {kk: v.get(kk) for kk in ("n_trades", "expectancy_r", "profit_factor", "net_return", "max_drawdown", "candidates", "accepted", "stop_mode")} for k, v in m15.items()}).T, use_container_width=True)
+        fp = RD.parent.parent / "data_store/brando_pa/derivatives/forward_snapshots.parquet"
+        if fp.exists():
+            st.markdown("**永续前瞻快照（CoinGecko，每次模拟盘运行采集；不回填历史）**"); st.dataframe(pd.read_parquet(fp).tail(10), use_container_width=True)

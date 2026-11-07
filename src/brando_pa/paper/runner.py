@@ -293,6 +293,11 @@ class PaperRunner:
             st["data_issues"] = [x for x in issues if "过期" not in x]      # 过期单独由 data_ok 处理；缺口/跳变触发熔断
             report["data_issues"] = issues
             report["realtime"] = self.realtime_status(now)
+            try:
+                from ..data.derivatives_live import collect as _collect_deriv
+                report["derivatives_forward_snapshot"] = _collect_deriv(symbols=self.symbols) if self.refresh_data and contexts is None else {"ok": False, "error": "离线/回放模式不采集"}
+            except Exception as e:  # noqa: BLE001
+                report["derivatives_forward_snapshot"] = {"ok": False, "error": type(e).__name__}
             st["mode"] = "paper_realtime" if report["realtime"]["realtime_capable"] else "paper_delayed_data"
             for s in self.symbols:
                 mc = self.contexts[s]

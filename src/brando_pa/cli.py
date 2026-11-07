@@ -155,6 +155,13 @@ def cmd_evaluate(a):
     print(open(out["paths"]["md"], encoding="utf-8").read())
 
 
+def cmd_phase3(a):
+    from .backtest.phase3 import run_phase3
+    log = run_phase3(a.symbols, exec_tf=a.exec_tf or "1h")
+    from .config import report_dir
+    print(open(report_dir() / "phase3" / "phase3_results.md", encoding="utf-8").read())
+
+
 def cmd_paper(a):
     from .paper.runner import PaperRunner
     r = PaperRunner(symbols=a.symbols, exec_tf=a.exec_tf, equity=a.equity)
@@ -191,6 +198,7 @@ def main(argv=None):
     p = sub.add_parser("experiments"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--only"); p.add_argument("--set", nargs="*", help="配置覆盖，如 costs.funding.assumed_rate_8h=0.00004"); p.add_argument("--workers", type=int); p.set_defaults(f=cmd_experiments)
     p = sub.add_parser("audit"); p.set_defaults(f=cmd_audit)
     p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)
+    p = sub.add_parser("phase3", help="第三阶段预登记流程：训练/验证选止损模式 → 锁定测试一次 → 压力测试 → 止损诊断"); p.set_defaults(f=cmd_phase3)
     p = sub.add_parser("paper"); p.add_argument("--once", action="store_true"); p.add_argument("--loop", action="store_true"); p.add_argument("--replay", action="store_true"); p.add_argument("--replay-bars", dest="replay_bars", type=int, default=3000); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_paper)
     p = sub.add_parser("dashboard"); p.add_argument("--port", type=int, default=8502); p.set_defaults(f=cmd_dashboard)
     p = sub.add_parser("export"); p.add_argument("--out"); p.set_defaults(f=cmd_export)
