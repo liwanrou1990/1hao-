@@ -1,0 +1,2 @@
+symbol,sleeve,strategy,entry_ts,exit_ts,entry,exit,qty,gross_pnl,fee,net_pnl,ret_pct,r_multiple,exit_reason,hold_days,mae,mfe,state_at_exit
+ETHUSDT,core,core|trend_BULL,2025-07-11 00:00:00+00:00,2025-10-11 23:00:00+00:00,2951.29,3746.79,3.3849,2692.68795,0.0,2692.68795,0.26954314892809594,,trend_failure,92.95833333333333,47.440000000000055,2005.4899999999998,UNCERTAIN

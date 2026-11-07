@@ -1,0 +1,2 @@
+symbol,sleeve,strategy,entry_ts,exit_ts,entry,exit,qty,gross_pnl,fee,net_pnl,ret_pct,r_multiple,exit_reason,hold_days,mae,mfe,state_at_exit
+ETHUSDT,core,core|trend_BULL,2019-04-25 00:00:00+00:00,2019-07-14 20:00:00+00:00,164.78,235.07,60.626200000000004,4261.415598,0.0,4261.415598,0.4265687583444593,,crash_exit,80.83333333333333,14.430000000000007,202.02,UNCERTAIN

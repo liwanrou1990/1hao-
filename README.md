@@ -87,7 +87,7 @@ iphone-farm/
 
 # brando_pa — Brando Price Action 量化交易引擎（独立模块，研究/回测/模拟盘）
 
-> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)（第一阶段）、[docs/21_brando_pa_第二阶段_成本审计与样本外验证.md](docs/21_brando_pa_第二阶段_成本审计与样本外验证.md)（第二阶段：成本审计、入场/退出/多周期对比、严格样本外、Strategy Evaluator；结论：无合格策略，不满足进入模拟盘条件）、[docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md](docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md)（第三阶段：止损距离根因、模式 A/B 结构入场、预登记锁定测试、成交事件审计；结论：三条假设全部失败，永续数据仍不可得）、[docs/23_brando_pa_第四阶段_纯现货价格行为系统.md](docs/23_brando_pa_第四阶段_纯现货价格行为系统.md)（第四阶段：纯现货 BUY/HOLD/SELL、两层关键位、六组对照；结论：止损距离降到约 1.4 ATR，但无稳定正期望，熊市像 USDT、牛市落后持币）。
+> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)（第一阶段）、[docs/21_brando_pa_第二阶段_成本审计与样本外验证.md](docs/21_brando_pa_第二阶段_成本审计与样本外验证.md)（第二阶段：成本审计、入场/退出/多周期对比、严格样本外、Strategy Evaluator；结论：无合格策略，不满足进入模拟盘条件）、[docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md](docs/22_brando_pa_第三阶段_信号诊断与结构入场验证.md)（第三阶段：止损距离根因、模式 A/B 结构入场、预登记锁定测试、成交事件审计；结论：三条假设全部失败，永续数据仍不可得）、[docs/23_brando_pa_第四阶段_纯现货价格行为系统.md](docs/23_brando_pa_第四阶段_纯现货价格行为系统.md)（第四阶段：纯现货 BUY/HOLD/SELL、两层关键位、六组对照；结论：止损距离降到约 1.4 ATR，但无稳定正期望，熊市像 USDT、牛市落后持币）、[docs/24_brando_pa_第五阶段_现货趋势参与与持仓优化.md](docs/24_brando_pa_第五阶段_现货趋势参与与持仓优化.md)（第五阶段：趋势状态引擎、模型 A/B/C × 三种退出 × 十组对照；结论：SMA200 简单趋势基准优于全部模型，预登记的回撤熔断在现货空仓下成为永久停机，Brando 入场线无增量）。
 > 不修改 spot90 / bgw_quant 的策略、数据与配置。**默认禁止真实下单**（仓库内没有任何交易所私有接口调用）。
 
 ```bash
@@ -113,4 +113,8 @@ python -m brando_pa.cli --exec-tf 1h phase3                    # 预登记流程
 # ---- 第四阶段（docs/23，纯现货）----
 python -m brando_pa.cli phase4                                 # 六组对照（买入持有 BTC/ETH、策略 BTC/ETH/双资产、USDT）× 5 窗口 × 零成本/含成本 + 4h 长历史 → reports_out/brando_pa/phase4_spot/
 python -m brando_pa.cli spot-signal                            # 最新 BUY/HOLD/SELL 与理由（前瞻记录）
+# ---- 第五阶段（docs/24，现货趋势参与）----
+python -m brando_pa.cli phase5 --workers 4                     # 趋势状态 + 模型 A/B/C × 三种退出 × 十组对照 × 6 窗口 × 2 成本 → reports_out/brando_pa/phase5_spot/
+python -m brando_pa.cli phase5 --windows full_1h holdout --set trend.exits.hard_limits.max_drawdown_halt=1.0 --out-suffix ablation_no_halt   # 事后消融（明确标注）
+python -m brando_pa.cli trend-signal                           # 最新日线状态与模型 A/C 决策（前瞻记录）
 ```

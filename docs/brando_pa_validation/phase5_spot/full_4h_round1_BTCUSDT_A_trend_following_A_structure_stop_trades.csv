@@ -1,0 +1,2 @@
+symbol,sleeve,strategy,entry_ts,exit_ts,entry,exit,qty,gross_pnl,fee,net_pnl,ret_pct,r_multiple,exit_reason,hold_days,mae,mfe,state_at_exit
+BTCUSDT,core,core|trend_BULL,2019-04-28 00:00:00+00:00,2020-03-12 20:00:00+00:00,5295.69,6036.28,1.88643,1397.0711937000003,0.0,1397.0711937000003,0.13984768745904685,0.8174682400895742,crash_exit,319.8333333333333,885.6899999999996,8674.310000000001,UNCERTAIN

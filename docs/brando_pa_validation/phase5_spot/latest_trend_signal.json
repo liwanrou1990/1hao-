@@ -1,0 +1,44 @@
+{
+  "BTCUSDT": {
+    "ts": "2026-11-06 09:00:00+00:00",
+    "data_last_close": "2026-11-06 10:00:00+00:00",
+    "price": 76185.01,
+    "state": "BULL",
+    "sma50": 82061.3818,
+    "sma200": 73242.5168,
+    "trend_4h": "range",
+    "models": {
+      "A_trend_following": {
+        "decision": "HOLD",
+        "reasons": "日线 BULL，4h range；持有现货，按退出模式管理",
+        "holding_qty_sim": 0.11963000000000001
+      },
+      "C_trend_filtered_brando": {
+        "decision": "HOLD",
+        "reasons": "日线 BULL，4h range；持有现货，按退出模式管理",
+        "holding_qty_sim": 0.12116998947143555
+      }
+    }
+  },
+  "ETHUSDT": {
+    "ts": "2026-11-06 09:00:00+00:00",
+    "data_last_close": "2026-11-06 10:00:00+00:00",
+    "price": 2239.1,
+    "state": "UNCERTAIN",
+    "sma50": 2504.8544,
+    "sma200": 2158.04645,
+    "trend_4h": "range",
+    "models": {
+      "A_trend_following": {
+        "decision": "HOLD",
+        "reasons": "日线 UNCERTAIN，4h range；持有 USDT：等待日线 BULL",
+        "holding_qty_sim": 0.0
+      },
+      "C_trend_filtered_brando": {
+        "decision": "HOLD",
+        "reasons": "日线 UNCERTAIN，4h range；持有 USDT：等待日线 BULL",
+        "holding_qty_sim": 0.0
+      }
+    }
+  }
+}

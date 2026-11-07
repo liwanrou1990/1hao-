@@ -1,0 +1,2 @@
+symbol,sleeve,strategy,entry_ts,exit_ts,entry,exit,qty,gross_pnl,fee,net_pnl,ret_pct,r_multiple,exit_reason,hold_days,mae,mfe,state_at_exit
+BTCUSDT,core,core|trend_BULL,2019-04-28 00:00:00+00:00,2019-08-26 20:00:00+00:00,5298.337844999999,10367.063875,1.8836100000000002,9547.503037368302,19.52750518558875,9527.975532182714,0.956663425074586,,trend_failure,120.83333333333333,119.53784499999892,8671.662155000002,UNCERTAIN
