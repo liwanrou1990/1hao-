@@ -346,3 +346,53 @@ spot:
     holdout: ["2025-07-01", null]
     locked_unused_1h: ["2022-01-01", "2022-03-31"]
     full_4h: ["2018-01-01", null]
+
+# ===================== 第五阶段：纯现货趋势参与 / 持仓优化（src/brando_pa/trend/） =====================
+trend:
+  symbols: [BTCUSDT, ETHUSDT]
+  exec_tf: 1h
+  initial_cash_usdt: 10000
+  regime:                              # 日线趋势状态（只用已收盘日线）
+    sma_fast: 50
+    sma_slow: 200
+    slope_lookback_days: 20            # SMA50 斜率 = (SMA50_t − SMA50_{t−20}) / SMA50_{t−20}
+    slope_min: 0.0                     # BULL 要求 SMA50 斜率 > 0；BEAR 要求 < 0
+    band_atr: 0.5                      # |SMA50 − SMA200| < 0.5×ATR(1d) 视为均线纠缠 → RANGE
+    structure_lookback_days: 60        # 历史高低点结构：收盘创 60 日新高支持 BULL，创 60 日新低支持 BEAR
+    atr_n: 14
+    confirm_days: 1                    # 状态切换需连续 N 个日线收盘满足
+  models:
+    A_trend_following:                 # 模型 A：日线 BULL 买入并持有，只按预登记退出
+      enabled: true
+      allocation: 1.0                  # 单资产模式满仓比例（双资产 0.5）
+      entry_on: BULL                   # 日线状态进入 BULL（确认后下一根执行 K 线开盘）
+      reentry_allowed: true
+    B_core_satellite:                  # 模型 B：核心仓位（趋势管理）+ 战术仓位（Brando A/B）
+      enabled: true
+      core_fraction: 0.5               # 预登记候选，不代表最优
+      tactical_fraction: 0.5
+      tactical_risk_per_trade: 0.01    # 战术单笔风险 = 战术资金 × 1%
+    C_trend_filtered_brando:           # 模型 C：日线 BULL 且 4h 非 down 时才用 Brando A/B 买入
+      enabled: true
+      require_4h_not_down: true
+      risk_per_trade: 0.01
+      max_position_pct: 1.0
+      strategy_c_action: reduce_25     # 策略 C 阻力拒绝只作风险提示：减仓 25%，不清仓
+  exits:                               # 三种退出各自独立运行，不事后挑选
+    A_structure_stop: {stop_buffer_atr: 0.2}                                   # Brando 结构止损（趋势入场用日线摆动低/ SMA50 下方 1 ATR 作结构）
+    B_trend_failure: {exit_when: not_BULL, grace_days: 2}                      # 日线状态离开 BULL 且持续 grace_days 个日线收盘 → 退出
+    C_atr_trailing: {atr_mult: 3.0, atr_tf: 1d}                                # 吊灯止损：自入场以来最高收盘 − 3×ATR(1d)，只上移
+    hard_limits: {max_drawdown_halt: 0.20, max_position_pct: 1.0, max_position_pct_dual: 0.5, crash_exit_daily_drop: 0.15}   # 单日跌幅 ≥15% 的异常风险退出
+  benchmarks:
+    sma200: {sma: 200}                 # 简单趋势基准：日线收盘 > SMA200 持有，< SMA200 空仓（下一根 1h 开盘执行）
+    fixed_5050: {spot_fraction: 0.5}   # 期初 50% 现货 + 50% USDT，不再平衡
+  costs:
+    round1: {fee_bps: 0, slippage_bps: 0}
+    round2: {fee_bps: 10, slippage_bps: 5}
+  windows:
+    train: ["2022-04-01", "2024-06-30"]
+    valid: ["2024-07-01", "2025-06-30"]
+    holdout: ["2025-07-01", null]
+    locked_unused_1h: ["2022-01-01", "2022-03-31"]
+    full_1h: ["2022-04-01", null]
+    full_4h: ["2018-06-01", null]       # 4h 执行的长历史（跨牛熊）

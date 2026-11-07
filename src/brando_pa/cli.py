@@ -190,6 +190,18 @@ def cmd_spot_signal(a):
     _p(out)
 
 
+def cmd_phase5(a):
+    from .trend.phase5 import run_phase5
+    from .config import report_dir
+    run_phase5(workers=a.workers, windows=a.windows)
+    print(open(report_dir() / "phase5_spot" / "phase5_results.md", encoding="utf-8").read()[:5000])
+
+
+def cmd_trend_signal(a):
+    from .trend.phase5 import latest_trend_signal
+    _p(latest_trend_signal())
+
+
 def cmd_paper(a):
     from .paper.runner import PaperRunner
     r = PaperRunner(symbols=a.symbols, exec_tf=a.exec_tf, equity=a.equity)
@@ -226,6 +238,8 @@ def main(argv=None):
     p = sub.add_parser("experiments"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--only"); p.add_argument("--set", nargs="*", help="配置覆盖，如 costs.funding.assumed_rate_8h=0.00004"); p.add_argument("--workers", type=int); p.set_defaults(f=cmd_experiments)
     p = sub.add_parser("audit"); p.set_defaults(f=cmd_audit)
     p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)
+    p = sub.add_parser("phase5", help="第五阶段：趋势状态 + 模型 A/B/C + 三种退出 × 十组对照 × 窗口 × 成本轮次（预登记，一次性运行）"); p.add_argument("--workers", type=int); p.add_argument("--windows", nargs="*"); p.set_defaults(f=cmd_phase5)
+    p = sub.add_parser("trend-signal"); p.set_defaults(f=cmd_trend_signal)
     p = sub.add_parser("phase4", help="第四阶段纯现货：六组对照 × 窗口 × 成本模式（预登记，零自由度）"); p.add_argument("--no-charts", dest="no_charts", action="store_true"); p.set_defaults(f=cmd_phase4)
     p = sub.add_parser("spot-backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--with-cost", dest="with_cost", action="store_true"); p.set_defaults(f=cmd_spot_backtest)
     p = sub.add_parser("spot-signal"); p.set_defaults(f=cmd_spot_signal)
