@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -304,3 +304,32 @@ with tabs[11]:
                     eq = pd.read_csv(P4 / pick2); eq["ts"] = pd.to_datetime(eq["ts"])
                     fig = go.Figure(); fig.add_trace(go.Scatter(x=eq["ts"], y=eq["equity"], name="权益")); fig.add_trace(go.Scatter(x=eq["ts"], y=eq["cash"], name="现金"))
                     fig.update_layout(height=280, margin=dict(l=30, r=10, t=20, b=20)); st.plotly_chart(fig, use_container_width=True)
+
+
+with tabs[12]:
+    st.subheader("第五阶段：趋势状态 + 模型 A/B/C + 三种退出 vs 十组对照（纯现货，禁止真实下单）")
+    P5 = RD / "phase5_spot"; pj = load_json(str(P5 / "phase5_results.json")); ls = load_json(str(P5 / "latest_trend_signal.json"))
+    st.warning("可信度：全部历史区间在前四阶段已被观察；本阶段为历史稳健性研究，不存在新的样本外验证。零成本为理想条件。")
+    if ls:
+        for s_, d in ls.items():
+            color = {"BULL": "#2e8b57", "BEAR": "#b22222", "RANGE": "#c9a227", "UNCERTAIN": "#888"}.get(d.get("state"), "#888")
+            st.markdown(f"<div style='border-left:6px solid {color};padding:6px 10px;background:#f6f6f6'><b>{s_}</b> 数据截至 {str(d.get('data_last_close'))[:16]} UTC · 收盘 {d.get('price')} · 日线状态 <b>{d.get('state')}</b>（SMA50 {d.get('sma50')}, SMA200 {d.get('sma200')}）· 4h {d.get('trend_4h')}<br><small>" + " | ".join(f"{m}: {v.get('decision')} — {v.get('reasons')}" for m, v in (d.get('models') or {}).items()) + "</small></div>", unsafe_allow_html=True)
+    if not pj:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli phase5")
+    else:
+        for s_, rs in pj.get("regime_summary", {}).items():
+            st.caption(f"{s_} 日线状态分布 {rs['state_counts']}，切换 {rs['transitions']} 次；各年 BULL 占比 {rs['bull_share_by_year']}")
+        for w, d in pj["windows"].items():
+            with st.expander(f"窗口 {w}（{d['exec_tf']}）：{d['period'][0]} → {d['period'][1] or '最新'}", expanded=(w == "full_1h")):
+                for rnd in ("round1", "round2"):
+                    if rnd not in d:
+                        continue
+                    st.markdown(f"**{'零成本' if rnd == 'round1' else '10 bps + 5 bps'}**")
+                    rows = [{"组合": r["name"], "总收益": pct(r.get("total_return")), "年化": pct(r.get("cagr")), "最大回撤": pct(r.get("max_drawdown")), "Sharpe": r.get("sharpe"), "Calmar": r.get("calmar"), "交易": r.get("n_trades"), "平均仓位": pct(r.get("avg_exposure"), 0), "BULL期持仓": pct(r.get("bull_time_in_market_share"), 0), "上涨月捕获": pct(r.get("up_month_capture"), 0), "下跌月捕获": pct(r.get("down_month_capture"), 0), "卖后错过合计": pct(r.get("missed_after_sell_sum"), 0), "止损后再入": r.get("reentries_after_stop"), "均持仓天": r.get("avg_hold_days"), "超额 vs B&H": pct(r.get("excess_vs_bh")), "低回撤因空仓": r.get("low_dd_due_to_idle_cash")} for r in d[rnd]["rows"]]
+                    st.dataframe(pd.DataFrame(rows), use_container_width=True, height=560)
+                    if d[rnd].get("chart") and Path(d[rnd]["chart"]).exists():
+                        st.image(d[rnd]["chart"])
+        rec = pj.get("phase4_btc_valid_reconstruction")
+        if rec:
+            st.markdown("**第四阶段 BTC 验证窗（买入持有 +73%，原策略 +7.9%）逐笔还原**")
+            st.json(rec["exposure"]); st.json(rec["reconstruction"]["summary"]); st.dataframe(pd.DataFrame(rec["reconstruction"]["segments"]), use_container_width=True, height=300)
