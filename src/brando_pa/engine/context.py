@@ -65,6 +65,8 @@ class MarketContext:
         if "1d" in self.bars:
             self.reg = regime_frame(self.bars["1d"], c["regime"])
             self.reg_idx = self.htf["1d"]["idx"] if "1d" in self.htf else align_last_closed(self.ts, exec_tf, self.bars["1d"]["ts"], "1d")
+            self._reg_trend = self.reg["trend"].to_numpy(); self._reg_hv = self.reg["highvol"].to_numpy(bool)
+            self._reg_adx = self.reg["adx"].to_numpy(float); self._reg_rv = self.reg["rv20"].to_numpy(float)
         else:
             self.reg, self.reg_idx = None, None
         self.extras = extras or {}
@@ -107,8 +109,8 @@ class MarketContext:
     def regime_at(self, i: int) -> dict:
         if self.reg is None or self.reg_idx is None or self.reg_idx[i] < 0:
             return {"trend": "undefined", "highvol": False, "adx": None}
-        r = self.reg.iloc[int(self.reg_idx[i])]
-        return {"trend": str(r["trend"]), "highvol": bool(r["highvol"]), "adx": None if pd.isna(r["adx"]) else float(r["adx"]), "rv20": None if pd.isna(r["rv20"]) else float(r["rv20"])}
+        j = int(self.reg_idx[i]); adx_v = self._reg_adx[j]; rv_v = self._reg_rv[j]
+        return {"trend": str(self._reg_trend[j]), "highvol": bool(self._reg_hv[j]), "adx": None if np.isnan(adx_v) else float(adx_v), "rv20": None if np.isnan(rv_v) else float(rv_v)}
 
     def htf_events_at(self, i: int, tf: str, zone_tfs: list[str]) -> list[dict]:
         """若 tf 周期在本执行 K 线有新收盘 K 线，返回它对 zone_tfs 区域（以上一根 tf K 线收盘时的区域快照）的事件。"""

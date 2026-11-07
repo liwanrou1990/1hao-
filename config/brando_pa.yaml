@@ -177,10 +177,11 @@ backtest:
     valid_months: 6
     test_months: 6
     min_trades_select: 15
-    grid:
-      A_breakout_retest: {break_buffer_atr: [0.10, 0.15, 0.25], sl_buffer_atr: [0.3, 0.5]}
-      B_reclaim: {min_break_depth_atr: [0.10, 0.15, 0.30], sl_buffer_atr: [0.3, 0.5]}
-      C_rejection: {wick_ratio_min: [0.50, 0.55, 0.65], sl_buffer_atr: [0.3, 0.5]}
+    embargo_days: 7                   # 训练/验证/测试窗之间的隔离天数（防止持仓跨窗泄漏）
+    grid:                             # 键可为策略参数名或完整配置路径（如 exits.breakeven_after_rr）
+      A_breakout_retest: {break_buffer_atr: [0.10, 0.15, 0.25], sl_buffer_atr: [0.3, 0.5], exits.breakeven_after_rr: [null, 1.5]}
+      B_reclaim: {min_break_depth_atr: [0.10, 0.15, 0.30], sl_buffer_atr: [0.3, 0.5], exits.breakeven_after_rr: [null, 1.5]}
+      C_rejection: {wick_ratio_min: [0.50, 0.55, 0.65], sl_buffer_atr: [0.3, 0.5], exits.breakeven_after_rr: [null, 1.5]}
 
 paper:
   enabled: true
@@ -192,6 +193,10 @@ paper:
   retry_backoff_s: 2
   rate_limit_rps: 5
   alert_webhook_env: BRANDO_ALERT_WEBHOOK   # 只从环境变量读取，不写日志
+  circuit_breakers:                         # 异常熔断（触发后暂停新开仓，持仓照常管理）
+    max_drawdown: 0.10                      # 模拟盘峰值回撤 ≥ 10%
+    max_consecutive_losses: 8
+  require_realtime_for_new_entries: true    # 非实时数据（公开缓存/过期）时禁止新开仓（data_ok=False 已实现）
 
 execution:
   live_trading: false                 # 真实下单总开关；即便为 true，还需 BRANDO_LIVE_CONFIRM=I_UNDERSTAND 环境变量 + --confirm-live 参数
@@ -199,3 +204,47 @@ execution:
 
 paths:
   report_dir: reports_out/brando_pa
+
+# ===================== 第二阶段：执行机制 / 退出 / 多周期 / 环境策略 / 评估器 =====================
+execution_modes:
+  entry_mode: market                # market = 收盘确认后下一根开盘市价；limit = 在关键区域边界挂限价等回踩
+  limit:
+    max_wait_bars: 8                # 挂单最多等待的执行 K 线数，超时自动取消
+    penetration_atr: 0.05           # 保守成交模型：后续 K 线必须穿越挂单价 ≥ 0.05×ATR 才算成交（仅触及不算）
+    improve_cap_atr: 1.0            # 挂单价相对信号收盘最多改善 1×ATR
+    cancel_on_invalidation: true    # 结构失效（收盘越过失效价）立即撤单
+    cancel_if_tp_hit_first: true    # 未成交期间价格先到止盈 → 撤单并记为“机会损失”
+    maker_fill_uses_maker_fee: true
+
+exits:                              # 每项可独立开关；参数由训练窗选择、样本外验证（见 walkforward.grid）
+  stop_mode: atr_buffer             # fixed_structure（止损 = 结构失效点）| atr_buffer（结构点外 sl_buffer_atr×ATR）
+  tp_mode: next_zone_or_rr          # next_zone_or_rr | rr | none
+  breakeven_after_rr: 1.5           # 浮盈达 N R 后止损移到保本（含双边费用）；null 关闭
+  atr_trail: null                   # 例 {after_rr: 2.0, atr_mult: 2.0}：浮盈 ≥ after_rr 后按 收盘 ∓ atr_mult×ATR 跟踪
+  structure_exit: false             # 执行周期收盘越过信号失效价 → 市价退出
+  time_exit: true                   # 持仓超过策略 max_hold_bars → 退出
+  partial_tp: null                  # 例 {at_rr: 1.0, fraction: 0.5}：达 at_rr 平掉 fraction，余仓止损移到保本
+  never_widen_stop: true            # 硬约束：止损只允许向有利方向移动
+
+mtf:
+  mode: single                      # single | aligned | zone_limit
+  aligned_require_4h: true          # aligned/zone_limit：4h 结构方向须与信号一致（range 不允许）
+  aligned_require_1d: true          # 日线环境不得与信号方向相反（down/strong_down 不做多，up/strong_up 不做空）
+  zone_limit_require_htf_zone: true # zone_limit：信号区域必须含 1w 或 1d
+  confirm_tf: null                  # 预留：15m 精细确认（本环境 15m 仅 2024-12 起）
+
+regime_policy:                      # 每策略允许的 4 类环境（上涨趋势/下跌趋势/横盘震荡/高波动异常）；null = 不限制。只能由训练窗决定。
+  A_breakout_retest: null
+  B_reclaim: null
+  C_rejection: null
+
+evaluator:                          # Strategy Evaluator 最低门槛（样本外）
+  min_trades: 30
+  min_expectancy_r: 0.0
+  min_profit_factor: 1.10
+  max_drawdown: 0.20
+  min_fold_nonneg_share: 0.5        # 测试折中期望 ≥ 0 的占比
+  bootstrap_ci_lower_r_min: -0.05   # 均值 R 的 95% 置信下限
+  paper_requires_ci_lower_gt0: true # 进入模拟盘候选：置信下限 > 0 且交易数 ≥ paper_min_trades
+  paper_min_trades: 50
+  tf_policy: {4h: analysis_only}    # 4h 默认只做趋势/结构分析，不产生模拟盘开仓

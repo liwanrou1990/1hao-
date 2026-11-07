@@ -25,9 +25,9 @@ class Reclaim(Strategy):
             if any(s["zone"].zone_id == z.zone_id for s in self.setups):
                 continue
             if ctx.prev_close >= z.lo and ctx.c < z.lo and mn <= (z.lo - ctx.c) <= mx:
-                self.setups.append({"id": f"B:{z.zone_id}:long:{ctx.i}", "zone": z, "direction": "long", "break_idx": ctx.i, "extreme": ctx.l, "break_rel_vol": ctx.rel_vol})
+                self._count("setup_armed"); self.setups.append({"id": f"B:{z.zone_id}:long:{ctx.i}", "zone": z, "direction": "long", "break_idx": ctx.i, "extreme": ctx.l, "break_rel_vol": ctx.rel_vol})
             elif ctx.prev_close <= z.hi and ctx.c > z.hi and mn <= (ctx.c - z.hi) <= mx:
-                self.setups.append({"id": f"B:{z.zone_id}:short:{ctx.i}", "zone": z, "direction": "short", "break_idx": ctx.i, "extreme": ctx.h, "break_rel_vol": ctx.rel_vol})
+                self._count("setup_armed"); self.setups.append({"id": f"B:{z.zone_id}:short:{ctx.i}", "zone": z, "direction": "short", "break_idx": ctx.i, "extreme": ctx.h, "break_rel_vol": ctx.rel_vol})
         if not self.setups:
             self.wait_reasons.append("无执行周期收盘越出关键区域的假突破候选")
             return None
@@ -41,11 +41,11 @@ class Reclaim(Strategy):
             if ctx.i == s["break_idx"]:
                 keep.append(s); self.wait_reasons.append(f"B {z.zone_id} {d} 假突破候选建立，等待收复"); continue
             if ctx.i - s["break_idx"] > int(p["max_bars_outside"]):
-                self.wait_reasons.append(f"B {z.zone_id} 在区域外超过 {p['max_bars_outside']} 根，视为真突破，放弃"); continue
+                self.wait_reasons.append(f"B {z.zone_id} 在区域外超过 {p['max_bars_outside']} 根，视为真突破，放弃"); self._count("setup_expired_true_break"); continue
             if d == "long":
                 s["extreme"] = min(s["extreme"], ctx.l)
                 if z.lo - ctx.c > mx:
-                    self.wait_reasons.append(f"B {z.zone_id} 跌破深度超过 {p['max_break_depth_atr']} ATR，视为真突破"); continue
+                    self.wait_reasons.append(f"B {z.zone_id} 跌破深度超过 {p['max_break_depth_atr']} ATR，视为真突破"); self._count("setup_too_deep"); continue
                 reclaim_px = z.lo if lvl == "lo" else z.hi
                 if ctx.c >= reclaim_px and ctx.c > ctx.o and ctx.close_pct >= cp and signal is None:
                     if vol_min and (s["break_rel_vol"] is None or s["break_rel_vol"] < vol_min):
@@ -55,12 +55,13 @@ class Reclaim(Strategy):
                     signal = Signal(ctx.symbol, self.key, "long", ctx.c, stop, tp, z.to_dict(),
                                     [f"收盘跌破 {'/'.join(z.tfs)} 支撑区 [{z.lo:.2f},{z.hi:.2f}] 深度 {(z.lo - min(s['extreme'], z.lo))/a:.2f} ATR（第 {s['break_idx']} 根）",
                                      f"{ctx.i - s['break_idx']} 根内收复：收盘 {ctx.c:.2f} ≥ {reclaim_px:.2f}，收盘位置 {ctx.close_pct:.0%} ≥ {cp:.0%}", tpr],
-                                    f"收盘再次跌破假突破低点 {s['extreme']:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s["break_rel_vol"], ctx.rel_vol)
+                                    f"收盘再次跌破假突破低点 {s['extreme']:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s["break_rel_vol"], ctx.rel_vol,
+                                    structure_price=s["extreme"], invalidation_price=s["extreme"], limit_price=min(ctx.c, z.lo))
                     continue
             else:
                 s["extreme"] = max(s["extreme"], ctx.h)
                 if ctx.c - z.hi > mx:
-                    self.wait_reasons.append(f"B {z.zone_id} 突破深度超过 {p['max_break_depth_atr']} ATR，视为真突破"); continue
+                    self.wait_reasons.append(f"B {z.zone_id} 突破深度超过 {p['max_break_depth_atr']} ATR，视为真突破"); self._count("setup_too_deep"); continue
                 reclaim_px = z.hi if lvl == "lo" else z.lo
                 if ctx.c <= reclaim_px and ctx.c < ctx.o and ctx.close_pct <= 1 - cp and signal is None:
                     if vol_min and (s["break_rel_vol"] is None or s["break_rel_vol"] < vol_min):
@@ -70,9 +71,12 @@ class Reclaim(Strategy):
                     signal = Signal(ctx.symbol, self.key, "short", ctx.c, stop, tp, z.to_dict(),
                                     [f"收盘突破 {'/'.join(z.tfs)} 阻力区 [{z.lo:.2f},{z.hi:.2f}] 深度 {(max(s['extreme'], z.hi) - z.hi)/a:.2f} ATR（第 {s['break_idx']} 根）",
                                      f"{ctx.i - s['break_idx']} 根内跌回：收盘 {ctx.c:.2f} ≤ {reclaim_px:.2f}，收盘位置 {ctx.close_pct:.0%} ≤ {1-cp:.0%}", tpr],
-                                    f"收盘再次突破假突破高点 {s['extreme']:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s["break_rel_vol"], ctx.rel_vol)
+                                    f"收盘再次突破假突破高点 {s['extreme']:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s["break_rel_vol"], ctx.rel_vol,
+                                    structure_price=s["extreme"], invalidation_price=s["extreme"], limit_price=max(ctx.c, z.hi))
                     continue
             keep.append(s)
             self.wait_reasons.append(f"B {z.zone_id} {d} 等待收复（区域外第 {ctx.i - s['break_idx']} 根）")
         self.setups = keep
+        if signal is not None:
+            self._count("signal_confirmed")
         return signal

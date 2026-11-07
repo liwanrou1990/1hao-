@@ -30,19 +30,21 @@ class Rejection(Strategy):
             entered = ctx.l <= z.hi and ctx.h >= z.lo
             if not entered:
                 continue
+            self._count("zone_touched")
             # 支撑拒绝 → 多：上一根与本根收盘都在区域下沿之上（未被收盘跌破），下影线长
             if ctx.prev_close >= z.lo and ctx.c >= z.lo and ctx.c > ctx.o:
                 wick_ratio = ctx.lower_wick / ctx.rng
                 ok_trend, why = self._trend_ok(ctx, "long", wick_ratio, p)
                 if not ok_trend:
-                    self.wait_reasons.append(f"C {z.zone_id} 支撑拒绝形态出现但{why}"); continue
+                    self.wait_reasons.append(f"C {z.zone_id} 支撑拒绝形态出现但{why}"); self._count("blocked_counter_trend"); continue
                 if wick_ratio >= float(p["wick_ratio_min"]) and ctx.close_pct >= float(p["close_pct_min"]):
                     stop = ctx.l - float(p["sl_buffer_atr"]) * a
                     tp, tpz, tpr = choose_take_profit("long", ctx.c, stop, ctx.zones, p["tp_mode"], float(p["tp_rr"]), 1.0)
                     sig = Signal(ctx.symbol, self.key, "long", ctx.c, stop, tp, z.to_dict(),
                                  [f"触及 {'/'.join(z.tfs)} 支撑区 [{z.lo:.2f},{z.hi:.2f}]，最低 {ctx.l:.2f}", f"下影线/振幅 {wick_ratio:.0%} ≥ {float(p['wick_ratio_min']):.0%}，收盘位置 {ctx.close_pct:.0%}，振幅 {ctx.rng/a:.2f} ATR",
                                   f"4h 结构 {ctx.trend_4h}{'（顺势）' if ctx.trend_4h == 'up' else ''}", tpr],
-                                 f"收盘跌破拒绝 K 线最低 {ctx.l:.2f}", f"C:{z.zone_id}:long:{ctx.i}", ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, None, ctx.rel_vol)
+                                 f"收盘跌破拒绝 K 线最低 {ctx.l:.2f}", f"C:{z.zone_id}:long:{ctx.i}", ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, None, ctx.rel_vol,
+                                 structure_price=ctx.l, invalidation_price=ctx.l, limit_price=min(ctx.c, max(z.hi, 0.5 * (ctx.h + ctx.l))))
                     if best is None or sig.rr_gross > best.rr_gross:
                         best = sig
                 else:
@@ -52,20 +54,21 @@ class Rejection(Strategy):
                 wick_ratio = ctx.upper_wick / ctx.rng
                 ok_trend, why = self._trend_ok(ctx, "short", wick_ratio, p)
                 if not ok_trend:
-                    self.wait_reasons.append(f"C {z.zone_id} 阻力拒绝形态出现但{why}"); continue
+                    self.wait_reasons.append(f"C {z.zone_id} 阻力拒绝形态出现但{why}"); self._count("blocked_counter_trend"); continue
                 if wick_ratio >= float(p["wick_ratio_min"]) and ctx.close_pct <= 1 - float(p["close_pct_min"]):
                     stop = ctx.h + float(p["sl_buffer_atr"]) * a
                     tp, tpz, tpr = choose_take_profit("short", ctx.c, stop, ctx.zones, p["tp_mode"], float(p["tp_rr"]), 1.0)
                     sig = Signal(ctx.symbol, self.key, "short", ctx.c, stop, tp, z.to_dict(),
                                  [f"触及 {'/'.join(z.tfs)} 阻力区 [{z.lo:.2f},{z.hi:.2f}]，最高 {ctx.h:.2f}", f"上影线/振幅 {wick_ratio:.0%} ≥ {float(p['wick_ratio_min']):.0%}，收盘位置 {ctx.close_pct:.0%}，振幅 {ctx.rng/a:.2f} ATR",
                                   f"4h 结构 {ctx.trend_4h}{'（顺势）' if ctx.trend_4h == 'down' else ''}", tpr],
-                                 f"收盘突破拒绝 K 线最高 {ctx.h:.2f}", f"C:{z.zone_id}:short:{ctx.i}", ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, None, ctx.rel_vol)
+                                 f"收盘突破拒绝 K 线最高 {ctx.h:.2f}", f"C:{z.zone_id}:short:{ctx.i}", ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, None, ctx.rel_vol,
+                                 structure_price=ctx.h, invalidation_price=ctx.h, limit_price=max(ctx.c, min(z.lo, 0.5 * (ctx.h + ctx.l))))
                     if best is None or sig.rr_gross > best.rr_gross:
                         best = sig
                 else:
                     self.wait_reasons.append(f"C {z.zone_id} 触及阻力但影线 {wick_ratio:.0%}/收盘位置 {ctx.close_pct:.0%} 不足")
         if best is not None:
-            self.last_signal_idx[best.zone["zone_id"]] = ctx.i
+            self.last_signal_idx[best.zone["zone_id"]] = ctx.i; self._count("signal_confirmed")
         elif not self.wait_reasons:
             self.wait_reasons.append("C 本根未触及 1W/1D 关键区域")
         return best

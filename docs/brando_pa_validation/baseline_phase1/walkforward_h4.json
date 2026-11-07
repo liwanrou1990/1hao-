@@ -1,0 +1,3762 @@
+{
+  "exec_tf": "4h",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "results": {
+    "A_breakout_retest": {
+      "strategy": "A_breakout_retest",
+      "oos_stats": {
+        "n_trades": 223,
+        "win_rate": 0.3721973094170404,
+        "avg_win": 70.69115516418647,
+        "avg_loss": -72.86512259599861,
+        "profit_factor": 0.5751689530295531,
+        "expectancy_usd": -19.43386226373243,
+        "expectancy_r": -0.3904603306440613,
+        "avg_r_win": 1.4066074996284943,
+        "avg_r_loss": -1.455864830019934,
+        "total_net_pnl": -4333.7512848123315,
+        "gross_pnl": -4022.475995505644,
+        "total_fees": 297.10824191208656,
+        "total_funding": 14.167047394599999,
+        "cost_share_of_gross": null,
+        "max_consecutive_losses": 12,
+        "avg_bars_held": 167.1031390134529,
+        "n_long": 7,
+        "n_short": 216,
+        "exit_reasons": {
+          "stop": 132,
+          "take_profit": 52,
+          "trail_stop": 32,
+          "end_of_test": 6,
+          "time_stop": 1
+        },
+        "stitched_total_return": -0.43337512848123316,
+        "stitched_max_drawdown": -0.46157471545380957
+      },
+      "default_full_stats": {
+        "n_trades": 234,
+        "expectancy_r": -0.039090746334584515,
+        "net_pnl": -512.5211512727386,
+        "profit_factor": 0.9250593227926013
+      },
+      "notes": [
+        "训练 12 月 / 验证 6 月 / 测试 6 月，滚动步长 = 测试窗；参数网格 {'break_buffer_atr': [0.1, 0.15, 0.25], 'sl_buffer_atr': [0.3, 0.5]}；选参标准 Expectancy(R)，最少 15 笔"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2018-06-01",
+            "2019-06-01"
+          ],
+          "valid": [
+            "2019-06-01",
+            "2019-12-01"
+          ],
+          "test": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.09972172253972553,
+              "profit_factor": 0.8356244838813787,
+              "net_pnl": -182.28904890988736
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.11730621655117426,
+              "profit_factor": 0.8129175714219286,
+              "net_pnl": -188.2621519335191
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.09972172253972553,
+              "profit_factor": 0.8356244838813787,
+              "net_pnl": -182.28904890988736
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.11730621655117426,
+              "profit_factor": 0.8129175714219286,
+              "net_pnl": -188.2621519335191
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.09972172253972553,
+              "profit_factor": 0.8356244838813787,
+              "net_pnl": -182.28904890988736
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.11730621655117426,
+              "profit_factor": 0.8129175714219286,
+              "net_pnl": -188.2621519335191
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 18,
+            "expectancy_r": -13.206904447591802,
+            "net_pnl": -12482.98123171312
+          },
+          "test_stats": {
+            "n_trades": 25,
+            "expectancy_r": -0.2195387434463151,
+            "net_pnl": -275.7703453012418,
+            "profit_factor": 0.7060421139388108
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2018-12-01",
+            "2019-12-01"
+          ],
+          "valid": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "test": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 32,
+              "expectancy_r": -7.7673913427625765,
+              "profit_factor": 0.057360765950222777,
+              "net_pnl": -12350.266803625387
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 29,
+              "expectancy_r": -7.88756092479188,
+              "profit_factor": 0.054596639374624174,
+              "net_pnl": -11307.248673260332
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 32,
+              "expectancy_r": -7.7673913427625765,
+              "profit_factor": 0.057360765950222777,
+              "net_pnl": -12350.266803625387
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 29,
+              "expectancy_r": -7.88756092479188,
+              "profit_factor": 0.054596639374624174,
+              "net_pnl": -11307.248673260332
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 32,
+              "expectancy_r": -7.7673913427625765,
+              "profit_factor": 0.057360765950222777,
+              "net_pnl": -12350.266803625387
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 29,
+              "expectancy_r": -7.88756092479188,
+              "profit_factor": 0.054596639374624174,
+              "net_pnl": -11307.248673260332
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 26,
+            "expectancy_r": -0.249086067892685,
+            "net_pnl": -324.3738542561365
+          },
+          "test_stats": {
+            "n_trades": 6,
+            "expectancy_r": -0.8021468271776112,
+            "net_pnl": -238.34940535943656,
+            "profit_factor": 0.003013367058077698
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2019-06-01",
+            "2020-06-01"
+          ],
+          "valid": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "test": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": 0.0744212670739466,
+              "profit_factor": 1.1116335043144587,
+              "net_pnl": 149.35503430347103
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": 0.05386686118082003,
+              "profit_factor": 1.076246326661525,
+              "net_pnl": 97.3549140287098
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": 0.0744212670739466,
+              "profit_factor": 1.1116335043144587,
+              "net_pnl": 149.35503430347103
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": 0.05386686118082003,
+              "profit_factor": 1.076246326661525,
+              "net_pnl": 97.3549140287098
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": 0.0744212670739466,
+              "profit_factor": 1.1116335043144587,
+              "net_pnl": 149.35503430347103
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": 0.05386686118082003,
+              "profit_factor": 1.076246326661525,
+              "net_pnl": 97.3549140287098
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 7,
+            "expectancy_r": -0.8444084942126061,
+            "net_pnl": -292.15208837425723
+          },
+          "test_stats": {
+            "n_trades": 3,
+            "expectancy_r": -0.3211312905162604,
+            "net_pnl": -48.16301289983362,
+            "profit_factor": 0.023669838380912977
+          }
+        },
+        {
+          "fold": 3,
+          "train": [
+            "2019-12-01",
+            "2020-12-01"
+          ],
+          "valid": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "test": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 33,
+              "expectancy_r": -0.37536658256660765,
+              "profit_factor": 0.5215681107421951,
+              "net_pnl": -607.0217195931397
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.3323015983620498,
+              "profit_factor": 0.5664350417452312,
+              "net_pnl": -507.52363853591567
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 33,
+              "expectancy_r": -0.37536658256660765,
+              "profit_factor": 0.5215681107421951,
+              "net_pnl": -607.0217195931397
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.3323015983620498,
+              "profit_factor": 0.5664350417452312,
+              "net_pnl": -507.52363853591567
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 33,
+              "expectancy_r": -0.37536658256660765,
+              "profit_factor": 0.5215681107421951,
+              "net_pnl": -607.0217195931397
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 31,
+              "expectancy_r": -0.3323015983620498,
+              "profit_factor": 0.5664350417452312,
+              "net_pnl": -507.52363853591567
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 3,
+            "expectancy_r": -0.3211312905162604,
+            "net_pnl": -48.16301289983362
+          },
+          "test_stats": {
+            "n_trades": 9,
+            "expectancy_r": -0.6510615268266027,
+            "net_pnl": -291.8763561930866,
+            "profit_factor": 0.4408021268550272
+          }
+        },
+        {
+          "fold": 4,
+          "train": [
+            "2020-06-01",
+            "2021-06-01"
+          ],
+          "valid": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "test": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.6113648823655314,
+              "profit_factor": 0.23798048884876896,
+              "net_pnl": -332.5264984213434
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 9,
+              "expectancy_r": -0.6418083149571608,
+              "profit_factor": 0.006472187103711173,
+              "net_pnl": -285.3369542002918
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.6113648823655314,
+              "profit_factor": 0.23798048884876896,
+              "net_pnl": -332.5264984213434
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 9,
+              "expectancy_r": -0.6418083149571608,
+              "profit_factor": 0.006472187103711173,
+              "net_pnl": -285.3369542002918
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.6113648823655314,
+              "profit_factor": 0.23798048884876896,
+              "net_pnl": -332.5264984213434
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 9,
+              "expectancy_r": -0.6418083149571608,
+              "profit_factor": 0.006472187103711173,
+              "net_pnl": -285.3369542002918
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 9,
+            "expectancy_r": -0.6510615268266027,
+            "net_pnl": -291.8763561930866
+          },
+          "test_stats": {
+            "n_trades": 28,
+            "expectancy_r": 0.6275913983457603,
+            "net_pnl": 900.9255150141955,
+            "profit_factor": 2.4416663377379675
+          }
+        },
+        {
+          "fold": 5,
+          "train": [
+            "2020-12-01",
+            "2021-12-01"
+          ],
+          "valid": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "test": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 14,
+              "expectancy_r": -0.504609423784674,
+              "profit_factor": 0.48636492737221937,
+              "net_pnl": -352.2990439115141
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 12,
+              "expectancy_r": -0.5685789677490172,
+              "profit_factor": 0.4054444542463348,
+              "net_pnl": -337.5383588809664
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 14,
+              "expectancy_r": -0.504609423784674,
+              "profit_factor": 0.48636492737221937,
+              "net_pnl": -352.2990439115141
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 12,
+              "expectancy_r": -0.5685789677490172,
+              "profit_factor": 0.4054444542463348,
+              "net_pnl": -337.5383588809664
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 14,
+              "expectancy_r": -0.504609423784674,
+              "profit_factor": 0.48636492737221937,
+              "net_pnl": -352.2990439115141
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 12,
+              "expectancy_r": -0.5685789677490172,
+              "profit_factor": 0.4054444542463348,
+              "net_pnl": -337.5383588809664
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 28,
+            "expectancy_r": 0.6275913983457603,
+            "net_pnl": 900.9255150141955
+          },
+          "test_stats": {
+            "n_trades": 19,
+            "expectancy_r": -0.029939778812649812,
+            "net_pnl": -35.110795576494986,
+            "profit_factor": 0.9412630809259691
+          }
+        },
+        {
+          "fold": 6,
+          "train": [
+            "2021-06-01",
+            "2022-06-01"
+          ],
+          "valid": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "test": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.4138299335253449,
+              "profit_factor": 1.7977401869331775,
+              "net_pnl": 776.0945104468169
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.501241146551803,
+              "profit_factor": 2.0261762575713207,
+              "net_pnl": 951.7195719129704
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.4138299335253449,
+              "profit_factor": 1.7977401869331775,
+              "net_pnl": 776.0945104468169
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.501241146551803,
+              "profit_factor": 2.0261762575713207,
+              "net_pnl": 951.7195719129704
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.4138299335253449,
+              "profit_factor": 1.7977401869331775,
+              "net_pnl": 776.0945104468169
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 37,
+              "expectancy_r": 0.501241146551803,
+              "profit_factor": 2.0261762575713207,
+              "net_pnl": 951.7195719129704
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 19,
+            "expectancy_r": -0.029939778812649812,
+            "net_pnl": -35.110795576494986
+          },
+          "test_stats": {
+            "n_trades": 16,
+            "expectancy_r": -4.046538971110893,
+            "net_pnl": -3232.1856033696863,
+            "profit_factor": 0.11752062583034294
+          }
+        },
+        {
+          "fold": 7,
+          "train": [
+            "2021-12-01",
+            "2022-12-01"
+          ],
+          "valid": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "test": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 45,
+              "expectancy_r": 0.2601315425120393,
+              "profit_factor": 1.4440470127048168,
+              "net_pnl": 580.7151094564206
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 47,
+              "expectancy_r": 0.3617809224732114,
+              "profit_factor": 1.6757741934298938,
+              "net_pnl": 862.5444440628198
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 45,
+              "expectancy_r": 0.2601315425120393,
+              "profit_factor": 1.4440470127048168,
+              "net_pnl": 580.7151094564206
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 47,
+              "expectancy_r": 0.3617809224732114,
+              "profit_factor": 1.6757741934298938,
+              "net_pnl": 862.5444440628198
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 45,
+              "expectancy_r": 0.2601315425120393,
+              "profit_factor": 1.4440470127048168,
+              "net_pnl": 580.7151094564206
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 47,
+              "expectancy_r": 0.3617809224732114,
+              "profit_factor": 1.6757741934298938,
+              "net_pnl": 862.5444440628198
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 16,
+            "expectancy_r": -4.046538971110893,
+            "net_pnl": -3232.1856033696863
+          },
+          "test_stats": {
+            "n_trades": 19,
+            "expectancy_r": -0.40561272330519926,
+            "net_pnl": -380.99287385913743,
+            "profit_factor": 0.3635404201297766
+          }
+        },
+        {
+          "fold": 8,
+          "train": [
+            "2022-06-01",
+            "2023-06-01"
+          ],
+          "valid": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "test": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.14417326207750944,
+              "profit_factor": 0.7692288000597316,
+              "net_pnl": -259.7860762292257
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -1.8660994095775607,
+              "profit_factor": 0.2333859883904678,
+              "net_pnl": -3257.6534651921675
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.14417326207750944,
+              "profit_factor": 0.7692288000597316,
+              "net_pnl": -259.7860762292257
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -1.8660994095775607,
+              "profit_factor": 0.2333859883904678,
+              "net_pnl": -3257.6534651921675
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.14417326207750944,
+              "profit_factor": 0.7692288000597316,
+              "net_pnl": -259.7860762292257
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -1.8660994095775607,
+              "profit_factor": 0.2333859883904678,
+              "net_pnl": -3257.6534651921675
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 17,
+            "expectancy_r": -0.34437145365053484,
+            "net_pnl": -291.24547687176596
+          },
+          "test_stats": {
+            "n_trades": 11,
+            "expectancy_r": -0.22446706073060882,
+            "net_pnl": -125.11251419958474,
+            "profit_factor": 0.6373899314298737
+          }
+        },
+        {
+          "fold": 9,
+          "train": [
+            "2022-12-01",
+            "2023-12-01"
+          ],
+          "valid": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "test": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 34,
+              "expectancy_r": -0.2419316405161767,
+              "profit_factor": 0.6059388844121423,
+              "net_pnl": -410.2930380762537
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.16812810106900838,
+              "profit_factor": 0.7170419290351041,
+              "net_pnl": -297.2907660928902
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 34,
+              "expectancy_r": -0.2419316405161767,
+              "profit_factor": 0.6059388844121423,
+              "net_pnl": -410.2930380762537
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.16812810106900838,
+              "profit_factor": 0.7170419290351041,
+              "net_pnl": -297.2907660928902
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 34,
+              "expectancy_r": -0.2419316405161767,
+              "profit_factor": 0.6059388844121423,
+              "net_pnl": -410.2930380762537
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.16812810106900838,
+              "profit_factor": 0.7170419290351041,
+              "net_pnl": -297.2907660928902
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 11,
+            "expectancy_r": -0.22446706073060882,
+            "net_pnl": -125.11251419958474
+          },
+          "test_stats": {
+            "n_trades": 24,
+            "expectancy_r": -0.23122918678893667,
+            "net_pnl": -280.6514752438066,
+            "profit_factor": 0.6697049798401958
+          }
+        },
+        {
+          "fold": 10,
+          "train": [
+            "2023-06-01",
+            "2024-06-01"
+          ],
+          "valid": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "test": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 26,
+              "expectancy_r": -0.2702908882309099,
+              "profit_factor": 0.5512833375731507,
+              "net_pnl": -350.04137060811956
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 30,
+              "expectancy_r": -0.330215541567819,
+              "profit_factor": 0.4679734833107016,
+              "net_pnl": -488.3456154013567
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 26,
+              "expectancy_r": -0.2702908882309099,
+              "profit_factor": 0.5512833375731507,
+              "net_pnl": -350.04137060811956
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 30,
+              "expectancy_r": -0.330215541567819,
+              "profit_factor": 0.4679734833107016,
+              "net_pnl": -488.3456154013567
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 26,
+              "expectancy_r": -0.2702908882309099,
+              "profit_factor": 0.5512833375731507,
+              "net_pnl": -350.04137060811956
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 30,
+              "expectancy_r": -0.330215541567819,
+              "profit_factor": 0.4679734833107016,
+              "net_pnl": -488.3456154013567
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 29,
+            "expectancy_r": -0.14519748387847636,
+            "net_pnl": -216.8411110257282
+          },
+          "test_stats": {
+            "n_trades": 16,
+            "expectancy_r": -0.632920273716296,
+            "net_pnl": -494.58136889370894,
+            "profit_factor": 0.19196598877195445
+          }
+        },
+        {
+          "fold": 11,
+          "train": [
+            "2023-12-01",
+            "2024-12-01"
+          ],
+          "valid": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "test": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.15,
+            "sl_buffer_atr": 0.5
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 38,
+              "expectancy_r": -0.15049929966457795,
+              "profit_factor": 0.7749925919995807,
+              "net_pnl": -291.7798287521123
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.22910394717060503,
+              "profit_factor": 0.6606629999465918,
+              "net_pnl": -401.91810621764336
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 38,
+              "expectancy_r": -0.15049929966457795,
+              "profit_factor": 0.7749925919995807,
+              "net_pnl": -291.7798287521123
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.22910394717060503,
+              "profit_factor": 0.6606629999465918,
+              "net_pnl": -401.91810621764336
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 38,
+              "expectancy_r": -0.15049929966457795,
+              "profit_factor": 0.7749925919995807,
+              "net_pnl": -291.7798287521123
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 35,
+              "expectancy_r": -0.22910394717060503,
+              "profit_factor": 0.6606629999465918,
+              "net_pnl": -401.91810621764336
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 14,
+            "expectancy_r": -0.6175518782266197,
+            "net_pnl": -423.51338066275
+          },
+          "test_stats": {
+            "n_trades": 20,
+            "expectancy_r": 0.0671918951179177,
+            "net_pnl": 61.688695645155136,
+            "profit_factor": 1.126558625867365
+          }
+        },
+        {
+          "fold": 12,
+          "train": [
+            "2024-06-01",
+            "2025-06-01"
+          ],
+          "valid": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "test": [
+            "2025-12-01",
+            "2026-06-01"
+          ],
+          "chosen_params": {
+            "break_buffer_atr": 0.1,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": false,
+          "train_table": [
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": -0.2989872866894997,
+              "profit_factor": 0.5598734714775074,
+              "net_pnl": -631.2228468195298
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": -0.39190562155988046,
+              "profit_factor": 0.4732668448404602,
+              "net_pnl": -761.064047097749
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": -0.2989872866894997,
+              "profit_factor": 0.5598734714775074,
+              "net_pnl": -631.2228468195298
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": -0.39190562155988046,
+              "profit_factor": 0.4732668448404602,
+              "net_pnl": -761.064047097749
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 43,
+              "expectancy_r": -0.2989872866894997,
+              "profit_factor": 0.5598734714775074,
+              "net_pnl": -631.2228468195298
+            },
+            {
+              "params": {
+                "break_buffer_atr": 0.25,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 40,
+              "expectancy_r": -0.39190562155988046,
+              "profit_factor": 0.4732668448404602,
+              "net_pnl": -761.064047097749
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 21,
+            "expectancy_r": 0.07141453793321892,
+            "net_pnl": 69.8591937182818
+          },
+          "test_stats": {
+            "n_trades": 27,
+            "expectancy_r": 0.08521222151821371,
+            "net_pnl": 106.42825542433599,
+            "profit_factor": 1.157794607072741
+          }
+        }
+      ]
+    },
+    "B_reclaim": {
+      "strategy": "B_reclaim",
+      "oos_stats": {
+        "n_trades": 12,
+        "win_rate": 0.4166666666666667,
+        "avg_win": 102.24967634083154,
+        "avg_loss": -35.31212794194364,
+        "profit_factor": 2.0682832600932732,
+        "expectancy_usd": 22.00529050921269,
+        "expectancy_r": 0.44125210075294924,
+        "avg_r_win": 2.0490325415454462,
+        "avg_r_loss": -0.7071624998131201,
+        "total_net_pnl": 264.0634861105523,
+        "gross_pnl": 295.8734042526556,
+        "total_fees": 19.353489720303266,
+        "total_funding": 12.456428421800002,
+        "cost_share_of_gross": 0.1075119212639328,
+        "max_consecutive_losses": 3,
+        "avg_bars_held": 26.333333333333332,
+        "n_long": 5,
+        "n_short": 7,
+        "exit_reasons": {
+          "stop": 5,
+          "trail_stop": 4,
+          "time_stop": 1,
+          "stop_gap": 1,
+          "take_profit": 1
+        },
+        "stitched_total_return": 0.026406348611055286,
+        "stitched_max_drawdown": -0.014722603028151648
+      },
+      "default_full_stats": {
+        "n_trades": 14,
+        "expectancy_r": 0.24183190818481917,
+        "net_pnl": 161.58604353403877,
+        "profit_factor": 1.4576866937289668
+      },
+      "notes": [
+        "训练 12 月 / 验证 6 月 / 测试 6 月，滚动步长 = 测试窗；参数网格 {'min_break_depth_atr': [0.1, 0.15, 0.3], 'sl_buffer_atr': [0.3, 0.5]}；选参标准 Expectancy(R)，最少 15 笔"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2018-06-01",
+            "2019-06-01"
+          ],
+          "valid": [
+            "2019-06-01",
+            "2019-12-01"
+          ],
+          "test": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.6420677665162917,
+              "profit_factor": 0.0038380349630038227,
+              "net_pnl": -96.075025898268
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.6435551731972374,
+              "profit_factor": 0.0035228619284252177,
+              "net_pnl": -96.29973572960205
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4902858992697511,
+              "profit_factor": 0.007493708255790625,
+              "net_pnl": -49.025944421528365
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4911432148277338,
+              "profit_factor": 0.006884145411366103,
+              "net_pnl": -49.113768441678396
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.007442290985766358,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3720285466874831
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.006844197779995927,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3421317272650837
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2018-12-01",
+            "2019-12-01"
+          ],
+          "valid": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "test": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.46909460501180333,
+              "profit_factor": 0.0078695700899192,
+              "net_pnl": -46.902287894568445
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4707674460781244,
+              "profit_factor": 0.007218358018562364,
+              "net_pnl": -47.05531328519829
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.007442290985766358,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3720285466874831
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.006844197779995927,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3421317272650837
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.007442290985766358,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3720285466874831
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.006844197779995927,
+              "profit_factor": Infinity,
+              "net_pnl": 0.3421317272650837
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 1,
+            "expectancy_r": 7.889775723437906,
+            "net_pnl": 394.33550181274643,
+            "profit_factor": Infinity
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2019-06-01",
+            "2020-06-01"
+          ],
+          "valid": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "test": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": 7.889775723437906,
+            "net_pnl": 394.33550181274643
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 3,
+          "train": [
+            "2019-12-01",
+            "2020-12-01"
+          ],
+          "valid": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "test": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.5093692080033642,
+            "net_pnl": -50.747389074648716,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "fold": 4,
+          "train": [
+            "2020-06-01",
+            "2021-06-01"
+          ],
+          "valid": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "test": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.889775723437906,
+              "profit_factor": Infinity,
+              "net_pnl": 394.33550181274643
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 7.234347796011285,
+              "profit_factor": Infinity,
+              "net_pnl": 361.66593281775806
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.5093692080033642,
+            "net_pnl": -50.747389074648716
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.04069915849116005,
+            "net_pnl": -4.065085439921307,
+            "profit_factor": 0.15878917986700852
+          }
+        },
+        {
+          "fold": 5,
+          "train": [
+            "2020-12-01",
+            "2021-12-01"
+          ],
+          "valid": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "test": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.3731538471987917,
+              "profit_factor": 2.079018022937831,
+              "net_pnl": 55.42696042691505
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.028249525891415973,
+              "profit_factor": 0.0,
+              "net_pnl": -1.4119852469446805
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.5093692080033642,
+              "profit_factor": 0.0,
+              "net_pnl": -50.747389074648716
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.028249525891415973,
+              "profit_factor": 0.0,
+              "net_pnl": -1.4119852469446805
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.5093692080033642,
+              "profit_factor": 0.0,
+              "net_pnl": -50.747389074648716
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.028249525891415973,
+              "profit_factor": 0.0,
+              "net_pnl": -1.4119852469446805
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.04069915849116005,
+            "net_pnl": -4.065085439921307
+          },
+          "test_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.9853351965330132,
+            "net_pnl": -49.23365877736471,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "fold": 6,
+          "train": [
+            "2021-06-01",
+            "2022-06-01"
+          ],
+          "valid": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "test": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 5,
+              "expectancy_r": 0.207612644922811,
+              "profit_factor": 1.9131455653007166,
+              "net_pnl": 51.34199798728767
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 3,
+              "expectancy_r": 1.1253183291653044,
+              "profit_factor": 120.34312325549678,
+              "net_pnl": 168.51072936106206
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 4,
+              "expectancy_r": -0.2750341832472621,
+              "profit_factor": 0.013750309467868363,
+              "net_pnl": -54.79087702992674
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 3,
+              "expectancy_r": 1.1253183291653044,
+              "profit_factor": 120.34312325549678,
+              "net_pnl": 168.51072936106206
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.33445506374922535,
+              "profit_factor": 0.015052898800299634,
+              "net_pnl": -49.983493762528596
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.007269185247286879,
+              "profit_factor": 0.4849576201240594,
+              "net_pnl": -0.7272322419361059
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.9853351965330132,
+            "net_pnl": -49.23365877736471
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 7,
+          "train": [
+            "2021-12-01",
+            "2022-12-01"
+          ],
+          "valid": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "test": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.35557783783844443,
+              "profit_factor": 0.014192563524273677,
+              "net_pnl": -53.298744217286014
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": 1.7021022566936646,
+              "profit_factor": Infinity,
+              "net_pnl": 169.92271460800674
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.35557783783844443,
+              "profit_factor": 0.014192563524273677,
+              "net_pnl": -53.298744217286014
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": 1.7021022566936646,
+              "profit_factor": Infinity,
+              "net_pnl": 169.92271460800674
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4849809858869804,
+              "profit_factor": 0.015585603447926527,
+              "net_pnl": -48.46632249537018
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.013711155396842215,
+              "profit_factor": Infinity,
+              "net_pnl": 0.6847530050085746
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 8,
+          "train": [
+            "2022-06-01",
+            "2023-06-01"
+          ],
+          "valid": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "test": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9853351965330132,
+              "profit_factor": 0.0,
+              "net_pnl": -49.23365877736471
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9853351965330132,
+              "profit_factor": 0.0,
+              "net_pnl": -49.23365877736471
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9853351965330132,
+              "profit_factor": 0.0,
+              "net_pnl": -49.23365877736471
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 3,
+            "expectancy_r": 0.44960822848072035,
+            "net_pnl": 66.59553263364496,
+            "profit_factor": 2.359493635400092
+          }
+        },
+        {
+          "fold": 9,
+          "train": [
+            "2022-12-01",
+            "2023-12-01"
+          ],
+          "valid": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "test": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 3,
+            "expectancy_r": 0.44960822848072035,
+            "net_pnl": 66.59553263364496
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 10,
+          "train": [
+            "2023-06-01",
+            "2024-06-01"
+          ],
+          "valid": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "test": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 4,
+              "expectancy_r": 1.0185604401136037,
+              "profit_factor": 5.139684063546925,
+              "net_pnl": 202.99931469140344
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 4,
+              "expectancy_r": 1.0185604401136037,
+              "profit_factor": 5.139684063546925,
+              "net_pnl": 202.99931469140344
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 4,
+              "expectancy_r": 1.0185604401136037,
+              "profit_factor": 5.139684063546925,
+              "net_pnl": 202.99931469140344
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.4871247116898493,
+            "net_pnl": -48.708367061116085,
+            "profit_factor": 0.011455986279331443
+          }
+        },
+        {
+          "fold": 11,
+          "train": [
+            "2023-12-01",
+            "2024-12-01"
+          ],
+          "valid": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "test": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 5,
+              "expectancy_r": 0.6200466535308474,
+              "profit_factor": 2.555215663026477,
+              "net_pnl": 153.40052946238143
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 4,
+              "expectancy_r": 1.0185604401136037,
+              "profit_factor": 5.139684063546925,
+              "net_pnl": 202.99931469140344
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 3,
+              "expectancy_r": 0.44960822848072035,
+              "profit_factor": 2.359493635400092,
+              "net_pnl": 66.59553263364496
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 4,
+              "expectancy_r": 1.0185604401136037,
+              "profit_factor": 5.139684063546925,
+              "net_pnl": 202.99931469140344
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.4871247116898493,
+            "net_pnl": -48.708367061116085
+          },
+          "test_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.8838538469429172,
+            "net_pnl": -44.1130479827883,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "fold": 12,
+          "train": [
+            "2024-06-01",
+            "2025-06-01"
+          ],
+          "valid": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "test": [
+            "2025-12-01",
+            "2026-06-01"
+          ],
+          "chosen_params": {
+            "min_break_depth_atr": 0.15,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4871247116898493,
+              "profit_factor": 0.011455986279331443,
+              "net_pnl": -48.708367061116085
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.1,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4816763918872199,
+              "profit_factor": 0.01085041654439273,
+              "net_pnl": -48.16498781056505
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4871247116898493,
+              "profit_factor": 0.011455986279331443,
+              "net_pnl": -48.708367061116085
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.15,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.010655709025737807,
+              "profit_factor": Infinity,
+              "net_pnl": 0.528342921375434
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.4871247116898493,
+              "profit_factor": 0.011455986279331443,
+              "net_pnl": -48.708367061116085
+            },
+            {
+              "params": {
+                "min_break_depth_atr": 0.3,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.010655709025737807,
+              "profit_factor": Infinity,
+              "net_pnl": 0.528342921375434
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.8838538469429172,
+            "net_pnl": -44.1130479827883
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        }
+      ]
+    },
+    "C_rejection": {
+      "strategy": "C_rejection",
+      "oos_stats": {
+        "n_trades": 4,
+        "win_rate": 0.5,
+        "avg_win": 117.26884139554844,
+        "avg_loss": -49.345255661516546,
+        "profit_factor": 2.3764967842086637,
+        "expectancy_usd": 33.961792867015944,
+        "expectancy_r": 0.6828025368253333,
+        "avg_r_win": 2.34709407940682,
+        "avg_r_loss": -0.9814890057561534,
+        "total_net_pnl": 135.84717146806378,
+        "gross_pnl": 145.30330446070099,
+        "total_fees": 9.0833333586372,
+        "total_funding": 0.37279963400000005,
+        "cost_share_of_gross": 0.06507858185148654,
+        "max_consecutive_losses": 1,
+        "avg_bars_held": 5.25,
+        "n_long": 1,
+        "n_short": 3,
+        "exit_reasons": {
+          "take_profit": 2,
+          "stop": 2
+        },
+        "stitched_total_return": 0.013584717146806424,
+        "stitched_max_drawdown": -0.0049294144216075475
+      },
+      "default_full_stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.6828025368253333,
+        "net_pnl": 135.73213965306138,
+        "profit_factor": 2.362842969222271
+      },
+      "notes": [
+        "训练 12 月 / 验证 6 月 / 测试 6 月，滚动步长 = 测试窗；参数网格 {'wick_ratio_min': [0.5, 0.55, 0.65], 'sl_buffer_atr': [0.3, 0.5]}；选参标准 Expectancy(R)，最少 15 笔"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2018-06-01",
+            "2019-06-01"
+          ],
+          "valid": [
+            "2019-06-01",
+            "2019-12-01"
+          ],
+          "test": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.1087119275246486,
+              "profit_factor": Infinity,
+              "net_pnl": 105.4304277705964
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.1087119275246486,
+              "profit_factor": Infinity,
+              "net_pnl": 105.4304277705964
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": 0.6475315245071447,
+            "net_pnl": 64.1807166971029,
+            "profit_factor": 2.287314595356832
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2018-12-01",
+            "2019-12-01"
+          ],
+          "valid": [
+            "2019-12-01",
+            "2020-06-01"
+          ],
+          "test": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.1087119275246486,
+              "profit_factor": Infinity,
+              "net_pnl": 105.4304277705964
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.1087119275246486,
+              "profit_factor": Infinity,
+              "net_pnl": 105.4304277705964
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": 0.6475315245071447,
+            "net_pnl": 64.1807166971029
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2019-06-01",
+            "2020-06-01"
+          ],
+          "valid": [
+            "2020-06-01",
+            "2020-12-01"
+          ],
+          "test": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.6475315245071447,
+              "profit_factor": 2.287314595356832,
+              "net_pnl": 64.1807166971029
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.4547086662437723,
+              "profit_factor": Infinity,
+              "net_pnl": 122.72634148618548
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.6475315245071447,
+              "profit_factor": 2.287314595356832,
+              "net_pnl": 64.1807166971029
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.4547086662437723,
+              "profit_factor": Infinity,
+              "net_pnl": 122.72634148618548
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.281005509778062,
+              "profit_factor": Infinity,
+              "net_pnl": 114.03699652846188
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 3,
+          "train": [
+            "2019-12-01",
+            "2020-12-01"
+          ],
+          "valid": [
+            "2020-12-01",
+            "2021-06-01"
+          ],
+          "test": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.6475315245071447,
+              "profit_factor": 2.287314595356832,
+              "net_pnl": 64.1807166971029
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.4547086662437723,
+              "profit_factor": Infinity,
+              "net_pnl": 122.72634148618548
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.6475315245071447,
+              "profit_factor": 2.287314595356832,
+              "net_pnl": 64.1807166971029
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.4547086662437723,
+              "profit_factor": Infinity,
+              "net_pnl": 122.72634148618548
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.281005509778062,
+              "profit_factor": Infinity,
+              "net_pnl": 114.03699652846188
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 4,
+          "train": [
+            "2020-06-01",
+            "2021-06-01"
+          ],
+          "valid": [
+            "2021-06-01",
+            "2021-12-01"
+          ],
+          "test": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 1,
+            "expectancy_r": 2.413182649035578,
+            "net_pnl": 120.50068626263499,
+            "profit_factor": Infinity
+          }
+        },
+        {
+          "fold": 5,
+          "train": [
+            "2020-12-01",
+            "2021-12-01"
+          ],
+          "valid": [
+            "2021-12-01",
+            "2022-06-01"
+          ],
+          "test": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9816389119279947,
+              "profit_factor": 0.0,
+              "net_pnl": -48.98505885940693
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.5125197240006167,
+              "profit_factor": 0.0,
+              "net_pnl": -51.22471039540949
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.04078315318255022,
+              "profit_factor": 0.0,
+              "net_pnl": -2.0376448250406294
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": 2.413182649035578,
+            "net_pnl": 120.50068626263499
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 6,
+          "train": [
+            "2021-06-01",
+            "2022-06-01"
+          ],
+          "valid": [
+            "2022-06-01",
+            "2022-12-01"
+          ],
+          "test": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.7157718685537917,
+              "profit_factor": 2.449205639148742,
+              "net_pnl": 70.98942353308556
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.5125197240006167,
+              "profit_factor": 0.0,
+              "net_pnl": -51.22471039540949
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.413182649035578,
+              "profit_factor": Infinity,
+              "net_pnl": 120.50068626263499
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.04078315318255022,
+              "profit_factor": 0.0,
+              "net_pnl": -2.0376448250406294
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 7,
+          "train": [
+            "2021-12-01",
+            "2022-12-01"
+          ],
+          "valid": [
+            "2022-12-01",
+            "2023-06-01"
+          ],
+          "test": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.413182649035578,
+              "profit_factor": Infinity,
+              "net_pnl": 120.50068626263499
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.413182649035578,
+              "profit_factor": Infinity,
+              "net_pnl": 120.50068626263499
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 8,
+          "train": [
+            "2022-06-01",
+            "2023-06-01"
+          ],
+          "valid": [
+            "2023-06-01",
+            "2023-12-01"
+          ],
+          "test": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 9,
+          "train": [
+            "2022-12-01",
+            "2023-12-01"
+          ],
+          "valid": [
+            "2023-12-01",
+            "2024-06-01"
+          ],
+          "test": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 10,
+          "train": [
+            "2023-06-01",
+            "2024-06-01"
+          ],
+          "valid": [
+            "2024-06-01",
+            "2024-12-01"
+          ],
+          "test": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.9770355507485343,
+            "net_pnl": -48.8342314916741,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "fold": 11,
+          "train": [
+            "2023-12-01",
+            "2024-12-01"
+          ],
+          "valid": [
+            "2024-12-01",
+            "2025-06-01"
+          ],
+          "test": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 2.3922349932053897,
+              "profit_factor": Infinity,
+              "net_pnl": 119.44269996523306
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 0,
+              "expectancy_r": null,
+              "profit_factor": null,
+              "net_pnl": 0.0
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.9770355507485343,
+            "net_pnl": -48.8342314916741
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 12,
+          "train": [
+            "2024-06-01",
+            "2025-06-01"
+          ],
+          "valid": [
+            "2025-06-01",
+            "2025-12-01"
+          ],
+          "test": [
+            "2025-12-01",
+            "2026-06-01"
+          ],
+          "chosen_params": {
+            "wick_ratio_min": 0.55,
+            "sl_buffer_atr": 0.3
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9770355507485343,
+              "profit_factor": 0.0,
+              "net_pnl": -48.8342314916741
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.5,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 2,
+              "expectancy_r": 0.7062587358125607,
+              "profit_factor": 2.4110622410466247,
+              "net_pnl": 69.90324887525048
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9770355507485343,
+              "profit_factor": 0.0,
+              "net_pnl": -48.8342314916741
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.55,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9797175215802683,
+              "profit_factor": 0.0,
+              "net_pnl": -48.769407808791144
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.3
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9770355507485343,
+              "profit_factor": 0.0,
+              "net_pnl": -48.8342314916741
+            },
+            {
+              "params": {
+                "wick_ratio_min": 0.65,
+                "sl_buffer_atr": 0.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9797175215802683,
+              "profit_factor": 0.0,
+              "net_pnl": -48.769407808791144
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        }
+      ]
+    }
+  }
+}

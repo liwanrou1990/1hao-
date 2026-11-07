@@ -1,0 +1,201 @@
+# Brando Price Action 量化交易引擎（brando_pa）参数。全部为研究/模拟参数，不是收益承诺，默认禁止真实下单。
+# 单位约定：bps = 万分之一；pct = 小数（0.005 = 0.5%）；atr 倍数以对应周期 ATR(14) 为基准。
+
+symbols: [BTCUSDT, ETHUSDT]           # 预留：SOLUSDT, HYPEUSDT（static-klines 有 SOL；HYPE 需交易所适配器）
+reserved_symbols: [SOLUSDT, HYPEUSDT]
+
+timeframes:
+  weekly: 1w
+  daily: 1d
+  structure: 4h
+  execution: 15m                     # 实盘/模拟盘执行周期；回测可用 --exec-tf 覆盖（15m 数据自 2024-12-30，1h 自 2022-01，4h 自 2017-08）
+
+data:
+  own_dir: data_store/brando_pa                      # 本引擎自己的 K 线仓（15m/1h/1w）；1d/4h 只读复用 data_store/spot90/bars
+  spot90_dir: data_store/spot90
+  static_klines:
+    raw_base: https://raw.githubusercontent.com/finom/static-klines/main/.klines-cache
+    windows:                                          # 来自 finom/static-klines README：窗口起点与长度
+      15m: {anchor: "2024-12-30", unit: weeks, step: 1}
+      30m: {anchor: "2024-01-01", unit: weeks, step: 2}
+      1h:  {anchor: "2022-01-01", unit: months, step: 1}
+      4h:  {anchor: "2017-07-01", unit: months, step: 3}
+      1d:  {anchor: "2016-01-01", unit: months, step: 24}
+      1w:  {anchor: "2010-01-01", unit: months, step: 120}
+  max_bar_age_multiplier: 3          # 最新收盘 K 线落后超过 3 根执行周期 → 数据过期，不开新仓（模拟盘）
+  exchange_adapter: static_klines    # static_klines | bitget_public（api.bitget.com 可达时）
+
+levels:
+  swing_k: {1w: 2, 1d: 3, 4h: 3, 15m: 3, 1h: 3}      # 分形确认左右各 k 根；摆动点在第 i+k 根收盘后才算“已确认”
+  atr_n: 14
+  zone_width_atr: {1w: 0.15, 1d: 0.25, 4h: 0.30}     # 区域半宽 = 该周期 ATR × 系数（波动率自适应）
+  zone_max_width_pct: 0.010                          # 区域半宽上限 1.0%（防止周线 ATR 把区域撑成几千美元的“大饼”）
+  zone_min_width_pct: 0.0015                         # 区域半宽下限 0.15%
+  cluster_atr: 0.5                                   # 摆动点价格差 < 0.5 ATR 归为同一区域
+  touch_gap_bars: 2                                  # 两次触及之间至少隔 2 根 K 线才算新触及
+  break_buffer_atr: 0.10                             # 收盘越过区域边界 ≥ 0.10 ATR 才算有效突破（否则为噪声/触及）
+  break_confirm_bars: 1                              # 突破后再 N 根收盘仍在区域外才确认（1 = 下一根）
+  min_touches: 1                                     # 进入关键位候选的最少触及次数（摆动点本身算 1 次）
+  tf_weight: {1w: 3.0, 1d: 2.0, 4h: 1.0}
+  max_zones_each_side: 6
+  lookback_bars: {1w: 260, 1d: 400, 4h: 600}
+
+structure:
+  tf: 4h
+  swing_k: 3
+  range_atr: 0.5                      # 相邻摆动高/低差 < 0.5 ATR 视为“持平”（不算 HH/LL）
+
+regime:                               # 环境分类（用于过滤与分组统计），只用已收盘日线
+  trend_ma: 50
+  trend_ma_long: 200
+  highvol_rv_n: 20
+  highvol_pct: 0.80                   # rv20 处于过去 365 日 80% 分位以上 → 高波动
+  range_adx_n: 14
+  range_adx_max: 20
+
+strategies:
+  A_breakout_retest:
+    enabled: true
+    break_tf: 4h                      # 用 4h 收盘判断关键位突破
+    zone_tfs: [1w, 1d]                # 可被突破的关键位来自哪些周期
+    break_buffer_atr: 0.15            # 4h 收盘越过区域 ≥ 0.15×ATR(4h)
+    max_wait_retest_bars: 48          # 执行周期 K 线数（15m×48 = 12h）内必须回踩，否则作废
+    retest_tolerance_atr: 0.25        # 回踩进入 区域边界±0.25×ATR(exec)
+    confirm_close_pct: 0.60           # 确认 K 线收盘位于其振幅上 60%（做多）/ 下 40%（做空）
+    confirm_within_bars: 8            # 回踩触及后 8 根执行 K 线内出现确认
+    invalidate_close_beyond_atr: 0.10 # 执行周期收盘回到区域另一侧超过 0.10 ATR → 设置失效
+    sl_buffer_atr: 0.50               # 止损 = 结构失效点 外 0.5×ATR(exec)
+    tp_mode: next_zone_or_rr          # next_zone_or_rr | rr
+    tp_rr: 2.5
+    trail_after_rr: 1.5               # 浮盈达 1.5R 后把止损移到保本（可关：null）
+    max_hold_bars: 192                # 持仓最长 192 根执行 K 线（15m×192 = 2 天）
+  B_reclaim:
+    enabled: true
+    zone_tfs: [1w, 1d, 4h]
+    break_tf: exec                    # 用执行周期 K 线判断假突破（exec | 4h）
+    min_break_depth_atr: 0.15         # 越过区域边界的最小深度（相对 exec ATR）
+    max_break_depth_atr: 1.50         # 超过此深度视为真突破，不做反向
+    max_bars_outside: 6               # 在区域外停留不超过 6 根执行 K 线即需收复
+    reclaim_close_pct: 0.55           # 收复 K 线收盘位于其振幅上 55%（做多）
+    break_volume_ratio_min: 0.0       # 可选：突破根成交量/均量 ≥ 该值（0 = 不要求）
+    sl_buffer_atr: 0.30
+    tp_mode: next_zone_or_rr
+    tp_rr: 2.0
+    trail_after_rr: 1.5
+    max_hold_bars: 96
+  C_rejection:
+    enabled: true
+    zone_tfs: [1w, 1d]
+    signal_tf: exec                   # 拒绝 K 线所在周期
+    wick_ratio_min: 0.55              # 反向影线/全振幅 ≥ 0.55
+    body_atr_min: 0.10                # 实体 ≥ 0.10 ATR（排除十字星噪声）
+    close_pct_min: 0.65               # 收盘位于振幅上 65%（支撑拒绝做多）
+    range_atr_min: 0.80               # K 线振幅 ≥ 0.8 ATR（量化“强势”）
+    allow_counter_trend: false        # 4h 结构逆势是否允许
+    counter_trend_wick_ratio_min: 0.70
+    sl_buffer_atr: 0.30
+    tp_mode: next_zone_or_rr
+    tp_rr: 2.0
+    trail_after_rr: 1.5
+    max_hold_bars: 96
+  priority: [A_breakout_retest, B_reclaim, C_rejection]   # 同一根 K 线多策略同向触发时的取舍（按净盈亏比择优，再按此顺序）
+
+filters:
+  enabled: true
+  volume:
+    enabled: true
+    lookback: 20
+    min_ratio_breakout: 1.20          # 突破/假突破根成交量 ≥ 20 根均量×1.2
+    min_ratio_rejection: 0.80
+  volatility:
+    enabled: true
+    atr_pct_min: 0.0010               # exec ATR/价格 < 0.10% → 波动过低，不交易
+    atr_pct_max: 0.0300               # exec ATR/价格 > 3% → 极端波动，不开新仓
+    stop_distance_min_atr: 0.5        # 止损距离至少 0.5 ATR（否则噪声扫损）
+    stop_distance_max_atr: 4.0
+  derivatives:                        # 可选：资金费率 / 未平仓量（本环境交易所域名被拒 → 无数据时自动关闭并在报告中注明）
+    enabled: false
+    funding_abs_max: 0.0010           # |资金费率| > 0.1%/8h 时不顺着拥挤方向开仓
+    oi_change_lookback: 6
+  onchain:                            # 可选：CoinMetrics 社区数据（spot90 已采集，含 published_at，按发布时间对齐）
+    enabled: false
+    exchange_netflow_z_lookback: 30
+    block_long_if_netflow_z_gt: 2.0   # 交易所净流入 z 分数 > 2 时不做多（卖压信号，研究假设）
+    block_short_if_netflow_z_lt: -2.0
+  regime:
+    enabled: true
+    block_counter_trend_in_strong_trend: true
+    block_new_in_highvol: false
+  cost:
+    enabled: true
+    max_cost_to_risk: 0.25            # 往返成本 / 止损风险 > 25% → 不交易
+    min_net_rr: 2.0
+
+risk:
+  account_equity_usdt: 10000
+  risk_per_trade: 0.005               # 0.5%，允许 0.0025 ~ 0.01
+  risk_per_trade_min: 0.0025
+  risk_per_trade_max: 0.01
+  min_net_rr: 2.0
+  max_total_risk: 0.02                # 全部未平仓风险（到止损的损失）≤ 2% 净值
+  max_positions: 3
+  max_same_direction_correlated: 2    # BTC/ETH 高相关：同向最多 2 笔
+  correlation_group: {BTCUSDT: crypto_major, ETHUSDT: crypto_major, SOLUSDT: crypto_major, HYPEUSDT: crypto_alt}
+  daily_loss_limit: 0.02              # 当日已实现+浮动亏损达 2% → 暂停新开仓至 UTC 次日
+  max_leverage: 3.0
+  margin_mode: isolated
+  liquidation_buffer: 0.5             # 止损价到估算强平价的距离至少 0.5×止损距离
+  maintenance_margin_rate: 0.005
+  forbid_averaging_down: true
+  forbid_martingale: true
+  instruments:
+    BTCUSDT: {spot: true, perp: true, qty_step: 0.0001, price_tick: 0.1, min_notional: 5}
+    ETHUSDT: {spot: true, perp: true, qty_step: 0.001, price_tick: 0.01, min_notional: 5}
+    SOLUSDT: {spot: true, perp: true, qty_step: 0.01, price_tick: 0.001, min_notional: 5}
+    HYPEUSDT: {spot: false, perp: true, qty_step: 0.01, price_tick: 0.001, min_notional: 5}
+  direction_policy: perp_both         # spot_only（仅现货做多）| perp_both（合约多空）| perp_long_spot（做多走现货、做空走合约）
+
+costs:
+  spot: {taker_fee_bps: 10, maker_fee_bps: 10, slippage_bps: 5}
+  perp: {taker_fee_bps: 6, maker_fee_bps: 2, slippage_bps: 5}
+  funding:                            # 无历史资金费率数据时的保守假设：多头每 8 小时付 0.01%，空头不收取（不假设收益）
+    assumed_rate_8h: 0.0001
+    long_pays: true
+    short_receives: false
+  stop_slippage_bps: 10               # 止损单成交额外滑点
+  gap_fill_at_open: true              # 跳空越过止损/止盈时按开盘价成交
+
+backtest:
+  start: null
+  end: null
+  same_bar_rule: stop_first           # 同一 K 线内止盈止损都可能触发 → 保守按止损成交
+  entry_fill: next_open               # 信号在 K 线收盘确认，下一根开盘成交
+  initial_equity: 10000
+  regimes_min_trades: 5
+  walkforward:
+    train_months: 12
+    valid_months: 6
+    test_months: 6
+    min_trades_select: 15
+    grid:
+      A_breakout_retest: {break_buffer_atr: [0.10, 0.15, 0.25], sl_buffer_atr: [0.3, 0.5]}
+      B_reclaim: {min_break_depth_atr: [0.10, 0.15, 0.30], sl_buffer_atr: [0.3, 0.5]}
+      C_rejection: {wick_ratio_min: [0.50, 0.55, 0.65], sl_buffer_atr: [0.3, 0.5]}
+
+paper:
+  enabled: true
+  poll_interval_s: 300
+  state_file: reports_out/brando_pa/paper/state.json
+  log_file: reports_out/brando_pa/paper/trades.jsonl
+  lock_file: data_store/brando_pa/.paper.lock
+  max_retries: 4
+  retry_backoff_s: 2
+  rate_limit_rps: 5
+  alert_webhook_env: BRANDO_ALERT_WEBHOOK   # 只从环境变量读取，不写日志
+
+execution:
+  live_trading: false                 # 真实下单总开关；即便为 true，还需 BRANDO_LIVE_CONFIRM=I_UNDERSTAND 环境变量 + --confirm-live 参数
+  live_confirm_env: BRANDO_LIVE_CONFIRM
+
+paths:
+  report_dir: reports_out/brando_pa

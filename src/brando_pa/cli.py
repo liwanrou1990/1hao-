@@ -91,15 +91,63 @@ def cmd_walkforward(a):
     out_dir = report_dir(c) / "walkforward" / a.name; out_dir.mkdir(parents=True, exist_ok=True)
     allres = {}
     for sk in strategies:
-        r = run_walkforward(ctxs, exec_tf, sk, c, not a.no_filters, a.start, a.end, a.workers)
+        r = run_walkforward(ctxs, exec_tf, sk, c, not a.no_filters, a.start, a.end, a.workers, perturb=not a.no_perturb)
         d = wf_to_dict(r); allres[sk] = d
         if not r.oos_trades.empty:
             r.oos_trades.to_csv(out_dir / f"{sk}_oos_trades.csv", index=False)
-        print(f"{sk}: 折数 {len(r.folds)} OOS 交易 {r.oos_stats.get('n_trades', 0)} ExpR {r.oos_stats.get('expectancy_r')} PF {r.oos_stats.get('profit_factor')} 拼接收益 {r.oos_stats.get('stitched_total_return')} | 默认参数全程 {r.default_full_stats}")
+        if r.default_full_trades is not None and not r.default_full_trades.empty:
+            r.default_full_trades.to_csv(out_dir / f"{sk}_default_full_trades.csv", index=False)
+        print(f"{sk}: 折数 {len(r.folds)} OOS 交易 {r.oos_stats.get('n_trades', 0)} ExpR {r.oos_stats.get('expectancy_r')} PF {r.oos_stats.get('profit_factor')} 净收益 {r.oos_stats.get('net_return')} 回撤 {r.oos_stats.get('max_drawdown')} CI {r.oos_stats.get('bootstrap_mean_r_95ci')} | 默认参数全程 {r.default_full_stats} | 扰动 {r.perturbation.get('summary')}")
         for f in r.folds:
             print(f"   fold{f.fold} test {f.test[0]}→{f.test[1]} 参数 {f.chosen_params}{'（退回默认）' if f.fallback_to_default else ''} → {f.test_stats}")
     atomic_write_json(out_dir / "walkforward.json", {"exec_tf": exec_tf, "symbols": a.symbols or c["symbols"], "results": allres}, indent=2, default=str)
     print("已写入", out_dir / "walkforward.json")
+
+
+def cmd_experiments(a):
+    from .config import cfg
+    from .backtest.runner import load_contexts
+    from .backtest.experiments import run_experiments, phase2_variants
+    c = cfg(); exec_tf = a.exec_tf or c["timeframes"]["execution"]
+    ctxs = load_contexts(a.symbols or c["symbols"], exec_tf, c)
+    variants = None
+    if a.only:
+        allv = phase2_variants([k for k, v in c["strategies"].items() if isinstance(v, dict) and v.get("enabled", True)])
+        variants = {k: v for k, v in allv.items() if any(tok in k for tok in a.only.split(","))}
+    if a.set:
+        import yaml as _yaml
+        from .backtest.walkforward import set_path
+        extra = {}
+        for kv in a.set:
+            k, v = kv.split("=", 1); set_path(extra, k, _yaml.safe_load(v))
+        from .backtest.experiments import _merge
+        variants = {f"{k}__set_{'_'.join(x.split('=')[0].split('.')[-1] + str(x.split('=')[1]) for x in a.set)}": {**v, "override": _merge(v.get("override") or {}, extra), "label": v.get("label", "") + f" / 覆盖 {a.set}"} for k, v in (variants or allv_default(c)).items()}
+    out = run_experiments(ctxs, exec_tf, a.name, a.start, a.end, variants, c, a.workers)
+    print("已写入", Path(out["variants"][list(out["variants"])[0]]["paths"]["summary_json"]).parent / "experiments.md")
+
+
+def allv_default(c):
+    from .backtest.experiments import phase2_variants
+    return phase2_variants([k for k, v in c["strategies"].items() if isinstance(v, dict) and v.get("enabled", True)])
+
+
+def cmd_audit(a):
+    from .audit.data_quality import run_audit
+    r = run_audit(a.symbols)
+    print(open(r["paths"]["md"], encoding="utf-8").read())
+
+
+def cmd_evaluate(a):
+    from .config import cfg, report_dir
+    from .evaluation.evaluator import evaluate_walkforward_dir
+    c = cfg(); rd = report_dir(c) / "walkforward"
+    names = a.names.split(",") if a.names else ["h1_p2", "m15_p2", "h4_p2"]
+    paths = {}
+    for n in names:
+        tf = n.split("_")[0].replace("h1", "1h").replace("m15", "15m").replace("h4", "4h")
+        paths[tf] = rd / n / "walkforward.json"
+    out = evaluate_walkforward_dir(paths, c)
+    print(open(out["paths"]["md"], encoding="utf-8").read())
 
 
 def cmd_paper(a):
@@ -134,7 +182,10 @@ def main(argv=None):
     p = sub.add_parser("analyze"); p.set_defaults(f=cmd_analyze)
     p = sub.add_parser("signal"); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_signal)
     p = sub.add_parser("backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_const", const=True, default=None); p.set_defaults(f=cmd_backtest)
-    p = sub.add_parser("walkforward"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_true"); p.add_argument("--workers", type=int); p.add_argument("--train-months", dest="train_months", type=int); p.add_argument("--valid-months", dest="valid_months", type=int); p.add_argument("--test-months", dest="test_months", type=int); p.set_defaults(f=cmd_walkforward)
+    p = sub.add_parser("walkforward"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_true"); p.add_argument("--workers", type=int); p.add_argument("--train-months", dest="train_months", type=int); p.add_argument("--valid-months", dest="valid_months", type=int); p.add_argument("--test-months", dest="test_months", type=int); p.add_argument("--no-perturb", dest="no_perturb", action="store_true"); p.set_defaults(f=cmd_walkforward)
+    p = sub.add_parser("experiments"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--only"); p.add_argument("--set", nargs="*", help="配置覆盖，如 costs.funding.assumed_rate_8h=0.00004"); p.add_argument("--workers", type=int); p.set_defaults(f=cmd_experiments)
+    p = sub.add_parser("audit"); p.set_defaults(f=cmd_audit)
+    p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)
     p = sub.add_parser("paper"); p.add_argument("--once", action="store_true"); p.add_argument("--loop", action="store_true"); p.add_argument("--replay", action="store_true"); p.add_argument("--replay-bars", dest="replay_bars", type=int, default=3000); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_paper)
     p = sub.add_parser("dashboard"); p.add_argument("--port", type=int, default=8502); p.set_defaults(f=cmd_dashboard)
     p = sub.add_parser("export"); p.add_argument("--out"); p.set_defaults(f=cmd_export)

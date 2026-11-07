@@ -50,7 +50,7 @@ def cluster_swings(swings: list[Swing], atr_value: float, cluster_atr: float) ->
     s = sorted(swings, key=lambda x: x.price)
     groups: list[list[Swing]] = [[s[0]]]
     for sw in s[1:]:
-        ref = float(np.mean([g.price for g in groups[-1]]))
+        ref = sum(g.price for g in groups[-1]) / len(groups[-1])
         if abs(sw.price - ref) <= cluster_atr * atr_value:
             groups[-1].append(sw)
         else:
@@ -59,31 +59,37 @@ def cluster_swings(swings: list[Swing], atr_value: float, cluster_atr: float) ->
 
 
 def _count_touches_breaks(high: np.ndarray, low: np.ndarray, close: np.ndarray, start: int, end: int, lo: float, hi: float, buf: float, gap: int, confirm: int) -> tuple[int, int, int | None, bool]:
-    """在 [start, end] 索引范围内统计触及与有效突破。返回 (touches, breaks, last_touch_idx, flipped)。"""
-    touches = breaks = 0; last_touch = None; last_t = -10**9
-    side_prev = None; flipped = False
-    for i in range(start, end + 1):
-        c = close[i]
-        side = "above" if c > hi + buf else ("below" if c < lo - buf else "inside")
-        entered = (low[i] <= hi) and (high[i] >= lo)
-        if entered and side == "inside" or (entered and side_prev is not None and side == side_prev):
-            if i - last_t >= gap:
-                touches += 1; last_touch = i
-            last_t = i
-        if side_prev in ("above", "below") and side in ("above", "below") and side != side_prev:
-            # 收盘从一侧穿到另一侧：检查随后 confirm 根是否仍在外侧
-            ok = True
-            for j in range(i + 1, min(i + 1 + confirm, end + 1)):
-                cj = close[j]
-                if side == "above" and cj <= hi + buf:
-                    ok = False; break
-                if side == "below" and cj >= lo - buf:
-                    ok = False; break
-            if ok and (i + confirm <= end):
-                breaks += 1; flipped = True
-        if side != "inside":
-            side_prev = side
-    return touches, breaks, last_touch, flipped
+    """在 [start, end] 索引范围内统计触及与有效突破（向量化；语义与逐根循环版本一致）。返回 (touches, breaks, last_touch_idx, flipped)。
+    side：收盘在区域上方(+1)/下方(-1)/内部(0)；side_prev：之前最近一次非零 side（前向填充）。
+    触及：K 线进入区域且（收盘在内部 或 收盘仍在原侧），两次触及间隔 ≥ gap。
+    有效突破：收盘从一侧穿到另一侧，且随后 confirm 根收盘仍在新一侧（需在范围内可验证）。"""
+    c = close[start:end + 1]; h = high[start:end + 1]; l = low[start:end + 1]
+    n = len(c)
+    if n == 0:
+        return 0, 0, None, False
+    side = np.where(c > hi + buf, 1, np.where(c < lo - buf, -1, 0))
+    # side_prev[i] = 最近一次 i 之前的非零 side（无则 0）
+    nz = side != 0
+    idx = np.where(nz, np.arange(n), -1)
+    last_nz = np.maximum.accumulate(idx)
+    prev_pos = np.concatenate(([-1], last_nz[:-1]))
+    side_prev = np.where(prev_pos >= 0, side[np.clip(prev_pos, 0, n - 1)], 0)
+    entered = (l <= hi) & (h >= lo)
+    touch_mask = entered & ((side == 0) | ((side_prev != 0) & (side == side_prev)))
+    touches = 0; last_touch = None; last_t = -10 ** 9
+    for i in np.flatnonzero(touch_mask):
+        if i - last_t >= gap:
+            touches += 1; last_touch = int(i) + start
+        last_t = int(i)
+    breaks = 0
+    trans = np.flatnonzero((side != 0) & (side_prev != 0) & (side != side_prev))
+    for i in trans:
+        if i + confirm > n - 1:
+            continue
+        seg = side[i + 1: i + 1 + confirm]
+        if np.all(seg == side[i]):
+            breaks += 1
+    return touches, breaks, last_touch, breaks > 0
 
 
 def build_zones(bars: pd.DataFrame, swings: list[Swing], last_closed_idx: int, atr_arr: np.ndarray, tf: str, lv: dict) -> list[Zone]:
@@ -104,7 +110,8 @@ def build_zones(bars: pd.DataFrame, swings: list[Swing], last_closed_idx: int, a
     buf = float(lv["break_buffer_atr"]) * a
     zones: list[Zone] = []
     for grp in cluster_swings(usable, a, float(lv["cluster_atr"])):
-        center = float(np.median([g.price for g in grp]))
+        _ps = sorted(g.price for g in grp); _m = len(_ps) // 2
+        center = float(_ps[_m] if len(_ps) % 2 else 0.5 * (_ps[_m - 1] + _ps[_m]))
         half = min(max(half_atr, float(lv["zone_min_width_pct"]) * center), float(lv.get("zone_max_width_pct", 0.01)) * center)
         z = Zone(tf=tf, lo=center - half, hi=center + half, center=center, swing_prices=[g.price for g in grp], swing_kinds=[g.kind for g in grp],
                  first_idx=min(g.idx for g in grp), tfs=[tf])

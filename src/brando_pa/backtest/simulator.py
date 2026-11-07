@@ -19,7 +19,8 @@ from ..engine.context import MarketContext
 from ..engine.signal_engine import SignalEngine, instrument_for
 from ..risk.limits import RiskState, check_new_position
 from ..strategies import make_strategies
-from .execution import Position, PositionManager
+from .execution import Position, PositionManager, hypothetical_outcome
+from ..engine.signal_engine import regime_class4
 
 
 @dataclass
@@ -34,6 +35,8 @@ class BacktestResult:
     symbols: list[str]
     period: tuple[str, str]
     notes: list[str] = field(default_factory=list)
+    limit_log: list[dict] = field(default_factory=list)
+    strategy_counters: dict = field(default_factory=dict)
 
 
 class Backtester:
@@ -72,7 +75,10 @@ class Backtester:
         equity_cash = self.initial_equity
         positions: list[Position] = []
         pending: dict[str, dict] = {}
-        trades: list[dict] = []; eq_rows: list[dict] = []; sig_rows: list[dict] = []; cancelled: list[dict] = []
+        trades: list[dict] = []; eq_rows: list[dict] = []; sig_rows: list[dict] = []; cancelled: list[dict] = []; limit_log: list[dict] = []
+        entry_mode = (c.get("execution_modes", {}) or {}).get("entry_mode", "market")
+        lim_cfg = (c.get("execution_modes", {}) or {}).get("limit", {}) or {}
+        mtf_mode = (c.get("mtf", {}) or {}).get("mode", "single")
         status_counts: dict[str, int] = {}
         rs = RiskState(equity=self.initial_equity)
         seen_setups: set[str] = set()
@@ -88,23 +94,42 @@ class Backtester:
                 mc = contexts[s]
                 o, h, l, cl = float(mc.o[i]), float(mc.h[i]), float(mc.l[i]), float(mc.cl[i])
                 # (a) 待执行信号在本根开盘成交
-                pend = pending.pop(s, None)
+                pend = pending.get(s)
                 if pend is not None:
                     equity_now = equity_cash + sum(p.unrealized(float(contexts[p.symbol].cl[pos_of[p.symbol].get(t, p.entry_idx)])) for p in positions)
-                    newp, dcash, canc = pm.fill_entry(pend, o, t, i, equity_now, bar_sec)
-                    equity_cash += dcash
-                    if newp is not None:
-                        positions.append(newp)
-                    if canc is not None:
-                        cancelled.append(canc)
+                    if pend.get("entry_mode") == "limit":
+                        state, px = pm.limit_fill_check(pend, o, h, l, cl, i)
+                        if state == "fill":
+                            pending.pop(s)
+                            newp, dcash, canc = pm.fill_entry(pend, o, t, i, equity_now, bar_sec, fill_price=px, maker=bool(lim_cfg.get("maker_fill_uses_maker_fee", True)))
+                            equity_cash += dcash
+                            if newp is not None:
+                                positions.append(newp)
+                            if canc is not None:
+                                cancelled.append(canc)
+                            limit_log.append({"ts": str(t), "symbol": s, "strategy": pend["signal"]["strategy"], "direction": pend["signal"]["direction"], "limit_price": pend["signal"]["limit_price"], "status": "filled" if newp is not None else "filled_then_rejected", "wait_bars": i - pend["placed_idx"]})
+                        elif state.startswith("cancel"):
+                            pending.pop(s)
+                            hyp = hypothetical_outcome(pm, mc, pend, pend["placed_idx"], bar_sec, equity_now)
+                            limit_log.append({"ts": str(t), "symbol": s, "strategy": pend["signal"]["strategy"], "direction": pend["signal"]["direction"], "limit_price": pend["signal"]["limit_price"], "status": state, "wait_bars": i - pend["placed_idx"],
+                                              "hypothetical_market_net_pnl": hyp.get("net_pnl"), "hypothetical_market_r": hyp.get("r_multiple"), "hypothetical_exit": hyp.get("exit_reason", hyp.get("status"))})
+                            cancelled.append({"ts": str(t), "symbol": s, "strategy": pend["signal"]["strategy"], "reason": f"限价未成交：{state}"})
+                    else:
+                        pending.pop(s)
+                        newp, dcash, canc = pm.fill_entry(pend, o, t, i, equity_now, bar_sec)
+                        equity_cash += dcash
+                        if newp is not None:
+                            positions.append(newp)
+                        if canc is not None:
+                            cancelled.append(canc)
                 # (b) 管理持仓
                 still: list[Position] = []
                 for p in positions:
                     if p.symbol != s:
                         still.append(p); continue
                     closed, pnl_cash = pm.manage(p, o, h, l, cl, t, i, trades)
+                    equity_cash += pnl_cash
                     if closed:
-                        equity_cash += pnl_cash
                         rs.day_realized_pnl += trades[-1]["net_pnl"]
                         rs.consecutive_losses = rs.consecutive_losses + 1 if trades[-1]["net_pnl"] < 0 else 0
                     else:
@@ -123,12 +148,15 @@ class Backtester:
                 if i is None:
                     continue
                 mc = contexts[s]
-                rep = engines[s].evaluate(mc, i, equity)
+                rep = engines[s].evaluate(mc, i, equity, detail=False)
                 status_counts[rep.status] = status_counts.get(rep.status, 0) + 1
                 for e in rep.candidates:
                     fails = [f"{ch['name']}" for ch in e.get("filter", {}).get("checks", []) if ch["status"] == "FAIL"]
                     sig_rows.append({"ts": t, "symbol": s, "strategy": e["strategy"], "direction": e["signal"]["direction"], "accepted": bool(e.get("sizing", {}).get("ok", False)) and not fails,
-                                     "fails": ",".join(fails), "net_rr": e.get("net_rr"), "rr_gross": e["signal"]["rr_gross"], "status": rep.status})
+                                     "fails": ",".join(fails), "first_fail": fails[0] if fails else "", "net_rr": e.get("net_rr", e.get("net_rr_est")), "rr_gross": e["signal"]["rr_gross"], "status": rep.status,
+                                     "regime4": e.get("regime4"), "stop_distance_pct": e.get("stop_distance_pct"), "stop_distance_atr": e.get("stop_distance_atr"), "cost_bps": e.get("cost_bps", e.get("cost_bps_est")),
+                                     "cost_to_risk": e.get("cost_to_risk"), "cost_share_of_reward": e.get("cost_share_of_reward", e.get("cost_share_of_reward_est")), "zone_tfs": e.get("zone_tfs"),
+                                     "sizing_ok": bool(e.get("sizing", {}).get("ok", False)) if e.get("sizing") else None, "portfolio_block": ""})
                 if rep.status in ("LONG", "SHORT") and rep.chosen is not None:
                     sig = rep.chosen["signal"]
                     if sig["setup_id"] in seen_setups:
@@ -136,11 +164,18 @@ class Backtester:
                     open_dicts = [{"symbol": p.symbol, "direction": p.direction, "risk_usd": p.risk_usd, "strategy": p.strategy} for p in positions]
                     ok, why = check_new_position(sig["direction"], s, rep.chosen["sizing"]["risk_usd"], open_dicts, rs, rc, unrealized_pnl=unreal)
                     if not ok:
-                        sig_rows[-1]["fails"] = (sig_rows[-1]["fails"] + ",portfolio:" + "|".join(why)).strip(",") if sig_rows else ""
+                        if sig_rows:
+                            sig_rows[-1]["fails"] = (sig_rows[-1]["fails"] + ",portfolio").strip(","); sig_rows[-1]["portfolio_block"] = "|".join(why); sig_rows[-1]["first_fail"] = sig_rows[-1]["first_fail"] or "portfolio"
                         status_counts["NO_TRADE_PORTFOLIO"] = status_counts.get("NO_TRADE_PORTFOLIO", 0) + 1
                         continue
                     seen_setups.add(sig["setup_id"])
-                    pending[s] = {"signal": sig, "instrument": rep.chosen["instrument"], "regime": rep.trend_1d.get("trend"), "trend_4h": rep.structure_4h.get("trend"), "signal_ts": t}
+                    if sig_rows:
+                        sig_rows[-1]["order_created"] = True
+                    pend_new = {"signal": sig, "instrument": rep.chosen["instrument"], "regime": rep.trend_1d.get("trend"), "regime4": rep.trend_1d.get("class4"), "trend_4h": rep.structure_4h.get("trend"), "signal_ts": t,
+                                "entry_mode": entry_mode if sig.get("limit_price") is not None else "market", "placed_idx": i + 1, "expires_idx": i + 1 + int(lim_cfg.get("max_wait_bars", 8))}
+                    if s in pending and pending[s].get("entry_mode") == "limit":
+                        limit_log.append({"ts": str(t), "symbol": s, "strategy": pending[s]["signal"]["strategy"], "direction": pending[s]["signal"]["direction"], "limit_price": pending[s]["signal"]["limit_price"], "status": "cancel:replaced_by_new_signal", "wait_bars": i - pending[s]["placed_idx"]})
+                    pending[s] = pend_new
             if rs.day_start_equity and rs.halted_until_day is None:
                 day_loss = -(rs.day_realized_pnl + unreal) / rs.day_start_equity
                 if day_loss >= float(rc["daily_loss_limit"]):
@@ -150,9 +185,16 @@ class Backtester:
             mc = contexts[p.symbol]; j = len(mc.cl) - 1
             equity_cash += pm.close(p, float(mc.cl[j]), mc.ts.iloc[j], j, "end_of_test", trades)
         trades_df = pd.DataFrame(trades)
+        if not trades_df.empty:
+            reg_map = {"strong_up": "上涨趋势", "up": "上涨趋势", "strong_down": "下跌趋势", "down": "下跌趋势", "range": "横盘震荡", "undefined": "横盘震荡"}
+            trades_df["regime4"] = trades_df["regime"].map(reg_map).fillna("横盘震荡")
+            trades_df["year"] = pd.to_datetime(trades_df["entry_ts"]).dt.year
+            trades_df["mtf_mode"] = mtf_mode; trades_df["exec_tf"] = self.exec_tf
         eq = pd.DataFrame(eq_rows)
         period = (str(all_ts[0])[:19] if all_ts else "", str(all_ts[-1])[:19] if all_ts else "")
         notes = [f"执行周期 {self.exec_tf}；成交规则 {bt['entry_fill']}；同根止盈止损规则 {bt['same_bar_rule']}；资金费假设 {costs['funding']}（无历史资金费率数据）",
                  f"过滤模块 {'开启' if self.filters_enabled else '关闭'}；策略 {self.strategy_keys or '全部'}"]
-        return BacktestResult(trades_df, eq, pd.DataFrame(sig_rows), status_counts, cancelled, {"strategies": self.c["strategies"], "filters": self.c["filters"], "risk": self.c["risk"], "costs": costs, "backtest": bt},
-                              self.exec_tf, syms, period, notes)
+        notes.append(f"入场模式 {entry_mode}；多周期模式 {mtf_mode}；退出配置 {c.get('exits')}")
+        counters = {s: {k: dict(v.counters) for k, v in engines[s].strategies.items()} for s in syms}
+        return BacktestResult(trades_df, eq, pd.DataFrame(sig_rows), status_counts, cancelled, {"strategies": self.c["strategies"], "filters": self.c["filters"], "risk": self.c["risk"], "costs": costs, "backtest": bt, "exits": c.get("exits"), "execution_modes": c.get("execution_modes"), "mtf": c.get("mtf")},
+                              self.exec_tf, syms, period, notes, limit_log, counters)

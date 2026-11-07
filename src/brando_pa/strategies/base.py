@@ -73,6 +73,9 @@ class Signal:
     tp_zone: dict | None = None
     break_rel_vol: float | None = None  # 突破/假突破那根 K 线的相对成交量（供过滤器使用）
     signal_rel_vol: float | None = None
+    structure_price: float | None = None   # 结构失效点（不含 ATR 缓冲）；stop_mode=fixed_structure 时用它作止损
+    invalidation_price: float | None = None  # 执行周期收盘越过此价 → 结构失效（structure_exit 用）
+    limit_price: float | None = None       # 入场模式 2 的挂单价（由引擎按区域边界计算）
 
     @property
     def risk_per_unit(self) -> float:
@@ -90,7 +93,8 @@ class Signal:
         return {"symbol": self.symbol, "strategy": self.strategy, "direction": self.direction, "ref_price": self.ref_price, "stop_price": self.stop_price,
                 "take_profit": self.take_profit, "rr_gross": round(self.rr_gross, 3), "zone": self.zone, "tp_zone": self.tp_zone, "reasons": self.reasons,
                 "invalidation": self.invalidation, "setup_id": self.setup_id, "bar_idx": self.bar_idx, "ts": self.ts.isoformat(), "atr": self.atr,
-                "trail_after_rr": self.trail_after_rr, "max_hold_bars": self.max_hold_bars, "break_rel_vol": self.break_rel_vol, "signal_rel_vol": self.signal_rel_vol}
+                "trail_after_rr": self.trail_after_rr, "max_hold_bars": self.max_hold_bars, "break_rel_vol": self.break_rel_vol, "signal_rel_vol": self.signal_rel_vol,
+                "structure_price": self.structure_price, "invalidation_price": self.invalidation_price, "limit_price": self.limit_price}
 
 
 def choose_take_profit(direction: str, ref: float, stop: float, zones: list[Zone], tp_mode: str, tp_rr: float, min_rr: float) -> tuple[float, dict | None, str]:
@@ -121,6 +125,10 @@ class Strategy:
         self.setups: list[dict] = []
         self.last_signal_idx: dict[str, int] = {}
         self.wait_reasons: list[str] = []
+        self.counters: dict[str, int] = {}
+
+    def _count(self, key: str, n: int = 1) -> None:
+        self.counters[key] = self.counters.get(key, 0) + n
 
     def on_bar(self, ctx: BarContext) -> Signal | None:  # pragma: no cover - 抽象
         raise NotImplementedError

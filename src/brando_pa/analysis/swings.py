@@ -54,5 +54,14 @@ def find_swings(df: pd.DataFrame, k: int) -> list[Swing]:
 
 
 def confirmed_up_to(swings: list[Swing], last_closed_idx: int) -> list[Swing]:
-    """只返回在 last_closed_idx 收盘时已确认的摆动点。"""
-    return [s for s in swings if s.confirmed_idx <= last_closed_idx]
+    """只返回在 last_closed_idx 收盘时已确认的摆动点（swings 按 idx 排序，confirmed_idx = idx + k 单调，用二分）。"""
+    if not swings:
+        return []
+    lo, hi = 0, len(swings)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if swings[mid].confirmed_idx <= last_closed_idx:
+            lo = mid + 1
+        else:
+            hi = mid
+    return swings[:lo]
