@@ -86,7 +86,7 @@ class SpotBacktester:
                 # (a) 成交上一根的决策
                 pend = pending.pop(s, None)
                 if pend is not None:
-                    self._fill(L, pend, s, o, t, rk, max_pos, prices_open | last_px, dec_rows)
+                    self._fill(L, pend, s, o, t, rk, max_pos, prices_open | last_px, dec_rows, i, mc, trade_rows)
                 # (b) 持仓管理
                 for lot in list(L.lots.get(s, [])):
                     lot.mae = max(lot.mae, lot.price - l); lot.mfe = max(lot.mfe, h - lot.price)
@@ -201,12 +201,14 @@ class SpotBacktester:
             return False, [f"可买数量 {qty:.6g} 名义额不足 {rk['min_order_usdt']} USDT（现金 {L.cash:.2f}，持仓上限 {max_pos:.0%}）"], 0.0, 0.0
         return True, [], float(qty), float(qty * dist)
 
-    def _fill(self, L: SpotLedger, pend: dict, s: str, o: float, t, rk: dict, max_pos: float, prices: dict, dec_rows: list):
+    def _fill(self, L: SpotLedger, pend: dict, s: str, o: float, t, rk: dict, max_pos: float, prices: dict, dec_rows: list, i: int = 0, mc=None, trade_rows: list | None = None):
         g = pend["signal"]
         if pend["action"] == "SELL":
             q = min(pend["qty"], L.qty(s))
             if q > 0:
-                L.sell(s, q, o, t, f"{g.strategy}", None)
+                rec = L.sell(s, q, o, t, f"{g.strategy}", None)
+                if trade_rows is not None and mc is not None:
+                    trade_rows += self._trade_rows(rec, s, t, i, mc)          # 策略 C 卖出同样计入平仓记录（按 FIFO 批次拆分）
             return
         if o <= g.stop:
             dec_rows.append({"ts": t, "symbol": s, "decision": "HOLD", "strategy": g.strategy, "price": o, "reasons": "开盘价已低于止损，取消买入"}); return

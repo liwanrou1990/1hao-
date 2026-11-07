@@ -1,0 +1,52 @@
+{
+  "BTCUSDT": {
+    "ts": "2026-11-06 09:00:00+00:00",
+    "price": 76185.01,
+    "decision": "HOLD",
+    "strategy": "",
+    "reasons": "持有 USDT，等待突破回踩或跌破收复的买入条件",
+    "regime4": "上涨趋势",
+    "trend_4h": "range",
+    "local_res": [
+      76416.24,
+      77314.01,
+      77886.86,
+      78063.3
+    ],
+    "local_sup": [
+      75736.38,
+      75568.0,
+      75208.42
+    ],
+    "near_htf_support": true,
+    "data_last_close": "2026-11-06 10:00:00+00:00",
+    "holding_qty_sim": 0.0,
+    "cash_sim": 10255.926461955,
+    "note": "持仓/现金为自 warm_bars 前空仓起跑的模拟状态，不是真实账户"
+  },
+  "ETHUSDT": {
+    "ts": "2026-11-06 09:00:00+00:00",
+    "price": 2239.1,
+    "decision": "HOLD",
+    "strategy": "",
+    "reasons": "持有现货，等待结构失效/阻力拒绝/跟踪止损",
+    "regime4": "上涨趋势",
+    "trend_4h": "range",
+    "local_res": [
+      2264.66,
+      2273.22,
+      2304.33,
+      2309.0
+    ],
+    "local_sup": [
+      2237.08,
+      2226.44,
+      2206.28
+    ],
+    "near_htf_support": true,
+    "data_last_close": "2026-11-06 10:00:00+00:00",
+    "holding_qty_sim": 2.132,
+    "cash_sim": 5354.420224161896,
+    "note": "持仓/现金为自 warm_bars 前空仓起跑的模拟状态，不是真实账户"
+  }
+}
