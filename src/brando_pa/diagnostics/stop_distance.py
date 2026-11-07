@@ -83,7 +83,7 @@ def charts(sl: pd.DataFrame, trades: pd.DataFrame, sl_buffer_atr: float, out_dir
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    matplotlib.rcParams["font.family"] = ["Noto Sans CJK SC", "WenQuanYi Zen Hei", "SimHei", "DejaVu Sans"]
+    matplotlib.rcParams["font.family"] = ["DejaVu Sans"]
     out_dir = Path(out_dir); out_dir.mkdir(parents=True, exist_ok=True)
     d = decompose(sl, sl_buffer_atr); paths = []
     fig, ax = plt.subplots(1, 3, figsize=(15, 4.2))

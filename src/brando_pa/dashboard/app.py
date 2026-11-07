@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -266,3 +266,41 @@ with tabs[10]:
         fp = RD.parent.parent / "data_store/brando_pa/derivatives/forward_snapshots.parquet"
         if fp.exists():
             st.markdown("**永续前瞻快照（CoinGecko，每次模拟盘运行采集；不回填历史）**"); st.dataframe(pd.read_parquet(fp).tail(10), use_container_width=True)
+
+
+with tabs[11]:
+    st.subheader("BTC/ETH 纯现货价格行为研究（只做多、无杠杆；默认零成本研究模式；禁止真实下单）")
+    P4 = RD / "phase4_spot"; pj = load_json(str(P4 / "phase4_results.json")); ls = load_json(str(P4 / "latest_signal.json"))
+    st.warning("可信度警告：1h 历史 2022-04 起已在前三阶段反复观察，保留集 2025-07→ 为半锁定；真正未使用的数据只有 2022-01→03；15m 仅 22 个月；全部为理想成本研究，含成本结果见对照列。")
+    if ls:
+        st.markdown("**最新可用价格与 BUY / HOLD / SELL**")
+        for s_, d in ls.items():
+            color = {"BUY": "#2e8b57", "SELL": "#b22222", "HOLD": "#888"}.get(d.get("decision"), "#888")
+            st.markdown(f"<div style='border-left:6px solid {color};padding:6px 10px;background:#f6f6f6'><b>{s_}</b> 数据截至 {str(d.get('data_last_close'))[:16]} UTC · 最新收盘 {d.get('price')} → <b>{d.get('decision')}</b> {d.get('strategy') or ''}<br><small>日线环境 {d.get('regime4')} · 4h 结构 {d.get('trend_4h')} · 本地阻力 {d.get('local_res')} · 本地支撑 {d.get('local_sup')} · {'靠近高周期支撑' if d.get('near_htf_support') else '不在高周期支撑附近'}</small><br><small>{d.get('reasons')}</small><br><small>模拟现金 {d.get('cash_sim')} · 模拟持仓 {d.get('holding_qty_sim')}（{d.get('note')}）</small></div>", unsafe_allow_html=True)
+    if not pj:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli phase4")
+    else:
+        for w, modes in pj["windows"].items():
+            with st.expander(f"窗口 {w}：{modes['zero_cost']['period'][0][:10]} → {modes['zero_cost']['period'][1][:10]}", expanded=(w == "holdout")):
+                for mode, r in modes.items():
+                    st.markdown(f"**{'零成本（理想研究）' if mode == 'zero_cost' else '含成本 10 bps + 5 bps'}**")
+                    rows = [{"组合": k, "总收益": pct(v["equity"].get("total_return")), "年化": pct(v["equity"].get("cagr")), "最大回撤": pct(v["equity"].get("max_drawdown")), "Sharpe": v["equity"].get("sharpe_daily"), "交易数": v["trades"].get("n_trades"), "胜率": pct(v["trades"].get("win_rate")), "平均每笔": v["trades"].get("avg_pnl"), "PF": v["trades"].get("profit_factor"), "ExpR": v["trades"].get("expectancy_r"), "持仓时间占比": pct(v["util"].get("time_in_market_share"), 0), "资金利用率": pct(v["util"].get("avg_exposure"), 0), "超额 vs B&H": pct(v.get("excess_vs_bh"))} for k, v in r["rows"].items()]
+                    st.dataframe(pd.DataFrame(rows), use_container_width=True)
+                    if r.get("chart") and Path(r["chart"]).exists():
+                        st.image(r["chart"])
+                    for k, v in r["rows"].items():
+                        if k.startswith(("C_", "D_", "E_策略")) and v["trades"].get("n_trades"):
+                            c1, c2, c3 = st.columns(3)
+                            c1.markdown(f"{k} 按策略"); c1.dataframe(pd.DataFrame(v["trades"]["by_strategy"]).T)
+                            c2.markdown("按环境"); c2.dataframe(pd.DataFrame(v["trades"]["by_regime4"]).T)
+                            c3.markdown("年度"); c3.dataframe(pd.Series(v["yearly"], name="收益").to_frame())
+                pick = st.selectbox("查看买卖标记", [p_.name for p_ in P4.glob(f"{w}_zero_*_trades.html")], key=f"html_{w}") if list(P4.glob(f"{w}_zero_*_trades.html")) else None
+                if pick:
+                    import streamlit.components.v1 as components
+                    components.html((P4 / pick).read_text(encoding="utf-8"), height=540, scrolling=True)
+                eqs = list(P4.glob(f"{w}_zero_*_equity.csv"))
+                if eqs:
+                    pick2 = st.selectbox("现金与持仓曲线", [p_.name for p_ in eqs], key=f"eq_{w}")
+                    eq = pd.read_csv(P4 / pick2); eq["ts"] = pd.to_datetime(eq["ts"])
+                    fig = go.Figure(); fig.add_trace(go.Scatter(x=eq["ts"], y=eq["equity"], name="权益")); fig.add_trace(go.Scatter(x=eq["ts"], y=eq["cash"], name="现金"))
+                    fig.update_layout(height=280, margin=dict(l=30, r=10, t=20, b=20)); st.plotly_chart(fig, use_container_width=True)

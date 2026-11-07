@@ -244,7 +244,8 @@ def buy_and_hold(ctxs: dict, symbols: list[str], start, end, initial_cash: float
         if end is not None:
             df = df[df["ts"] <= pd.Timestamp(end, tz="UTC")]
         p0 = float(df["open"].iloc[0]); cash = initial_cash * weights[s]; qty = cash * (1 - fee_bps / 1e4) / p0
-        frames.append(pd.DataFrame({"ts": df["ts"].values, f"v_{s}": qty * df["close"].values}))
+        frames.append(pd.DataFrame({"ts": pd.to_datetime(df["ts"], utc=True).to_numpy(), f"v_{s}": qty * df["close"].to_numpy()}))
+        frames[-1]["ts"] = pd.to_datetime(frames[-1]["ts"], utc=True)
     out = frames[0]
     for f_ in frames[1:]:
         out = out.merge(f_, on="ts", how="outer")

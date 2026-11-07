@@ -11,7 +11,7 @@ import pandas as pd
 def equity_stats(eq: pd.DataFrame, initial: float) -> dict:
     if eq is None or eq.empty:
         return {}
-    e = eq.set_index("ts")["equity"].astype(float)
+    e = eq.copy(); e["ts"] = pd.to_datetime(e["ts"], utc=True); e = e.set_index("ts")["equity"].astype(float)
     days = max((e.index[-1] - e.index[0]).days, 1)
     total = float(e.iloc[-1] / initial - 1)
     dd = (e / e.cummax() - 1)
@@ -44,7 +44,7 @@ def utilization(eq: pd.DataFrame) -> dict:
 def yearly(eq: pd.DataFrame) -> dict:
     if eq is None or eq.empty:
         return {}
-    e = eq.set_index("ts")["equity"].astype(float)
+    e = eq.copy(); e["ts"] = pd.to_datetime(e["ts"], utc=True); e = e.set_index("ts")["equity"].astype(float)
     out = {}
     for y, g in e.groupby(e.index.year):
         prev = e[e.index < g.index[0]]
@@ -57,9 +57,10 @@ def regime_returns(eq: pd.DataFrame, regime_series: pd.Series) -> dict:
     """按市场环境（日线四分类，按 BTC 日线对齐到执行 K 线）分段统计策略权益收益与买入持有对照需由调用方提供两条曲线。"""
     if eq is None or eq.empty or regime_series is None:
         return {}
-    e = eq.set_index("ts")["equity"].astype(float)
+    e = eq.copy(); e["ts"] = pd.to_datetime(e["ts"], utc=True); e = e.set_index("ts")["equity"].astype(float)
     r = e.pct_change().fillna(0.0)
-    reg = regime_series.reindex(e.index, method="ffill")
+    rs = regime_series.copy(); rs.index = pd.to_datetime(rs.index, utc=True)
+    reg = rs.reindex(e.index, method="ffill")
     out = {}
     for k, g in r.groupby(reg):
         out[str(k)] = {"bars": int(len(g)), "cum_return": float((1 + g).prod() - 1)}
@@ -85,7 +86,7 @@ def plot_equity(curves: dict[str, pd.DataFrame], path: Path, title: str) -> str:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    matplotlib.rcParams["font.family"] = ["Noto Sans CJK SC", "WenQuanYi Zen Hei", "DejaVu Sans"]
+    matplotlib.rcParams["font.family"] = ["DejaVu Sans"]          # 容器无中文字体：图内标签用英文，中文说明在报告/看板
     fig, ax = plt.subplots(figsize=(12, 4.5))
     for name, df in curves.items():
         if df is None or df.empty:

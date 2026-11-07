@@ -162,6 +162,34 @@ def cmd_phase3(a):
     print(open(report_dir() / "phase3" / "phase3_results.md", encoding="utf-8").read())
 
 
+def cmd_phase4(a):
+    from .spot.phase4 import run_phase4
+    from .config import report_dir
+    run_phase4(charts=not a.no_charts)
+    print(open(report_dir() / "phase4_spot" / "phase4_results.md", encoding="utf-8").read()[:6000])
+
+
+def cmd_spot_backtest(a):
+    from .config import cfg
+    from .backtest.runner import load_contexts
+    from .spot.engine import SpotBacktester
+    from .spot.report import equity_stats, trade_stats, utilization
+    c = cfg(); syms = a.symbols or c["spot"]["symbols"]; tf = a.exec_tf or c["spot"]["exec_tf"]
+    res = SpotBacktester(c, syms, tf, a.start, a.end, research_costs=not a.with_cost).run(load_contexts(syms, tf, c))
+    _p({"final": res.final, "equity": equity_stats(res.equity, c["spot"]["initial_cash_usdt"]), "trades": trade_stats(res.trades), "util": utilization(res.equity), "decisions": res.decisions["decision"].value_counts().to_dict(), "notes": res.notes})
+
+
+def cmd_spot_signal(a):
+    from .config import cfg, report_dir
+    from .backtest.runner import load_contexts
+    from .spot.phase4 import latest_signal
+    from spot90.atomic import atomic_write_json
+    c = cfg(); syms = a.symbols or c["spot"]["symbols"]; tf = a.exec_tf or c["spot"]["exec_tf"]
+    out = latest_signal(c, load_contexts(syms, tf, c), tf, c["spot"]["initial_cash_usdt"])
+    od = report_dir(c) / "phase4_spot"; od.mkdir(parents=True, exist_ok=True); atomic_write_json(od / "latest_signal.json", out, indent=2, default=str)
+    _p(out)
+
+
 def cmd_paper(a):
     from .paper.runner import PaperRunner
     r = PaperRunner(symbols=a.symbols, exec_tf=a.exec_tf, equity=a.equity)
@@ -198,6 +226,9 @@ def main(argv=None):
     p = sub.add_parser("experiments"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--only"); p.add_argument("--set", nargs="*", help="配置覆盖，如 costs.funding.assumed_rate_8h=0.00004"); p.add_argument("--workers", type=int); p.set_defaults(f=cmd_experiments)
     p = sub.add_parser("audit"); p.set_defaults(f=cmd_audit)
     p = sub.add_parser("evaluate"); p.add_argument("--names"); p.set_defaults(f=cmd_evaluate)
+    p = sub.add_parser("phase4", help="第四阶段纯现货：六组对照 × 窗口 × 成本模式（预登记，零自由度）"); p.add_argument("--no-charts", dest="no_charts", action="store_true"); p.set_defaults(f=cmd_phase4)
+    p = sub.add_parser("spot-backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--with-cost", dest="with_cost", action="store_true"); p.set_defaults(f=cmd_spot_backtest)
+    p = sub.add_parser("spot-signal"); p.set_defaults(f=cmd_spot_signal)
     p = sub.add_parser("phase3", help="第三阶段预登记流程：训练/验证选止损模式 → 锁定测试一次 → 压力测试 → 止损诊断"); p.set_defaults(f=cmd_phase3)
     p = sub.add_parser("paper"); p.add_argument("--once", action="store_true"); p.add_argument("--loop", action="store_true"); p.add_argument("--replay", action="store_true"); p.add_argument("--replay-bars", dest="replay_bars", type=int, default=3000); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_paper)
     p = sub.add_parser("dashboard"); p.add_argument("--port", type=int, default=8502); p.set_defaults(f=cmd_dashboard)
