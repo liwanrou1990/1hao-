@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- macOS launchd：复制到 ~/Library/LaunchAgents/，把 /PATH/TO/1hao- 与 python 路径改成本机实际路径 -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.brando-pa.forward</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/PATH/TO/python3</string>
+    <string>-m</string><string>brando_pa.cli</string><string>forward-service</string>
+  </array>
+  <key>WorkingDirectory</key><string>/PATH/TO/1hao-</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PYTHONPATH</key><string>src</string>
+    <key>TZ</key><string>UTC</string>
+    <key>BRANDO_ALERT_WEBHOOK</key><string></string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>                      <!-- 异常退出自动重启 -->
+  <key>ThrottleInterval</key><integer>30</integer>
+  <key>StandardOutPath</key><string>/PATH/TO/1hao-/reports_out/brando_pa/phase8_forward/launchd.out.log</string>
+  <key>StandardErrorPath</key><string>/PATH/TO/1hao-/reports_out/brando_pa/phase8_forward/launchd.err.log</string>
+</dict>
+</plist>

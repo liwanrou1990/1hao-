@@ -169,6 +169,9 @@ class FeedStatus:
     consistency: dict = field(default_factory=dict)
     reference_check: dict = field(default_factory=dict)
     stale: bool = True
+    quality_fault: bool = False
+    quality_note: str = ""
+    source_switch: dict = field(default_factory=dict)
 
 
 class MarketDataService:
@@ -234,11 +237,28 @@ class MarketDataService:
             if "1h" in tfs and "1d" in tfs:
                 st.consistency = {s: consistency_1h_vs_1d(self.store.load(s, "1h", allow_fallback=False), self.store.load(s, "1d", allow_fallback=False)) for s in symbols}
             st.source = src.name; st.ok = True; st.last_success_utc = str(now); st.stale = any(v["stale"] for v in st.per_tf.values()); st.consistency["cross_source"] = xsrc
+            prev_src = self._prev_source()
+            if prev_src and prev_src != src.name:
+                st.source_switch = {"from": prev_src, "to": src.name, "at": str(now), "overlap": xsrc}; self._event("source_switch", **st.source_switch)
+            thr = float(self.c.get("forward", {}).get("cross_source_max_rel_diff", 0.005))
+            bad = {k: v for k, v in xsrc.items() if v.get("max_rel_close_diff", 0) > thr}
+            if bad:
+                st.quality_fault = True; st.quality_note = f"跨来源重叠 K 线收盘价偏差超过 {thr:.2%}：{bad}"; self._event("data_quality_fault", note=st.quality_note)
+            bad_c = {k: v for k, v in st.consistency.items() if k != "cross_source" and isinstance(v, dict) and v.get("ok") is False}
+            if bad_c:
+                st.quality_fault = True; st.quality_note += f" 1h→1d 聚合不一致：{bad_c}"; self._event("data_quality_fault", note=st.quality_note)
             self._event("update_ok", source=src.name, stale=st.stale, per_tf={k: {"lag_hours": v["lag_hours"], "n_fetched": v["n_fetched"]} for k, v in st.per_tf.items()}, consistency=st.consistency, any_new=any_new)
             break
         st.reference_check = self.reference_check(symbols)
         self._write_status(st, now)
         return st
+
+    def _prev_source(self) -> str | None:
+        try:
+            import json
+            return json.loads(self.status_path.read_text()).get("last_success_source") if self.status_path.exists() else None
+        except Exception:  # noqa: BLE001
+            return None
 
     def _seed(self, s: str, tf: str) -> None:
         """前瞻行情仓为空时，从历史仓复制一次作为指标预热（标注 source 原值，通常为 Binance 镜像）。"""
@@ -276,7 +296,7 @@ class MarketDataService:
                 import json; prev = json.loads(self.status_path.read_text())
             except Exception:  # noqa: BLE001
                 prev = {}
-        d = {"checked_at_utc": str(now), "ok": st.ok, "source": st.source, "last_success_utc": st.last_success_utc or prev.get("last_success_utc"), "last_success_source": st.source or prev.get("last_success_source"), "stale": st.stale, "per_tf": st.per_tf, "consistency": st.consistency, "reference_check": st.reference_check, "errors": st.errors[-20:], "note": "只保留已收盘 K 线；UTC；来源为交易所官方公开现货接口或其镜像（见 source）"}
+        d = {"checked_at_utc": str(now), "ok": st.ok, "source": st.source, "last_success_utc": st.last_success_utc or prev.get("last_success_utc"), "last_success_source": st.source or prev.get("last_success_source"), "stale": st.stale, "quality_fault": st.quality_fault, "quality_note": st.quality_note, "source_switch": st.source_switch or prev.get("source_switch"), "per_tf": st.per_tf, "consistency": st.consistency, "reference_check": st.reference_check, "errors": st.errors[-20:], "note": "只保留已收盘 K 线；UTC；来源为交易所官方公开现货接口或其镜像（见 source）"}
         atomic_write_json(self.status_path, d, indent=1, default=str)
 
     def run_loop(self, symbols, tfs, interval_s: int = 300, max_iter: int | None = None):

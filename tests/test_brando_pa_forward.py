@@ -119,11 +119,17 @@ def test_forward_accounts_warmup_separation_restart_dedupe_and_usdt(tmp_path):
     st_before = json.loads((tmp_path / "fw" / "B_modelB_state_machine" / "state.json").read_text())
     r2 = ForwardRunner(c, log_dir=tmp_path / "fw", store=store)
     assert r2.accounts["B_modelB_state_machine"].state["ledgers"] == st_before["ledgers"] and r2.accounts["B_modelB_state_machine"].state["processed_orders"] == st_before["processed_orders"]
-    # 推进到下跌段：BTC 趋势失效 → 账户 A 卖出；B 切到 ETH 100%；权益 = 现金 + 持仓 × 价
-    out = r2.run_once(now=pd.Timestamp("2024-09-17 00:30", tz="UTC"))
+    # 服务"离线"一个多月后恢复：期间的日线信号只能标记 missed（不补成交）；当日收盘（宽限期内）正常执行
+    out = r2.run_once(now=pd.Timestamp("2024-09-16 00:30", tz="UTC"))
+    evA = [json.loads(l) for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl")]
+    missed = [e for e in evA if e["kind"] == "missed_signal"]; assert len(missed) >= 40 and all(not e["executed"] and "late" in e["missed_reason"] for e in missed)
+    assert not [e for e in evA if e["kind"] == "fill" and pd.Timestamp(e["fill_ts"]) > pd.Timestamp("2024-08-02 01:00", tz="UTC")]       # 没有回填成交
+    live = [e for e in evA if e["kind"] == "signal" and e["signal_ts"].startswith("2024-09-16")]; assert live and live[0]["executed"]
+    out = r2.run_once(now=pd.Timestamp("2024-09-16 01:30", tz="UTC"))                     # 00:00 那根 1h 收盘 → 成交：A 卖出 BTC，B 切到 ETH 100%
     a = out["accounts"]["A_BTC_SMA200"]["nav"]["cost"]; b = out["accounts"]["B_modelB_state_machine"]["nav"]["cost"]
-    assert a["holdings"]["BTCUSDT"] == 0 and a["cash"] > 0 and b["weights"]["ETHUSDT"] > 0.9
-    px = {s: float(store.load(s, "1h")[store.load(s, "1h")["ts"] + pd.Timedelta(hours=1) <= pd.Timestamp("2024-09-17 00:30", tz="UTC")]["close"].iloc[-1]) for s in SYMS}
+    assert a["holdings"]["BTCUSDT"] == 0 and a["cash"] > 0 and b["holdings"]["BTCUSDT"] == 0
+    assert out["accounts"]["B_modelB_state_machine"]["risk_state"] == "RISK_REDUCED" and abs(b["weights"]["ETHUSDT"] - 0.5) < 0.03     # 离线期间回撤 > 10% → 状态机限仓 50%（ETH 目标 100% × 0.5）
+    px = {s: float(store.load(s, "1h")[store.load(s, "1h")["ts"] + pd.Timedelta(hours=1) <= pd.Timestamp("2024-09-16 01:30", tz="UTC")]["close"].iloc[-1]) for s in SYMS}
     assert abs(b["equity_usdt"] - (b["cash"] + sum(b["holdings"][s] * px[s] for s in SYMS))) < 1e-6
     assert all(v["ok"] for v in r2.verify_all().values())
     # 前瞻日志不可回写：篡改/删除任一行 → 哈希链失败
@@ -135,7 +141,7 @@ def test_forward_stale_data_blocks_new_buys_and_risk_recovery(tmp_path):
     bars = _synth(); store = _store(tmp_path, bars, upto=pd.Timestamp("2024-08-02 00:00", tz="UTC"))
     r = ForwardRunner(cfg(), log_dir=tmp_path / "fw", store=store)
     r.run_once(now=pd.Timestamp("2024-08-01 05:00", tz="UTC"))
-    out = r.run_once(now=pd.Timestamp("2024-08-02 06:00", tz="UTC"))          # 1h 数据只到 00:00 收盘 → 落后 6 小时 > 3 根 → 过期
+    out = r.run_once(now=pd.Timestamp("2024-08-02 03:30", tz="UTC"))          # 1h 数据只到 00:00 收盘 → 落后 3.5 小时 > 3 根 → 过期（仍在信号宽限期内）
     assert not out["data_check"]["ok"] and any("过期" in x for x in out["data_check"]["issues"])
     for n, v in out["accounts"].items():
         assert v["nav"]["cost"]["exposure"] == 0.0 and not v["fills"]       # 数据过期：禁止开仓

@@ -1,24 +1,28 @@
 {
- "checked_at_utc": "2026-11-07 17:41:28.074229+00:00",
+ "checked_at_utc": "2026-11-07 18:17:29.001336+00:00",
  "ok": true,
  "source": "okx_spot",
- "last_success_utc": "2026-11-07 17:41:28.074229+00:00",
+ "last_success_utc": "2026-11-07 18:17:29.001336+00:00",
  "last_success_source": "okx_spot",
  "stale": false,
+ "quality_fault": false,
+ "quality_note": "",
+ "source_switch": null,
  "per_tf": {
   "BTCUSDT_1h": {
-   "n_fetched": 4,
+   "n_fetched": 5,
    "quality": {
-    "n_raw": 4,
+    "n_raw": 5,
     "duplicates": 0,
-    "out_of_order": 3,
+    "out_of_order": 4,
     "unclosed_dropped": 0,
-    "gaps": []
+    "gaps": [],
+    "added": 1
    },
-   "last_closed_bar_close_utc": "2026-11-07 17:00:00+00:00",
-   "lag_hours": 0.6911317302777777,
+   "last_closed_bar_close_utc": "2026-11-07 18:00:00+00:00",
+   "lag_hours": 0.29138926,
    "stale": false,
-   "n_stored": 42520
+   "n_stored": 42521
   },
   "BTCUSDT_1d": {
    "n_fetched": 4,
@@ -30,23 +34,24 @@
     "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-07 00:00:00+00:00",
-   "lag_hours": 17.691131730277778,
+   "lag_hours": 18.29138926,
    "stale": false,
    "n_stored": 3369
   },
   "ETHUSDT_1h": {
-   "n_fetched": 4,
+   "n_fetched": 5,
    "quality": {
-    "n_raw": 4,
+    "n_raw": 5,
     "duplicates": 0,
-    "out_of_order": 3,
+    "out_of_order": 4,
     "unclosed_dropped": 0,
-    "gaps": []
+    "gaps": [],
+    "added": 1
    },
-   "last_closed_bar_close_utc": "2026-11-07 17:00:00+00:00",
-   "lag_hours": 0.6911317302777777,
+   "last_closed_bar_close_utc": "2026-11-07 18:00:00+00:00",
+   "lag_hours": 0.29138926,
    "stale": false,
-   "n_stored": 42520
+   "n_stored": 42521
   },
   "ETHUSDT_1d": {
    "n_fetched": 4,
@@ -58,7 +63,7 @@
     "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-07 00:00:00+00:00",
-   "lag_hours": 17.691131730277778,
+   "lag_hours": 18.29138926,
    "stale": false,
    "n_stored": 3369
   }
@@ -88,22 +93,7 @@
   }
  },
  "reference_check": {
-  "BTCUSDT": {
-   "reference_usd": 75802,
-   "reference_updated_at": 1794073280,
-   "last_1h_close": 75744.4,
-   "rel_diff": -0.0007598744096463106,
-   "flag_gt_3pct": false,
-   "note": "non-exchange reference, alerts only"
-  },
-  "ETHUSDT": {
-   "reference_usd": 2234.95,
-   "reference_updated_at": 1794073280,
-   "last_1h_close": 2233.67,
-   "rel_diff": -0.0005727197476452783,
-   "flag_gt_3pct": false,
-   "note": "non-exchange reference, alerts only"
-  }
+  "error": "HTTPStatusError: Client error '429 Too Many Requests' for url 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum&vs_cu"
  },
  "errors": [
   "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",

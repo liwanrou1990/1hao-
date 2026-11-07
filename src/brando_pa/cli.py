@@ -340,6 +340,34 @@ def cmd_forward_replay(a):
     _p(r.replay(a.start, a.end))
 
 
+def cmd_forward_service(a):
+    from .forward.service import ForwardService
+    from pathlib import Path as _P
+    svc = ForwardService(log_dir=_P(a.log_dir) if a.log_dir else None)
+    if a.interval:
+        svc.interval = a.interval
+    if a.once:
+        _p(svc.cycle())
+    else:
+        svc.run(max_cycles=a.max_cycles)
+
+
+def cmd_forward_health(a):
+    from .forward.service import ForwardService
+    from pathlib import Path as _P
+    h = ForwardService(log_dir=_P(a.log_dir) if a.log_dir else None).health(); _p(h)
+    raise SystemExit(0 if h["ok"] else 1)
+
+
+def cmd_forward_daily_report(a):
+    import json as _j
+    from .forward.report import daily_report
+    from .config import cfg as _cfg, report_dir as _rd, own_data_dir as _od
+    from pathlib import Path as _P
+    c = _cfg(); d = _P(a.log_dir) if a.log_dir else (_rd(c) / "phase8_forward"); dsp = _od(c) / "forward_data_status.json"
+    _p(daily_report(d, a.date, _j.loads(dsp.read_text()) if dsp.exists() else None, _j.loads((d / "health.json").read_text()) if (d / "health.json").exists() else None))
+
+
 def cmd_dashboard(a):
     import subprocess
     app = Path(__file__).resolve().parent / "dashboard" / "app.py"
@@ -375,6 +403,9 @@ def main(argv=None):
     p = sub.add_parser("forward-data", help="第八阶段：真实行情更新（Binance → OKX → Bybit → Coinbase → 镜像；只保留已收盘 K 线）"); p.add_argument("--loop", action="store_true"); p.add_argument("--interval", type=int, default=300); p.add_argument("--max-iter", dest="max_iter", type=int); p.set_defaults(f=cmd_forward_data)
     p = sub.add_parser("forward-run", help="第八阶段：前瞻模拟账户（A BTC SMA200 / B 模型 B + 状态机 / 参考 ETH SMA200）运行一次或循环"); p.add_argument("--loop", action="store_true"); p.add_argument("--interval", type=int, default=600); p.add_argument("--no-update", dest="no_update", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_run)
     p = sub.add_parser("forward-status"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_status)
+    p = sub.add_parser("forward-service", help="第九阶段：24 小时前瞻服务（行情→账户→心跳→日报→容量→告警；由 launchd/systemd/Docker 管理）"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=int); p.add_argument("--max-cycles", dest="max_cycles", type=int); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_service)
+    p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
+    p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-replay", help="独立历史回放（mode=replay，单独目录，不是前瞻）"); p.add_argument("--start", required=True); p.add_argument("--end"); p.add_argument("--log-dir", dest="log_dir", required=True); p.set_defaults(f=cmd_forward_replay)
     p = sub.add_parser("usdt-paper", help="第七阶段前瞻模拟（资金配置；只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--model"); p.add_argument("--risk-mode", dest="risk_mode"); p.set_defaults(f=cmd_usdt_paper)
     p = sub.add_parser("trendsys-paper", help="前瞻模拟（只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--strategy", default="A_sma200"); p.add_argument("--risk-mode", dest="risk_mode", default="state_machine"); p.set_defaults(f=cmd_trendsys_paper)

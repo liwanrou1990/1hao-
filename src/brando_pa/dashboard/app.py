@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）", "USDT 利润与资产配置（第七阶段）", "前瞻模拟实时榜（第八阶段）"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）", "USDT 利润与资产配置（第七阶段）", "前瞻模拟实时榜（第八阶段）", "三账户实时利润对比（第九阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -455,3 +455,48 @@ with tabs[15]:
         if rp.exists():
             re_ = pd.read_json(rp, lines=True); bad = re_[(re_["kind"] == "data_check") & (~re_["ok"].astype(bool))] if "ok" in re_ else re_.iloc[0:0]
             st.caption(f"数据异常日志：{len(bad)} 条"); st.dataframe(bad.tail(10), use_container_width=True) if len(bad) else None
+
+with tabs[16]:
+    st.subheader("第九阶段：24 小时前瞻服务 · 三账户实时 USDT 利润对比（真正前瞻模拟；真实下单无实现）")
+    F9 = RD / "phase8_forward"; hb = load_json(str(F9 / "health.json")); fst = load_json(str(F9 / "status.json")); dst = load_json(str(ROOT / "data_store" / "brando_pa" / "forward_data_status.json"))
+    st.warning("类别标注：本页全部数字为【真正前瞻模拟】（从服务启动时刻起由真实已收盘行情推进）；历史回测见第四～七阶段页；历史回放见 replay 目录。成本假设 10 bps + 5 bps 为压力假设。风险回撤上限尚未获用户批准。")
+    c1, c2, c3, c4, c5 = st.columns(5)
+    if hb:
+        age = (pd.Timestamp.now(tz="UTC") - pd.Timestamp(hb["heartbeat_utc"])).total_seconds() / 60
+        c1.metric("服务心跳 UTC", str(hb["heartbeat_utc"])[:16], f"{age:.0f} 分钟前"); c2.metric("循环次数", hb.get("n_cycles")); c3.metric("最近一轮行情", f"{(hb.get('last_cycle') or {}).get('data', {}).get('source')}")
+    if dst:
+        c4.metric("数据过期 / 质量异常", f"{'是' if dst.get('stale') else '否'} / {'是' if dst.get('quality_fault') else '否'}"); c5.metric("最后成功更新 UTC", str(dst.get("last_success_utc"))[:16])
+        if dst.get("source_switch"):
+            st.caption(f"最近一次来源切换：{dst['source_switch']}")
+    if not fst:
+        st.info("服务未运行：见 deploy/README.md（launchd / systemd / Docker Compose）")
+    else:
+        rows = []
+        for n, a in fst["accounts"].items():
+            for k in ("cost", "ideal"):
+                nav = a["nav"][k]; rows.append({"账户": a["label"], "账本": "含成本" if k == "cost" else "零成本", "类别": "前瞻", "总资产USDT": round(nav["equity_usdt"], 2), "累计净利润": round(nav["profit_usdt"], 2), "已实现": round(nav.get("realized_usdt", 0) or 0, 2), "未实现": round(nav.get("unrealized_usdt", 0) or 0, 2), "最大回撤": pct(nav["max_drawdown"], 2), "BTC": round(nav["holdings"]["BTCUSDT"], 6), "ETH": round(nav["holdings"]["ETHUSDT"], 5), "USDT": round(nav["cash"], 2), "风险状态": a["risk_state"], "最新信号日": a.get("last_daily_ts"), "挂单": len(a.get("pending", []))})
+        df = pd.DataFrame(rows); st.dataframe(df.sort_values(["账本", "总资产USDT"], ascending=[True, False]), use_container_width=True)
+        cost = df[df["账本"] == "含成本"].set_index("账户")["总资产USDT"]
+        if len(cost) > 1:
+            st.caption("含成本账户两两利润差额 USDT：" + "；".join(f"{a} − {b} = {cost[a] - cost[b]:+,.0f}" for i, a in enumerate(cost.index) for b in cost.index[i + 1:]))
+        curves = {}
+        for n, a in fst["accounts"].items():
+            p = F9 / n / "events.jsonl"
+            if p.exists():
+                ev = pd.read_json(p, lines=True); nav = ev[ev["kind"] == "nav"]
+                if len(nav):
+                    curves[a["label"]] = pd.Series(nav["ledgers"].apply(lambda d: d["cost"]["equity_usdt"]).to_numpy(), index=pd.to_datetime(nav["ts"]))
+        if curves:
+            st.caption("含成本净值曲线（前瞻，自各账户启动时刻）"); st.line_chart(pd.DataFrame(curves).ffill())
+        dd = F9 / "daily"
+        if dd.exists() and list(dd.glob("*.json")):
+            st.markdown("**每日 UTC 账户报告（最近 14 天）**")
+            recs = []
+            for p in sorted(dd.glob("*.json"))[-14:]:
+                r = json.loads(p.read_text())
+                for n, a in r["accounts"].items():
+                    v = a["ledgers"]["cost"]; recs.append({"日期": r["date_utc"], "账户": n, "期末权益": round(v["final_equity_usdt"], 2), "当日盈亏": round(v["day_pnl_usdt"], 2), "累计净利润": round(v["cum_profit_usdt"], 2), "最大回撤": pct(v["max_drawdown"], 2), "当日交易": v["n_trades_today"], "累计成本": round(v["cum_fees_usdt"], 2), "风险状态": a["risk_state"], "数据状态": (r.get("data_status") or {}).get("source")})
+            st.dataframe(pd.DataFrame(recs), use_container_width=True)
+        ap = F9 / "alerts.jsonl"
+        if ap.exists() and ap.stat().st_size:
+            st.caption("最近告警"); st.dataframe(pd.read_json(ap, lines=True).tail(10), use_container_width=True)

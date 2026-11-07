@@ -1,0 +1,281 @@
+{
+ "date_utc": "2026-11-07",
+ "category": "forward (真正前瞻模拟；不含历史回测/回放)",
+ "accounts": {
+  "A_BTC_SMA200": {
+   "label": "A_BTC_SMA200",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "as_of": "2026-11-07 18:17:29.001336+00:00",
+   "ledgers": {
+    "cost": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "B_modelB_state_machine": 0.0,
+      "REF_ETH_SMA200": 0.0
+     }
+    },
+    "ideal": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "B_modelB_state_machine": 0.0,
+      "REF_ETH_SMA200": 0.0
+     }
+    }
+   },
+   "risk_state": "NORMAL",
+   "n_missed_signals_total": 0,
+   "source": {
+    "BTCUSDT": "okx_spot",
+    "ETHUSDT": "okx_spot"
+   }
+  },
+  "B_modelB_state_machine": {
+   "label": "B_modelB_state_machine",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "as_of": "2026-11-07 18:17:29.001336+00:00",
+   "ledgers": {
+    "cost": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "A_BTC_SMA200": 0.0,
+      "REF_ETH_SMA200": 0.0
+     }
+    },
+    "ideal": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "A_BTC_SMA200": 0.0,
+      "REF_ETH_SMA200": 0.0
+     }
+    }
+   },
+   "risk_state": "NORMAL",
+   "n_missed_signals_total": 0,
+   "source": {
+    "BTCUSDT": "okx_spot",
+    "ETHUSDT": "okx_spot"
+   }
+  },
+  "REF_ETH_SMA200": {
+   "label": "REF_ETH_SMA200",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "as_of": "2026-11-07 18:17:29.001336+00:00",
+   "ledgers": {
+    "cost": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "A_BTC_SMA200": 0.0,
+      "B_modelB_state_machine": 0.0
+     }
+    },
+    "ideal": {
+     "final_equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "day_pnl_usdt": 0.0,
+     "cum_profit_usdt": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0,
+      "USDT": 1.0
+     },
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "cash": 10000.0,
+     "cum_fees_usdt": 0.0,
+     "n_trades_today": 0,
+     "diff_vs_others_usdt": {
+      "A_BTC_SMA200": 0.0,
+      "B_modelB_state_machine": 0.0
+     }
+    }
+   },
+   "risk_state": "NORMAL",
+   "n_missed_signals_total": 0,
+   "source": {
+    "BTCUSDT": "okx_spot",
+    "ETHUSDT": "okx_spot"
+   }
+  }
+ },
+ "data_status": {
+  "source": "okx_spot",
+  "last_success_utc": "2026-11-07 18:17:29.001336+00:00",
+  "stale": false,
+  "quality_fault": false,
+  "source_switch": null
+ },
+ "service": {
+  "heartbeat_utc": "2026-11-07 18:17:35.411321+00:00",
+  "pid": 1042,
+  "n_cycles": 1,
+  "last_ok_cycle_at": "2026-11-07 18:17:29.001336+00:00",
+  "last_report_day": "2026-11-06",
+  "interval_s": 600,
+  "last_cycle": {
+   "now": "2026-11-07 18:17:29.001336+00:00",
+   "data": {
+    "ok": true,
+    "source": "okx_spot",
+    "stale": false,
+    "quality_fault": false,
+    "quality_note": "",
+    "errors": [
+     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
+     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
+     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en"
+    ],
+    "source_switch": {}
+   },
+   "accounts": {
+    "A_BTC_SMA200": {
+     "cost_equity": 10000.0,
+     "ideal_equity": 10000.0,
+     "risk_state": "NORMAL",
+     "fills": 0,
+     "pending": 0,
+     "last_daily_ts": null
+    },
+    "B_modelB_state_machine": {
+     "cost_equity": 10000.0,
+     "ideal_equity": 10000.0,
+     "risk_state": "NORMAL",
+     "fills": 0,
+     "pending": 0,
+     "last_daily_ts": null
+    },
+    "REF_ETH_SMA200": {
+     "cost_equity": 10000.0,
+     "ideal_equity": 10000.0,
+     "risk_state": "NORMAL",
+     "fills": 0,
+     "pending": 0,
+     "last_daily_ts": null
+    }
+   },
+   "data_check": {
+    "ok": true,
+    "issues": [],
+    "anomalies": [],
+    "latest": {
+     "BTCUSDT": {
+      "1h": "2026-11-07 18:00:00+00:00",
+      "1d": "2026-11-07 00:00:00+00:00"
+     },
+     "ETHUSDT": {
+      "1h": "2026-11-07 18:00:00+00:00",
+      "1d": "2026-11-07 00:00:00+00:00"
+     }
+    }
+   },
+   "daily_report": "2026-11-06",
+   "storage": {
+    "free_disk_mb": 26757,
+    "log_dir_mb": 0.0,
+    "ok": true
+   },
+   "elapsed_s": 6.4
+  },
+  "real_trading": "disabled (no implementation)"
+ }
+}

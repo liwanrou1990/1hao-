@@ -1,0 +1,19 @@
+services:
+  forward:
+    build: { context: ../.., dockerfile: deploy/docker/Dockerfile }
+    container_name: brando-pa-forward
+    restart: unless-stopped                 # 异常退出 / 主机重启后自动拉起
+    env_file: [../.env]
+    volumes:
+      - ../../data_store:/app/data_store     # 行情仓（含 forward_bars）持久化
+      - ../../reports_out:/app/reports_out   # 事件链、状态、日报、日志持久化
+    logging: { driver: json-file, options: { max-size: "20m", max-file: "5" } }
+  dashboard:
+    build: { context: ../.., dockerfile: deploy/docker/Dockerfile }
+    container_name: brando-pa-dashboard
+    restart: unless-stopped
+    command: ["python", "-m", "streamlit", "run", "src/brando_pa/dashboard/app.py", "--server.port", "8502", "--server.headless", "true"]
+    ports: ["8502:8502"]
+    volumes:
+      - ../../data_store:/app/data_store:ro
+      - ../../reports_out:/app/reports_out:ro

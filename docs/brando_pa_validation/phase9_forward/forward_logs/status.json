@@ -1,0 +1,203 @@
+{
+ "now": "2026-11-07 18:17:29.001336+00:00",
+ "mode": "forward",
+ "data_check": {
+  "ok": true,
+  "issues": [],
+  "anomalies": [],
+  "latest": {
+   "BTCUSDT": {
+    "1h": "2026-11-07 18:00:00+00:00",
+    "1d": "2026-11-07 00:00:00+00:00"
+   },
+   "ETHUSDT": {
+    "1h": "2026-11-07 18:00:00+00:00",
+    "1d": "2026-11-07 00:00:00+00:00"
+   }
+  }
+ },
+ "accounts": {
+  "A_BTC_SMA200": {
+   "label": "账户 A：BTC SMA200",
+   "nav": {
+    "ideal": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    },
+    "cost": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    }
+   },
+   "fills": [],
+   "pending": [],
+   "risk_state": "NORMAL",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "last_daily_ts": null
+  },
+  "B_modelB_state_machine": {
+   "label": "账户 B：模型 B 满额配置 + 状态机",
+   "nav": {
+    "ideal": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    },
+    "cost": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    }
+   },
+   "fills": [],
+   "pending": [],
+   "risk_state": "NORMAL",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "last_daily_ts": null
+  },
+  "REF_ETH_SMA200": {
+   "label": "参考：ETH SMA200",
+   "nav": {
+    "ideal": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    },
+    "cost": {
+     "equity_usdt": 10000.0,
+     "liquidation_usdt": 10000.0,
+     "profit_usdt": 0.0,
+     "return": 0.0,
+     "realized_usdt": 0.0,
+     "unrealized_usdt": 0.0,
+     "cash": 10000.0,
+     "holdings": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "weights": {
+      "BTCUSDT": 0.0,
+      "ETHUSDT": 0.0
+     },
+     "exposure": 0.0,
+     "drawdown": 0.0,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0,
+     "fees_paid": 0.0
+    }
+   },
+   "fills": [],
+   "pending": [],
+   "risk_state": "NORMAL",
+   "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "last_daily_ts": null
+  }
+ },
+ "buy_hold_since_forward_start": {},
+ "chains": {
+  "runner": {
+   "ok": true,
+   "n": 3
+  },
+  "A_BTC_SMA200": {
+   "ok": true,
+   "n": 4
+  },
+  "B_modelB_state_machine": {
+   "ok": true,
+   "n": 4
+  },
+  "REF_ETH_SMA200": {
+   "ok": true,
+   "n": 4
+  }
+ },
+ "real_trading": "disabled (no implementation)"
+}

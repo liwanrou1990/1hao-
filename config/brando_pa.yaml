@@ -493,3 +493,23 @@ usdt:
     log_dir: reports_out/brando_pa/usdt_paper
     model: A_equal_weight
     risk_mode: state_machine
+
+# ===================== 第九阶段：24 小时前瞻服务 =====================
+forward:
+  interval_s: 600                        # 服务主循环间隔（行情更新 + 账户推进）
+  symbols: [BTCUSDT, ETHUSDT]
+  tfs: [1h, 1d]
+  missed_signal_grace_hours: 3           # 日线收盘后超过该时长仍未有机会成交（服务离线）→ 标记 missed，不补成交
+  cross_source_max_rel_diff: 0.005       # 来源切换时重叠 K 线收盘价偏差 > 0.5% → 数据质量异常，暂停模拟成交
+  max_bar_age_multiplier: 3
+  health:
+    heartbeat_file: reports_out/brando_pa/phase8_forward/health.json
+    max_heartbeat_age_s: 1800            # 心跳超过 30 分钟未更新 → 告警（外部监控用）
+    min_free_disk_mb: 500
+    max_log_dir_mb: 2000
+    alert_webhook_env: BRANDO_ALERT_WEBHOOK   # 可选：只从环境变量读取
+  log:
+    file: reports_out/brando_pa/phase8_forward/service.log
+    max_bytes: 10485760                  # 10 MB × 5 轮转（事件链 JSONL 不轮转：只追加、体积极小、保证哈希链完整）
+    backups: 5
+  daily_report_dir: reports_out/brando_pa/phase8_forward/daily

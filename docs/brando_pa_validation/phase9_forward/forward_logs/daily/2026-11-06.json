@@ -1,0 +1,16 @@
+{
+ "date_utc": "2026-11-06",
+ "category": "forward (真正前瞻模拟；不含历史回测/回放)",
+ "accounts": {},
+ "data_status": {
+  "source": "okx_spot",
+  "last_success_utc": "2026-11-07 18:17:29.001336+00:00",
+  "stale": false,
+  "quality_fault": false,
+  "source_switch": null
+ },
+ "service": {
+  "n_cycles": 0,
+  "last_ok_cycle_at": "2026-11-07 18:17:29.001336+00:00"
+ }
+}

@@ -1,0 +1,22 @@
+# Linux systemd：复制到 /etc/systemd/system/brando-pa-forward.service；环境变量文件 /etc/default/brando-pa-forward（见 deploy/.env.example）
+[Unit]
+Description=brando_pa forward paper-trading service (BTC/ETH spot, real trading disabled)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=brando
+WorkingDirectory=/opt/1hao-
+EnvironmentFile=-/etc/default/brando-pa-forward
+Environment=PYTHONPATH=src TZ=UTC
+ExecStart=/opt/1hao-/.venv/bin/python -m brando_pa.cli forward-service
+Restart=always
+RestartSec=30
+TimeoutStopSec=60
+KillSignal=SIGTERM
+StandardOutput=append:/opt/1hao-/reports_out/brando_pa/phase8_forward/systemd.out.log
+StandardError=append:/opt/1hao-/reports_out/brando_pa/phase8_forward/systemd.err.log
+
+[Install]
+WantedBy=multi-user.target

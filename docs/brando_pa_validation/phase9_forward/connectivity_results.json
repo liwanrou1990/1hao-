@@ -1,0 +1,36 @@
+{
+ "probed_at": "2026-11-07T18:29:52Z",
+ "environment": "claude cloud session, repo-specific environment with exchange hosts allowlisted",
+ "results": {
+  "binance_spot": {
+   "ok": false,
+   "status": 451,
+   "error": "{\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact custom"
+  },
+  "okx_spot": {
+   "ok": true,
+   "status": 200,
+   "ms": 285
+  },
+  "bybit_spot": {
+   "ok": false,
+   "status": 403,
+   "error": "{\n    error:The Amazon CloudFront distribution is configured to block access from your country\n}"
+  },
+  "coinbase_exchange": {
+   "ok": true,
+   "status": 200,
+   "ms": 280
+  },
+  "binance_mirror_github": {
+   "ok": true,
+   "status": 200,
+   "ms": 170
+  },
+  "coingecko_reference": {
+   "ok": true,
+   "status": 200,
+   "ms": 171
+  }
+ }
+}

@@ -1,0 +1,8 @@
+[Unit]
+Description=brando_pa forward health check (exit 1 → journal/alert)
+[Service]
+Type=oneshot
+User=brando
+WorkingDirectory=/opt/1hao-
+Environment=PYTHONPATH=src TZ=UTC
+ExecStart=/opt/1hao-/.venv/bin/python -m brando_pa.cli forward-health

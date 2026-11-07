@@ -1,0 +1,7 @@
+[Unit]
+Description=Run brando_pa forward health check every 15 minutes
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+[Install]
+WantedBy=timers.target

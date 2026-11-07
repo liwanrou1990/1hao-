@@ -86,26 +86,38 @@ class ForwardAccount:
         _append(self.events, {"kind": kind, "account": self.name, **kw})
 
     # ---- 一次日线收盘决策 ----
-    def decide(self, close_t: pd.Timestamp, on: dict, prices: dict, daily_drop: float, data_fault: bool, data_ts, indicators: dict) -> list[dict]:
+    def decide(self, close_t: pd.Timestamp, on: dict, prices: dict, daily_drop: float, data_fault: bool, data_ts, indicators: dict, execute: bool = True, missed_reason: str = "", quality_fault: bool = False, source: dict | None = None, mode: str = "forward", exec_after: pd.Timestamp | None = None) -> list[dict]:
+        exec_after = exec_after if exec_after is not None else close_t
+        """execute=False：服务离线错过的历史信号——照常计算并记录决定，但标记 missed，不生成订单、不改变分配器状态。quality_fault：跨来源偏差可能改变决策 → 记录信号但暂停下单。"""
         Lc = self.ledger("cost"); eq_c = Lc.equity(prices); expo_c = Lc.exposure(prices)
         self.risk.set_data_fault(data_fault, "stale_or_gap" if data_fault else "")
+        if not execute:
+            saved = self.risk.snapshot()
         dec = self.risk.evaluate(close_t, eq_c, daily_drop, expo_c)
+        if not execute:
+            self.risk.restore(saved); self.risk.log = self.risk.log[:-1] if self.risk.log else self.risk.log     # 错过的信号不推进风险状态机
         if dec.data_fault:
             dec.max_exposure = min(dec.max_exposure, expo_c)
-        self.log("risk", signal_ts=str(close_t), state=dec.state, max_exposure=dec.max_exposure, force_exit=dec.force_exit, dd_ref=dec.dd_ref, dd_all=dec.dd_all, equity_cost=eq_c, data_fault=dec.data_fault, note=dec.note)
+        self.log("risk", mode=mode, signal_ts=str(close_t), state=dec.state, max_exposure=dec.max_exposure, force_exit=dec.force_exit, dd_ref=dec.dd_ref, dd_all=dec.dd_all, equity_cost=eq_c, data_fault=dec.data_fault, note=dec.note, executed=execute)
         orders = []
         for k in self.LEDGERS:
             L = self.ledger(k); eq = L.equity(prices)
+            lt = self.allocs[k].last_target
             a = self.allocs[k].allocate(on, {s: L.qty(s) for s in SYMS}, L.cash, prices, dec, eq)
+            if not execute or quality_fault:
+                self.allocs[k].last_target = lt                      # 不执行：分配器目标不前移，下一次实时收盘自然补齐
             if k == "cost":
                 sig = {"signal_ts": str(close_t), "data_ts": str(data_ts), "prices": prices, "indicators": indicators, "trend_on": on, "risk_state": dec.state, "max_exposure": dec.max_exposure, "target_weights": a.target_weights, "current_weights": a.inputs["cur_weights"],
-                       "signal": "HOLD" if not a.orders else ("BUY" if any(o["side"] == "BUY" for o in a.orders) and not any(o["side"] == "SELL" for o in a.orders) else "SELL" if not any(o["side"] == "BUY" for o in a.orders) else "REBALANCE"), "reason": a.reason, "equity_usdt": eq, "usdt": L.cash, "holdings": {s: L.qty(s) for s in SYMS}, "data_fault": dec.data_fault}
-                self.log("signal", **sig)
+                       "signal": "HOLD" if not a.orders else ("BUY" if any(o["side"] == "BUY" for o in a.orders) and not any(o["side"] == "SELL" for o in a.orders) else "SELL" if not any(o["side"] == "BUY" for o in a.orders) else "REBALANCE"), "reason": a.reason, "equity_usdt": eq, "usdt": L.cash, "holdings": {s: L.qty(s) for s in SYMS}, "data_fault": dec.data_fault,
+                       "signal_generated_at": str(utcnow()), "mode": mode, "market_source": source, "executed": bool(execute and not quality_fault), "missed_reason": missed_reason if not execute else ("data_quality_fault" if quality_fault else "")}
+                self.log("signal" if (execute and not quality_fault) else "missed_signal", **sig)
+            if not execute or quality_fault:
+                continue
             for i, o in enumerate(sorted(a.orders, key=lambda o: 0 if o["side"] == "SELL" else 1)):
                 oid = f"{self.name}:{k}:{o['symbol']}:{close_t.strftime('%Y%m%d')}:{o['side']}:{i}"
                 if oid in self.state["processed_orders"] or any(p["order_id"] == oid for p in self.state["pending"]):
                     continue                                   # 重复订单去重
-                od = {"order_id": oid, "ledger": k, "symbol": o["symbol"], "side": o["side"], "qty": o.get("qty"), "amount": o.get("amount"), "signal_ts": str(close_t), "exec_after": str(close_t), "reason": o["reason"], "est_cost": o.get("est_cost", 0.0)}
+                od = {"order_id": oid, "ledger": k, "symbol": o["symbol"], "side": o["side"], "qty": o.get("qty"), "amount": o.get("amount"), "signal_ts": str(close_t), "exec_after": str(exec_after), "late": bool(exec_after > close_t), "reason": o["reason"], "est_cost": o.get("est_cost", 0.0), "order_simulated_at": str(utcnow()), "mode": mode}
                 self.state["pending"].append(od); self.log("order", **od); orders.append(od)
         return orders
 
@@ -134,7 +146,7 @@ class ForwardAccount:
         for k in self.LEDGERS:
             L = self.ledger(k); eq = L.equity(prices); s = self.state["ledgers"][k]
             s["peak_equity"] = max(float(s.get("peak_equity", self.initial)), eq); dd = eq / s["peak_equity"] - 1; s["max_drawdown"] = min(float(s.get("max_drawdown", 0.0)), dd); s["max_drawdown_usdt"] = min(float(s.get("max_drawdown_usdt", 0.0)), eq - s["peak_equity"])
-            out[k] = {"equity_usdt": eq, "liquidation_usdt": liquidation_value(L, prices), "profit_usdt": eq - self.initial, "return": eq / self.initial - 1, "cash": L.cash, "holdings": {sym: L.qty(sym) for sym in SYMS}, "weights": {sym: L.qty(sym) * prices[sym] / eq if eq > 0 else 0.0 for sym in SYMS}, "exposure": L.exposure(prices), "drawdown": dd, "max_drawdown": s["max_drawdown"], "max_drawdown_usdt": s["max_drawdown_usdt"], "fees_paid": L.fees_paid}
+            out[k] = {"equity_usdt": eq, "liquidation_usdt": liquidation_value(L, prices), "profit_usdt": eq - self.initial, "return": eq / self.initial - 1, "realized_usdt": L.realized, "unrealized_usdt": L.unrealized(prices), "cash": L.cash, "holdings": {sym: L.qty(sym) for sym in SYMS}, "weights": {sym: L.qty(sym) * prices[sym] / eq if eq > 0 else 0.0 for sym in SYMS}, "exposure": L.exposure(prices), "drawdown": dd, "max_drawdown": s["max_drawdown"], "max_drawdown_usdt": s["max_drawdown_usdt"], "fees_paid": L.fees_paid}
         self.log(kind, ts=str(ts), prices=prices, ledgers=out, risk_state=getattr(self.risk, "state", "NORMAL"), **extra); return out
 
 
@@ -175,11 +187,14 @@ class ForwardRunner:
                 anomalies.append(f"{s} 最近 48 根 1h 出现 {r.max():.1%} 单根跳变")
         return {"ok": not issues and not anomalies, "issues": issues, "anomalies": anomalies, "latest": {s: {tf: str(bars[s][tf]["ts"].iloc[-1] + pd.Timedelta(seconds=tf_seconds(tf))) for tf in ("1h", "1d") if not bars[s][tf].empty} for s in SYMS}}
 
-    def run_once(self, now: pd.Timestamp | None = None, bars: dict | None = None) -> dict:
+    def run_once(self, now: pd.Timestamp | None = None, bars: dict | None = None, quality_fault: bool = False, quality_note: str = "") -> dict:
         now = now or utcnow(); bars = bars or self.load_bars()
+        grace = pd.Timedelta(hours=float(self.c.get("forward", {}).get("missed_signal_grace_hours", 3)))
         sec = {"1h": 3600, "1d": 86400}
         bars = {s: {tf: b[(b["ts"] + pd.Timedelta(seconds=sec[tf])) <= now].reset_index(drop=True) for tf, b in bb.items()} for s, bb in bars.items()}
         chk = self.data_check(bars, now); data_fault = not chk["ok"]
+        if quality_fault:
+            chk["ok"] = False; chk["issues"] = chk["issues"] + [f"数据质量异常（跨来源偏差）：{quality_note}"]; data_fault = True
         self._log("data_check", now=str(now), **chk)
         if any(bars[s]["1h"].empty or bars[s]["1d"].empty for s in SYMS):
             self._log("no_data", now=str(now)); return {"status": "no_data", "data_check": chk}
@@ -195,7 +210,13 @@ class ForwardRunner:
             fstart = pd.Timestamp(st["forward_start_utc"]); last_done = pd.Timestamp(st["last_daily_ts"]) if st.get("last_daily_ts") else None
             closes = d1_ts + pd.Timedelta(days=1)
             new = d1_ts[(closes > fstart) & ((d1_ts > last_done) if last_done is not None else True)]
-            fills = acc.fill_pending(bars, now)
+            if quality_fault:
+                for od in st["pending"]:                              # 数据质量异常：暂停模拟成交；挂单顺延到当前小时之后（不回填旧价格）
+                    if pd.Timestamp(od["exec_after"]) < now.floor("h"):
+                        od["exec_after"] = str(now.floor("h")); od["deferred_reason"] = "data_quality_fault"
+                fills = []
+            else:
+                fills = acc.fill_pending(bars, now)
             for dts in new:
                 close_t = dts + pd.Timedelta(days=1); prices = {}; drops = []; on = {}; ind = {}
                 for s in SYMS:
@@ -204,11 +225,16 @@ class ForwardRunner:
                     drops.append(float(d1["close"].iloc[k[0]] / d1["close"].iloc[k[0] - 1] - 1) if len(k) and k[0] >= 1 else 0.0)
                     row = sig[s][sig[s]["ts"] == dts]; on[s] = bool(row["on"].iloc[0]) if len(row) else False
                     ind[s] = {"daily_close": float(row["close"].iloc[0]) if len(row) else None, "sma200": float(row["sma"].iloc[0]) if len(row) and np.isfinite(row["sma"].iloc[0]) else None, "above_sma": bool(row["above"].iloc[0]) if len(row) else None, "trend": "UP" if on[s] else "DOWN_OR_NONE", "source": str(d1.loc[k[0], "source"]) if (len(k) and "source" in d1) else None}
-                acc.log("market", signal_ts=str(close_t), prices=prices, data_ts={s: str(bars[s]["1h"].loc[(bars[s]["1h"]["ts"] + pd.Timedelta(hours=1)) <= close_t, "ts"].iloc[-1] + pd.Timedelta(hours=1)) for s in SYMS}, indicators=ind)
-                acc.decide(close_t, on, prices, min(drops), data_fault, data_ts, ind)
+                src = {s: ind[s].get("source") for s in SYMS}
+                live = (now - close_t) <= grace + pd.Timedelta(hours=1)            # 收盘后 1h 执行 K 线 + 宽限期内 → 实时；否则为服务离线错过
+                late = (now - close_t) > pd.Timedelta(hours=2)                      # 标准执行 K 线（收盘后第一根 1h）已经过去 → 不回填，改在当前正在形成的 1h K 线收盘后按其开盘成交
+                exec_after = now.floor("h") if (live and late and self.mode != "replay") else close_t
+                acc.log("market", mode=self.mode, signal_ts=str(close_t), prices=prices, data_ts={s: str(bars[s]["1h"].loc[(bars[s]["1h"]["ts"] + pd.Timedelta(hours=1)) <= close_t, "ts"].iloc[-1] + pd.Timedelta(hours=1)) for s in SYMS}, indicators=ind, source=src, live=live or self.mode == "replay")
+                acc.decide(close_t, on, prices, min(drops), data_fault, data_ts, ind, execute=(live or self.mode == "replay"), missed_reason="" if (live or self.mode == "replay") else f"late: close {close_t} first processed at {now} (> grace); not executed, no backdated fill", quality_fault=quality_fault, source=src, mode=self.mode, exec_after=exec_after)
                 st["last_daily_ts"] = str(dts)
-                fills += acc.fill_pending(bars, now)
-            nav = acc.mark(px_last, now, "nav", data_ts=data_ts, data_fault=data_fault, pending=len(st["pending"]))
+                if not quality_fault:
+                    fills += acc.fill_pending(bars, now)
+            nav = acc.mark(px_last, now, "nav", data_ts=data_ts, data_fault=data_fault, pending=len(st["pending"]), mode=self.mode, source={s: str(bars[s]["1h"]["source"].iloc[-1]) if "source" in bars[s]["1h"] else None for s in SYMS})
             st["n_runs"] = int(st.get("n_runs", 0)) + 1; st["last_run_at"] = str(now); acc.save()
             out["accounts"][name] = {"label": acc.spec["label"], "nav": nav, "fills": fills, "pending": st["pending"], "risk_state": getattr(acc.risk, "state", "NORMAL"), "forward_start_utc": st["forward_start_utc"], "last_daily_ts": st["last_daily_ts"]}
         self._write_status(out, bars); return out
