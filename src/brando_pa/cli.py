@@ -292,6 +292,54 @@ def cmd_usdt_paper(a):
         _p(r.run_once())
 
 
+def cmd_forward_data(a):
+    from .forward.datafeed import MarketDataService
+    svc = MarketDataService()
+    syms = ["BTCUSDT", "ETHUSDT"]; tfs = ["1h", "1d"]
+    if a.loop:
+        svc.run_loop(syms, tfs, interval_s=a.interval, max_iter=a.max_iter)
+    else:
+        st = svc.update(syms, tfs); _p({"ok": st.ok, "source": st.source, "stale": st.stale, "last_success_utc": st.last_success_utc, "per_tf": {k: {kk: v[kk] for kk in ("last_closed_bar_close_utc", "lag_hours", "stale", "n_fetched")} for k, v in st.per_tf.items()}, "consistency": st.consistency, "reference_check": st.reference_check, "errors": st.errors[-5:]})
+
+
+def cmd_forward_run(a):
+    import time as _t
+    from .forward.accounts import ForwardRunner
+    from .forward.datafeed import MarketDataService
+    from pathlib import Path as _P
+    r = ForwardRunner(log_dir=_P(a.log_dir) if a.log_dir else None)
+    def once():
+        if not a.no_update:
+            st = MarketDataService().update(["BTCUSDT", "ETHUSDT"], ["1h", "1d"]); print(f"[forward] data ok={st.ok} source={st.source} stale={st.stale}", flush=True)
+        out = r.run_once(); print(f"[forward] {out['now']} data_ok={out['data_check']['ok']} " + " | ".join(f"{n}: cost {v['nav']['cost']['equity_usdt']:.0f} ideal {v['nav']['ideal']['equity_usdt']:.0f} {v['risk_state']} fills {len(v['fills'])}" for n, v in out.get("accounts", {}).items()), flush=True)
+        return out
+    if a.loop:
+        while True:
+            try:
+                once()
+            except Exception as e:  # noqa: BLE001
+                print(f"[forward] error {type(e).__name__}: {e}", flush=True)
+            _t.sleep(a.interval)
+    else:
+        _p(once())
+
+
+def cmd_forward_status(a):
+    from .forward.accounts import ForwardRunner
+    from pathlib import Path as _P
+    r = ForwardRunner(log_dir=_P(a.log_dir) if a.log_dir else None)
+    import json as _j
+    st = _j.loads(r.status_path.read_text()) if r.status_path.exists() else {}
+    _p({"status": st, "chains": r.verify_all()})
+
+
+def cmd_forward_replay(a):
+    from .forward.accounts import ForwardRunner
+    from pathlib import Path as _P
+    r = ForwardRunner(log_dir=_P(a.log_dir), mode="replay")
+    _p(r.replay(a.start, a.end))
+
+
 def cmd_dashboard(a):
     import subprocess
     app = Path(__file__).resolve().parent / "dashboard" / "app.py"
@@ -324,6 +372,10 @@ def main(argv=None):
     p = sub.add_parser("trendsys-signal"); p.set_defaults(f=cmd_trendsys_signal)
     p = sub.add_parser("phase7", help="第七阶段：BTC/ETH/USDT 资金配置模型 A/B/C × 三风险模式 × 窗口 × 成本 + 六个固定参考 + USDT 排行榜"); p.add_argument("--workers", type=int); p.add_argument("--windows", nargs="*"); p.add_argument("--set", nargs="*"); p.add_argument("--out-suffix", dest="out_suffix"); p.set_defaults(f=cmd_phase7)
     p = sub.add_parser("usdt-signal"); p.set_defaults(f=cmd_usdt_signal)
+    p = sub.add_parser("forward-data", help="第八阶段：真实行情更新（Binance → OKX → Bybit → Coinbase → 镜像；只保留已收盘 K 线）"); p.add_argument("--loop", action="store_true"); p.add_argument("--interval", type=int, default=300); p.add_argument("--max-iter", dest="max_iter", type=int); p.set_defaults(f=cmd_forward_data)
+    p = sub.add_parser("forward-run", help="第八阶段：前瞻模拟账户（A BTC SMA200 / B 模型 B + 状态机 / 参考 ETH SMA200）运行一次或循环"); p.add_argument("--loop", action="store_true"); p.add_argument("--interval", type=int, default=600); p.add_argument("--no-update", dest="no_update", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_run)
+    p = sub.add_parser("forward-status"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_status)
+    p = sub.add_parser("forward-replay", help="独立历史回放（mode=replay，单独目录，不是前瞻）"); p.add_argument("--start", required=True); p.add_argument("--end"); p.add_argument("--log-dir", dest="log_dir", required=True); p.set_defaults(f=cmd_forward_replay)
     p = sub.add_parser("usdt-paper", help="第七阶段前瞻模拟（资金配置；只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--model"); p.add_argument("--risk-mode", dest="risk_mode"); p.set_defaults(f=cmd_usdt_paper)
     p = sub.add_parser("trendsys-paper", help="前瞻模拟（只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--strategy", default="A_sma200"); p.add_argument("--risk-mode", dest="risk_mode", default="state_machine"); p.set_defaults(f=cmd_trendsys_paper)
     p = sub.add_parser("phase4", help="第四阶段纯现货：六组对照 × 窗口 × 成本模式（预登记，零自由度）"); p.add_argument("--no-charts", dest="no_charts", action="store_true"); p.set_defaults(f=cmd_phase4)

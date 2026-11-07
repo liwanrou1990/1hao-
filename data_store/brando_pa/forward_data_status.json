@@ -1,0 +1,114 @@
+{
+ "checked_at_utc": "2026-11-07 17:41:28.074229+00:00",
+ "ok": true,
+ "source": "okx_spot",
+ "last_success_utc": "2026-11-07 17:41:28.074229+00:00",
+ "last_success_source": "okx_spot",
+ "stale": false,
+ "per_tf": {
+  "BTCUSDT_1h": {
+   "n_fetched": 4,
+   "quality": {
+    "n_raw": 4,
+    "duplicates": 0,
+    "out_of_order": 3,
+    "unclosed_dropped": 0,
+    "gaps": []
+   },
+   "last_closed_bar_close_utc": "2026-11-07 17:00:00+00:00",
+   "lag_hours": 0.6911317302777777,
+   "stale": false,
+   "n_stored": 42520
+  },
+  "BTCUSDT_1d": {
+   "n_fetched": 4,
+   "quality": {
+    "n_raw": 4,
+    "duplicates": 0,
+    "out_of_order": 3,
+    "unclosed_dropped": 0,
+    "gaps": []
+   },
+   "last_closed_bar_close_utc": "2026-11-07 00:00:00+00:00",
+   "lag_hours": 17.691131730277778,
+   "stale": false,
+   "n_stored": 3369
+  },
+  "ETHUSDT_1h": {
+   "n_fetched": 4,
+   "quality": {
+    "n_raw": 4,
+    "duplicates": 0,
+    "out_of_order": 3,
+    "unclosed_dropped": 0,
+    "gaps": []
+   },
+   "last_closed_bar_close_utc": "2026-11-07 17:00:00+00:00",
+   "lag_hours": 0.6911317302777777,
+   "stale": false,
+   "n_stored": 42520
+  },
+  "ETHUSDT_1d": {
+   "n_fetched": 4,
+   "quality": {
+    "n_raw": 4,
+    "duplicates": 0,
+    "out_of_order": 3,
+    "unclosed_dropped": 0,
+    "gaps": []
+   },
+   "last_closed_bar_close_utc": "2026-11-07 00:00:00+00:00",
+   "lag_hours": 17.691131730277778,
+   "stale": false,
+   "n_stored": 3369
+  }
+ },
+ "consistency": {
+  "BTCUSDT": {
+   "checked_days": 10,
+   "max_rel_err": 0.0,
+   "ok": true
+  },
+  "ETHUSDT": {
+   "checked_days": 10,
+   "max_rel_err": 0.0,
+   "ok": true
+  },
+  "cross_source": {
+   "BTCUSDT_1d": {
+    "overlap_bars": 4,
+    "other_source": "binance_spot_via_static_klines",
+    "max_rel_close_diff": 5.4058330256845366e-05
+   },
+   "ETHUSDT_1d": {
+    "overlap_bars": 4,
+    "other_source": "binance_spot_via_static_klines",
+    "max_rel_close_diff": 6.154468363828158e-05
+   }
+  }
+ },
+ "reference_check": {
+  "BTCUSDT": {
+   "reference_usd": 75802,
+   "reference_updated_at": 1794073280,
+   "last_1h_close": 75744.4,
+   "rel_diff": -0.0007598744096463106,
+   "flag_gt_3pct": false,
+   "note": "non-exchange reference, alerts only"
+  },
+  "ETHUSDT": {
+   "reference_usd": 2234.95,
+   "reference_updated_at": 1794073280,
+   "last_1h_close": 2233.67,
+   "rel_diff": -0.0005727197476452783,
+   "flag_gt_3pct": false,
+   "note": "non-exchange reference, alerts only"
+  }
+ },
+ "errors": [
+  "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
+  "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
+  "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en"
+ ],
+ "note": "只保留已收盘 K 线；UTC；来源为交易所官方公开现货接口或其镜像（见 source）"
+}

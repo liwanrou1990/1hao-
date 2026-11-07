@@ -1,0 +1,17 @@
+{
+ "参考_BTC_SMA200": {
+  "phase7": 33134.587988432046,
+  "now": 33134.587988432046,
+  "match": true
+ },
+ "B_full_single|state_machine": {
+  "phase7": 30367.638993738474,
+  "now": 30367.638993738474,
+  "match": true
+ },
+ "A_equal_weight|state_machine": {
+  "phase7": 29654.826400512433,
+  "now": 29654.826400512433,
+  "match": true
+ }
+}

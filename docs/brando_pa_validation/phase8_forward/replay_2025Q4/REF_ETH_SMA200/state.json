@@ -1,0 +1,98 @@
+{
+ "account": "REF_ETH_SMA200",
+ "initial_usdt": 10000.0,
+ "fee_bps": 10.0,
+ "slippage_bps": 5.0,
+ "forward_start_utc": "2025-09-01 00:00:00+00:00",
+ "last_daily_ts": "2026-11-06 00:00:00+00:00",
+ "pending": [],
+ "processed_orders": [
+  "REF_ETH_SMA200:ideal:ETHUSDT:20250902:BUY:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20250902:BUY:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251105:SELL:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251105:SELL:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251106:BUY:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251106:BUY:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251107:SELL:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251107:SELL:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251108:BUY:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251108:BUY:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251109:SELL:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251109:SELL:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251110:BUY:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251110:BUY:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20251112:SELL:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20251112:SELL:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20260820:BUY:0",
+  "REF_ETH_SMA200:cost:ETHUSDT:20260820:BUY:0"
+ ],
+ "n_runs": 433,
+ "ledgers": {
+  "ideal": {
+   "cash": 6.966829892060559,
+   "lots": {
+    "ETHUSDT": [
+     {
+      "qty": 3.0894141370859147,
+      "price": 2252.81,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-5",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 0.0,
+   "realized": -3033.1701079394193,
+   "seq": 5,
+   "peak_equity": 10920.761015181364,
+   "max_drawdown": -0.3662431992412968,
+   "max_drawdown_usdt": -3999.654452349655
+  },
+  "cost": {
+   "cash": 6.883818601158964,
+   "lots": {
+    "ETHUSDT": [
+     {
+      "qty": 3.0480295285176218,
+      "price": 2253.936405,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-5",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 68.02907646669587,
+   "realized": -3084.074381772174,
+   "seq": 5,
+   "peak_equity": 10904.41394705381,
+   "max_drawdown": -0.3737944637030399,
+   "max_drawdown_usdt": -4076.0095633349283
+  }
+ },
+ "risk": {
+  "hwm_all": 10904.41394705381,
+  "data_fault": false,
+  "fault_why": ""
+ },
+ "alloc_last_target": {
+  "BTCUSDT": 0.0,
+  "ETHUSDT": 1.0,
+  "USDT": 0.0
+ },
+ "last_run_at": "2026-11-07 00:00:00+00:00",
+ "saved_at": "2026-11-07 17:40:43.793599+00:00"
+}

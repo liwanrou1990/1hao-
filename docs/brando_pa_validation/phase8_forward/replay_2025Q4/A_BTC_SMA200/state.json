@@ -1,0 +1,98 @@
+{
+ "account": "A_BTC_SMA200",
+ "initial_usdt": 10000.0,
+ "fee_bps": 10.0,
+ "slippage_bps": 5.0,
+ "forward_start_utc": "2025-09-01 00:00:00+00:00",
+ "last_daily_ts": "2026-11-06 00:00:00+00:00",
+ "pending": [],
+ "processed_orders": [
+  "A_BTC_SMA200:ideal:BTCUSDT:20250902:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20250902:BUY:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251018:SELL:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251018:SELL:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251020:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251020:BUY:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251023:SELL:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251023:SELL:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251024:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251024:BUY:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251031:SELL:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251031:SELL:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251101:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251101:BUY:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20251104:SELL:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20251104:SELL:0",
+  "A_BTC_SMA200:ideal:BTCUSDT:20260820:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20260820:BUY:0"
+ ],
+ "n_runs": 433,
+ "ledgers": {
+  "ideal": {
+   "cash": 9.231650817993795,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.13301288570001976,
+      "price": 69334.78,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-5",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 0.0,
+   "realized": -768.3491820059885,
+   "seq": 5,
+   "peak_equity": 11530.807810153705,
+   "max_drawdown": -0.1909367123693836,
+   "max_drawdown_usdt": -2178.6440179270794
+  },
+  "cost": {
+   "cash": 9.121644848271899,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.13123096876440746,
+      "price": 69369.44739,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-5",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 85.57100663278536,
+   "realized": -839.7204145197793,
+   "seq": 5,
+   "peak_equity": 11393.213458870516,
+   "max_drawdown": -0.19937909693324585,
+   "max_drawdown_usdt": -2271.5686105973055
+  }
+ },
+ "risk": {
+  "hwm_all": 11393.213458870516,
+  "data_fault": false,
+  "fault_why": ""
+ },
+ "alloc_last_target": {
+  "BTCUSDT": 1.0,
+  "ETHUSDT": 0.0,
+  "USDT": 0.0
+ },
+ "last_run_at": "2026-11-07 00:00:00+00:00",
+ "saved_at": "2026-11-07 17:40:43.770372+00:00"
+}

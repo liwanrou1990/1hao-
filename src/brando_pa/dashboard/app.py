@@ -30,7 +30,7 @@ def pct(x, d=1):
 
 
 sig = load_json(str(RD / "signals" / "latest.json"))
-tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）", "USDT 利润与资产配置（第七阶段）"])
+tabs = st.tabs(["市场状态与信号", "回测对比", "Walk-Forward", "模拟盘", "导出", "数据审计", "信号漏斗", "入场/退出/多周期对比", "策略筛选", "样本外详情", "第三阶段：止损诊断与结构入场", "纯现货研究（第四阶段）", "趋势参与研究（第五阶段）", "三层趋势系统（第六阶段）", "USDT 利润与资产配置（第七阶段）", "前瞻模拟实时榜（第八阶段）"])
 
 with tabs[0]:
     if not sig:
@@ -413,3 +413,45 @@ with tabs[14]:
             fp = pdir / f"{name}.jsonl"
             if fp.exists() and fp.stat().st_size:
                 st.caption(name); st.dataframe(pd.read_json(fp, lines=True).tail(20), use_container_width=True)
+
+with tabs[15]:
+    st.subheader("第八阶段：真实行情驱动的前瞻模拟 · 实时 USDT 利润榜（Paper Trading，真实下单无实现）")
+    F8 = RD / "phase8_forward"; fst = load_json(str(F8 / "status.json")); dst = load_json(str(ROOT / "data_store" / "brando_pa" / "forward_data_status.json"))
+    st.warning("本页只显示从系统实际启动时刻起、由真实已收盘行情推进的前瞻记录（追加写入 + 哈希链）；不含任何历史回测。成本假设：手续费 10 bps + 滑点 5 bps（压力假设，非交易所保证成交）。")
+    if dst:
+        col = st.columns(4); col[0].metric("行情来源", str(dst.get("last_success_source"))); col[1].metric("最后成功更新 UTC", str(dst.get("last_success_utc"))[:16]); col[2].metric("数据过期", "是" if dst.get("stale") else "否"); col[3].metric("最近检查", str(dst.get("checked_at_utc"))[:16])
+        st.caption("各周期最新已收盘 K 线：" + "；".join(f"{k} {v['last_closed_bar_close_utc'][:16]}（落后 {v['lag_hours']:.1f} h）" for k, v in (dst.get("per_tf") or {}).items()) + f"；1h→1d 一致性 {dst.get('consistency', {})}")
+        if dst.get("errors"):
+            st.caption("最近错误（含被封锁来源的回退记录）：" + " | ".join(dst["errors"][-3:]))
+    if not fst:
+        st.info("运行：PYTHONPATH=src python -m brando_pa.cli forward-run")
+    else:
+        st.caption(f"系统状态：{fst.get('now')} · 数据检查 {'正常' if fst['data_check']['ok'] else '异常：' + '；'.join(fst['data_check']['issues'] + fst['data_check']['anomalies'])} · 哈希链 {fst.get('chains')} · 真实交易 {fst.get('real_trading')}")
+        rows = []
+        for n, a in fst["accounts"].items():
+            for k in ("cost", "ideal"):
+                nav = a["nav"][k]; rows.append({"账户": a["label"], "账本": "含成本" if k == "cost" else "零成本", "当前总资产USDT": round(nav["equity_usdt"], 2), "初始本金": 10000, "累计净利润USDT": round(nav["profit_usdt"], 2), "收益率": pct(nav["return"], 2), "历史最大回撤": pct(nav["max_drawdown"], 2), "BTC": round(nav["holdings"]["BTCUSDT"], 6), "ETH": round(nav["holdings"]["ETHUSDT"], 5), "USDT": round(nav["cash"], 2), "风险状态": a["risk_state"], "前瞻起点": str(a["forward_start_utc"])[:16], "最新信号日": a.get("last_daily_ts")})
+        st.dataframe(pd.DataFrame(rows).sort_values(["账本", "当前总资产USDT"], ascending=[True, False]), use_container_width=True)
+        bh = fst.get("buy_hold_since_forward_start") or {}
+        if bh:
+            st.caption("同期买入持有（自前瞻起点，仅供对照）：" + "；".join(f"{s} {pct(v['buy_hold_return'], 2)}" for s, v in bh.items()))
+        for n, a in fst["accounts"].items():
+            p = F8 / n / "events.jsonl"
+            if not p.exists():
+                continue
+            ev = pd.read_json(p, lines=True)
+            with st.expander(f"{a['label']} · 事件 {len(ev)} 条", expanded=(n == "B_modelB_state_machine")):
+                nav = ev[ev["kind"] == "nav"]
+                if len(nav) > 1:
+                    cur = pd.DataFrame({"ts": pd.to_datetime(nav["ts"]), "含成本": nav["ledgers"].apply(lambda d: d["cost"]["equity_usdt"]), "零成本": nav["ledgers"].apply(lambda d: d["ideal"]["equity_usdt"])}).set_index("ts")
+                    st.line_chart(cur); daily = cur["含成本"].resample("1D").last().diff().dropna()
+                    if len(daily):
+                        st.caption("每日 USDT 盈亏（含成本）"); st.bar_chart(daily)
+                for kind, title in (("signal", "最新信号"), ("fill", "最新模拟成交"), ("risk", "风险状态")):
+                    sub = ev[ev["kind"] == kind]
+                    if len(sub):
+                        st.caption(title); st.dataframe(sub.drop(columns=[c for c in ("prev_hash", "hash") if c in sub]).tail(10), use_container_width=True)
+        rp = F8 / "runner_events.jsonl"
+        if rp.exists():
+            re_ = pd.read_json(rp, lines=True); bad = re_[(re_["kind"] == "data_check") & (~re_["ok"].astype(bool))] if "ok" in re_ else re_.iloc[0:0]
+            st.caption(f"数据异常日志：{len(bad)} 条"); st.dataframe(bad.tail(10), use_container_width=True) if len(bad) else None

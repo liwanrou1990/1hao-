@@ -1,0 +1,238 @@
+{
+ "account": "B_modelB_state_machine",
+ "initial_usdt": 10000.0,
+ "fee_bps": 10.0,
+ "slippage_bps": 5.0,
+ "forward_start_utc": "2025-09-01 00:00:00+00:00",
+ "last_daily_ts": "2026-11-06 00:00:00+00:00",
+ "pending": [],
+ "processed_orders": [
+  "B_modelB_state_machine:ideal:BTCUSDT:20250902:BUY:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20250902:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20250902:BUY:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20250902:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20250926:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20250926:SELL:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20250926:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20250926:SELL:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251007:BUY:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251007:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251007:BUY:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251007:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251011:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251011:SELL:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251011:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251011:SELL:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251018:SELL:0",
+  "B_modelB_state_machine:cost:BTCUSDT:20251018:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251018:BUY:1",
+  "B_modelB_state_machine:cost:ETHUSDT:20251018:BUY:1",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251020:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251020:SELL:0",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251020:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251020:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251023:SELL:0",
+  "B_modelB_state_machine:cost:BTCUSDT:20251023:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251023:BUY:1",
+  "B_modelB_state_machine:cost:ETHUSDT:20251023:BUY:1",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251024:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251024:SELL:0",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251024:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251024:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251031:SELL:0",
+  "B_modelB_state_machine:cost:BTCUSDT:20251031:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251031:BUY:1",
+  "B_modelB_state_machine:cost:ETHUSDT:20251031:BUY:1",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251101:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251101:SELL:0",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251101:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251101:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20251104:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20251104:SELL:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20251104:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20251104:SELL:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20260820:BUY:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20260820:BUY:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20260820:BUY:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20260820:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20261024:SELL:0",
+  "B_modelB_state_machine:ideal:ETHUSDT:20261024:SELL:1",
+  "B_modelB_state_machine:cost:BTCUSDT:20261024:SELL:0",
+  "B_modelB_state_machine:cost:ETHUSDT:20261024:SELL:1"
+ ],
+ "n_runs": 433,
+ "ledgers": {
+  "ideal": {
+   "cash": 4825.462072354168,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.02971724684513826,
+      "price": 69334.78,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-11",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ],
+    "ETHUSDT": [
+     {
+      "qty": 1.010523677553222,
+      "price": 2252.81,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-12",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 0.0,
+   "realized": -837.5813094038031,
+   "seq": 12,
+   "peak_equity": 10770.951619067764,
+   "max_drawdown": -0.19661032859074434,
+   "max_drawdown_usdt": -2117.6803370599227
+  },
+  "cost": {
+   "cash": 4768.438638669022,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.02941009353225745,
+      "price": 69369.44739,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-11",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ],
+    "ETHUSDT": [
+     {
+      "qty": 1.0000790459585647,
+      "price": 2253.936405,
+      "ts": "2026-08-20 00:00:00+00:00",
+      "strategy": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-12",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 67.78176308590996,
+   "realized": -900.8120844043132,
+   "seq": 12,
+   "peak_equity": 10754.829003148541,
+   "max_drawdown": -0.20252784404127955,
+   "max_drawdown_usdt": -2178.152331040297
+  }
+ },
+ "risk": {
+  "hwm_all": 10754.829003148541,
+  "data_fault": false,
+  "state": "RISK_REDUCED",
+  "hwm_ref": 10624.049637045258,
+  "halt_count": 0,
+  "state_since": "2026-10-24 00:00:00+00:00",
+  "cooldown_until": "2025-12-05 00:00:00+00:00",
+  "recovery_since": "2025-12-05 00:00:00+00:00",
+  "recovery_peak": 8576.676672108244,
+  "normal_since": "2026-02-03 00:00:00+00:00",
+  "transitions": [
+   {
+    "ts": "2025-09-26 00:00:00+00:00",
+    "from": "NORMAL",
+    "to": "RISK_REDUCED",
+    "equity": 9465.143241336094,
+    "why": "dd -0.120 ≤ −reduce_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-10-07 00:00:00+00:00",
+    "from": "RISK_REDUCED",
+    "to": "NORMAL",
+    "equity": 10292.623053433043,
+    "why": "dd -0.043 > −recover_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-10-11 00:00:00+00:00",
+    "from": "NORMAL",
+    "to": "RISK_REDUCED",
+    "equity": 8857.94918686848,
+    "why": "dd -0.176 ≤ −reduce_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-11-04 00:00:00+00:00",
+    "from": "RISK_REDUCED",
+    "to": "EMERGENCY_HALT",
+    "equity": 8582.95593195349,
+    "why": "dd -0.202 ≤ −halt_dd",
+    "halt_count": 0
+   },
+   {
+    "ts": "2025-11-05 00:00:00+00:00",
+    "from": "EMERGENCY_HALT",
+    "to": "COOLDOWN",
+    "equity": 8576.676672108244,
+    "why": "halt executed → cooldown",
+    "halt_count": 1
+   },
+   {
+    "ts": "2025-12-05 00:00:00+00:00",
+    "from": "COOLDOWN",
+    "to": "RECOVERY",
+    "equity": 8576.676672108244,
+    "why": "cooldown expired",
+    "halt_count": 1
+   },
+   {
+    "ts": "2026-02-03 00:00:00+00:00",
+    "from": "RECOVERY",
+    "to": "NORMAL",
+    "equity": 8576.676672108244,
+    "why": "recovery completed",
+    "halt_count": 1
+   },
+   {
+    "ts": "2026-10-24 00:00:00+00:00",
+    "from": "NORMAL",
+    "to": "RISK_REDUCED",
+    "equity": 9551.154920522675,
+    "why": "dd -0.101 ≤ −reduce_dd",
+    "halt_count": 0
+   }
+  ],
+  "fault_why": ""
+ },
+ "alloc_last_target": {
+  "BTCUSDT": 0.25,
+  "ETHUSDT": 0.25,
+  "USDT": 0.5
+ },
+ "last_run_at": "2026-11-07 00:00:00+00:00",
+ "saved_at": "2026-11-07 17:40:43.781995+00:00"
+}
