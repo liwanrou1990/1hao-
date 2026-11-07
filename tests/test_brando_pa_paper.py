@@ -59,3 +59,18 @@ def test_run_once_with_stale_data_blocks_new_entries(tmp_path):
     assert last["status"] in ("WAIT", "NO_TRADE") and not rep["pending"]
     # 锁：运行中第二个实例被拒绝
     r._lock(); assert r.run_once(now=far_future, contexts=ctxs).get("skipped"); r._unlock()
+
+
+@pytest.mark.skipif(not Path("data_store/spot90/bars/BTCUSDT_4h.parquet").exists() and not Path("data_store/brando_pa/bars/BTCUSDT_4h.parquet").exists(), reason="无本地 4h 数据")
+def test_walkforward_smoke_single_strategy_small_windows():
+    """Walk-Forward 冒烟：小窗口、单参数网格，验证 训练→验证→测试 拼接与默认参数对照都能产出。"""
+    from brando_pa.backtest.walkforward import run_walkforward
+    c = cfg(); st = BarStore()
+    bars = {tf: st.load("BTCUSDT", tf) for tf in ("1w", "1d", "4h")}
+    ctxs = {"BTCUSDT": MarketContext("BTCUSDT", bars, "4h", c)}
+    c["backtest"]["walkforward"].update({"train_months": 6, "valid_months": 3, "test_months": 3, "min_trades_select": 1, "grid": {"A_breakout_retest": {"sl_buffer_atr": [0.3, 0.5]}}})
+    r = run_walkforward(ctxs, "4h", "A_breakout_retest", c, True, start="2024-06-01", end="2025-12-31", workers=2)
+    assert len(r.folds) >= 1 and "n_trades" in r.oos_stats and "n_trades" in r.default_full_stats
+    for f in r.folds:
+        assert f.train[1] <= f.valid[0] <= f.valid[1] <= f.test[0]      # 严格时间顺序
+        assert len(f.train_table) == 2

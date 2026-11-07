@@ -1,0 +1,468 @@
+{
+  "period": [
+    "2022-04-01 00:00:00",
+    "2026-11-06 09:00:00"
+  ],
+  "exec_tf": "1h",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "trade_stats": {
+    "n_trades": 291,
+    "win_rate": 0.36082474226804123,
+    "avg_win": 71.01042496039307,
+    "avg_loss": -43.30014616798538,
+    "profit_factor": 0.9257827921425196,
+    "expectancy_usd": -2.0540638020756323,
+    "expectancy_r": -0.03681981985196757,
+    "avg_r_win": 1.5165357321123858,
+    "avg_r_loss": -0.9137140830576507,
+    "total_net_pnl": -597.732566404009,
+    "gross_pnl": -69.08233211271792,
+    "total_fees": 469.9514867603918,
+    "total_funding": 58.69874753090001,
+    "cost_share_of_gross": null,
+    "max_consecutive_losses": 10,
+    "avg_bars_held": 58.90034364261168,
+    "n_long": 65,
+    "n_short": 226,
+    "exit_reasons": {
+      "stop": 172,
+      "take_profit": 59,
+      "trail_stop": 31,
+      "time_stop": 28,
+      "end_of_test": 1
+    }
+  },
+  "equity_stats": {
+    "total_net_return": -0.0596256821047737,
+    "annualized_return": -0.013267864822877562,
+    "max_drawdown": -0.19850609365562955,
+    "sharpe": -0.19359385232507065,
+    "sortino": -0.15805013356106415,
+    "n_days": 1680,
+    "final_equity": 9403.743178952263,
+    "initial_equity": 10000.0
+  },
+  "status_counts": {
+    "WAIT": 72830,
+    "SHORT": 301,
+    "NO_TRADE": 7425,
+    "LONG": 102,
+    "NO_TRADE_PORTFOLIO": 79
+  },
+  "n_cancelled_entries": 33,
+  "notes": [
+    "执行周期 1h；成交规则 next_open；同根止盈止损规则 stop_first；资金费假设 {'assumed_rate_8h': 0.0001, 'long_pays': True, 'short_receives': False}（无历史资金费率数据）",
+    "过滤模块 开启；策略 全部"
+  ],
+  "by_strategy": {
+    "A_breakout_retest": {
+      "n_trades": 240,
+      "win_rate": 0.375,
+      "net_pnl": -137.540113424855,
+      "expectancy_r": -0.0020278131688427144,
+      "profit_factor": 0.9786236827603315
+    },
+    "B_reclaim": {
+      "n_trades": 41,
+      "win_rate": 0.2926829268292683,
+      "net_pnl": -405.2345581105052,
+      "expectancy_r": -0.22206216310896837,
+      "profit_factor": 0.6906017234369912
+    },
+    "C_rejection": {
+      "n_trades": 10,
+      "win_rate": 0.3,
+      "net_pnl": -54.957894868649085,
+      "expectancy_r": -0.11233437289326023,
+      "profit_factor": 0.8226294846269359
+    }
+  },
+  "by_symbol": {
+    "BTCUSDT": {
+      "n_trades": 110,
+      "win_rate": 0.38181818181818183,
+      "net_pnl": -563.6677210507247,
+      "expectancy_r": -0.10159413473200835,
+      "profit_factor": 0.8158260004027952
+    },
+    "ETHUSDT": {
+      "n_trades": 181,
+      "win_rate": 0.34806629834254144,
+      "net_pnl": -34.06484535328491,
+      "expectancy_r": 0.002545785876234028,
+      "profit_factor": 0.9931779027421495
+    }
+  },
+  "by_regime": {
+    "down": {
+      "n_trades": 55,
+      "win_rate": 0.32727272727272727,
+      "net_pnl": -667.2730324459255,
+      "expectancy_r": -0.259226385738131,
+      "profit_factor": 0.5867355336852204
+    },
+    "range": {
+      "n_trades": 88,
+      "win_rate": 0.38636363636363635,
+      "net_pnl": 259.19095912166335,
+      "expectancy_r": 0.07460350581894774,
+      "profit_factor": 1.1105704725451702
+    },
+    "strong_down": {
+      "n_trades": 75,
+      "win_rate": 0.4,
+      "net_pnl": 418.28299134433433,
+      "expectancy_r": 0.1252768962016483,
+      "profit_factor": 1.199703210358382
+    },
+    "strong_up": {
+      "n_trades": 18,
+      "win_rate": 0.2777777777777778,
+      "net_pnl": -70.05277457309137,
+      "expectancy_r": -0.0657453814155973,
+      "profit_factor": 0.8488964235704108
+    },
+    "up": {
+      "n_trades": 55,
+      "win_rate": 0.32727272727272727,
+      "net_pnl": -537.8807098509901,
+      "expectancy_r": -0.20426500405519318,
+      "profit_factor": 0.650029735223348
+    }
+  },
+  "by_direction": {
+    "long": {
+      "n_trades": 65,
+      "win_rate": 0.26153846153846155,
+      "net_pnl": -519.2645276960998,
+      "expectancy_r": -0.16616718219442114,
+      "profit_factor": 0.7059545397736773
+    },
+    "short": {
+      "n_trades": 226,
+      "win_rate": 0.3893805309734513,
+      "net_pnl": -78.46803870790944,
+      "expectancy_r": 0.0003818551580301546,
+      "profit_factor": 0.9875207765781782
+    }
+  },
+  "by_exit_reason": {
+    "end_of_test": {
+      "n_trades": 1,
+      "win_rate": 0.0,
+      "net_pnl": -10.334217371497616,
+      "expectancy_r": -0.2197127406792959,
+      "profit_factor": 0.0
+    },
+    "stop": {
+      "n_trades": 172,
+      "win_rate": 0.0,
+      "net_pnl": -7962.747100944267,
+      "expectancy_r": -0.9772606163993043,
+      "profit_factor": 0.0
+    },
+    "take_profit": {
+      "n_trades": 59,
+      "win_rate": 1.0,
+      "net_pnl": 6399.784075781334,
+      "expectancy_r": 2.322709727096302,
+      "profit_factor": Infinity
+    },
+    "time_stop": {
+      "n_trades": 28,
+      "win_rate": 0.8214285714285714,
+      "net_pnl": 968.4764116459186,
+      "expectancy_r": 0.7287271453714652,
+      "profit_factor": 14.62232271938425
+    },
+    "trail_stop": {
+      "n_trades": 31,
+      "win_rate": 0.7419354838709677,
+      "net_pnl": 7.088264484502604,
+      "expectancy_r": 0.004830232753362018,
+      "profit_factor": 1.7344543962864674
+    }
+  },
+  "by_year": {
+    "2022": {
+      "n_trades": 58,
+      "win_rate": 0.39655172413793105,
+      "net_pnl": 90.95547070595897,
+      "expectancy_r": 0.040280301666897986,
+      "profit_factor": 1.0553023530750383
+    },
+    "2023": {
+      "n_trades": 34,
+      "win_rate": 0.38235294117647056,
+      "net_pnl": -234.9567314437385,
+      "expectancy_r": -0.13555222361985517,
+      "profit_factor": 0.7384910546827305
+    },
+    "2024": {
+      "n_trades": 62,
+      "win_rate": 0.27419354838709675,
+      "net_pnl": -703.5330297478895,
+      "expectancy_r": -0.23459245369555085,
+      "profit_factor": 0.6352829601358497
+    },
+    "2025": {
+      "n_trades": 83,
+      "win_rate": 0.3253012048192771,
+      "net_pnl": -345.6178138327801,
+      "expectancy_r": -0.08934698390687183,
+      "profit_factor": 0.8496900886741365
+    },
+    "2026": {
+      "n_trades": 54,
+      "win_rate": 0.46296296296296297,
+      "net_pnl": 595.4195379144401,
+      "expectancy_r": 0.2503422652382768,
+      "profit_factor": 1.464331307956879
+    }
+  },
+  "candidates": {
+    "n_candidates": 8163,
+    "n_accepted": 403,
+    "rejection_counts": {
+      "net_rr": 6061,
+      "cost_to_risk": 4113,
+      "volume": 3925,
+      "regime_trend": 1737,
+      "stop_distance": 894,
+      "portfolio:已有同向持仓，禁止补仓/摊平": 62,
+      "volatility": 54,
+      "portfolio:同向相关持仓 2 已达上限 2（crypto_major）|已有同向持仓，禁止补仓/摊平": 17
+    },
+    "by_strategy": {
+      "A_breakout_retest": {
+        "candidates": 2242,
+        "accepted": 343
+      },
+      "B_reclaim": {
+        "candidates": 4774,
+        "accepted": 47
+      },
+      "C_rejection": {
+        "candidates": 1147,
+        "accepted": 13
+      }
+    }
+  },
+  "buy_and_hold": {
+    "BTCUSDT": {
+      "return": 0.6706686756970668,
+      "max_drawdown": -0.6668897403150277
+    },
+    "ETHUSDT": {
+      "return": -0.31902568052512414,
+      "max_drawdown": -0.7448850042883582
+    },
+    "equal_weight": {
+      "return": 0.17582149758597132,
+      "final_equity": 11758.214975859713
+    }
+  },
+  "cancelled_entries": [
+    {
+      "ts": "2022-04-13 19:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 3107.91 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2022-10-05 23:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 20199.69 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2022-10-31 17:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 20360.73 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2023-01-14 07:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1557.34 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2023-03-13 23:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 24214.55 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2023-03-23 20:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1821.76 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2023-06-01 07:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 26771.75 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2023-06-02 07:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1888.87 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2023-06-21 14:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 29326.65 使净盈亏比降至 1.98，取消入场"
+    },
+    {
+      "ts": "2023-08-18 09:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1696.32 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2023-09-12 12:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1608.68 使净盈亏比降至 1.94，取消入场"
+    },
+    {
+      "ts": "2023-10-09 15:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 1590.50 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2023-11-23 02:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 2067.90 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2024-03-26 02:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 70319.33 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2024-09-11 17:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 57340.65 使净盈亏比降至 2.00，取消入场"
+    },
+    {
+      "ts": "2024-10-04 18:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "B_reclaim",
+      "reason": "成交价 2414.04 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2024-10-16 19:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 67788.82 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2024-12-18 00:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 106186.81 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2025-01-27 21:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 101436.80 使净盈亏比降至 1.98，取消入场"
+    },
+    {
+      "ts": "2025-04-30 22:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 94371.78 使净盈亏比降至 1.94，取消入场"
+    },
+    {
+      "ts": "2025-05-19 11:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 2411.03 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2025-05-21 20:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 108658.09 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2025-12-11 05:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 3217.05 使净盈亏比降至 2.00，取消入场"
+    },
+    {
+      "ts": "2026-01-02 17:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 3133.78 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2026-01-08 19:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 3118.66 使净盈亏比降至 1.95，取消入场"
+    },
+    {
+      "ts": "2026-01-14 21:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 3385.36 使净盈亏比降至 1.98，取消入场"
+    },
+    {
+      "ts": "2026-04-17 20:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 2429.13 使净盈亏比降至 1.98，取消入场"
+    },
+    {
+      "ts": "2026-05-04 15:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 80256.26 使净盈亏比降至 1.97，取消入场"
+    },
+    {
+      "ts": "2026-05-14 04:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 2241.02 使净盈亏比降至 1.98，取消入场"
+    },
+    {
+      "ts": "2026-05-28 11:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 73363.31 使净盈亏比降至 1.96，取消入场"
+    },
+    {
+      "ts": "2026-05-29 22:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 73372.57 使净盈亏比降至 1.95，取消入场"
+    },
+    {
+      "ts": "2026-07-09 02:00:00+00:00",
+      "symbol": "BTCUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 61885.04 使净盈亏比降至 1.99，取消入场"
+    },
+    {
+      "ts": "2026-09-21 13:00:00+00:00",
+      "symbol": "ETHUSDT",
+      "strategy": "A_breakout_retest",
+      "reason": "成交价 2736.52 使净盈亏比降至 1.97，取消入场"
+    }
+  ]
+}

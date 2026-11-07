@@ -1,0 +1,925 @@
+{
+  "generated_at": "2026-11-07T05:30:36.860963+00:00",
+  "exec_tf": "15m",
+  "equity": 10000.0,
+  "symbols": {
+    "BTCUSDT": {
+      "symbol": "BTCUSDT",
+      "ts": "2026-11-06T10:30:00+00:00",
+      "status": "WAIT",
+      "price": 76231.24,
+      "trend_1d": {
+        "trend": "up",
+        "highvol": false,
+        "adx": 33.042435514268206,
+        "rv20": 0.4041383290884777
+      },
+      "structure_4h": {
+        "trend": "range",
+        "last_high": 81196.01,
+        "last_low": 75736.38,
+        "recent_labels": [
+          "EQL",
+          "HL",
+          "LH",
+          "LL",
+          "EQL",
+          "HH"
+        ],
+        "detail": "最近结构 HH/EQL，不构成单边趋势"
+      },
+      "zones": [
+        {
+          "zone_id": "1w:18157.99",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 17976.410099999997,
+          "hi": 18339.5699,
+          "center": 18157.989999999998,
+          "touches": 8,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 40.015,
+          "n_swings": 8,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:25033.50",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 24783.165,
+          "hi": 25283.835,
+          "center": 25033.5,
+          "touches": 10,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 53.394,
+          "n_swings": 10,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:58946.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 58356.54,
+          "hi": 59535.46,
+          "center": 58946.0,
+          "touches": 6,
+          "breaks": 3,
+          "flipped": false,
+          "strength": 37.367,
+          "n_swings": 5,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:62392.64",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 61811.08267857143,
+          "hi": 63220.93714285714,
+          "center": 62392.64,
+          "touches": 24,
+          "breaks": 4,
+          "flipped": false,
+          "strength": 62.46,
+          "n_swings": 17,
+          "role": "support"
+        },
+        {
+          "zone_id": "4h:64166.00",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 63747.33285714286,
+          "hi": 64584.66714285714,
+          "center": 64166.0,
+          "touches": 15,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 25.377,
+          "n_swings": 15,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:65474.46",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "1w",
+            "4h"
+          ],
+          "lo": 64350.0,
+          "hi": 66056.01732142858,
+          "center": 65474.46,
+          "touches": 30,
+          "breaks": 6,
+          "flipped": true,
+          "strength": 116.796,
+          "n_swings": 22,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:67292.15",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 66710.59267857143,
+          "hi": 67873.70732142856,
+          "center": 67292.15,
+          "touches": 7,
+          "breaks": 4,
+          "flipped": true,
+          "strength": 24.593,
+          "n_swings": 3,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:69310.00",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 68728.44267857143,
+          "hi": 69891.55732142857,
+          "center": 69310.0,
+          "touches": 10,
+          "breaks": 8,
+          "flipped": true,
+          "strength": 33.66,
+          "n_swings": 3,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:71997.02",
+          "tf": "1w",
+          "tfs": [
+            "1d",
+            "1w"
+          ],
+          "lo": 70922.98767857143,
+          "hi": 72716.9902,
+          "center": 71997.02,
+          "touches": 18,
+          "breaks": 6,
+          "flipped": true,
+          "strength": 79.856,
+          "n_swings": 7,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:74289.60",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 73708.04267857144,
+          "hi": 74871.15732142857,
+          "center": 74289.6,
+          "touches": 9,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 29.929,
+          "n_swings": 5,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:75483.99",
+          "tf": "1w",
+          "tfs": [
+            "1d",
+            "1w",
+            "4h"
+          ],
+          "lo": 74729.14515,
+          "hi": 76900.66714285714,
+          "center": 75483.985,
+          "touches": 42,
+          "breaks": 4,
+          "flipped": true,
+          "strength": 135.162,
+          "n_swings": 28,
+          "role": "inside"
+        },
+        {
+          "zone_id": "4h:77626.29",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 77207.62785714286,
+          "hi": 78044.96214285714,
+          "center": 77626.295,
+          "touches": 20,
+          "breaks": 9,
+          "flipped": false,
+          "strength": 34.308,
+          "n_swings": 6,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:79220.74",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 78639.18267857144,
+          "hi": 79803.00214285713,
+          "center": 79220.74,
+          "touches": 37,
+          "breaks": 6,
+          "flipped": true,
+          "strength": 104.392,
+          "n_swings": 25,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:81039.43",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 80426.03285714285,
+          "hi": 81620.99232142857,
+          "center": 81039.435,
+          "touches": 38,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 98.698,
+          "n_swings": 19,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:82521.16",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "1w",
+            "4h"
+          ],
+          "lo": 81477.0,
+          "hi": 83138.14214285715,
+          "center": 82521.16,
+          "touches": 32,
+          "breaks": 7,
+          "flipped": true,
+          "strength": 104.453,
+          "n_swings": 23,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:84401.01",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 83819.44767857144,
+          "hi": 84982.56232142857,
+          "center": 84401.005,
+          "touches": 7,
+          "breaks": 4,
+          "flipped": true,
+          "strength": 28.144,
+          "n_swings": 4,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:85114.00",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 84695.33285714286,
+          "hi": 85532.66714285714,
+          "center": 85114.0,
+          "touches": 16,
+          "breaks": 5,
+          "flipped": false,
+          "strength": 27.723,
+          "n_swings": 7,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:87241.76",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 86660.20767857143,
+          "hi": 87823.32232142857,
+          "center": 87241.765,
+          "touches": 9,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 36.5,
+          "n_swings": 6,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:89011.06",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 88130.81242857143,
+          "hi": 89891.30757142857,
+          "center": 89011.06,
+          "touches": 5,
+          "breaks": 4,
+          "flipped": false,
+          "strength": 29.925,
+          "n_swings": 4,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:94369.49",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 93787.93767857143,
+          "hi": 94951.05232142856,
+          "center": 94369.495,
+          "touches": 6,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 18.18,
+          "n_swings": 4,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:98062.24",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 97181.99742857143,
+          "hi": 98942.49257142856,
+          "center": 98062.245,
+          "touches": 2,
+          "breaks": 1,
+          "flipped": false,
+          "strength": 12.79,
+          "n_swings": 2,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:108353.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 107472.75242857143,
+          "hi": 109233.24757142857,
+          "center": 108353.0,
+          "touches": 7,
+          "breaks": 2,
+          "flipped": true,
+          "strength": 37.904,
+          "n_swings": 3,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:111950.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 111069.75242857143,
+          "hi": 112830.24757142857,
+          "center": 111950.0,
+          "touches": 5,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 27.3,
+          "n_swings": 2,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:124474.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 123593.75242857143,
+          "hi": 125354.24757142857,
+          "center": 124474.0,
+          "touches": 3,
+          "breaks": 0,
+          "flipped": false,
+          "strength": 18.796,
+          "n_swings": 3,
+          "role": "resistance"
+        }
+      ],
+      "strategy_states": {
+        "A_breakout_retest": {
+          "active_setups": [],
+          "wait_reasons": [
+            "无 4h 收盘有效突破 1W/1D 关键区域的设置"
+          ]
+        },
+        "B_reclaim": {
+          "active_setups": [],
+          "wait_reasons": [
+            "无执行周期收盘越出关键区域的假突破候选"
+          ]
+        },
+        "C_rejection": {
+          "active_setups": [],
+          "wait_reasons": [
+            "C K 线振幅 0.69 ATR < 0.8"
+          ]
+        }
+      },
+      "candidates": [],
+      "chosen": null,
+      "reasons": [
+        "无 4h 收盘有效突破 1W/1D 关键区域的设置",
+        "无执行周期收盘越出关键区域的假突破候选",
+        "C K 线振幅 0.69 ATR < 0.8"
+      ],
+      "data_ok": false,
+      "extras": {},
+      "freshness": "最新 15m 收盘 2026-11-06T10:45:00+00:00，落后 18.8 小时（过期）"
+    },
+    "ETHUSDT": {
+      "symbol": "ETHUSDT",
+      "ts": "2026-11-06T10:30:00+00:00",
+      "status": "WAIT",
+      "price": 2241.52,
+      "trend_1d": {
+        "trend": "up",
+        "highvol": false,
+        "adx": 34.22093449452375,
+        "rv20": 0.5317299245764967
+      },
+      "structure_4h": {
+        "trend": "range",
+        "last_high": 2450.0,
+        "last_low": 2226.44,
+        "recent_labels": [
+          "HL",
+          "HH",
+          "EQL",
+          "EQH",
+          "EQL",
+          "HH"
+        ],
+        "detail": "最近结构 HH/EQL，不构成单边趋势"
+      },
+      "zones": [
+        {
+          "zone_id": "1w:881.56",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 872.7443999999999,
+          "hi": 890.3756,
+          "center": 881.56,
+          "touches": 1,
+          "breaks": 0,
+          "flipped": false,
+          "strength": 4.777,
+          "n_swings": 1,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:1170.26",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 1158.5524500000001,
+          "hi": 1181.95755,
+          "center": 1170.255,
+          "touches": 4,
+          "breaks": 0,
+          "flipped": false,
+          "strength": 20.008,
+          "n_swings": 4,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:1505.68",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 1490.6232,
+          "hi": 1520.7368000000001,
+          "center": 1505.68,
+          "touches": 9,
+          "breaks": 1,
+          "flipped": true,
+          "strength": 61.546,
+          "n_swings": 9,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:1692.62",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 1675.68885,
+          "hi": 1709.54115,
+          "center": 1692.615,
+          "touches": 3,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 10.74,
+          "n_swings": 2,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:1747.80",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 1730.322,
+          "hi": 1765.278,
+          "center": 1747.8,
+          "touches": 14,
+          "breaks": 6,
+          "flipped": false,
+          "strength": 81.649,
+          "n_swings": 9,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:1833.40",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 1815.066,
+          "hi": 1851.7340000000002,
+          "center": 1833.4,
+          "touches": 9,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 37.226,
+          "n_swings": 9,
+          "role": "support"
+        },
+        {
+          "zone_id": "4h:1872.59",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 1855.949142857143,
+          "hi": 1889.220857142857,
+          "center": 1872.585,
+          "touches": 20,
+          "breaks": 2,
+          "flipped": false,
+          "strength": 32.975,
+          "n_swings": 20,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:1943.02",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 1907.499142857143,
+          "hi": 1962.4502,
+          "center": 1943.02,
+          "touches": 26,
+          "breaks": 4,
+          "flipped": true,
+          "strength": 69.68,
+          "n_swings": 23,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:2016.17",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 1996.0083,
+          "hi": 2036.3317000000002,
+          "center": 2016.17,
+          "touches": 6,
+          "breaks": 3,
+          "flipped": false,
+          "strength": 18.165,
+          "n_swings": 2,
+          "role": "support"
+        },
+        {
+          "zone_id": "1w:2111.44",
+          "tf": "1w",
+          "tfs": [
+            "1d",
+            "1w"
+          ],
+          "lo": 2071.5254999999997,
+          "hi": 2132.5594499999997,
+          "center": 2111.4449999999997,
+          "touches": 27,
+          "breaks": 9,
+          "flipped": true,
+          "strength": 127.183,
+          "n_swings": 14,
+          "role": "support"
+        },
+        {
+          "zone_id": "1d:2174.08",
+          "tf": "1d",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 2152.3392,
+          "hi": 2195.8208,
+          "center": 2174.08,
+          "touches": 15,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 55.926,
+          "n_swings": 8,
+          "role": "support"
+        },
+        {
+          "zone_id": "4h:2242.61",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 2225.974142857143,
+          "hi": 2259.2458571428574,
+          "center": 2242.61,
+          "touches": 5,
+          "breaks": 0,
+          "flipped": false,
+          "strength": 10.477,
+          "n_swings": 4,
+          "role": "inside"
+        },
+        {
+          "zone_id": "1d:2269.74",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 2247.0425999999998,
+          "hi": 2292.4374,
+          "center": 2269.74,
+          "touches": 11,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 40.264,
+          "n_swings": 4,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:2357.84",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 2341.1991428571428,
+          "hi": 2374.4708571428573,
+          "center": 2357.835,
+          "touches": 18,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 37.273,
+          "n_swings": 14,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:2386.02",
+          "tf": "1w",
+          "tfs": [
+            "1d",
+            "1w",
+            "4h"
+          ],
+          "lo": 2362.1598,
+          "hi": 2422.605857142857,
+          "center": 2386.02,
+          "touches": 53,
+          "breaks": 11,
+          "flipped": true,
+          "strength": 203.767,
+          "n_swings": 25,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:2442.44",
+          "tf": "4h",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 2425.804142857143,
+          "hi": 2488.54,
+          "center": 2442.44,
+          "touches": 39,
+          "breaks": 7,
+          "flipped": true,
+          "strength": 85.188,
+          "n_swings": 12,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:2489.95",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 2473.3141428571425,
+          "hi": 2506.585857142857,
+          "center": 2489.95,
+          "touches": 23,
+          "breaks": 8,
+          "flipped": true,
+          "strength": 36.985,
+          "n_swings": 5,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:2533.97",
+          "tf": "4h",
+          "tfs": [
+            "1d",
+            "4h"
+          ],
+          "lo": 2517.329142857143,
+          "hi": 2580.2850000000003,
+          "center": 2533.965,
+          "touches": 33,
+          "breaks": 4,
+          "flipped": false,
+          "strength": 80.77,
+          "n_swings": 22,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1d:2643.28",
+          "tf": "1d",
+          "tfs": [
+            "1d"
+          ],
+          "lo": 2619.6549999999997,
+          "hi": 2666.915,
+          "center": 2643.285,
+          "touches": 7,
+          "breaks": 3,
+          "flipped": true,
+          "strength": 27.692,
+          "n_swings": 4,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "4h:2722.00",
+          "tf": "4h",
+          "tfs": [
+            "4h"
+          ],
+          "lo": 2705.3641428571427,
+          "hi": 2738.6358571428573,
+          "center": 2722.0,
+          "touches": 12,
+          "breaks": 2,
+          "flipped": true,
+          "strength": 24.075,
+          "n_swings": 11,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:2810.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 2781.9,
+          "hi": 2838.1,
+          "center": 2810.0,
+          "touches": 11,
+          "breaks": 6,
+          "flipped": true,
+          "strength": 71.538,
+          "n_swings": 9,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:3079.23",
+          "tf": "1w",
+          "tfs": [
+            "1d",
+            "1w"
+          ],
+          "lo": 3033.76,
+          "hi": 3110.0223,
+          "center": 3079.23,
+          "touches": 23,
+          "breaks": 7,
+          "flipped": true,
+          "strength": 83.721,
+          "n_swings": 8,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:3435.00",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 3400.65,
+          "hi": 3469.35,
+          "center": 3435.0,
+          "touches": 12,
+          "breaks": 12,
+          "flipped": false,
+          "strength": 61.82,
+          "n_swings": 5,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:3571.58",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 3535.8642,
+          "hi": 3607.2958,
+          "center": 3571.58,
+          "touches": 10,
+          "breaks": 10,
+          "flipped": false,
+          "strength": 46.263,
+          "n_swings": 2,
+          "role": "resistance"
+        },
+        {
+          "zone_id": "1w:3737.77",
+          "tf": "1w",
+          "tfs": [
+            "1w"
+          ],
+          "lo": 3701.6752857142856,
+          "hi": 3773.8647142857144,
+          "center": 3737.77,
+          "touches": 6,
+          "breaks": 5,
+          "flipped": false,
+          "strength": 29.279,
+          "n_swings": 2,
+          "role": "resistance"
+        }
+      ],
+      "strategy_states": {
+        "A_breakout_retest": {
+          "active_setups": [],
+          "wait_reasons": [
+            "无 4h 收盘有效突破 1W/1D 关键区域的设置"
+          ]
+        },
+        "B_reclaim": {
+          "active_setups": [],
+          "wait_reasons": [
+            "无执行周期收盘越出关键区域的假突破候选"
+          ]
+        },
+        "C_rejection": {
+          "active_setups": [],
+          "wait_reasons": [
+            "C K 线振幅 0.60 ATR < 0.8"
+          ]
+        }
+      },
+      "candidates": [],
+      "chosen": null,
+      "reasons": [
+        "无 4h 收盘有效突破 1W/1D 关键区域的设置",
+        "无执行周期收盘越出关键区域的假突破候选",
+        "C K 线振幅 0.60 ATR < 0.8"
+      ],
+      "data_ok": false,
+      "extras": {},
+      "freshness": "最新 15m 收盘 2026-11-06T10:45:00+00:00，落后 18.8 小时（过期）"
+    }
+  }
+}

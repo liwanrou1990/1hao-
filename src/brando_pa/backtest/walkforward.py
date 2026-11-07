@@ -75,6 +75,7 @@ def _grid(g: dict) -> list[dict]:
 
 def run_walkforward(contexts: dict, exec_tf: str, strategy: str, c: dict | None = None, filters_enabled: bool = True, start: str | None = None, end: str | None = None, workers: int | None = None) -> WFResult:
     c = c or cfg(); wf = c["backtest"]["walkforward"]
+    _init(contexts)                      # 父进程也持有上下文（default_full 任务在父进程执行；子进程经 fork 继承）
     ts_all = sorted(set().union(*[set(mc.ts.tolist()) for mc in contexts.values()]))
     first = max(pd.Timestamp(start, tz="UTC") if start else ts_all[0], ts_all[0]); last = min(pd.Timestamp(end, tz="UTC") if end else ts_all[-1], ts_all[-1])
     first = first.normalize()

@@ -1,0 +1,431 @@
+{
+  "name": "m15_2025_2026",
+  "exec_tf": "15m",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "start": "2025-02-01",
+  "end": null,
+  "period": [
+    "2025-02-01 00:00:00",
+    "2026-11-06 10:30:00"
+  ],
+  "buy_and_hold": {
+    "BTCUSDT": {
+      "return": -0.2572568528924657,
+      "max_drawdown": -0.5383758012582693
+    },
+    "ETHUSDT": {
+      "return": -0.32231263908100294,
+      "max_drawdown": -0.6927015686893332
+    },
+    "equal_weight": {
+      "return": -0.2897847459867343,
+      "final_equity": 7102.152540132657
+    }
+  },
+  "variants": {
+    "all_filters": {
+      "n_trades": 67,
+      "win_rate": 0.47761194029850745,
+      "profit_factor": 1.376802725277537,
+      "expectancy_r": 0.18020438856321638,
+      "total_net_return": 0.0602741252571346,
+      "max_drawdown": -0.04296392899276147,
+      "sharpe": 0.7390749057192245,
+      "sortino": 0.44836553936245027,
+      "max_consecutive_losses": 5,
+      "total_costs": 173.99961601585477,
+      "by_regime": {
+        "down": {
+          "n_trades": 16,
+          "win_rate": 0.5,
+          "net_pnl": 68.92966296570572,
+          "expectancy_r": 0.08693097003614311,
+          "profit_factor": 1.1975102013335968
+        },
+        "range": {
+          "n_trades": 25,
+          "win_rate": 0.56,
+          "net_pnl": 282.55753202716386,
+          "expectancy_r": 0.21923343251737465,
+          "profit_factor": 1.5154398461589416
+        },
+        "strong_down": {
+          "n_trades": 17,
+          "win_rate": 0.35294117647058826,
+          "net_pnl": 21.93589045638089,
+          "expectancy_r": 0.04075791280022428,
+          "profit_factor": 1.0427884721577154
+        },
+        "up": {
+          "n_trades": 8,
+          "win_rate": 0.5,
+          "net_pnl": 252.19317977414727,
+          "expectancy_r": 0.6204085906364237,
+          "profit_factor": 2.510987764510094
+        }
+      },
+      "candidates": 6398,
+      "accepted": 84,
+      "elapsed_s": 62.1,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_filters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_filters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_filters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_filters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_filters_report.html"
+      }
+    },
+    "all_nofilters": {
+      "n_trades": 3215,
+      "win_rate": 0.35987558320373253,
+      "profit_factor": 0.48585184926048763,
+      "expectancy_r": -0.2992521318657524,
+      "total_net_return": -0.9917271734485619,
+      "max_drawdown": -0.9918653085234165,
+      "sharpe": -14.080625370724695,
+      "sortino": -10.922660417264236,
+      "max_consecutive_losses": 12,
+      "total_costs": 3952.1463908257524,
+      "by_regime": {
+        "down": {
+          "n_trades": 750,
+          "win_rate": 0.36666666666666664,
+          "net_pnl": -1552.9394091163567,
+          "expectancy_r": -0.3026436350782537,
+          "profit_factor": 0.6554063165031893
+        },
+        "range": {
+          "n_trades": 588,
+          "win_rate": 0.3741496598639456,
+          "net_pnl": -1935.488138259834,
+          "expectancy_r": -0.2887303939175307,
+          "profit_factor": 0.4243634522239974
+        },
+        "strong_down": {
+          "n_trades": 731,
+          "win_rate": 0.33652530779753764,
+          "net_pnl": -2012.0328048413087,
+          "expectancy_r": -0.3381337732206211,
+          "profit_factor": 0.3893889366071497
+        },
+        "strong_up": {
+          "n_trades": 583,
+          "win_rate": 0.3361921097770154,
+          "net_pnl": -1996.304595853941,
+          "expectancy_r": -0.32877408234761707,
+          "profit_factor": 0.3654711818327681
+        },
+        "up": {
+          "n_trades": 563,
+          "win_rate": 0.3907637655417407,
+          "net_pnl": -2420.5531676908276,
+          "expectancy_r": -0.22466843300756795,
+          "profit_factor": 0.5138156442340686
+        }
+      },
+      "candidates": 6398,
+      "accepted": 6398,
+      "elapsed_s": 22.2,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_nofilters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_nofilters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_nofilters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_nofilters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/all_nofilters_report.html"
+      }
+    },
+    "A_breakout_retest_filters": {
+      "n_trades": 36,
+      "win_rate": 0.4722222222222222,
+      "profit_factor": 1.4471162847667898,
+      "expectancy_r": 0.2176875055903511,
+      "total_net_return": 0.03897945473982434,
+      "max_drawdown": -0.022784895143446837,
+      "sharpe": 0.8615436970698915,
+      "sortino": 0.34133255650077066,
+      "max_consecutive_losses": 5,
+      "total_costs": 72.44301753006879,
+      "by_regime": {
+        "down": {
+          "n_trades": 8,
+          "win_rate": 0.375,
+          "net_pnl": 25.38899324013458,
+          "expectancy_r": 0.06595110105177851,
+          "profit_factor": 1.126460935196855
+        },
+        "range": {
+          "n_trades": 18,
+          "win_rate": 0.5555555555555556,
+          "net_pnl": 209.44020220708597,
+          "expectancy_r": 0.22978413459744434,
+          "profit_factor": 1.5301460361837522
+        },
+        "strong_down": {
+          "n_trades": 6,
+          "win_rate": 0.3333333333333333,
+          "net_pnl": 11.520850635650419,
+          "expectancy_r": 0.04716399044034917,
+          "profit_factor": 1.0559632521837483
+        }
+      },
+      "candidates": 755,
+      "accepted": 44,
+      "elapsed_s": 16.4,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_filters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_filters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_filters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_filters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_filters_report.html"
+      }
+    },
+    "B_reclaim_filters": {
+      "n_trades": 29,
+      "win_rate": 0.41379310344827586,
+      "profit_factor": 1.2009415373700991,
+      "expectancy_r": 0.10978489100516685,
+      "total_net_return": 0.015215412527048722,
+      "max_drawdown": -0.030561799271146772,
+      "sharpe": 0.25866456458343384,
+      "sortino": 0.10625380254359684,
+      "max_consecutive_losses": 5,
+      "total_costs": 89.2835112891989,
+      "by_regime": {
+        "down": {
+          "n_trades": 7,
+          "win_rate": 0.5714285714285714,
+          "net_pnl": 40.701274783177716,
+          "expectancy_r": 0.11843576408163008,
+          "profit_factor": 1.280248033756395
+        },
+        "range": {
+          "n_trades": 6,
+          "win_rate": 0.3333333333333333,
+          "net_pnl": 13.597891701206239,
+          "expectancy_r": 0.05429596007333306,
+          "profit_factor": 1.0697033343872422
+        },
+        "strong_down": {
+          "n_trades": 11,
+          "win_rate": 0.36363636363636365,
+          "net_pnl": 16.01025257076933,
+          "expectancy_r": 0.03726368863288355,
+          "profit_factor": 1.0536830420944752
+        }
+      },
+      "candidates": 4045,
+      "accepted": 33,
+      "elapsed_s": 18.8,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_filters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_filters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_filters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_filters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_filters_report.html"
+      }
+    },
+    "C_rejection_filters": {
+      "n_trades": 7,
+      "win_rate": 0.5714285714285714,
+      "profit_factor": 0.0284338924538658,
+      "expectancy_r": -0.4052212895386691,
+      "total_net_return": -0.014108600320054898,
+      "max_drawdown": -0.02153197450689326,
+      "sharpe": -0.9194556066020242,
+      "sortino": -0.09333677851409006,
+      "max_consecutive_losses": 1,
+      "total_costs": 23.307982390735397,
+      "by_regime": {},
+      "candidates": 1598,
+      "accepted": 7,
+      "elapsed_s": 17.2,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_filters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_filters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_filters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_filters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_filters_report.html"
+      }
+    },
+    "A_breakout_retest_nofilters": {
+      "n_trades": 508,
+      "win_rate": 0.4153543307086614,
+      "profit_factor": 0.8997026233203056,
+      "expectancy_r": -0.04774367850518219,
+      "total_net_return": -0.11962780760816927,
+      "max_drawdown": -0.14607707584839935,
+      "sharpe": -0.800557091143701,
+      "sortino": -0.8524429030001521,
+      "max_consecutive_losses": 8,
+      "total_costs": 1240.4739911623176,
+      "by_regime": {
+        "down": {
+          "n_trades": 108,
+          "win_rate": 0.37037037037037035,
+          "net_pnl": -919.7717112760308,
+          "expectancy_r": -0.18089418561972662,
+          "profit_factor": 0.6799956226367699
+        },
+        "range": {
+          "n_trades": 112,
+          "win_rate": 0.4732142857142857,
+          "net_pnl": 270.7407481633188,
+          "expectancy_r": 0.054076778717026604,
+          "profit_factor": 1.1087330852797455
+        },
+        "strong_down": {
+          "n_trades": 115,
+          "win_rate": 0.40869565217391307,
+          "net_pnl": -244.24586411751264,
+          "expectancy_r": -0.04039824397822987,
+          "profit_factor": 0.9111933465431707
+        },
+        "strong_up": {
+          "n_trades": 71,
+          "win_rate": 0.4507042253521127,
+          "net_pnl": 307.975323423482,
+          "expectancy_r": 0.09228237444606699,
+          "profit_factor": 1.231845612141388
+        },
+        "up": {
+          "n_trades": 102,
+          "win_rate": 0.38235294117647056,
+          "net_pnl": -612.656152849477,
+          "expectancy_r": -0.1243143762566998,
+          "profit_factor": 0.7550530386904402
+        }
+      },
+      "candidates": 755,
+      "accepted": 755,
+      "elapsed_s": 16.9,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_nofilters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_nofilters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_nofilters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_nofilters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/A_breakout_retest_nofilters_report.html"
+      }
+    },
+    "B_reclaim_nofilters": {
+      "n_trades": 2691,
+      "win_rate": 0.36677814938684505,
+      "profit_factor": 0.4737761138563652,
+      "expectancy_r": -0.2977174185932082,
+      "total_net_return": -0.9819008612968928,
+      "max_drawdown": -0.9824310536989106,
+      "sharpe": -12.139914869262132,
+      "sortino": -9.843227114230933,
+      "max_consecutive_losses": 15,
+      "total_costs": 3892.7618715790204,
+      "by_regime": {
+        "down": {
+          "n_trades": 636,
+          "win_rate": 0.39937106918238996,
+          "net_pnl": -1470.6769852866782,
+          "expectancy_r": -0.2652060885954368,
+          "profit_factor": 0.6560813685898367
+        },
+        "range": {
+          "n_trades": 477,
+          "win_rate": 0.3668763102725367,
+          "net_pnl": -1859.2649308990112,
+          "expectancy_r": -0.2830775724534666,
+          "profit_factor": 0.42853558629757316
+        },
+        "strong_down": {
+          "n_trades": 630,
+          "win_rate": 0.3619047619047619,
+          "net_pnl": -1825.7579998737792,
+          "expectancy_r": -0.3227410149847669,
+          "profit_factor": 0.4406316308005925
+        },
+        "strong_up": {
+          "n_trades": 495,
+          "win_rate": 0.30707070707070705,
+          "net_pnl": -2119.5992466745065,
+          "expectancy_r": -0.3650028906457018,
+          "profit_factor": 0.3597777844991918
+        },
+        "up": {
+          "n_trades": 453,
+          "win_rate": 0.39293598233995586,
+          "net_pnl": -2543.77641902547,
+          "expectancy_r": -0.2504530435260403,
+          "profit_factor": 0.44155042331378624
+        }
+      },
+      "candidates": 4045,
+      "accepted": 4045,
+      "elapsed_s": 19.3,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_nofilters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_nofilters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_nofilters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_nofilters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/B_reclaim_nofilters_report.html"
+      }
+    },
+    "C_rejection_nofilters": {
+      "n_trades": 1479,
+      "win_rate": 0.32792427315753886,
+      "profit_factor": 0.356814297929346,
+      "expectancy_r": -0.3966649928702602,
+      "total_net_return": -0.9472296397912734,
+      "max_drawdown": -0.947273458491152,
+      "sharpe": -11.09725912785616,
+      "sortino": -8.47087801513518,
+      "max_consecutive_losses": 20,
+      "total_costs": 3724.296321064358,
+      "by_regime": {
+        "down": {
+          "n_trades": 345,
+          "win_rate": 0.2956521739130435,
+          "net_pnl": -2160.0075157312112,
+          "expectancy_r": -0.4463699262752003,
+          "profit_factor": 0.34457345844255916
+        },
+        "range": {
+          "n_trades": 303,
+          "win_rate": 0.35973597359735976,
+          "net_pnl": -1886.706084974401,
+          "expectancy_r": -0.3496232093906749,
+          "profit_factor": 0.4034781421336029
+        },
+        "strong_down": {
+          "n_trades": 338,
+          "win_rate": 0.2869822485207101,
+          "net_pnl": -1743.8431873099053,
+          "expectancy_r": -0.4367854571529287,
+          "profit_factor": 0.3160610315657781
+        },
+        "strong_up": {
+          "n_trades": 222,
+          "win_rate": 0.38288288288288286,
+          "net_pnl": -1374.3375438597989,
+          "expectancy_r": -0.36346649421407917,
+          "profit_factor": 0.3339899118211123
+        },
+        "up": {
+          "n_trades": 271,
+          "win_rate": 0.33948339483394835,
+          "net_pnl": -2307.5229169157574,
+          "expectancy_r": -0.36314029967373,
+          "profit_factor": 0.3687841523225638
+        }
+      },
+      "candidates": 1598,
+      "accepted": 1598,
+      "elapsed_s": 17.7,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_nofilters_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_nofilters_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_nofilters_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_nofilters_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/backtest/m15_2025_2026/C_rejection_nofilters_report.html"
+      }
+    }
+  }
+}

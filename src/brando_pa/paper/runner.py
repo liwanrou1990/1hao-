@@ -151,6 +151,9 @@ class PaperRunner:
         stale, why = bars_are_stale(mc.ex.iloc[: i + 1], self.exec_tf, now=now) if now is not None else (False, "回放模式")
         rep = self.engines[symbol].evaluate(mc, i, equity, data_ok=not stale)
         out["status"], out["reasons"] = rep.status, rep.reasons[:4]
+        if out["closes"] and rep.status not in ("LONG", "SHORT"):
+            out["status"] = "EXIT"                                   # 本根发生了持仓退出（止损/止盈/时间/保本），且无新开仓
+            out["reasons"] = [f"{c_['strategy']} {c_['direction']} 退出：{c_['exit_reason']}，净 {c_['net_pnl']:.2f}（{c_['r_multiple']:.2f}R）" for c_ in out["closes"]] + rep.reasons[:2]
         if rep.status in ("LONG", "SHORT") and rep.chosen is not None:
             sig = rep.chosen["signal"]
             if sig["setup_id"] in set(st["seen_setups"]):
