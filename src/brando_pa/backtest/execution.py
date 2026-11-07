@@ -54,7 +54,8 @@ def fee_rate(costs: dict, instrument: str, kind: str = "taker") -> float:
 
 
 def slip_rate(costs: dict, instrument: str) -> float:
-    return float(costs[instrument]["slippage_bps"]) / 1e4
+    """市价成交的单边不利偏移 = 滑点 + 半价差（spread_bps 为全价差，默认 0 以保持与前两阶段口径一致；压力测试时设置）。"""
+    return (float(costs[instrument]["slippage_bps"]) + 0.5 * float(costs[instrument].get("spread_bps", 0.0))) / 1e4
 
 
 class PositionManager:
@@ -67,9 +68,13 @@ class PositionManager:
     def _resolve_stop_tp(self, sig: dict, fill: float, d: str) -> tuple[float, float, float | None]:
         """按 exits 配置决定初始止损/止盈。返回 (stop, tp, trail_after_rr)。never_widen_stop：止损只能比策略止损更紧或相同。"""
         stop = float(sig["stop_price"]); tp = float(sig["take_profit"])
-        struct = sig.get("structure_price")
-        if self.ex.get("stop_mode", "atr_buffer") == "fixed_structure" and struct is not None:
+        struct = sig.get("structure_price"); micro = sig.get("micro_stop_price")
+        mode = self.ex.get("stop_mode", "atr_buffer")
+        if mode == "fixed_structure" and struct is not None:
             stop = float(struct)
+        elif mode == "micro" and micro is not None:
+            # 低周期微结构止损：只允许比策略止损更紧（never widen）
+            stop = float(micro) if ((d == "long" and micro > stop) or (d == "short" and micro < stop)) else stop
         tp_mode = self.ex.get("tp_mode", "next_zone_or_rr")
         risk = abs(fill - stop)
         if tp_mode == "rr":

@@ -76,6 +76,8 @@ class Signal:
     structure_price: float | None = None   # 结构失效点（不含 ATR 缓冲）；stop_mode=fixed_structure 时用它作止损
     invalidation_price: float | None = None  # 执行周期收盘越过此价 → 结构失效（structure_exit 用）
     limit_price: float | None = None       # 入场模式 2 的挂单价（由引擎按区域边界计算）
+    micro_stop_price: float | None = None  # 低周期微结构止损位（stop_mode=micro 时使用）
+    diag: dict = field(default_factory=dict)  # 逐笔诊断：突破价/回踩价/确认价/区域边界/结构点/微结构点 等
 
     @property
     def risk_per_unit(self) -> float:
@@ -94,7 +96,8 @@ class Signal:
                 "take_profit": self.take_profit, "rr_gross": round(self.rr_gross, 3), "zone": self.zone, "tp_zone": self.tp_zone, "reasons": self.reasons,
                 "invalidation": self.invalidation, "setup_id": self.setup_id, "bar_idx": self.bar_idx, "ts": self.ts.isoformat(), "atr": self.atr,
                 "trail_after_rr": self.trail_after_rr, "max_hold_bars": self.max_hold_bars, "break_rel_vol": self.break_rel_vol, "signal_rel_vol": self.signal_rel_vol,
-                "structure_price": self.structure_price, "invalidation_price": self.invalidation_price, "limit_price": self.limit_price}
+                "structure_price": self.structure_price, "invalidation_price": self.invalidation_price, "limit_price": self.limit_price,
+                "micro_stop_price": self.micro_stop_price, "diag": self.diag}
 
 
 def choose_take_profit(direction: str, ref: float, stop: float, zones: list[Zone], tp_mode: str, tp_rr: float, min_rr: float) -> tuple[float, dict | None, str]:

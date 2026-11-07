@@ -40,6 +40,9 @@ levels:
   max_zones_each_side: 6
   lookback_bars: {1w: 260, 1d: 400, 4h: 600}
 
+structure_entry:
+  micro_k: 3                          # 执行周期微结构分形参数（1h/15m 均用 3；confirmed_idx = idx + 3）
+
 structure:
   tf: 4h
   swing_k: 3
@@ -98,7 +101,37 @@ strategies:
     tp_rr: 2.0
     trail_after_rr: 1.5
     max_hold_bars: 96
-  priority: [A_breakout_retest, B_reclaim, C_rejection]   # 同一根 K 线多策略同向触发时的取舍（按净盈亏比择优，再按此顺序）
+  A2_structure_entry:                 # 第三阶段模式 A：到达关键区域 → 执行周期微结构确认（默认关闭，研究时显式选择）
+    enabled: false
+    zone_tfs: [1w, 1d]
+    touch_tol_atr: 0.25
+    max_undercut_atr: 1.0             # 微结构低点最多跌破区域下沿 1 ATR
+    invalidate_atr: 1.0               # 收盘跌破区域下沿 1 ATR → 支撑丢失，放弃
+    max_bars_after_touch: 24
+    micro_buffer_atr: 0.2
+    sl_buffer_atr: 0.5                # 结构止损（区域另一侧）的缓冲，供 stop_mode 对照
+    default_stop: micro               # micro | structure
+    allow_counter_trend: false        # 4h 结构逆势不做
+    tp_mode: next_zone_or_rr
+    tp_rr: 2.0
+    trail_after_rr: 1.5
+    max_hold_bars: 96
+  A3_breakout_second_confirm:         # 第三阶段模式 B：4h 有效突破 → 首次回踩 → 微结构确认；无回踩则放弃
+    enabled: false
+    zone_tfs: [1w, 1d]
+    max_wait_retest_bars: 48
+    touch_tol_atr: 0.25
+    max_undercut_atr: 1.0
+    invalidate_atr: 1.0
+    max_bars_after_touch: 24
+    micro_buffer_atr: 0.2
+    sl_buffer_atr: 0.5
+    default_stop: micro
+    tp_mode: next_zone_or_rr
+    tp_rr: 2.0
+    trail_after_rr: 1.5
+    max_hold_bars: 96
+  priority: [A_breakout_retest, B_reclaim, C_rejection, A2_structure_entry, A3_breakout_second_confirm]   # 同一根 K 线多策略同向触发时的取舍（按净盈亏比择优，再按此顺序）
 
 filters:
   enabled: true

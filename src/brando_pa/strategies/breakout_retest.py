@@ -28,7 +28,7 @@ class BreakoutRetest(Strategy):
                 continue
             self._count("setup_armed")
             self.setups.append({"id": sid, "zone": z, "direction": direction, "armed_idx": ctx.i, "retested": False, "retest_idx": None,
-                                "retest_extreme": None, "break_rel_vol": ev.get("rel_vol"), "break_ts": str(ev.get("ts"))})
+                                "retest_extreme": None, "break_rel_vol": ev.get("rel_vol"), "break_ts": str(ev.get("ts")), "break_close": ev.get("close"), "armed_close": ctx.c})
         if not self.setups:
             self.wait_reasons.append("无 4h 收盘有效突破 1W/1D 关键区域的设置")
             return None
@@ -69,7 +69,11 @@ class BreakoutRetest(Strategy):
                                     [f"4h 收盘有效突破 {'/'.join(z.tfs)} 阻力区 [{z.lo:.2f},{z.hi:.2f}]（{s['break_ts'][:16]}）", f"回踩至 {s['retest_extreme']:.2f}（区域上沿 {z.hi:.2f}）",
                                      f"确认 K 线收盘 {ctx.c:.2f} 回到区域上方，收盘位置 {ctx.close_pct:.0%} ≥ {cp:.0%}", tpr],
                                     f"执行周期收盘跌破 {z.lo - float(p['invalidate_close_beyond_atr'])*a:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s.get("break_rel_vol"), ctx.rel_vol,
-                                    structure_price=struct_px, invalidation_price=z.lo - float(p["invalidate_close_beyond_atr"]) * a, limit_price=min(ctx.c, z.hi))
+                                    structure_price=struct_px, invalidation_price=z.lo - float(p["invalidate_close_beyond_atr"]) * a, limit_price=min(ctx.c, z.hi),
+                                    micro_stop_price=s["retest_extreme"] - float(p.get("micro_buffer_atr", 0.2)) * a,
+                                    diag={"break_close_4h": s.get("break_close"), "armed_close": s.get("armed_close"), "zone_lo": z.lo, "zone_hi": z.hi, "zone_height_atr": (z.hi - z.lo) / a, "retest_extreme": s["retest_extreme"],
+                                          "retest_depth_atr": (z.hi - s["retest_extreme"]) / a, "confirm_close": ctx.c, "confirm_to_zone_edge_atr": (ctx.c - z.hi) / a, "structure_price": struct_px,
+                                          "structure_is_zone_far_side": bool(struct_px == z.lo), "bars_armed_to_retest": (s["retest_idx"] or ctx.i) - s["armed_idx"], "bars_retest_to_confirm": ctx.i - (s["retest_idx"] or ctx.i)})
                     continue
                 if d == "short" and ctx.c < z.lo and ctx.c < ctx.o and ctx.close_pct <= 1 - cp:
                     struct_px = max(s["retest_extreme"], z.hi); stop = struct_px + float(p["sl_buffer_atr"]) * a
@@ -78,7 +82,11 @@ class BreakoutRetest(Strategy):
                                     [f"4h 收盘有效跌破 {'/'.join(z.tfs)} 支撑区 [{z.lo:.2f},{z.hi:.2f}]（{s['break_ts'][:16]}）", f"反抽至 {s['retest_extreme']:.2f}（区域下沿 {z.lo:.2f}）",
                                      f"确认 K 线收盘 {ctx.c:.2f} 回到区域下方，收盘位置 {ctx.close_pct:.0%} ≤ {1-cp:.0%}", tpr],
                                     f"执行周期收盘站回 {z.hi + float(p['invalidate_close_beyond_atr'])*a:.2f}", s["id"], ctx.i, ctx.ts, a, p.get("trail_after_rr"), p.get("max_hold_bars"), tpz, s.get("break_rel_vol"), ctx.rel_vol,
-                                    structure_price=struct_px, invalidation_price=z.hi + float(p["invalidate_close_beyond_atr"]) * a, limit_price=max(ctx.c, z.lo))
+                                    structure_price=struct_px, invalidation_price=z.hi + float(p["invalidate_close_beyond_atr"]) * a, limit_price=max(ctx.c, z.lo),
+                                    micro_stop_price=s["retest_extreme"] + float(p.get("micro_buffer_atr", 0.2)) * a,
+                                    diag={"break_close_4h": s.get("break_close"), "armed_close": s.get("armed_close"), "zone_lo": z.lo, "zone_hi": z.hi, "zone_height_atr": (z.hi - z.lo) / a, "retest_extreme": s["retest_extreme"],
+                                          "retest_depth_atr": (s["retest_extreme"] - z.lo) / a, "confirm_close": ctx.c, "confirm_to_zone_edge_atr": (z.lo - ctx.c) / a, "structure_price": struct_px,
+                                          "structure_is_zone_far_side": bool(struct_px == z.hi), "bars_armed_to_retest": (s["retest_idx"] or ctx.i) - s["armed_idx"], "bars_retest_to_confirm": ctx.i - (s["retest_idx"] or ctx.i)})
                     continue
             keep.append(s)
             self.wait_reasons.append(f"A {z.zone_id} {d} 等待{'确认' if s['retested'] else '回踩'}（已 {ctx.i - s['armed_idx']} 根）")

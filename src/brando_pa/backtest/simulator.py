@@ -37,6 +37,7 @@ class BacktestResult:
     notes: list[str] = field(default_factory=list)
     limit_log: list[dict] = field(default_factory=list)
     strategy_counters: dict = field(default_factory=dict)
+    order_events: list[dict] = field(default_factory=list)
 
 
 class Backtester:
@@ -75,7 +76,9 @@ class Backtester:
         equity_cash = self.initial_equity
         positions: list[Position] = []
         pending: dict[str, dict] = {}
-        trades: list[dict] = []; eq_rows: list[dict] = []; sig_rows: list[dict] = []; cancelled: list[dict] = []; limit_log: list[dict] = []
+        trades: list[dict] = []; eq_rows: list[dict] = []; sig_rows: list[dict] = []; cancelled: list[dict] = []; limit_log: list[dict] = []; order_events: list[dict] = []
+        def _ev(kind, sym, t_, **kw):
+            order_events.append({"ts": str(t_), "symbol": sym, "event": kind} | kw)
         entry_mode = (c.get("execution_modes", {}) or {}).get("entry_mode", "market")
         lim_cfg = (c.get("execution_modes", {}) or {}).get("limit", {}) or {}
         mtf_mode = (c.get("mtf", {}) or {}).get("mode", "single")
@@ -99,7 +102,11 @@ class Backtester:
                     equity_now = equity_cash + sum(p.unrealized(float(contexts[p.symbol].cl[pos_of[p.symbol].get(t, p.entry_idx)])) for p in positions)
                     if pend.get("entry_mode") == "limit":
                         state, px = pm.limit_fill_check(pend, o, h, l, cl, i)
+                        lp_ = float(pend["signal"]["limit_price"]); touched = (l <= lp_) if pend["signal"]["direction"] == "long" else (h >= lp_)
+                        if touched and state != "fill":
+                            _ev("order_touched_not_filled", s, t, setup_id=pend["signal"]["setup_id"], limit_price=lp_, low=l, high=h)
                         if state == "fill":
+                            _ev("order_filled", s, t, setup_id=pend["signal"]["setup_id"], fill_price=px, order_type="limit")
                             pending.pop(s)
                             newp, dcash, canc = pm.fill_entry(pend, o, t, i, equity_now, bar_sec, fill_price=px, maker=bool(lim_cfg.get("maker_fill_uses_maker_fee", True)))
                             equity_cash += dcash
@@ -109,7 +116,7 @@ class Backtester:
                                 cancelled.append(canc)
                             limit_log.append({"ts": str(t), "symbol": s, "strategy": pend["signal"]["strategy"], "direction": pend["signal"]["direction"], "limit_price": pend["signal"]["limit_price"], "status": "filled" if newp is not None else "filled_then_rejected", "wait_bars": i - pend["placed_idx"]})
                         elif state.startswith("cancel"):
-                            pending.pop(s)
+                            pending.pop(s); _ev("order_cancelled", s, t, setup_id=pend["signal"]["setup_id"], reason=state)
                             hyp = hypothetical_outcome(pm, mc, pend, pend["placed_idx"], bar_sec, equity_now)
                             limit_log.append({"ts": str(t), "symbol": s, "strategy": pend["signal"]["strategy"], "direction": pend["signal"]["direction"], "limit_price": pend["signal"]["limit_price"], "status": state, "wait_bars": i - pend["placed_idx"],
                                               "hypothetical_market_net_pnl": hyp.get("net_pnl"), "hypothetical_market_r": hyp.get("r_multiple"), "hypothetical_exit": hyp.get("exit_reason", hyp.get("status"))})
@@ -119,9 +126,9 @@ class Backtester:
                         newp, dcash, canc = pm.fill_entry(pend, o, t, i, equity_now, bar_sec)
                         equity_cash += dcash
                         if newp is not None:
-                            positions.append(newp)
+                            positions.append(newp); _ev("order_filled", s, t, setup_id=pend["signal"]["setup_id"], fill_price=newp.entry_price, order_type="market")
                         if canc is not None:
-                            cancelled.append(canc)
+                            cancelled.append(canc); _ev("order_cancelled", s, t, setup_id=pend["signal"]["setup_id"], reason=canc["reason"])
                 # (b) 管理持仓
                 still: list[Position] = []
                 for p in positions:
@@ -130,6 +137,7 @@ class Backtester:
                     closed, pnl_cash = pm.manage(p, o, h, l, cl, t, i, trades)
                     equity_cash += pnl_cash
                     if closed:
+                        _ev("position_exit", s, t, position_id=p.position_id, reason=trades[-1]["exit_reason"], exit_price=trades[-1]["exit_price"])
                         rs.day_realized_pnl += trades[-1]["net_pnl"]
                         rs.consecutive_losses = rs.consecutive_losses + 1 if trades[-1]["net_pnl"] < 0 else 0
                     else:
@@ -156,7 +164,10 @@ class Backtester:
                                      "fails": ",".join(fails), "first_fail": fails[0] if fails else "", "net_rr": e.get("net_rr", e.get("net_rr_est")), "rr_gross": e["signal"]["rr_gross"], "status": rep.status,
                                      "regime4": e.get("regime4"), "stop_distance_pct": e.get("stop_distance_pct"), "stop_distance_atr": e.get("stop_distance_atr"), "cost_bps": e.get("cost_bps", e.get("cost_bps_est")),
                                      "cost_to_risk": e.get("cost_to_risk"), "cost_share_of_reward": e.get("cost_share_of_reward", e.get("cost_share_of_reward_est")), "zone_tfs": e.get("zone_tfs"),
-                                     "sizing_ok": bool(e.get("sizing", {}).get("ok", False)) if e.get("sizing") else None, "portfolio_block": ""})
+                                     "sizing_ok": bool(e.get("sizing", {}).get("ok", False)) if e.get("sizing") else None, "portfolio_block": "",
+                                     "ref_price": e["signal"]["ref_price"], "stop_price": e["signal"]["stop_price"], "take_profit": e["signal"]["take_profit"], "atr": e["signal"]["atr"],
+                                     "structure_price": e["signal"].get("structure_price"), "micro_stop_price": e["signal"].get("micro_stop_price"),
+                                     **{f"diag_{k}": v for k, v in (e["signal"].get("diag") or {}).items()}})
                 if rep.status in ("LONG", "SHORT") and rep.chosen is not None:
                     sig = rep.chosen["signal"]
                     if sig["setup_id"] in seen_setups:
@@ -176,6 +187,8 @@ class Backtester:
                     if s in pending and pending[s].get("entry_mode") == "limit":
                         limit_log.append({"ts": str(t), "symbol": s, "strategy": pending[s]["signal"]["strategy"], "direction": pending[s]["signal"]["direction"], "limit_price": pending[s]["signal"]["limit_price"], "status": "cancel:replaced_by_new_signal", "wait_bars": i - pending[s]["placed_idx"]})
                     pending[s] = pend_new
+                    _ev("signal_generated", s, t, setup_id=sig["setup_id"], strategy=sig["strategy"], direction=sig["direction"], ref_price=sig["ref_price"], stop=sig["stop_price"], tp=sig["take_profit"])
+                    _ev("order_submitted", s, t, setup_id=sig["setup_id"], order_type=pend_new["entry_mode"], limit_price=sig.get("limit_price") if pend_new["entry_mode"] == "limit" else None, expires_idx=pend_new["expires_idx"])
             if rs.day_start_equity and rs.halted_until_day is None:
                 day_loss = -(rs.day_realized_pnl + unreal) / rs.day_start_equity
                 if day_loss >= float(rc["daily_loss_limit"]):
@@ -197,4 +210,4 @@ class Backtester:
         notes.append(f"入场模式 {entry_mode}；多周期模式 {mtf_mode}；退出配置 {c.get('exits')}")
         counters = {s: {k: dict(v.counters) for k, v in engines[s].strategies.items()} for s in syms}
         return BacktestResult(trades_df, eq, pd.DataFrame(sig_rows), status_counts, cancelled, {"strategies": self.c["strategies"], "filters": self.c["filters"], "risk": self.c["risk"], "costs": costs, "backtest": bt, "exits": c.get("exits"), "execution_modes": c.get("execution_modes"), "mtf": c.get("mtf")},
-                              self.exec_tf, syms, period, notes, limit_log, counters)
+                              self.exec_tf, syms, period, notes, limit_log, counters, order_events)

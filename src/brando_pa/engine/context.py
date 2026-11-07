@@ -49,6 +49,8 @@ class MarketContext:
         self.vol = self.ex["volume"].to_numpy(float)
         self.ts = self.ex["ts"]
         self.atr_ex = atr(self.ex, int(lv["atr_n"])).to_numpy(float)
+        self.exec_swings = find_swings(self.ex, int(c.get("structure_entry", {}).get("micro_k", 3)))     # 执行周期微结构摆动点（含 confirmed_idx）
+        self._exec_swing_conf = np.array([sw.confirmed_idx for sw in self.exec_swings], dtype=int)
         self.relvol_ex = rel_volume(self.ex["volume"], int(c["filters"]["volume"]["lookback"])).to_numpy(float)
         self.level_tfs = [tf for tf in ("1w", "1d", "4h") if tf in self.bars]
         self.htf: dict[str, dict] = {}
@@ -129,11 +131,15 @@ class MarketContext:
         for z in merge_zones([zl]):
             ev = classify_bar(H["o"][hidx], H["h"][hidx], H["l"][hidx], H["c"][hidx], pc, z, buf)
             if ev != "none":
-                out.append({"zone": z, "event": ev, "rel_vol": float(H["relvol"][hidx]) if np.isfinite(H["relvol"][hidx]) else None, "ts": H["df"]["ts"].iloc[hidx], "tf": tf})
+                out.append({"zone": z, "event": ev, "rel_vol": float(H["relvol"][hidx]) if np.isfinite(H["relvol"][hidx]) else None, "ts": H["df"]["ts"].iloc[hidx], "tf": tf, "close": float(H["c"][hidx])})
         return out
 
     def extras_at(self, i: int) -> dict:
         out = {"bar_seconds": self.bar_seconds}
+        # 执行周期已确认摆动点（confirmed_idx ≤ i）与高低价数组（只读视图，策略只允许索引 ≤ i 的部分：微结构段 [idx+1, confirmed_idx] 必然 ≤ i）
+        n_ok = int(np.searchsorted(self._exec_swing_conf, i, side="right")) if len(self._exec_swing_conf) else 0
+        out["exec_swings"] = self.exec_swings[:n_ok]
+        out["exec_h"] = self.h; out["exec_l"] = self.l
         dec = self.ts.iloc[i] + pd.Timedelta(seconds=self.bar_seconds)
         for name, df in self.extras.items():
             if df is None or df.empty:
