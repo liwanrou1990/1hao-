@@ -1,0 +1,126 @@
+{
+ "probed_at": "2026-11-07T16:56:17Z",
+ "proxy": "http://127.0.0.1:36117",
+ "results": {
+  "binance_spot_api": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 255
+  },
+  "binance_spot_api1": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 243
+  },
+  "binance_data_vision": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 238
+  },
+  "binance_us": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 235
+  },
+  "okx": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 242
+  },
+  "bybit": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 227
+  },
+  "coinbase_exchange": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 226
+  },
+  "coinbase_api": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 211
+  },
+  "kraken": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 240
+  },
+  "bitstamp": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 235
+  },
+  "gateio": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 216
+  },
+  "kucoin": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 234
+  },
+  "mexc": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 225
+  },
+  "htx": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 226
+  },
+  "bitget": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 252
+  },
+  "gemini": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 235
+  },
+  "cryptocompare": {
+   "ok": false,
+   "status": null,
+   "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>",
+   "ms": 232
+  },
+  "coingecko": {
+   "ok": true,
+   "status": 200,
+   "ms": 334,
+   "sample": "[[1793984400000,75687.0,75957.0,75581.0,75925.0],[1793986200000,75914.0,75988.0,75771.0,75803.0],[1793988000000,75796.0,75839.0,75454.0,75706.0],[1793989800000,"
+  },
+  "defillama_coins": {
+   "ok": true,
+   "status": 200,
+   "ms": 278,
+   "sample": "{\"coins\":{\"coingecko:bitcoin\":{\"symbol\":\"BTC\",\"confidence\":0.99,\"prices\":[{\"timestamp\":1794063413,\"price\":75860.70618015},{\"timestamp\":1794066954,\"price\":75645."
+  },
+  "static_klines_cache": {
+   "ok": true,
+   "status": 200,
+   "ms": 157,
+   "sample": "# static-klines\n\n[![Deploy](https://github.com/finom/static-klines/actions/workflows/nextjs.yml/badge.svg)](https://github.com/finom/static-klines/actions/workf"
+  }
+ }
+}
