@@ -1,0 +1,4552 @@
+{
+  "exec_tf": "15m",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "overrides": [],
+  "regime_gating": true,
+  "windows": {
+    "train_months": 8,
+    "valid_months": 3,
+    "test_months": 3,
+    "embargo_days": 7
+  },
+  "results": {
+    "A_breakout_retest": {
+      "strategy": "A_breakout_retest",
+      "oos_stats": {
+        "n_trades": 9,
+        "net_pnl": 219.95066470579775,
+        "net_return": 0.021995066470579774,
+        "expectancy_r": 0.492607982183472,
+        "win_rate": 0.5555555555555556,
+        "profit_factor": 2.08268529649215,
+        "max_drawdown": -0.014667237158039526,
+        "sharpe": 2.8672120330379682,
+        "sortino": 2.1275090945006445,
+        "max_consecutive_losses": 3,
+        "avg_win": 84.62071422242897,
+        "avg_loss": -50.78822660158676,
+        "by_year": {
+          "2026": {
+            "n": 9,
+            "net_pnl": 219.95066470579775,
+            "expectancy_r": 0.492607982183472,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.08268529649215
+          }
+        },
+        "by_direction": {
+          "short": {
+            "n": 9,
+            "net_pnl": 219.95066470579775,
+            "expectancy_r": 0.492607982183472,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.08268529649215
+          }
+        },
+        "by_regime4": {
+          "下跌趋势": {
+            "n": 6,
+            "net_pnl": 8.220898009958653,
+            "expectancy_r": 0.03961834742636303,
+            "win_rate": 0.3333333333333333,
+            "pf": 1.0404665537667237
+          },
+          "横盘震荡": {
+            "n": 3,
+            "net_pnl": 211.72976669583915,
+            "expectancy_r": 1.39858725169769,
+            "win_rate": 1.0,
+            "pf": null
+          }
+        },
+        "by_symbol": {
+          "BTCUSDT": {
+            "n": 4,
+            "net_pnl": 109.42412285319446,
+            "expectancy_r": 0.5511259529931712,
+            "win_rate": 0.5,
+            "pf": 2.0733150037889647
+          },
+          "ETHUSDT": {
+            "n": 5,
+            "net_pnl": 110.52654185260333,
+            "expectancy_r": 0.4457936055357126,
+            "win_rate": 0.6,
+            "pf": 2.0921247027830328
+          }
+        },
+        "by_exit_reason": {
+          "stop": {
+            "n": 4,
+            "net_pnl": -203.15290640634703,
+            "expectancy_r": -0.9840791459596726,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "take_profit": {
+            "n": 4,
+            "net_pnl": 422.5286007198103,
+            "expectancy_r": 2.0896595727160943,
+            "win_rate": 1.0,
+            "pf": null
+          },
+          "trail_stop": {
+            "n": 1,
+            "net_pnl": 0.5749703923345295,
+            "expectancy_r": 0.01115013262556281,
+            "win_rate": 1.0,
+            "pf": null
+          }
+        },
+        "cost_sensitivity": {
+          "base": {
+            "net_pnl": 219.95066470579775,
+            "expectancy_r": 0.492607982183472,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.08268529649215
+          },
+          "fees_x0.5": {
+            "net_pnl": 228.83548048822794,
+            "expectancy_r": 0.5119276982522539,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.149096778683858
+          },
+          "fees_x1.5": {
+            "net_pnl": 211.0658489233677,
+            "expectancy_r": 0.47328826611469005,
+            "win_rate": 0.4444444444444444,
+            "pf": 2.0183209213765267
+          },
+          "fees_x2": {
+            "net_pnl": 202.18103314093756,
+            "expectancy_r": 0.45396855004590797,
+            "win_rate": 0.4444444444444444,
+            "pf": 1.953868313787102
+          },
+          "slip_x0": {
+            "net_pnl": 242.65715487907016,
+            "expectancy_r": 0.5418169368387115,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.279127715098262
+          },
+          "slip_x2": {
+            "net_pnl": 197.24417453252548,
+            "expectancy_r": 0.44339902752823257,
+            "win_rate": 0.4444444444444444,
+            "pf": 1.9035716464424675
+          },
+          "slip_x3": {
+            "net_pnl": 174.5376843592531,
+            "expectancy_r": 0.39419007287299296,
+            "win_rate": 0.4444444444444444,
+            "pf": 1.7458561282548155
+          },
+          "funding_x0": {
+            "net_pnl": 219.95066470579775,
+            "expectancy_r": 0.492607982183472,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.08268529649215
+          },
+          "funding_x3": {
+            "net_pnl": 219.95066470579775,
+            "expectancy_r": 0.492607982183472,
+            "win_rate": 0.5555555555555556,
+            "pf": 2.08268529649215
+          },
+          "all_x2": {
+            "net_pnl": 179.47454296766526,
+            "expectancy_r": 0.4047595953906684,
+            "win_rate": 0.4444444444444444,
+            "pf": 1.7882926364054894
+          },
+          "breakeven_fee_multiplier": 6.434084474021687
+        },
+        "bootstrap_mean_r_95ci": {
+          "lower": -0.07636481079006735,
+          "upper": 1.1716110068036012,
+          "point": 0.492607982183472,
+          "n": 9,
+          "block": 5
+        },
+        "bootstrap_net_return_95ci": {
+          "lower": -0.003734741125483135,
+          "upper": 0.052960938832719476,
+          "point": 0.021995066470579784,
+          "n": 9,
+          "block": 5
+        },
+        "total_fees": 17.769631564860205,
+        "total_funding": 0.0,
+        "total_slippage": 22.70649017327235,
+        "fold_nonneg_share": 1.0,
+        "n_folds_with_trades": 1
+      },
+      "default_full_stats": {
+        "n_trades": 11,
+        "expectancy_r": 0.3702537935119629,
+        "net_pnl": 201.03559889259276,
+        "profit_factor": 1.8877935292087193,
+        "span": [
+          "2026-01-15 00:00:00+00:00",
+          "2026-11-06 10:30:00+00:00"
+        ]
+      },
+      "perturbation": {
+        "default": {
+          "n_trades": 11,
+          "expectancy_r": 0.3702537935119629,
+          "profit_factor": 1.8877935292087193,
+          "net_pnl": 201.03559889259276
+        }
+      },
+      "subsets": {
+        "symbol=BTCUSDT": {
+          "n_trades": 4,
+          "net_pnl": 109.42412285319446,
+          "net_return": 0.010942412285319445,
+          "expectancy_r": 0.5511259529931712,
+          "win_rate": 0.5,
+          "profit_factor": 2.0733150037889647,
+          "max_drawdown": -0.005050147754387724,
+          "sharpe": 3.2954042155737664,
+          "sortino": 2.929377878479222,
+          "max_consecutive_losses": 1,
+          "avg_win": 105.68690220815283,
+          "avg_loss": -50.974840781555606,
+          "by_year": {
+            "2026": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -101.94968156311121,
+              "expectancy_r": -0.9847614282120918,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "take_profit": {
+              "n": 2,
+              "net_pnl": 211.37380441630566,
+              "expectancy_r": 2.087013334198434,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "fees_x0.5": {
+              "net_pnl": 113.46336455734033,
+              "expectancy_r": 0.5708687378982351,
+              "win_rate": 0.5,
+              "pf": 2.134365548480715
+            },
+            "fees_x1.5": {
+              "net_pnl": 105.38488114904861,
+              "expectancy_r": 0.5313831680881073,
+              "win_rate": 0.5,
+              "pf": 2.014528438330922
+            },
+            "fees_x2": {
+              "net_pnl": 101.34563944490276,
+              "expectancy_r": 0.5116403831830433,
+              "win_rate": 0.5,
+              "pf": 1.957882209623349
+            },
+            "slip_x0": {
+              "net_pnl": 119.40884363670864,
+              "expectancy_r": 0.5997399588966528,
+              "win_rate": 0.5,
+              "pf": 2.250524534024388
+            },
+            "slip_x2": {
+              "net_pnl": 99.43940206968023,
+              "expectancy_r": 0.5025119470896897,
+              "win_rate": 0.5,
+              "pf": 1.9172330965884223
+            },
+            "slip_x3": {
+              "net_pnl": 89.45468128616601,
+              "expectancy_r": 0.453897941186208,
+              "win_rate": 0.5,
+              "pf": 1.7787129991054618
+            },
+            "funding_x0": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "funding_x3": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "all_x2": {
+              "net_pnl": 91.36091866138854,
+              "expectancy_r": 0.46302637727956175,
+              "win_rate": 0.5,
+              "pf": 1.8138009580173755
+            },
+            "breakeven_fee_multiplier": 7.057846752506567
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.5511259529931712,
+            "upper": 0.5511259529931712,
+            "point": 0.5511259529931712,
+            "n": 4,
+            "block": 4
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.010942412285319444,
+            "upper": 0.010942412285319444,
+            "point": 0.010942412285319444,
+            "n": 4,
+            "block": 4
+          },
+          "total_fees": 8.078483408291708,
+          "total_funding": 0.0,
+          "total_slippage": 9.98472078351421
+        },
+        "symbol=ETHUSDT": {
+          "n_trades": 5,
+          "net_pnl": 110.52654185260333,
+          "net_return": 0.011052654185260333,
+          "expectancy_r": 0.4457936055357126,
+          "win_rate": 0.6,
+          "profit_factor": 2.0921247027830328,
+          "max_drawdown": -0.009910487954087444,
+          "sharpe": 2.027416519620193,
+          "sortino": 1.0699959812533264,
+          "max_consecutive_losses": 2,
+          "avg_win": 70.57658889861305,
+          "avg_loss": -50.6016124216179,
+          "by_year": {
+            "2026": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 2,
+              "net_pnl": -101.2032248432358,
+              "expectancy_r": -0.9833968637072534,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "横盘震荡": {
+              "n": 3,
+              "net_pnl": 211.72976669583915,
+              "expectancy_r": 1.39858725169769,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -101.2032248432358,
+              "expectancy_r": -0.9833968637072534,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "take_profit": {
+              "n": 2,
+              "net_pnl": 211.1547963035046,
+              "expectancy_r": 2.0923058112337536,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.5749703923345295,
+              "expectancy_r": 0.01115013262556281,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "fees_x0.5": {
+              "net_pnl": 115.37211593088759,
+              "expectancy_r": 0.46477486653546907,
+              "win_rate": 0.6,
+              "pf": 2.163962284676151
+            },
+            "fees_x1.5": {
+              "net_pnl": 105.68096777431911,
+              "expectancy_r": 0.4268123445359562,
+              "win_rate": 0.4,
+              "pf": 2.0221311195276543
+            },
+            "fees_x2": {
+              "net_pnl": 100.83539369603486,
+              "expectancy_r": 0.40783108353619985,
+              "win_rate": 0.4,
+              "pf": 1.949867860047757
+            },
+            "slip_x0": {
+              "net_pnl": 123.2483112423615,
+              "expectancy_r": 0.4954785191923586,
+              "win_rate": 0.6,
+              "pf": 2.3081160935819414
+            },
+            "slip_x2": {
+              "net_pnl": 97.80477246284525,
+              "expectancy_r": 0.39610869187906694,
+              "win_rate": 0.4,
+              "pf": 1.8900928579625322
+            },
+            "slip_x3": {
+              "net_pnl": 85.0830030730871,
+              "expectancy_r": 0.34642377822242104,
+              "win_rate": 0.4,
+              "pf": 1.7141740889702102
+            },
+            "funding_x0": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "funding_x3": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "all_x2": {
+              "net_pnl": 88.1136243062767,
+              "expectancy_r": 0.358146169879554,
+              "win_rate": 0.4,
+              "pf": 1.7634796772174652
+            },
+            "breakeven_fee_multiplier": 5.931376810901535
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.4457936055357126,
+            "upper": 0.4457936055357126,
+            "point": 0.4457936055357126,
+            "n": 5,
+            "block": 5
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.011052654185260335,
+            "upper": 0.011052654185260335,
+            "point": 0.011052654185260335,
+            "n": 5,
+            "block": 5
+          },
+          "total_fees": 9.691148156568495,
+          "total_funding": 0.0,
+          "total_slippage": 12.721769389758142
+        },
+        "direction=short": {
+          "n_trades": 9,
+          "net_pnl": 219.95066470579775,
+          "net_return": 0.021995066470579774,
+          "expectancy_r": 0.492607982183472,
+          "win_rate": 0.5555555555555556,
+          "profit_factor": 2.08268529649215,
+          "max_drawdown": -0.014667237158039526,
+          "sharpe": 2.8672120330379682,
+          "sortino": 2.1275090945006445,
+          "max_consecutive_losses": 3,
+          "avg_win": 84.62071422242897,
+          "avg_loss": -50.78822660158676,
+          "by_year": {
+            "2026": {
+              "n": 9,
+              "net_pnl": 219.95066470579775,
+              "expectancy_r": 0.492607982183472,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.08268529649215
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 9,
+              "net_pnl": 219.95066470579775,
+              "expectancy_r": 0.492607982183472,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.08268529649215
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 6,
+              "net_pnl": 8.220898009958653,
+              "expectancy_r": 0.03961834742636303,
+              "win_rate": 0.3333333333333333,
+              "pf": 1.0404665537667237
+            },
+            "横盘震荡": {
+              "n": 3,
+              "net_pnl": 211.72976669583915,
+              "expectancy_r": 1.39858725169769,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "ETHUSDT": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 4,
+              "net_pnl": -203.15290640634703,
+              "expectancy_r": -0.9840791459596726,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "take_profit": {
+              "n": 4,
+              "net_pnl": 422.5286007198103,
+              "expectancy_r": 2.0896595727160943,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.5749703923345295,
+              "expectancy_r": 0.01115013262556281,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 219.95066470579775,
+              "expectancy_r": 0.492607982183472,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.08268529649215
+            },
+            "fees_x0.5": {
+              "net_pnl": 228.83548048822794,
+              "expectancy_r": 0.5119276982522539,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.149096778683858
+            },
+            "fees_x1.5": {
+              "net_pnl": 211.0658489233677,
+              "expectancy_r": 0.47328826611469005,
+              "win_rate": 0.4444444444444444,
+              "pf": 2.0183209213765267
+            },
+            "fees_x2": {
+              "net_pnl": 202.18103314093756,
+              "expectancy_r": 0.45396855004590797,
+              "win_rate": 0.4444444444444444,
+              "pf": 1.953868313787102
+            },
+            "slip_x0": {
+              "net_pnl": 242.65715487907016,
+              "expectancy_r": 0.5418169368387115,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.279127715098262
+            },
+            "slip_x2": {
+              "net_pnl": 197.24417453252548,
+              "expectancy_r": 0.44339902752823257,
+              "win_rate": 0.4444444444444444,
+              "pf": 1.9035716464424675
+            },
+            "slip_x3": {
+              "net_pnl": 174.5376843592531,
+              "expectancy_r": 0.39419007287299296,
+              "win_rate": 0.4444444444444444,
+              "pf": 1.7458561282548155
+            },
+            "funding_x0": {
+              "net_pnl": 219.95066470579775,
+              "expectancy_r": 0.492607982183472,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.08268529649215
+            },
+            "funding_x3": {
+              "net_pnl": 219.95066470579775,
+              "expectancy_r": 0.492607982183472,
+              "win_rate": 0.5555555555555556,
+              "pf": 2.08268529649215
+            },
+            "all_x2": {
+              "net_pnl": 179.47454296766526,
+              "expectancy_r": 0.4047595953906684,
+              "win_rate": 0.4444444444444444,
+              "pf": 1.7882926364054894
+            },
+            "breakeven_fee_multiplier": 6.434084474021687
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.07636481079006735,
+            "upper": 1.1716110068036012,
+            "point": 0.492607982183472,
+            "n": 9,
+            "block": 5
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.003734741125483135,
+            "upper": 0.052960938832719476,
+            "point": 0.021995066470579784,
+            "n": 9,
+            "block": 5
+          },
+          "total_fees": 17.769631564860205,
+          "total_funding": 0.0,
+          "total_slippage": 22.70649017327235
+        },
+        "BTCUSDT/short": {
+          "n_trades": 4,
+          "net_pnl": 109.42412285319446,
+          "net_return": 0.010942412285319445,
+          "expectancy_r": 0.5511259529931712,
+          "win_rate": 0.5,
+          "profit_factor": 2.0733150037889647,
+          "max_drawdown": -0.005050147754387724,
+          "sharpe": 3.2954042155737664,
+          "sortino": 2.929377878479222,
+          "max_consecutive_losses": 1,
+          "avg_win": 105.68690220815283,
+          "avg_loss": -50.974840781555606,
+          "by_year": {
+            "2026": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 4,
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -101.94968156311121,
+              "expectancy_r": -0.9847614282120918,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "take_profit": {
+              "n": 2,
+              "net_pnl": 211.37380441630566,
+              "expectancy_r": 2.087013334198434,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "fees_x0.5": {
+              "net_pnl": 113.46336455734033,
+              "expectancy_r": 0.5708687378982351,
+              "win_rate": 0.5,
+              "pf": 2.134365548480715
+            },
+            "fees_x1.5": {
+              "net_pnl": 105.38488114904861,
+              "expectancy_r": 0.5313831680881073,
+              "win_rate": 0.5,
+              "pf": 2.014528438330922
+            },
+            "fees_x2": {
+              "net_pnl": 101.34563944490276,
+              "expectancy_r": 0.5116403831830433,
+              "win_rate": 0.5,
+              "pf": 1.957882209623349
+            },
+            "slip_x0": {
+              "net_pnl": 119.40884363670864,
+              "expectancy_r": 0.5997399588966528,
+              "win_rate": 0.5,
+              "pf": 2.250524534024388
+            },
+            "slip_x2": {
+              "net_pnl": 99.43940206968023,
+              "expectancy_r": 0.5025119470896897,
+              "win_rate": 0.5,
+              "pf": 1.9172330965884223
+            },
+            "slip_x3": {
+              "net_pnl": 89.45468128616601,
+              "expectancy_r": 0.453897941186208,
+              "win_rate": 0.5,
+              "pf": 1.7787129991054618
+            },
+            "funding_x0": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "funding_x3": {
+              "net_pnl": 109.42412285319446,
+              "expectancy_r": 0.5511259529931712,
+              "win_rate": 0.5,
+              "pf": 2.0733150037889647
+            },
+            "all_x2": {
+              "net_pnl": 91.36091866138854,
+              "expectancy_r": 0.46302637727956175,
+              "win_rate": 0.5,
+              "pf": 1.8138009580173755
+            },
+            "breakeven_fee_multiplier": 7.057846752506567
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.5511259529931712,
+            "upper": 0.5511259529931712,
+            "point": 0.5511259529931712,
+            "n": 4,
+            "block": 4
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.010942412285319444,
+            "upper": 0.010942412285319444,
+            "point": 0.010942412285319444,
+            "n": 4,
+            "block": 4
+          },
+          "total_fees": 8.078483408291708,
+          "total_funding": 0.0,
+          "total_slippage": 9.98472078351421
+        },
+        "ETHUSDT/short": {
+          "n_trades": 5,
+          "net_pnl": 110.52654185260333,
+          "net_return": 0.011052654185260333,
+          "expectancy_r": 0.4457936055357126,
+          "win_rate": 0.6,
+          "profit_factor": 2.0921247027830328,
+          "max_drawdown": -0.009910487954087444,
+          "sharpe": 2.027416519620193,
+          "sortino": 1.0699959812533264,
+          "max_consecutive_losses": 2,
+          "avg_win": 70.57658889861305,
+          "avg_loss": -50.6016124216179,
+          "by_year": {
+            "2026": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 2,
+              "net_pnl": -101.2032248432358,
+              "expectancy_r": -0.9833968637072534,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "横盘震荡": {
+              "n": 3,
+              "net_pnl": 211.72976669583915,
+              "expectancy_r": 1.39858725169769,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 5,
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -101.2032248432358,
+              "expectancy_r": -0.9833968637072534,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "take_profit": {
+              "n": 2,
+              "net_pnl": 211.1547963035046,
+              "expectancy_r": 2.0923058112337536,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.5749703923345295,
+              "expectancy_r": 0.01115013262556281,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "fees_x0.5": {
+              "net_pnl": 115.37211593088759,
+              "expectancy_r": 0.46477486653546907,
+              "win_rate": 0.6,
+              "pf": 2.163962284676151
+            },
+            "fees_x1.5": {
+              "net_pnl": 105.68096777431911,
+              "expectancy_r": 0.4268123445359562,
+              "win_rate": 0.4,
+              "pf": 2.0221311195276543
+            },
+            "fees_x2": {
+              "net_pnl": 100.83539369603486,
+              "expectancy_r": 0.40783108353619985,
+              "win_rate": 0.4,
+              "pf": 1.949867860047757
+            },
+            "slip_x0": {
+              "net_pnl": 123.2483112423615,
+              "expectancy_r": 0.4954785191923586,
+              "win_rate": 0.6,
+              "pf": 2.3081160935819414
+            },
+            "slip_x2": {
+              "net_pnl": 97.80477246284525,
+              "expectancy_r": 0.39610869187906694,
+              "win_rate": 0.4,
+              "pf": 1.8900928579625322
+            },
+            "slip_x3": {
+              "net_pnl": 85.0830030730871,
+              "expectancy_r": 0.34642377822242104,
+              "win_rate": 0.4,
+              "pf": 1.7141740889702102
+            },
+            "funding_x0": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "funding_x3": {
+              "net_pnl": 110.52654185260333,
+              "expectancy_r": 0.4457936055357126,
+              "win_rate": 0.6,
+              "pf": 2.0921247027830328
+            },
+            "all_x2": {
+              "net_pnl": 88.1136243062767,
+              "expectancy_r": 0.358146169879554,
+              "win_rate": 0.4,
+              "pf": 1.7634796772174652
+            },
+            "breakeven_fee_multiplier": 5.931376810901535
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.4457936055357126,
+            "upper": 0.4457936055357126,
+            "point": 0.4457936055357126,
+            "n": 5,
+            "block": 5
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.011052654185260335,
+            "upper": 0.011052654185260335,
+            "point": 0.011052654185260335,
+            "n": 5,
+            "block": 5
+          },
+          "total_fees": 9.691148156568495,
+          "total_funding": 0.0,
+          "total_slippage": 12.721769389758142
+        }
+      },
+      "notes": [
+        "训练 8 月 / 验证 3 月 / 测试 3 月，隔离 7 天，滚动步长 = 测试窗；网格 {'strategies.A_breakout_retest.break_buffer_atr': [0.1, 0.15, 0.25], 'strategies.A_breakout_retest.sl_buffer_atr': [0.3, 0.5], 'exits.breakeven_after_rr': [None, 1.5]}；选参 Expectancy(R) 且 ≥ 15 笔；验证窗为负退回默认；环境启停由训练窗交易决定（≥5 笔且 ExpR>0 的环境）"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2025-02-01",
+            "2025-10-01"
+          ],
+          "valid": [
+            "2025-10-08",
+            "2026-01-08"
+          ],
+          "test": [
+            "2026-01-15",
+            "2026-04-15"
+          ],
+          "chosen_params": {
+            "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+            "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.A_breakout_retest": null
+          },
+          "fallback_to_default": false,
+          "train_table": [
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.10475479463736223,
+              "profit_factor": 0.8220540284142553,
+              "net_pnl": -87.05271269431796
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 16,
+              "expectancy_r": 0.020275086653379515,
+              "profit_factor": 1.0332066603837604,
+              "net_pnl": 13.036201594079131
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.10475479463736223,
+              "profit_factor": 0.8220540284142553,
+              "net_pnl": -87.05271269431796
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 16,
+              "expectancy_r": 0.020275086653379515,
+              "profit_factor": 1.0332066603837604,
+              "net_pnl": 13.036201594079131
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.10475479463736223,
+              "profit_factor": 0.8220540284142553,
+              "net_pnl": -87.05271269431796
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 16,
+              "expectancy_r": 0.020275086653379515,
+              "profit_factor": 1.0332066603837604,
+              "net_pnl": 13.036201594079131
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.004282595610390925,
+              "profit_factor": 1.0023959005245284,
+              "net_pnl": 1.1776459169628914
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 8,
+            "expectancy_r": 0.5096814089330532,
+            "net_pnl": 203.75615817910455
+          },
+          "test_stats": {
+            "n_trades": 9,
+            "expectancy_r": 0.492607982183472,
+            "net_pnl": 219.95066470579775,
+            "profit_factor": 2.08268529649215
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2025-05-01",
+            "2026-01-01"
+          ],
+          "valid": [
+            "2026-01-08",
+            "2026-04-08"
+          ],
+          "test": [
+            "2026-04-15",
+            "2026-07-15"
+          ],
+          "chosen_params": {
+            "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+            "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.A_breakout_retest": [
+              "横盘震荡"
+            ]
+          },
+          "fallback_to_default": false,
+          "train_table": [
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.04313046298932934,
+              "profit_factor": 1.0789390442146032,
+              "net_pnl": 37.020997968509896
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.1484187840762697,
+              "profit_factor": 1.369610042934656,
+              "net_pnl": 138.48184962104597
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.04313046298932934,
+              "profit_factor": 1.0789390442146032,
+              "net_pnl": 37.020997968509896
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.1484187840762697,
+              "profit_factor": 1.369610042934656,
+              "net_pnl": 138.48184962104597
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.04313046298932934,
+              "profit_factor": 1.0789390442146032,
+              "net_pnl": 37.020997968509896
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 19,
+              "expectancy_r": 0.1484187840762697,
+              "profit_factor": 1.369610042934656,
+              "net_pnl": 138.48184962104597
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 20,
+              "expectancy_r": 0.11940239869512229,
+              "profit_factor": 1.239627530629104,
+              "net_pnl": 117.25928115862044
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 3,
+            "expectancy_r": 1.39858725169769,
+            "net_pnl": 210.6606568818002
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2025-08-01",
+            "2026-04-01"
+          ],
+          "valid": [
+            "2026-04-08",
+            "2026-07-08"
+          ],
+          "test": [
+            "2026-07-15",
+            "2026-10-15"
+          ],
+          "chosen_params": {
+            "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+            "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.A_breakout_retest": [
+              "下跌趋势",
+              "横盘震荡"
+            ]
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.6068398581340811,
+              "profit_factor": 2.6206748635116934,
+              "net_pnl": 554.4798442687201
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.492855828600734,
+              "profit_factor": 2.312492153508819,
+              "net_pnl": 447.06296606785685
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.6757126642961571,
+              "profit_factor": 2.90617325112797,
+              "net_pnl": 584.1556013177924
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.1,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.5614870826045962,
+              "profit_factor": 2.5766834552989017,
+              "net_pnl": 481.5573919697921
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.6068398581340811,
+              "profit_factor": 2.6206748635116934,
+              "net_pnl": 554.4798442687201
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.492855828600734,
+              "profit_factor": 2.312492153508819,
+              "net_pnl": 447.06296606785685
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.6757126642961571,
+              "profit_factor": 2.90617325112797,
+              "net_pnl": 584.1556013177924
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.15,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.5614870826045962,
+              "profit_factor": 2.5766834552989017,
+              "net_pnl": 481.5573919697921
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.6068398581340811,
+              "profit_factor": 2.6206748635116934,
+              "net_pnl": 554.4798442687201
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 18,
+              "expectancy_r": 0.492855828600734,
+              "profit_factor": 2.312492153508819,
+              "net_pnl": 447.06296606785685
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.6757126642961571,
+              "profit_factor": 2.90617325112797,
+              "net_pnl": 584.1556013177924
+            },
+            {
+              "params": {
+                "strategies.A_breakout_retest.break_buffer_atr": 0.25,
+                "strategies.A_breakout_retest.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 17,
+              "expectancy_r": 0.5614870826045962,
+              "profit_factor": 2.5766834552989017,
+              "net_pnl": 481.5573919697921
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 1,
+            "expectancy_r": -0.07847182443816844,
+            "net_pnl": -3.9202097003516507
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        }
+      ]
+    },
+    "B_reclaim": {
+      "strategy": "B_reclaim",
+      "oos_stats": {
+        "n_trades": 7,
+        "net_pnl": -72.60250210686408,
+        "net_return": -0.007260250210686408,
+        "expectancy_r": -0.2082173051064884,
+        "win_rate": 0.5714285714285714,
+        "profit_factor": 0.5015695498816148,
+        "max_drawdown": -0.013494938253440836,
+        "sharpe": -0.9427009564578878,
+        "sortino": -0.14355519198517935,
+        "max_consecutive_losses": 2,
+        "avg_win": 18.26493761234372,
+        "avg_loss": -48.55408418541299,
+        "by_year": {
+          "2026": {
+            "n": 7,
+            "net_pnl": -72.60250210686408,
+            "expectancy_r": -0.2082173051064884,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.5015695498816148
+          }
+        },
+        "by_direction": {
+          "long": {
+            "n": 4,
+            "net_pnl": 23.596555364026507,
+            "expectancy_r": 0.11811931142390714,
+            "win_rate": 0.75,
+            "pf": 1.4853945086223261
+          },
+          "short": {
+            "n": 3,
+            "net_pnl": -96.19905747089061,
+            "expectancy_r": -0.6433327938136825,
+            "win_rate": 0.3333333333333333,
+            "pf": 0.008758932105126665
+          }
+        },
+        "by_regime4": {
+          "下跌趋势": {
+            "n": 6,
+            "net_pnl": -73.59437085889255,
+            "expectancy_r": -0.24620695916435506,
+            "win_rate": 0.5,
+            "pf": 0.49476017590433463
+          },
+          "横盘震荡": {
+            "n": 1,
+            "net_pnl": 0.9918687520284664,
+            "expectancy_r": 0.019720619240711668,
+            "win_rate": 1.0,
+            "pf": null
+          }
+        },
+        "by_symbol": {
+          "BTCUSDT": {
+            "n": 3,
+            "net_pnl": 12.884626527891733,
+            "expectancy_r": 0.08401128153520909,
+            "win_rate": 0.6666666666666666,
+            "pf": 1.265761822365727
+          },
+          "ETHUSDT": {
+            "n": 4,
+            "net_pnl": -85.48712863475583,
+            "expectancy_r": -0.4273887450877615,
+            "win_rate": 0.5,
+            "pf": 0.1203253734284108
+          }
+        },
+        "by_exit_reason": {
+          "stop": {
+            "n": 3,
+            "net_pnl": -145.66225255623897,
+            "expectancy_r": -0.9733910092307453,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "time_stop": {
+            "n": 2,
+            "net_pnl": 71.21783518469115,
+            "expectancy_r": 0.7129646960020061,
+            "win_rate": 1.0,
+            "pf": null
+          },
+          "trail_stop": {
+            "n": 2,
+            "net_pnl": 1.8419152646837222,
+            "expectancy_r": 0.018361249971402475,
+            "win_rate": 1.0,
+            "pf": null
+          }
+        },
+        "cost_sensitivity": {
+          "base": {
+            "net_pnl": -72.60250210686408,
+            "expectancy_r": -0.2082173051064884,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.501569549881615
+          },
+          "fees_x0.5": {
+            "net_pnl": -62.96269366632517,
+            "expectancy_r": -0.18065049370926664,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.5544815424337004
+          },
+          "fees_x1.5": {
+            "net_pnl": -82.24231054740298,
+            "expectancy_r": -0.23578411650371014,
+            "win_rate": 0.2857142857142857,
+            "pf": 0.45417838038596897
+          },
+          "fees_x2": {
+            "net_pnl": -91.88211898794195,
+            "expectancy_r": -0.26335092790093184,
+            "win_rate": 0.2857142857142857,
+            "pf": 0.4167399722666455
+          },
+          "slip_x0": {
+            "net_pnl": -45.09214995401133,
+            "expectancy_r": -0.1295688984224507,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.6562784807410924
+          },
+          "slip_x2": {
+            "net_pnl": -100.11285425971687,
+            "expectancy_r": -0.28686571179052606,
+            "win_rate": 0.2857142857142857,
+            "pf": 0.39940950610365644
+          },
+          "slip_x3": {
+            "net_pnl": -127.62320641256959,
+            "expectancy_r": -0.3655141184745638,
+            "win_rate": 0.2857142857142857,
+            "pf": 0.3267436113606491
+          },
+          "funding_x0": {
+            "net_pnl": -70.77028625646408,
+            "expectancy_r": -0.20297581653493044,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.513507836834613
+          },
+          "funding_x3": {
+            "net_pnl": -76.26693380766407,
+            "expectancy_r": -0.2187002822496043,
+            "win_rate": 0.5714285714285714,
+            "pf": 0.4777869949019179
+          },
+          "all_x2": {
+            "net_pnl": -121.22468699119469,
+            "expectancy_r": -0.3472408231565275,
+            "win_rate": 0.2857142857142857,
+            "pf": 0.3296777572277938
+          },
+          "breakeven_fee_multiplier": -0.5516680948050015
+        },
+        "bootstrap_mean_r_95ci": {
+          "lower": -0.5205832242984504,
+          "upper": -0.17963615499158275,
+          "point": -0.2082173051064884,
+          "n": 7,
+          "block": 5
+        },
+        "bootstrap_net_return_95ci": {
+          "lower": -0.018187390940699245,
+          "upper": -0.006270524886091742,
+          "point": -0.00726025021068641,
+          "n": 7,
+          "block": 5
+        },
+        "total_fees": 19.279616881077832,
+        "total_funding": 1.8322158504000003,
+        "total_slippage": 27.51035215285276,
+        "fold_nonneg_share": 0.3333333333333333,
+        "n_folds_with_trades": 3
+      },
+      "default_full_stats": {
+        "n_trades": 13,
+        "expectancy_r": 0.22142936759643217,
+        "net_pnl": 141.33768921294472,
+        "profit_factor": 1.5717835659314017,
+        "span": [
+          "2026-01-15 00:00:00+00:00",
+          "2026-11-06 10:30:00+00:00"
+        ]
+      },
+      "perturbation": {
+        "default": {
+          "n_trades": 13,
+          "expectancy_r": 0.22142936759643217,
+          "profit_factor": 1.5717835659314017,
+          "net_pnl": 141.33768921294472
+        }
+      },
+      "subsets": {
+        "symbol=BTCUSDT": {
+          "n_trades": 3,
+          "net_pnl": 12.884626527891733,
+          "net_return": 0.0012884626527891734,
+          "expectancy_r": 0.08401128153520909,
+          "win_rate": 0.6666666666666666,
+          "profit_factor": 1.265761822365727,
+          "max_drawdown": -0.00484777356398125,
+          "sharpe": 0.24565541413182837,
+          "sortino": 0.03058658124767967,
+          "max_consecutive_losses": 1,
+          "avg_win": 30.68324150035864,
+          "avg_loss": -48.48185647282555,
+          "by_year": {
+            "2026": {
+              "n": 3,
+              "net_pnl": 12.884626527891733,
+              "expectancy_r": 0.08401128153520909,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.265761822365727
+            }
+          },
+          "by_direction": {
+            "long": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "short": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 3,
+              "net_pnl": 12.884626527891733,
+              "expectancy_r": 0.08401128153520909,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.265761822365727
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 3,
+              "net_pnl": 12.884626527891733,
+              "expectancy_r": 0.08401128153520909,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.265761822365727
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.48185647282555,
+              "expectancy_r": -0.975637966352486,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "time_stop": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.8500465126552559,
+              "expectancy_r": 0.017001880702093283,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 12.88462652789174,
+              "expectancy_r": 0.08401128153520909,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.2657618223657272
+            },
+            "fees_x0.5": {
+              "net_pnl": 16.967810837695673,
+              "expectancy_r": 0.11129651619410474,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.3609189819684573
+            },
+            "fees_x1.5": {
+              "net_pnl": 8.801442218087814,
+              "expectancy_r": 0.05672604687631355,
+              "win_rate": 0.3333333333333333,
+              "pf": 1.175648308714882
+            },
+            "fees_x2": {
+              "net_pnl": 4.718257908283881,
+              "expectancy_r": 0.02944081221741805,
+              "win_rate": 0.3333333333333333,
+              "pf": 1.0897265872132504
+            },
+            "slip_x0": {
+              "net_pnl": 23.83051803087813,
+              "expectancy_r": 0.15719294581274837,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.5469834469025523
+            },
+            "slip_x2": {
+              "net_pnl": 1.9387350249053412,
+              "expectancy_r": 0.010829617257669844,
+              "win_rate": 0.3333333333333333,
+              "pf": 1.0346822631562191
+            },
+            "slip_x3": {
+              "net_pnl": -9.007156478081043,
+              "expectancy_r": -0.062352047019869516,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.8596316229862626
+            },
+            "funding_x0": {
+              "net_pnl": 13.686583886291743,
+              "expectancy_r": 0.08935917110872445,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.2823032136560855
+            },
+            "funding_x3": {
+              "net_pnl": 11.280711811091741,
+              "expectancy_r": 0.07331550238817845,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.2326790397850105
+            },
+            "all_x2": {
+              "net_pnl": -7.029590953102513,
+              "expectancy_r": -0.0490887416336366,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.8844822850214612
+            },
+            "breakeven_fee_multiplier": 1.6741550421166416
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.08401128153520909,
+            "upper": 0.08401128153520909,
+            "point": 0.08401128153520909,
+            "n": 3,
+            "block": 3
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.001288462652789174,
+            "upper": 0.001288462652789174,
+            "point": 0.001288462652789174,
+            "n": 3,
+            "block": 3
+          },
+          "total_fees": 8.16636861960786,
+          "total_funding": 0.8019573584,
+          "total_slippage": 10.945891502986393
+        },
+        "symbol=ETHUSDT": {
+          "n_trades": 4,
+          "net_pnl": -85.48712863475583,
+          "net_return": -0.008548712863475583,
+          "expectancy_r": -0.4273887450877615,
+          "win_rate": 0.5,
+          "profit_factor": 0.1203253734284108,
+          "max_drawdown": -0.00864789973867841,
+          "sharpe": -1.8711765235158393,
+          "sortino": -0.2127361806113755,
+          "max_consecutive_losses": 1,
+          "avg_win": 5.846633724328796,
+          "avg_loss": -48.590198041706714,
+          "by_year": {
+            "2026": {
+              "n": 4,
+              "net_pnl": -85.48712863475583,
+              "expectancy_r": -0.4273887450877615,
+              "win_rate": 0.5,
+              "pf": 0.1203253734284108
+            }
+          },
+          "by_direction": {
+            "long": {
+              "n": 3,
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2405371343345967
+            },
+            "short": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 3,
+              "net_pnl": -86.4789973867843,
+              "expectancy_r": -0.5764251998639193,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.11011890389337094
+            },
+            "横盘震荡": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 4,
+              "net_pnl": -85.48712863475583,
+              "expectancy_r": -0.4273887450877615,
+              "win_rate": 0.5,
+              "pf": 0.1203253734284108
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -97.18039608341343,
+              "expectancy_r": -0.9722675306698749,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "time_stop": {
+              "n": 1,
+              "net_pnl": 10.701398696629125,
+              "expectancy_r": 0.21525946174799213,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -85.48712863475583,
+              "expectancy_r": -0.42738874508776153,
+              "win_rate": 0.5,
+              "pf": 0.12032537342841082
+            },
+            "fees_x0.5": {
+              "net_pnl": -79.93050450402086,
+              "expectancy_r": -0.3996107511367952,
+              "win_rate": 0.5,
+              "pf": 0.15248624351993487
+            },
+            "fees_x1.5": {
+              "net_pnl": -91.04375276549081,
+              "expectancy_r": -0.4551667390387279,
+              "win_rate": 0.25,
+              "pf": 0.09470316176612846
+            },
+            "fees_x2": {
+              "net_pnl": -96.6003768962258,
+              "expectancy_r": -0.48294473298969426,
+              "win_rate": 0.25,
+              "pf": 0.0795332327261127
+            },
+            "slip_x0": {
+              "net_pnl": -68.92266798488947,
+              "expectancy_r": -0.34464028159884996,
+              "win_rate": 0.5,
+              "pf": 0.21339893550850483
+            },
+            "slip_x2": {
+              "net_pnl": -102.0515892846222,
+              "expectancy_r": -0.510137208576673,
+              "win_rate": 0.25,
+              "pf": 0.07888035786297451
+            },
+            "slip_x3": {
+              "net_pnl": -118.61604993448856,
+              "expectancy_r": -0.5928856720655845,
+              "win_rate": 0.25,
+              "pf": 0.05404634764263208
+            },
+            "funding_x0": {
+              "net_pnl": -84.45687014275583,
+              "expectancy_r": -0.42222705726767157,
+              "win_rate": 0.5,
+              "pf": 0.1292091847980846
+            },
+            "funding_x3": {
+              "net_pnl": -87.54764561875582,
+              "expectancy_r": -0.43771212072794147,
+              "win_rate": 0.5,
+              "pf": 0.10266248104052574
+            },
+            "all_x2": {
+              "net_pnl": -114.19509603809217,
+              "expectancy_r": -0.5708548842986957,
+              "win_rate": 0.25,
+              "pf": 0.048314429318929035
+            },
+            "breakeven_fee_multiplier": -2.088663476756983
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.4273887450877615,
+            "upper": -0.4273887450877615,
+            "point": -0.4273887450877615,
+            "n": 4,
+            "block": 4
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.008548712863475583,
+            "upper": -0.008548712863475583,
+            "point": -0.008548712863475583,
+            "n": 4,
+            "block": 4
+          },
+          "total_fees": 11.11324826146997,
+          "total_funding": 1.0302584920000002,
+          "total_slippage": 16.564460649866366
+        },
+        "direction=long": {
+          "n_trades": 4,
+          "net_pnl": 23.596555364026507,
+          "net_return": 0.0023596555364026506,
+          "expectancy_r": 0.11811931142390714,
+          "win_rate": 0.75,
+          "profit_factor": 1.4853945086223261,
+          "max_drawdown": -0.004861314857269261,
+          "sharpe": 0.4563452656121369,
+          "sortino": 0.05869271560949317,
+          "max_consecutive_losses": 1,
+          "avg_win": 24.069901312239875,
+          "avg_loss": -48.61314857269311,
+          "by_year": {
+            "2026": {
+              "n": 4,
+              "net_pnl": 23.596555364026507,
+              "expectancy_r": 0.11811931142390714,
+              "win_rate": 0.75,
+              "pf": 1.4853945086223261
+            }
+          },
+          "by_direction": {
+            "long": {
+              "n": 4,
+              "net_pnl": 23.596555364026507,
+              "expectancy_r": 0.11811931142390714,
+              "win_rate": 0.75,
+              "pf": 1.4853945086223261
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 3,
+              "net_pnl": 22.60468661199804,
+              "expectancy_r": 0.1509188754849723,
+              "win_rate": 0.6666666666666666,
+              "pf": 1.4649912066114454
+            },
+            "横盘震荡": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "ETHUSDT": {
+              "n": 3,
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2405371343345967
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.61314857269311,
+              "expectancy_r": -0.9731727655490953,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "time_stop": {
+              "n": 2,
+              "net_pnl": 71.21783518469115,
+              "expectancy_r": 0.7129646960020061,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 23.596555364026514,
+              "expectancy_r": 0.11811931142390714,
+              "win_rate": 0.75,
+              "pf": 1.4853945086223261
+            },
+            "fees_x0.5": {
+              "net_pnl": 29.024947323813603,
+              "expectancy_r": 0.14525825427837907,
+              "win_rate": 0.75,
+              "pf": 1.6113165823465077
+            },
+            "fees_x1.5": {
+              "net_pnl": 18.16816340423941,
+              "expectancy_r": 0.09098036856943521,
+              "win_rate": 0.5,
+              "pf": 1.3614425986178431
+            },
+            "fees_x2": {
+              "net_pnl": 12.739771444452312,
+              "expectancy_r": 0.06384142571496328,
+              "win_rate": 0.5,
+              "pf": 1.2407814201314367
+            },
+            "slip_x0": {
+              "net_pnl": 37.03908757003518,
+              "expectancy_r": 0.18526138931605565,
+              "win_rate": 0.75,
+              "pf": 1.8257819513859057
+            },
+            "slip_x2": {
+              "net_pnl": 10.15402315801784,
+              "expectancy_r": 0.050977233531758634,
+              "win_rate": 0.5,
+              "pf": 1.1799598355672443
+            },
+            "slip_x3": {
+              "net_pnl": -3.2885090479908268,
+              "expectancy_r": -0.01616484436038998,
+              "win_rate": 0.5,
+              "pf": 0.9495831434301242
+            },
+            "funding_x0": {
+              "net_pnl": 25.42877121442651,
+              "expectancy_r": 0.1272919164241336,
+              "win_rate": 0.75,
+              "pf": 1.525155056311775
+            },
+            "funding_x3": {
+              "net_pnl": 19.932123663226516,
+              "expectancy_r": 0.09977410142345423,
+              "win_rate": 0.75,
+              "pf": 1.4068067724949063
+            },
+            "all_x2": {
+              "net_pnl": -2.534976611956367,
+              "expectancy_r": -0.012473257177411774,
+              "win_rate": 0.5,
+              "pf": 0.959215687874354
+            },
+            "breakeven_fee_multiplier": 1.9710789901277723
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 0.11811931142390714,
+            "upper": 0.11811931142390714,
+            "point": 0.11811931142390714,
+            "n": 4,
+            "block": 4
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.0023596555364026506,
+            "upper": 0.0023596555364026506,
+            "point": 0.0023596555364026506,
+            "n": 4,
+            "block": 4
+          },
+          "total_fees": 10.856783919574198,
+          "total_funding": 1.8322158504000003,
+          "total_slippage": 13.442532206008668
+        },
+        "direction=short": {
+          "n_trades": 3,
+          "net_pnl": -96.19905747089061,
+          "net_return": -0.00961990574708906,
+          "expectancy_r": -0.6433327938136825,
+          "win_rate": 0.3333333333333333,
+          "profit_factor": 0.008758932105126665,
+          "max_drawdown": -0.009704085505950255,
+          "sharpe": -2.454620446359156,
+          "sortino": -0.31562711135132276,
+          "max_consecutive_losses": 2,
+          "avg_win": 0.8500465126552559,
+          "avg_loss": -48.524551991772924,
+          "by_year": {
+            "2026": {
+              "n": 3,
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 3,
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 3,
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            },
+            "ETHUSDT": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 2,
+              "net_pnl": -97.04910398354585,
+              "expectancy_r": -0.9735001310715703,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.8500465126552559,
+              "expectancy_r": 0.017001880702093283,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            },
+            "fees_x0.5": {
+              "net_pnl": -91.98764099013877,
+              "expectancy_r": -0.6151954910261276,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.019793249205321405
+            },
+            "fees_x1.5": {
+              "net_pnl": -100.41047395164242,
+              "expectancy_r": -0.6714700966012371,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -104.62189043239422,
+              "expectancy_r": -0.699607399388792,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -82.13123752404651,
+              "expectancy_r": -0.5493426154071258,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.04868778556732852
+            },
+            "slip_x2": {
+              "net_pnl": -110.26687741773469,
+              "expectancy_r": -0.7373229722202389,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -124.33469736457877,
+              "expectancy_r": -0.8313131506267956,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            },
+            "funding_x3": {
+              "net_pnl": -96.19905747089061,
+              "expectancy_r": -0.6433327938136825,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.008758932105126665
+            },
+            "all_x2": {
+              "net_pnl": -118.68971037923832,
+              "expectancy_r": -0.7935975777953486,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -3.2772905643475108
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.6433327938136825,
+            "upper": -0.6433327938136825,
+            "point": -0.6433327938136825,
+            "n": 3,
+            "block": 3
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.009619905747089059,
+            "upper": -0.009619905747089059,
+            "point": -0.009619905747089059,
+            "n": 3,
+            "block": 3
+          },
+          "total_fees": 8.422832961503632,
+          "total_funding": 0.0,
+          "total_slippage": 14.06781994684409
+        },
+        "BTCUSDT/long": {
+          "n_trades": 1,
+          "net_pnl": 60.51643648806203,
+          "net_return": 0.006051643648806203,
+          "expectancy_r": 1.21066993025602,
+          "win_rate": 1.0,
+          "profit_factor": Infinity,
+          "max_drawdown": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_consecutive_losses": 0,
+          "avg_win": 60.51643648806203,
+          "avg_loss": 0.0,
+          "by_year": {
+            "2026": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_direction": {
+            "long": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_exit_reason": {
+            "time_stop": {
+              "n": 1,
+              "net_pnl": 60.51643648806203,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": 60.516436488062034,
+              "expectancy_r": 1.21066993025602,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "fees_x0.5": {
+              "net_pnl": 62.123107583831334,
+              "expectancy_r": 1.2428124108173648,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "fees_x1.5": {
+              "net_pnl": 58.909765392292734,
+              "expectancy_r": 1.1785274496946754,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "fees_x2": {
+              "net_pnl": 57.30309429652343,
+              "expectancy_r": 1.1463849691333308,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "slip_x0": {
+              "net_pnl": 63.19423845006156,
+              "expectancy_r": 1.2642410673340092,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "slip_x2": {
+              "net_pnl": 57.8386345260625,
+              "expectancy_r": 1.1570987931780308,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "slip_x3": {
+              "net_pnl": 55.16083256406297,
+              "expectancy_r": 1.1035276561000413,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "funding_x0": {
+              "net_pnl": 61.31839384646204,
+              "expectancy_r": 1.226713598976566,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "funding_x3": {
+              "net_pnl": 58.912521771262035,
+              "expectancy_r": 1.178582592814928,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "all_x2": {
+              "net_pnl": 53.8233349761239,
+              "expectancy_r": 1.0767701633347955,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "breakeven_fee_multiplier": 11.27244197576065
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": 1.21066993025602,
+            "upper": 1.21066993025602,
+            "point": 1.21066993025602,
+            "n": 1,
+            "block": 1
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": 0.006051643648806203,
+            "upper": 0.006051643648806203,
+            "point": 0.006051643648806203,
+            "n": 1,
+            "block": 1
+          },
+          "total_fees": 3.2133421915386,
+          "total_funding": 0.8019573584,
+          "total_slippage": 2.67780196199953
+        },
+        "BTCUSDT/short": {
+          "n_trades": 2,
+          "net_pnl": -47.631809960170294,
+          "net_return": -0.00476318099601703,
+          "expectancy_r": -0.47931804282519636,
+          "win_rate": 0.5,
+          "profit_factor": 0.01753329130726901,
+          "max_drawdown": -0.00484777356398125,
+          "sharpe": -1.7129431461678217,
+          "sortino": -0.1564166676204665,
+          "max_consecutive_losses": 1,
+          "avg_win": 0.8500465126552559,
+          "avg_loss": -48.48185647282555,
+          "by_year": {
+            "2026": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            }
+          },
+          "by_symbol": {
+            "BTCUSDT": {
+              "n": 2,
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.48185647282555,
+              "expectancy_r": -0.975637966352486,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.8500465126552559,
+              "expectancy_r": 0.017001880702093283,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            },
+            "fees_x0.5": {
+              "net_pnl": -45.15529674613566,
+              "expectancy_r": -0.4544614311175253,
+              "win_rate": 0.5,
+              "pf": 0.03951052448719116
+            },
+            "fees_x1.5": {
+              "net_pnl": -50.10832317420492,
+              "expectancy_r": -0.5041746545328674,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -52.58483638823955,
+              "expectancy_r": -0.5290312662405383,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -39.36372041918343,
+              "expectancy_r": -0.39633111494788203,
+              "win_rate": 0.5,
+              "pf": 0.09648193757708584
+            },
+            "slip_x2": {
+              "net_pnl": -55.89989950115716,
+              "expectancy_r": -0.5623049707025106,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -64.16798904214401,
+              "expectancy_r": -0.6452918985798249,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            },
+            "funding_x3": {
+              "net_pnl": -47.631809960170294,
+              "expectancy_r": -0.47931804282519636,
+              "win_rate": 0.5,
+              "pf": 0.01753329130726901
+            },
+            "all_x2": {
+              "net_pnl": -60.852925929226416,
+              "expectancy_r": -0.6120181941178526,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -2.602707220150857
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.47931804282519636,
+            "upper": -0.47931804282519636,
+            "point": -0.47931804282519636,
+            "n": 2,
+            "block": 2
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.004763180996017029,
+            "upper": -0.004763180996017029,
+            "point": -0.004763180996017029,
+            "n": 2,
+            "block": 2
+          },
+          "total_fees": 4.95302642806926,
+          "total_funding": 0.0,
+          "total_slippage": 8.268089540986864
+        },
+        "ETHUSDT/long": {
+          "n_trades": 3,
+          "net_pnl": -36.91988112403552,
+          "net_return": -0.003691988112403552,
+          "expectancy_r": -0.24606422818679716,
+          "win_rate": 0.6666666666666666,
+          "profit_factor": 0.2405371343345967,
+          "max_drawdown": -0.004861314857269261,
+          "sharpe": -1.1254880538884355,
+          "sortino": -0.09183239035189197,
+          "max_consecutive_losses": 1,
+          "avg_win": 5.846633724328796,
+          "avg_loss": -48.61314857269311,
+          "by_year": {
+            "2026": {
+              "n": 3,
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2405371343345967
+            }
+          },
+          "by_direction": {
+            "long": {
+              "n": 3,
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2405371343345967
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 2,
+              "net_pnl": -37.911749876063986,
+              "expectancy_r": -0.37895665190055156,
+              "win_rate": 0.5,
+              "pf": 0.2201338323237161
+            },
+            "横盘震荡": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 3,
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2405371343345967
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.61314857269311,
+              "expectancy_r": -0.9731727655490953,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "time_stop": {
+              "n": 1,
+              "net_pnl": 10.701398696629125,
+              "expectancy_r": 0.21525946174799213,
+              "win_rate": 1.0,
+              "pf": null
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 0.9918687520284664,
+              "expectancy_r": 0.019720619240711668,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -36.91988112403552,
+              "expectancy_r": -0.24606422818679716,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.24053713433459675
+            },
+            "fees_x0.5": {
+              "net_pnl": -33.09816026001773,
+              "expectancy_r": -0.22059313123461619,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.3028943692342058
+            },
+            "fees_x1.5": {
+              "net_pnl": -40.741601988053326,
+              "expectancy_r": -0.27153532513897816,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.18947500819044116
+            },
+            "fees_x2": {
+              "net_pnl": -44.56332285207112,
+              "expectancy_r": -0.29700642209115924,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.15775410815789
+            },
+            "slip_x0": {
+              "net_pnl": -26.155150880026383,
+              "expectancy_r": -0.17439850335659554,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.41687409303316
+            },
+            "slip_x2": {
+              "net_pnl": -47.684611368044656,
+              "expectancy_r": -0.31772995301699875,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.1548852422987378
+            },
+            "slip_x3": {
+              "net_pnl": -58.4493416120538,
+              "expectancy_r": -0.38939567784720036,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.10390026919372196
+            },
+            "funding_x0": {
+              "net_pnl": -35.889622632035525,
+              "expectancy_r": -0.23918197776001057,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.2588074101023745
+            },
+            "funding_x3": {
+              "net_pnl": -38.980398108035516,
+              "expectancy_r": -0.25982872904037035,
+              "win_rate": 0.6666666666666666,
+              "pf": 0.20442546851379784
+            },
+            "all_x2": {
+              "net_pnl": -56.35831158808027,
+              "expectancy_r": -0.3755543973481475,
+              "win_rate": 0.3333333333333333,
+              "pf": 0.09327172493761593
+            },
+            "breakeven_fee_multiplier": -1.0056245226361034
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.24606422818679716,
+            "upper": -0.24606422818679716,
+            "point": -0.24606422818679716,
+            "n": 3,
+            "block": 3
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.0036919881124035524,
+            "upper": -0.0036919881124035524,
+            "point": -0.0036919881124035524,
+            "n": 3,
+            "block": 3
+          },
+          "total_fees": 7.643441728035599,
+          "total_funding": 1.0302584920000002,
+          "total_slippage": 10.764730244009138
+        },
+        "ETHUSDT/short": {
+          "n_trades": 1,
+          "net_pnl": -48.56724751072031,
+          "net_return": -0.004856724751072031,
+          "expectancy_r": -0.9713622957906546,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "max_drawdown": -0.004856724751072017,
+          "sharpe": null,
+          "sortino": -19.1049731745428,
+          "max_consecutive_losses": 1,
+          "avg_win": 0.0,
+          "avg_loss": -48.56724751072031,
+          "by_year": {
+            "2026": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_regime4": {
+            "下跌趋势": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x0.5": {
+              "net_pnl": -46.83234424400312,
+              "expectancy_r": -0.9366636108433322,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x1.5": {
+              "net_pnl": -50.30215077743749,
+              "expectancy_r": -1.006060980737977,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -52.03705404415468,
+              "expectancy_r": -1.0407596656852993,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -42.76751710486308,
+              "expectancy_r": -0.8553656163256135,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x2": {
+              "net_pnl": -54.36697791657753,
+              "expectancy_r": -1.0873589752556958,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -60.16670832243476,
+              "expectancy_r": -1.203355654720737,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x3": {
+              "net_pnl": -48.56724751072031,
+              "expectancy_r": -0.9713622957906546,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "all_x2": {
+              "net_pnl": -57.836784450011905,
+              "expectancy_r": -1.1567563451503404,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -4.239447000297724
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.9713622957906546,
+            "upper": -0.9713622957906546,
+            "point": -0.9713622957906546,
+            "n": 1,
+            "block": 1
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.004856724751072031,
+            "upper": -0.004856724751072031,
+            "point": -0.004856724751072031,
+            "n": 1,
+            "block": 1
+          },
+          "total_fees": 3.4698065334343715,
+          "total_funding": 0.0,
+          "total_slippage": 5.799730405857225
+        }
+      },
+      "notes": [
+        "训练 8 月 / 验证 3 月 / 测试 3 月，隔离 7 天，滚动步长 = 测试窗；网格 {'strategies.B_reclaim.min_break_depth_atr': [0.1, 0.15, 0.3], 'strategies.B_reclaim.sl_buffer_atr': [0.3, 0.5], 'exits.breakeven_after_rr': [None, 1.5]}；选参 Expectancy(R) 且 ≥ 15 笔；验证窗为负退回默认；环境启停由训练窗交易决定（≥5 笔且 ExpR>0 的环境）"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2025-02-01",
+            "2025-10-01"
+          ],
+          "valid": [
+            "2025-10-08",
+            "2026-01-08"
+          ],
+          "test": [
+            "2026-01-15",
+            "2026-04-15"
+          ],
+          "chosen_params": {
+            "strategies.B_reclaim.min_break_depth_atr": 0.15,
+            "strategies.B_reclaim.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.B_reclaim": [
+              "下跌趋势"
+            ]
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 13,
+              "expectancy_r": 0.40137208521135104,
+              "profit_factor": 1.7010658545036252,
+              "net_pnl": 259.2265425426081
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 13,
+              "expectancy_r": 0.2810692478731396,
+              "profit_factor": 1.4889750764709413,
+              "net_pnl": 179.59308218743516
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.09999917515591543,
+              "profit_factor": 0.8513807222610945,
+              "net_pnl": -68.34958113348104
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.09999917515591543,
+              "profit_factor": 0.8513807222610945,
+              "net_pnl": -68.34958113348104
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 12,
+              "expectancy_r": 0.24164368838663344,
+              "profit_factor": 1.3870142737532114,
+              "net_pnl": 141.6660322024723
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 12,
+              "expectancy_r": 0.11131561460357127,
+              "profit_factor": 1.1735838857237029,
+              "net_pnl": 63.10062434325867
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.22632114677035767,
+              "profit_factor": 0.6909338717651899,
+              "net_pnl": -126.56292334810263
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.22632114677035767,
+              "profit_factor": 0.6909338717651899,
+              "net_pnl": -126.56292334810263
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.06370151596440632,
+              "profit_factor": 0.8961496188591088,
+              "net_pnl": -27.580350746123003
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.2591936266389997,
+              "profit_factor": 0.6025536053396251,
+              "net_pnl": -104.85575238657847
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.4053410592314239,
+              "profit_factor": 0.4760757671106474,
+              "net_pnl": -162.52176951623244
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.4053410592314239,
+              "profit_factor": 0.4760757671106474,
+              "net_pnl": -162.52176951623244
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 3,
+            "expectancy_r": -0.2469704743663366,
+            "net_pnl": -37.06170336340873,
+            "profit_factor": 0.23761977054440447
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2025-05-01",
+            "2026-01-01"
+          ],
+          "valid": [
+            "2026-01-08",
+            "2026-04-08"
+          ],
+          "test": [
+            "2026-04-15",
+            "2026-07-15"
+          ],
+          "chosen_params": {
+            "strategies.B_reclaim.min_break_depth_atr": 0.15,
+            "strategies.B_reclaim.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.B_reclaim": null
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 6,
+              "expectancy_r": 0.13340792927728395,
+              "profit_factor": 1.2280657767685745,
+              "net_pnl": 38.68421101606724
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 6,
+              "expectancy_r": 0.13340792927728395,
+              "profit_factor": 1.2280657767685745,
+              "net_pnl": 38.68421101606724
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.5639091757639103,
+              "profit_factor": 0.2753708248992164,
+              "net_pnl": -223.78585367139848
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 8,
+              "expectancy_r": -0.43886201761491384,
+              "profit_factor": 0.3309211323785726,
+              "net_pnl": -174.796317845274
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 6,
+              "expectancy_r": 0.13340792927728395,
+              "profit_factor": 1.2280657767685745,
+              "net_pnl": 38.68421101606724
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 6,
+              "expectancy_r": 0.13340792927728395,
+              "profit_factor": 1.2280657767685745,
+              "net_pnl": 38.68421101606724
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 7,
+              "expectancy_r": -0.5079245244312208,
+              "profit_factor": 0.3247067883355264,
+              "net_pnl": -176.8624983396707
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 7,
+              "expectancy_r": -0.3650134865466534,
+              "profit_factor": 0.40377033158529935,
+              "net_pnl": -127.6611189228838
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.29695957146379903,
+              "profit_factor": 0.5541496376518575,
+              "net_pnl": -74.78701721519911
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.29695957146379903,
+              "profit_factor": 0.5541496376518575,
+              "net_pnl": -74.78701721519911
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.4314685323312686,
+              "profit_factor": 0.39683456238384923,
+              "net_pnl": -129.25926952031006
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.26473898813260655,
+              "profit_factor": 0.5202022708974788,
+              "net_pnl": -79.73801364254366
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 8,
+            "expectancy_r": 0.1838223359513721,
+            "net_pnl": 71.19510662606204
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.9735001310715703,
+            "net_pnl": -97.04910398354585,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2025-08-01",
+            "2026-04-01"
+          ],
+          "valid": [
+            "2026-04-08",
+            "2026-07-08"
+          ],
+          "test": [
+            "2026-07-15",
+            "2026-10-15"
+          ],
+          "chosen_params": {
+            "strategies.B_reclaim.min_break_depth_atr": 0.15,
+            "strategies.B_reclaim.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.B_reclaim": null
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.26204015236151557,
+              "profit_factor": 0.5953329054499207,
+              "net_pnl": -210.27168992227016
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.18421050066296132,
+              "profit_factor": 0.6758185905084563,
+              "net_pnl": -149.5294775545214
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 19,
+              "expectancy_r": -0.3024218765113263,
+              "profit_factor": 0.529210857996262,
+              "net_pnl": -286.1229702671912
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.1,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 19,
+              "expectancy_r": -0.22312955271375082,
+              "profit_factor": 0.5756613640587934,
+              "net_pnl": -212.7558300097217
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.09688412283729894,
+              "profit_factor": 0.8247382267989035,
+              "net_pnl": -65.77005674067227
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.0010937822852321246,
+              "profit_factor": 0.9868170162368882,
+              "net_pnl": -4.166684325681707
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.17722029902642789,
+              "profit_factor": 0.6925762083521574,
+              "net_pnl": -143.50789763827555
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.15,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 16,
+              "expectancy_r": -0.08306253979997144,
+              "profit_factor": 0.8074115106497184,
+              "net_pnl": -69.08513149913152
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.5151343113031029,
+              "profit_factor": 0.24894246764937453,
+              "net_pnl": -280.4389663894631
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 11,
+              "expectancy_r": -0.40192754519611484,
+              "profit_factor": 0.3024084013102982,
+              "net_pnl": -219.73537647771502
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.45551453421480653,
+              "profit_factor": 0.3003970989066301,
+              "net_pnl": -292.7080901199505
+            },
+            {
+              "params": {
+                "strategies.B_reclaim.min_break_depth_atr": 0.3,
+                "strategies.B_reclaim.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 13,
+              "expectancy_r": -0.33962806132070616,
+              "profit_factor": 0.2940731705551201,
+              "net_pnl": -219.22332827881155
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.9758483079147355,
+            "net_pnl": -97.19098440989879
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": 0.6151952747483658,
+            "net_pnl": 61.50830524009049,
+            "profit_factor": Infinity
+          }
+        }
+      ]
+    },
+    "C_rejection": {
+      "strategy": "C_rejection",
+      "oos_stats": {
+        "n_trades": 2,
+        "net_pnl": -47.004873260099274,
+        "net_return": -0.004700487326009927,
+        "expectancy_r": -0.47010414625579583,
+        "win_rate": 0.5,
+        "profit_factor": 0.03116162500070484,
+        "max_drawdown": -0.004851673351618957,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "avg_win": 1.511860256090638,
+        "avg_loss": -48.51673351618991,
+        "by_year": {
+          "2026": {
+            "n": 2,
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.03116162500070484
+          }
+        },
+        "by_direction": {
+          "short": {
+            "n": 2,
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.03116162500070484
+          }
+        },
+        "by_regime4": {
+          "横盘震荡": {
+            "n": 2,
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.03116162500070484
+          }
+        },
+        "by_symbol": {
+          "ETHUSDT": {
+            "n": 2,
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.03116162500070484
+          }
+        },
+        "by_exit_reason": {
+          "stop": {
+            "n": 1,
+            "net_pnl": -48.51673351618991,
+            "expectancy_r": -0.9706017876228152,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "trail_stop": {
+            "n": 1,
+            "net_pnl": 1.511860256090638,
+            "expectancy_r": 0.030393495111223544,
+            "win_rate": 1.0,
+            "pf": null
+          }
+        },
+        "cost_sensitivity": {
+          "base": {
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.031161625000704823
+          },
+          "fees_x0.5": {
+            "net_pnl": -43.432936587750646,
+            "expectancy_r": -0.4342872636752148,
+            "win_rate": 0.5,
+            "pf": 0.07068716845438128
+          },
+          "fees_x1.5": {
+            "net_pnl": -50.576809932447894,
+            "expectancy_r": -0.5059210288363769,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "fees_x2": {
+            "net_pnl": -54.148746604796514,
+            "expectancy_r": -0.5417379114169578,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "slip_x0": {
+            "net_pnl": -35.090422596221856,
+            "expectancy_r": -0.35063498087959855,
+            "win_rate": 0.5,
+            "pf": 0.1756330522363392
+          },
+          "slip_x2": {
+            "net_pnl": -58.91932392397669,
+            "expectancy_r": -0.5895733116319932,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "slip_x3": {
+            "net_pnl": -70.83377458785411,
+            "expectancy_r": -0.7090424770081907,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "funding_x0": {
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.031161625000704823
+          },
+          "funding_x3": {
+            "net_pnl": -47.004873260099274,
+            "expectancy_r": -0.47010414625579583,
+            "win_rate": 0.5,
+            "pf": 0.031161625000704823
+          },
+          "all_x2": {
+            "net_pnl": -66.06319726867393,
+            "expectancy_r": -0.6612070767931553,
+            "win_rate": 0.0,
+            "pf": 0.0
+          },
+          "breakeven_fee_multiplier": -1.466369720598254
+        },
+        "bootstrap_mean_r_95ci": {
+          "lower": -0.47010414625579583,
+          "upper": -0.47010414625579583,
+          "point": -0.47010414625579583,
+          "n": 2,
+          "block": 2
+        },
+        "bootstrap_net_return_95ci": {
+          "lower": -0.004700487326009927,
+          "upper": -0.004700487326009927,
+          "point": -0.004700487326009927,
+          "n": 2,
+          "block": 2
+        },
+        "total_fees": 7.143873344697241,
+        "total_funding": 0.0,
+        "total_slippage": 11.914450663877417,
+        "fold_nonneg_share": 0.0,
+        "n_folds_with_trades": 1
+      },
+      "default_full_stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "net_pnl": -47.004873260099274,
+        "profit_factor": 0.03116162500070484,
+        "span": [
+          "2026-01-15 00:00:00+00:00",
+          "2026-11-06 10:30:00+00:00"
+        ]
+      },
+      "perturbation": {
+        "default": {
+          "n_trades": 2,
+          "expectancy_r": -0.47010414625579583,
+          "profit_factor": 0.03116162500070484,
+          "net_pnl": -47.004873260099274
+        }
+      },
+      "subsets": {
+        "symbol=ETHUSDT": {
+          "n_trades": 2,
+          "net_pnl": -47.004873260099274,
+          "net_return": -0.004700487326009927,
+          "expectancy_r": -0.47010414625579583,
+          "win_rate": 0.5,
+          "profit_factor": 0.03116162500070484,
+          "max_drawdown": -0.004851673351618957,
+          "sharpe": -10.518876945499501,
+          "sortino": -6.169877054943057,
+          "max_consecutive_losses": 1,
+          "avg_win": 1.511860256090638,
+          "avg_loss": -48.51673351618991,
+          "by_year": {
+            "2026": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_regime4": {
+            "横盘震荡": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.51673351618991,
+              "expectancy_r": -0.9706017876228152,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 1.511860256090638,
+              "expectancy_r": 0.030393495111223544,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "fees_x0.5": {
+              "net_pnl": -43.432936587750646,
+              "expectancy_r": -0.4342872636752148,
+              "win_rate": 0.5,
+              "pf": 0.07068716845438128
+            },
+            "fees_x1.5": {
+              "net_pnl": -50.576809932447894,
+              "expectancy_r": -0.5059210288363769,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -54.148746604796514,
+              "expectancy_r": -0.5417379114169578,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -35.090422596221856,
+              "expectancy_r": -0.35063498087959855,
+              "win_rate": 0.5,
+              "pf": 0.1756330522363392
+            },
+            "slip_x2": {
+              "net_pnl": -58.91932392397669,
+              "expectancy_r": -0.5895733116319932,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -70.83377458785411,
+              "expectancy_r": -0.7090424770081907,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "funding_x3": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "all_x2": {
+              "net_pnl": -66.06319726867393,
+              "expectancy_r": -0.6612070767931553,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -1.466369720598254
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.47010414625579583,
+            "upper": -0.47010414625579583,
+            "point": -0.47010414625579583,
+            "n": 2,
+            "block": 2
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.004700487326009927,
+            "upper": -0.004700487326009927,
+            "point": -0.004700487326009927,
+            "n": 2,
+            "block": 2
+          },
+          "total_fees": 7.143873344697241,
+          "total_funding": 0.0,
+          "total_slippage": 11.914450663877417
+        },
+        "direction=short": {
+          "n_trades": 2,
+          "net_pnl": -47.004873260099274,
+          "net_return": -0.004700487326009927,
+          "expectancy_r": -0.47010414625579583,
+          "win_rate": 0.5,
+          "profit_factor": 0.03116162500070484,
+          "max_drawdown": -0.004851673351618957,
+          "sharpe": -10.518876945499501,
+          "sortino": -6.169877054943057,
+          "max_consecutive_losses": 1,
+          "avg_win": 1.511860256090638,
+          "avg_loss": -48.51673351618991,
+          "by_year": {
+            "2026": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_regime4": {
+            "横盘震荡": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.51673351618991,
+              "expectancy_r": -0.9706017876228152,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 1.511860256090638,
+              "expectancy_r": 0.030393495111223544,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "fees_x0.5": {
+              "net_pnl": -43.432936587750646,
+              "expectancy_r": -0.4342872636752148,
+              "win_rate": 0.5,
+              "pf": 0.07068716845438128
+            },
+            "fees_x1.5": {
+              "net_pnl": -50.576809932447894,
+              "expectancy_r": -0.5059210288363769,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -54.148746604796514,
+              "expectancy_r": -0.5417379114169578,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -35.090422596221856,
+              "expectancy_r": -0.35063498087959855,
+              "win_rate": 0.5,
+              "pf": 0.1756330522363392
+            },
+            "slip_x2": {
+              "net_pnl": -58.91932392397669,
+              "expectancy_r": -0.5895733116319932,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -70.83377458785411,
+              "expectancy_r": -0.7090424770081907,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "funding_x3": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "all_x2": {
+              "net_pnl": -66.06319726867393,
+              "expectancy_r": -0.6612070767931553,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -1.466369720598254
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.47010414625579583,
+            "upper": -0.47010414625579583,
+            "point": -0.47010414625579583,
+            "n": 2,
+            "block": 2
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.004700487326009927,
+            "upper": -0.004700487326009927,
+            "point": -0.004700487326009927,
+            "n": 2,
+            "block": 2
+          },
+          "total_fees": 7.143873344697241,
+          "total_funding": 0.0,
+          "total_slippage": 11.914450663877417
+        },
+        "ETHUSDT/short": {
+          "n_trades": 2,
+          "net_pnl": -47.004873260099274,
+          "net_return": -0.004700487326009927,
+          "expectancy_r": -0.47010414625579583,
+          "win_rate": 0.5,
+          "profit_factor": 0.03116162500070484,
+          "max_drawdown": -0.004851673351618957,
+          "sharpe": -10.518876945499501,
+          "sortino": -6.169877054943057,
+          "max_consecutive_losses": 1,
+          "avg_win": 1.511860256090638,
+          "avg_loss": -48.51673351618991,
+          "by_year": {
+            "2026": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_direction": {
+            "short": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_regime4": {
+            "横盘震荡": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_symbol": {
+            "ETHUSDT": {
+              "n": 2,
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.03116162500070484
+            }
+          },
+          "by_exit_reason": {
+            "stop": {
+              "n": 1,
+              "net_pnl": -48.51673351618991,
+              "expectancy_r": -0.9706017876228152,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "trail_stop": {
+              "n": 1,
+              "net_pnl": 1.511860256090638,
+              "expectancy_r": 0.030393495111223544,
+              "win_rate": 1.0,
+              "pf": null
+            }
+          },
+          "cost_sensitivity": {
+            "base": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "fees_x0.5": {
+              "net_pnl": -43.432936587750646,
+              "expectancy_r": -0.4342872636752148,
+              "win_rate": 0.5,
+              "pf": 0.07068716845438128
+            },
+            "fees_x1.5": {
+              "net_pnl": -50.576809932447894,
+              "expectancy_r": -0.5059210288363769,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "fees_x2": {
+              "net_pnl": -54.148746604796514,
+              "expectancy_r": -0.5417379114169578,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x0": {
+              "net_pnl": -35.090422596221856,
+              "expectancy_r": -0.35063498087959855,
+              "win_rate": 0.5,
+              "pf": 0.1756330522363392
+            },
+            "slip_x2": {
+              "net_pnl": -58.91932392397669,
+              "expectancy_r": -0.5895733116319932,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "slip_x3": {
+              "net_pnl": -70.83377458785411,
+              "expectancy_r": -0.7090424770081907,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "funding_x0": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "funding_x3": {
+              "net_pnl": -47.004873260099274,
+              "expectancy_r": -0.47010414625579583,
+              "win_rate": 0.5,
+              "pf": 0.031161625000704823
+            },
+            "all_x2": {
+              "net_pnl": -66.06319726867393,
+              "expectancy_r": -0.6612070767931553,
+              "win_rate": 0.0,
+              "pf": 0.0
+            },
+            "breakeven_fee_multiplier": -1.466369720598254
+          },
+          "bootstrap_mean_r_95ci": {
+            "lower": -0.47010414625579583,
+            "upper": -0.47010414625579583,
+            "point": -0.47010414625579583,
+            "n": 2,
+            "block": 2
+          },
+          "bootstrap_net_return_95ci": {
+            "lower": -0.004700487326009927,
+            "upper": -0.004700487326009927,
+            "point": -0.004700487326009927,
+            "n": 2,
+            "block": 2
+          },
+          "total_fees": 7.143873344697241,
+          "total_funding": 0.0,
+          "total_slippage": 11.914450663877417
+        }
+      },
+      "notes": [
+        "训练 8 月 / 验证 3 月 / 测试 3 月，隔离 7 天，滚动步长 = 测试窗；网格 {'strategies.C_rejection.wick_ratio_min': [0.5, 0.55, 0.65], 'strategies.C_rejection.sl_buffer_atr': [0.3, 0.5], 'exits.breakeven_after_rr': [None, 1.5]}；选参 Expectancy(R) 且 ≥ 15 笔；验证窗为负退回默认；环境启停由训练窗交易决定（≥5 笔且 ExpR>0 的环境）"
+      ],
+      "folds": [
+        {
+          "fold": 0,
+          "train": [
+            "2025-02-01",
+            "2025-10-01"
+          ],
+          "valid": [
+            "2025-10-08",
+            "2026-01-08"
+          ],
+          "test": [
+            "2026-01-15",
+            "2026-04-15"
+          ],
+          "chosen_params": {
+            "strategies.C_rejection.wick_ratio_min": 0.55,
+            "strategies.C_rejection.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.C_rejection": null
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": 0.5145624236313405,
+              "profit_factor": 2.3029793529747713,
+              "net_pnl": 128.4231749660706
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.3792681468518184,
+              "profit_factor": 0.027085004375287287,
+              "net_pnl": -94.54394822275293
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.27440116732894987,
+              "profit_factor": 0.5749716255803942,
+              "net_pnl": -82.84843073878356
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.6448108644471169,
+              "profit_factor": 0.006925971327597243,
+              "net_pnl": -191.9182228678453
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": 0.5145624236313405,
+              "profit_factor": 2.3029793529747713,
+              "net_pnl": 128.4231749660706
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.3792681468518184,
+              "profit_factor": 0.027085004375287287,
+              "net_pnl": -94.54394822275293
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.13511786645088306,
+              "profit_factor": 0.7648530568940035,
+              "net_pnl": -34.495801138993755
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.5796095029926835,
+              "profit_factor": 0.009222082575343793,
+              "net_pnl": -144.10521635080283
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.6291146406506364,
+              "profit_factor": Infinity,
+              "net_pnl": 31.429419725550503
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.010506281187485042,
+              "profit_factor": Infinity,
+              "net_pnl": 0.5248746410584564
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.5889723457101522,
+              "profit_factor": Infinity,
+              "net_pnl": 29.43860742487547
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.00983590060673826,
+              "profit_factor": Infinity,
+              "net_pnl": 0.4916278646032718
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.47010414625579583,
+            "net_pnl": -47.004873260099274,
+            "profit_factor": 0.03116162500070484
+          }
+        },
+        {
+          "fold": 1,
+          "train": [
+            "2025-05-01",
+            "2026-01-01"
+          ],
+          "valid": [
+            "2026-01-08",
+            "2026-04-08"
+          ],
+          "test": [
+            "2026-04-15",
+            "2026-07-15"
+          ],
+          "chosen_params": {
+            "strategies.C_rejection.wick_ratio_min": 0.55,
+            "strategies.C_rejection.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.C_rejection": null
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.43307163946631305,
+              "profit_factor": 0.3251083456393384,
+              "net_pnl": -64.98046809805447
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.6392744259540302,
+              "profit_factor": 0.005439705110041932,
+              "net_pnl": -95.57666755703849
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.6595399899223696,
+              "profit_factor": 0.1503546088041452,
+              "net_pnl": -163.9622955328458
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.7753672789430522,
+              "profit_factor": 0.0025130447105206647,
+              "net_pnl": -192.33098968817814
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.17171870991474542,
+              "profit_factor": 0.6440784266560706,
+              "net_pnl": -17.297863101956562
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.481022889646321,
+              "profit_factor": 0.0107561779999958,
+              "net_pnl": -48.07745719554095
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 4,
+              "expectancy_r": -0.5817205694731411,
+              "profit_factor": 0.20079497311256717,
+              "net_pnl": -115.99152719029999
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 4,
+              "expectancy_r": -0.7265046807489945,
+              "profit_factor": 0.0033557911616455645,
+              "net_pnl": -144.53909970384478
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.6291146406506364,
+              "profit_factor": Infinity,
+              "net_pnl": 31.429419725550503
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 1,
+              "expectancy_r": 0.010506281187485042,
+              "profit_factor": Infinity,
+              "net_pnl": 0.5248746410584564
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.1907291713663516,
+              "profit_factor": 0.6052036041727301,
+              "net_pnl": -19.203877884041248
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.48029739391805865,
+              "profit_factor": 0.010140691699625821,
+              "net_pnl": -47.98907534239909
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 2,
+            "expectancy_r": -0.47010414625579583,
+            "net_pnl": -47.004873260099274
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        },
+        {
+          "fold": 2,
+          "train": [
+            "2025-08-01",
+            "2026-04-01"
+          ],
+          "valid": [
+            "2026-04-08",
+            "2026-07-08"
+          ],
+          "test": [
+            "2026-07-15",
+            "2026-10-15"
+          ],
+          "chosen_params": {
+            "strategies.C_rejection.wick_ratio_min": 0.55,
+            "strategies.C_rejection.sl_buffer_atr": 0.3,
+            "exits.breakeven_after_rr": 1.5,
+            "regime_policy.C_rejection": null
+          },
+          "fallback_to_default": true,
+          "train_table": [
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.5079919174075135,
+              "profit_factor": 0.20743715380742753,
+              "net_pnl": -76.1031838523046
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 3,
+              "expectancy_r": -0.63199526369368,
+              "profit_factor": 0.015667705643476155,
+              "net_pnl": -94.51720065991326
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.7483086303059311,
+              "profit_factor": 0.07497364003993578,
+              "net_pnl": -222.37389443403362
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.5,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 6,
+              "expectancy_r": -0.3287124303180306,
+              "profit_factor": 0.04058365686420458,
+              "net_pnl": -98.3058131651662
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.28409912682654614,
+              "profit_factor": 0.41257341344373266,
+              "net_pnl": -28.50001916027549
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.47010414625579583,
+              "profit_factor": 0.03116162500070484,
+              "net_pnl": -47.004873260099274
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.7034052975376257,
+              "profit_factor": 0.09396291818815722,
+              "net_pnl": -174.60330216877537
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.55,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 5,
+              "expectancy_r": -0.39996321656628087,
+              "profit_factor": 0.0272185996845017,
+              "net_pnl": -99.67525284945941
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9719514756999366,
+              "profit_factor": 0.0,
+              "net_pnl": -48.57831539207412
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.3,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 1,
+              "expectancy_r": -0.9719514756999366,
+              "profit_factor": 0.0,
+              "net_pnl": -48.57831539207412
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": null
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.972777073787114,
+              "profit_factor": 0.0,
+              "net_pnl": -96.99057423559128
+            },
+            {
+              "params": {
+                "strategies.C_rejection.wick_ratio_min": 0.65,
+                "strategies.C_rejection.sl_buffer_atr": 0.5,
+                "exits.breakeven_after_rr": 1.5
+              },
+              "n_trades": 2,
+              "expectancy_r": -0.972777073787114,
+              "profit_factor": 0.0,
+              "net_pnl": -96.99057423559128
+            }
+          ],
+          "valid_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0
+          },
+          "test_stats": {
+            "n_trades": 0,
+            "expectancy_r": null,
+            "net_pnl": 0.0,
+            "profit_factor": null
+          }
+        }
+      ]
+    }
+  }
+}

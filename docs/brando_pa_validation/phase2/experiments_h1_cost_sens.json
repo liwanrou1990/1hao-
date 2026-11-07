@@ -1,0 +1,302 @@
+{
+  "name": "h1_cost_sens",
+  "exec_tf": "1h",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "start": "2022-04-01",
+  "end": null,
+  "variants": {
+    "A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004": {
+      "name": "A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004",
+      "exec_tf": "1h",
+      "label": "A_breakout_retest / 入场 market / 多周期 single / 退出 基线 / 覆盖 ['costs.funding.assumed_rate_8h=0.00004']",
+      "n_trades": 303,
+      "win_rate": 0.36303630363036304,
+      "profit_factor": 0.9243169903168897,
+      "expectancy_r": -0.03773922642438036,
+      "total_net_return": -0.062273971751371615,
+      "max_drawdown": -0.15749337156633725,
+      "sharpe": -0.2024177145756694,
+      "sortino": -0.1735428027649772,
+      "max_consecutive_losses": 10,
+      "total_fees": 457.43249094932673,
+      "total_funding": 51.217587441240006,
+      "total_slippage": 643.8443540485284,
+      "n_long": 108,
+      "n_short": 195,
+      "candidates": 2242,
+      "accepted": 437,
+      "cancelled_entries": 52,
+      "by_regime4": {
+        "上涨趋势": {
+          "n": 95,
+          "win_rate": 0.30526315789473685,
+          "net_pnl": -945.0344693313133,
+          "expectancy_r": -0.2092134189155685,
+          "pf": 0.6501310767771777
+        },
+        "下跌趋势": {
+          "n": 122,
+          "win_rate": 0.3770491803278688,
+          "net_pnl": -290.120469738794,
+          "expectancy_r": -0.0444540802038833,
+          "pf": 0.9148344248118692
+        },
+        "横盘震荡": {
+          "n": 86,
+          "win_rate": 0.4069767441860465,
+          "net_pnl": 610.9444035635942,
+          "expectancy_r": 0.16120566250308746,
+          "pf": 1.285482603336362
+        }
+      },
+      "by_direction": {
+        "long": {
+          "n": 108,
+          "win_rate": 0.2962962962962963,
+          "net_pnl": -709.9854881365368,
+          "expectancy_r": -0.14053751425853203,
+          "pf": 0.7586577125068871
+        },
+        "short": {
+          "n": 195,
+          "win_rate": 0.4,
+          "net_pnl": 85.77495263002396,
+          "expectancy_r": 0.019195209914534436,
+          "pf": 1.0161660261819578
+        }
+      },
+      "by_symbol": {
+        "BTCUSDT": {
+          "n": 127,
+          "win_rate": 0.3779527559055118,
+          "net_pnl": -218.69380346467892,
+          "expectancy_r": -0.035085734511982755,
+          "pf": 0.9345006108151873
+        },
+        "ETHUSDT": {
+          "n": 176,
+          "win_rate": 0.3522727272727273,
+          "net_pnl": -405.5167320418342,
+          "expectancy_r": -0.03965396206571273,
+          "pf": 0.9173903360422224
+        }
+      },
+      "by_strategy": {
+        "A_breakout_retest": {
+          "n": 303,
+          "win_rate": 0.36303630363036304,
+          "net_pnl": -624.210535506513,
+          "expectancy_r": -0.03773922642438036,
+          "pf": 0.9243169903168897
+        }
+      },
+      "by_year": {
+        "2022": {
+          "n": 55,
+          "win_rate": 0.38181818181818183,
+          "net_pnl": -119.7500385440199,
+          "expectancy_r": -0.03787594383345925,
+          "pf": 0.9248263736518032
+        },
+        "2023": {
+          "n": 49,
+          "win_rate": 0.3877551020408163,
+          "net_pnl": -141.74844189478063,
+          "expectancy_r": -0.05489237032904144,
+          "pf": 0.88799510662086
+        },
+        "2024": {
+          "n": 69,
+          "win_rate": 0.2898550724637681,
+          "net_pnl": -650.6100255340036,
+          "expectancy_r": -0.19651733383738187,
+          "pf": 0.6940257120930363
+        },
+        "2025": {
+          "n": 74,
+          "win_rate": 0.35135135135135137,
+          "net_pnl": -22.53103939819625,
+          "expectancy_r": -0.0026774007592981165,
+          "pf": 0.9888204899239883
+        },
+        "2026": {
+          "n": 56,
+          "win_rate": 0.42857142857142855,
+          "net_pnl": 310.4290098644876,
+          "expectancy_r": 0.12670966323827598,
+          "pf": 1.2488569257354276
+        }
+      },
+      "exit_reasons": {
+        "stop": 175,
+        "take_profit": 64,
+        "trail_stop": 32,
+        "time_stop": 31,
+        "end_of_test": 1
+      },
+      "elapsed_s": 52.1,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/A_breakout_retest__entry_market__mtf_single__set_assumed_rate_8h0.00004_report.html"
+      }
+    },
+    "ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004": {
+      "name": "ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004",
+      "exec_tf": "1h",
+      "label": "ALL / 入场 market / 多周期 single / 退出 基线 / 覆盖 ['costs.funding.assumed_rate_8h=0.00004']",
+      "n_trades": 359,
+      "win_rate": 0.35097493036211697,
+      "profit_factor": 0.8686424905570217,
+      "expectancy_r": -0.07230140245686938,
+      "total_net_return": -0.12935730000945933,
+      "max_drawdown": -0.2128995965496333,
+      "sharpe": -0.45436619954324853,
+      "sortino": -0.40151473871881294,
+      "max_consecutive_losses": 11,
+      "total_fees": 579.1138286882243,
+      "total_funding": 57.48151317264001,
+      "total_slippage": 829.49569886371,
+      "n_long": 133,
+      "n_short": 226,
+      "candidates": 8163,
+      "accepted": 509,
+      "cancelled_entries": 55,
+      "by_regime4": {
+        "上涨趋势": {
+          "n": 104,
+          "win_rate": 0.3076923076923077,
+          "net_pnl": -952.8633253982696,
+          "expectancy_r": -0.19995837568623182,
+          "pf": 0.6757136400251152
+        },
+        "下跌趋势": {
+          "n": 145,
+          "win_rate": 0.3586206896551724,
+          "net_pnl": -609.5783582195368,
+          "expectancy_r": -0.08233222066891376,
+          "pf": 0.8507417191186897
+        },
+        "横盘震荡": {
+          "n": 110,
+          "win_rate": 0.38181818181818183,
+          "net_pnl": 267.50380384477603,
+          "expectancy_r": 0.061614905330404424,
+          "pf": 1.0943333564032454
+        }
+      },
+      "by_direction": {
+        "long": {
+          "n": 133,
+          "win_rate": 0.2857142857142857,
+          "net_pnl": -1172.9748685065927,
+          "expectancy_r": -0.19580829133632272,
+          "pf": 0.6834221292882414
+        },
+        "short": {
+          "n": 226,
+          "win_rate": 0.3893805309734513,
+          "net_pnl": -121.96301126643743,
+          "expectancy_r": 0.0003818551580301625,
+          "pf": 0.9801781185287278
+        }
+      },
+      "by_symbol": {
+        "BTCUSDT": {
+          "n": 146,
+          "win_rate": 0.3767123287671233,
+          "net_pnl": -418.8582691053384,
+          "expectancy_r": -0.06119175140961781,
+          "pf": 0.8906050324335651
+        },
+        "ETHUSDT": {
+          "n": 213,
+          "win_rate": 0.3333333333333333,
+          "net_pnl": -876.0796106676917,
+          "expectancy_r": -0.07991646843291977,
+          "pf": 0.8546952393589292
+        }
+      },
+      "by_strategy": {
+        "A_breakout_retest": {
+          "n": 300,
+          "win_rate": 0.36333333333333334,
+          "net_pnl": -699.3002236547935,
+          "expectancy_r": -0.0416410864487883,
+          "pf": 0.9126017329329836
+        },
+        "B_reclaim": {
+          "n": 48,
+          "win_rate": 0.2916666666666667,
+          "net_pnl": -496.98003650553403,
+          "expectancy_r": -0.23621527110748153,
+          "pf": 0.6716878830829693
+        },
+        "C_rejection": {
+          "n": 11,
+          "win_rate": 0.2727272727272727,
+          "net_pnl": -98.6576196127029,
+          "expectancy_r": -0.19323132129277357,
+          "pf": 0.7124275001103875
+        }
+      },
+      "by_year": {
+        "2022": {
+          "n": 66,
+          "win_rate": 0.36363636363636365,
+          "net_pnl": -242.71261332139807,
+          "expectancy_r": -0.06660033605870294,
+          "pf": 0.8753945439130411
+        },
+        "2023": {
+          "n": 57,
+          "win_rate": 0.42105263157894735,
+          "net_pnl": 181.40644978431175,
+          "expectancy_r": 0.06875317498269505,
+          "pf": 1.1287625895013418
+        },
+        "2024": {
+          "n": 78,
+          "win_rate": 0.28205128205128205,
+          "net_pnl": -973.196397511954,
+          "expectancy_r": -0.2604210749844526,
+          "pf": 0.6039932931400271
+        },
+        "2025": {
+          "n": 92,
+          "win_rate": 0.32608695652173914,
+          "net_pnl": -518.962527247831,
+          "expectancy_r": -0.12656738364522252,
+          "pf": 0.7944605589091048
+        },
+        "2026": {
+          "n": 66,
+          "win_rate": 0.3939393939393939,
+          "net_pnl": 258.5272085238414,
+          "expectancy_r": 0.09814440709079462,
+          "pf": 1.1701934785895483
+        }
+      },
+      "exit_reasons": {
+        "stop": 214,
+        "take_profit": 69,
+        "trail_stop": 39,
+        "time_stop": 36,
+        "end_of_test": 1
+      },
+      "elapsed_s": 55.8,
+      "paths": {
+        "trades_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004_trades.csv",
+        "equity_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004_equity.csv",
+        "signals_csv": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004_signals_log.csv",
+        "summary_json": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004_summary.json",
+        "report_html": "/home/user/1hao-/reports_out/brando_pa/phase2/experiments/h1_cost_sens/ALL__entry_market__mtf_single__set_assumed_rate_8h0.00004_report.html"
+      }
+    }
+  }
+}

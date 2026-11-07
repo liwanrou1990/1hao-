@@ -1,0 +1,6230 @@
+{
+  "generated_at": "2026-11-07T07:52:53.561496+00:00",
+  "thresholds": {
+    "min_trades": 30,
+    "min_expectancy_r": 0.0,
+    "min_profit_factor": 1.1,
+    "max_drawdown": 0.2,
+    "min_fold_nonneg_share": 0.5,
+    "bootstrap_ci_lower_r_min": -0.05,
+    "paper_requires_ci_lower_gt0": true,
+    "paper_min_trades": 50,
+    "tf_policy": {
+      "4h": "analysis_only"
+    }
+  },
+  "rows": [
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "均值 R 置信下限 -0.15302092121624003 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 165,
+        "expectancy_r": 0.10295437253246766,
+        "profit_factor": 1.183604523581893,
+        "net_return": 0.08594669305555017,
+        "max_drawdown": -0.10673171716543861,
+        "win_rate": 0.4,
+        "sharpe": 0.4571403834397401,
+        "sortino": 0.2799023650136912,
+        "max_consecutive_losses": 10,
+        "fold_nonneg_share": 0.6666666666666666,
+        "ci_mean_r": [
+          -0.15302092121624003,
+          0.3485246786317111
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.10666462107896288 ≤ 0.0",
+        "PF 0.8185973596585393 < 1.1",
+        "均值 R 置信下限 -0.3812125107999465 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 58,
+        "expectancy_r": -0.10666462107896288,
+        "profit_factor": 0.8185973596585393,
+        "net_return": -0.03145020144013472,
+        "max_drawdown": -0.05176832792500419,
+        "win_rate": 0.3793103448275862,
+        "sharpe": -0.39443831187037864,
+        "sortino": -0.11885424012289064,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3812125107999465,
+          0.1731129223601574
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "均值 R 置信下限 -0.09384182668370712 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 107,
+        "expectancy_r": 0.2165796214059533,
+        "profit_factor": 1.3983128906006725,
+        "net_return": 0.11739689449568484,
+        "max_drawdown": -0.07722654209959334,
+        "win_rate": 0.411214953271028,
+        "sharpe": 0.7489283392567564,
+        "sortino": 0.42489830178170385,
+        "max_consecutive_losses": 10,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.09384182668370712,
+          0.5023705927752324
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2/A_breakout_retest/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": true,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "PF 1.0434962580845721 < 1.1",
+        "均值 R 置信下限 -0.3571602485376312 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 42,
+        "expectancy_r": 0.024934827236177116,
+        "profit_factor": 1.0434962580845721,
+        "net_return": 0.004921094017304307,
+        "max_drawdown": -0.049682252038817376,
+        "win_rate": 0.38095238095238093,
+        "sharpe": 0.07228049617626196,
+        "sortino": 0.018679088451026605,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3571602485376312,
+          0.37480741378877186
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "均值 R 置信下限 -0.18413230651008697 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 123,
+        "expectancy_r": 0.12959519287754248,
+        "profit_factor": 1.2282608126762558,
+        "net_return": 0.08102559903824583,
+        "max_drawdown": -0.094498564856622,
+        "win_rate": 0.4065040650406504,
+        "sharpe": 0.4598315584159834,
+        "sortino": 0.25656416663045983,
+        "max_consecutive_losses": 11,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.18413230651008697,
+          0.4550254192160655
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2/A_breakout_retest/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 14 < 30",
+        "扣费后期望 -0.24159698456223805 ≤ 0.0",
+        "PF 0.598697020082608 < 1.1",
+        "均值 R 置信下限 -0.5158757631668786 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 14,
+        "expectancy_r": -0.24159698456223805,
+        "profit_factor": 0.598697020082608,
+        "net_return": -0.01693332674040979,
+        "max_drawdown": -0.020059760783765035,
+        "win_rate": 0.35714285714285715,
+        "sharpe": -0.7136743758303237,
+        "sortino": -0.14107177015855435,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.5158757631668786,
+          -0.017224364800326266
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.0637315963342843 ≤ 0.0",
+        "PF 0.8893332507214549 < 1.1",
+        "均值 R 置信下限 -0.32273472263054437 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 44,
+        "expectancy_r": -0.0637315963342843,
+        "profit_factor": 0.8893332507214549,
+        "net_return": -0.01451687469972491,
+        "max_drawdown": -0.03849899373604204,
+        "win_rate": 0.38636363636363635,
+        "sharpe": -0.21092679031032605,
+        "sortino": -0.05910399197988624,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.32273472263054437,
+          0.29544861928954064
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2/A_breakout_retest/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 28 < 30",
+        "均值 R 置信下限 -0.34987850723915165 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 28,
+        "expectancy_r": 0.15820073313538469,
+        "profit_factor": 1.3080583812560729,
+        "net_return": 0.0218544207577141,
+        "max_drawdown": -0.030888658798484236,
+        "win_rate": 0.39285714285714285,
+        "sharpe": 0.38628098258328086,
+        "sortino": 0.10082399296493859,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.34987850723915165,
+          0.4483945239374767
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "均值 R 置信下限 -0.1425745639088136 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 79,
+        "expectancy_r": 0.23727087294488902,
+        "profit_factor": 1.426923616651281,
+        "net_return": 0.09554247373797074,
+        "max_drawdown": -0.06207816221410223,
+        "win_rate": 0.4177215189873418,
+        "sharpe": 0.6532789427056951,
+        "sortino": 0.3374445565623245,
+        "max_consecutive_losses": 10,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.1425745639088136,
+          0.5669441453211773
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.6606438904109686 ≤ 0.0",
+        "PF 0.15225022387583267 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.8700383644072386 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 31,
+        "expectancy_r": -0.6606438904109686,
+        "profit_factor": 0.15225022387583267,
+        "net_return": -0.10178810935794962,
+        "max_drawdown": -0.10185117630104978,
+        "win_rate": 0.1935483870967742,
+        "sharpe": -2.3335608255134175,
+        "sortino": -0.44190347566662824,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.8700383644072386,
+          -0.43617512172366957
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "扣费后期望 -0.6948699711508431 ≤ 0.0",
+        "PF 0.16612793655402794 < 1.1",
+        "均值 R 置信下限 -0.6954045512535567 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": -0.6948699711508431,
+        "profit_factor": 0.16612793655402794,
+        "net_return": -0.02424150493481619,
+        "max_drawdown": -0.024241504934816138,
+        "win_rate": 0.14285714285714285,
+        "sharpe": -1.2139009303397146,
+        "sortino": -0.10750830708366375,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6954045512535567,
+          -0.4101788526604809
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 24 < 30",
+        "扣费后期望 -0.6506612835285052 ≤ 0.0",
+        "PF 0.14781670793370502 < 1.1",
+        "均值 R 置信下限 -0.8850987862206652 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 24,
+        "expectancy_r": -0.6506612835285052,
+        "profit_factor": 0.14781670793370502,
+        "net_return": -0.07754660442313342,
+        "max_drawdown": -0.07760967136623353,
+        "win_rate": 0.20833333333333334,
+        "sharpe": -2.053466380201487,
+        "sortino": -0.35561423682845295,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.8850987862206652,
+          -0.3885770596845895
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 11 < 30",
+        "扣费后期望 -0.6830722253508303 ≤ 0.0",
+        "PF 0.11600153165690825 < 1.1",
+        "均值 R 置信下限 -0.9543169096644387 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 11,
+        "expectancy_r": -0.6830722253508303,
+        "profit_factor": 0.11600153165690825,
+        "net_return": -0.03728423280321743,
+        "max_drawdown": -0.037347299746317564,
+        "win_rate": 0.18181818181818182,
+        "sharpe": -1.5858063978262291,
+        "sortino": -0.16554298284024738,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9543169096644387,
+          -0.41450251771566227
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 20 < 30",
+        "扣费后期望 -0.6483083061940447 ≤ 0.0",
+        "PF 0.17187815240667415 < 1.1",
+        "均值 R 置信下限 -0.8810898590554629 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 20,
+        "expectancy_r": -0.6483083061940447,
+        "profit_factor": 0.17187815240667415,
+        "net_return": -0.06450387655473219,
+        "max_drawdown": -0.06450387655473222,
+        "win_rate": 0.2,
+        "sharpe": -1.7950585451254142,
+        "sortino": -0.291903278456547,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.8810898590554629,
+          -0.33691127863449666
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.31411504363744003 ≤ 0.0",
+        "PF 0.5031545361890807 < 1.1",
+        "均值 R 置信下限 -0.31411504363744003 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.31411504363744003,
+        "profit_factor": 0.5031545361890807,
+        "net_return": -0.004768949910269323,
+        "max_drawdown": -0.004864598459515146,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.36667432521735094,
+        "sortino": -0.021352814849347,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.31411504363744003,
+          -0.31411504363744003
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.9804361667858954 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9804361667858954 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.9804361667858954,
+        "profit_factor": 0.0,
+        "net_return": -0.019472555024546867,
+        "max_drawdown": -0.01947255502454681,
+        "win_rate": 0.0,
+        "sharpe": -1.4471589798227817,
+        "sortino": -0.10915999554482785,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9804361667858954,
+          -0.9804361667858954
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2/B_reclaim/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 8 < 30",
+        "扣费后期望 -0.8214311684933517 ≤ 0.0",
+        "PF 0.0019358544376085161 < 1.1",
+        "均值 R 置信下限 -0.9484356834072849 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 8,
+        "expectancy_r": -0.8214311684933517,
+        "profit_factor": 0.0019358544376085161,
+        "net_return": -0.032515282892948104,
+        "max_drawdown": -0.03257834983604824,
+        "win_rate": 0.125,
+        "sharpe": -1.8930351143493154,
+        "sortino": -0.18639568321454406,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9484356834072849,
+          -0.8214311684933517
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 16 < 30",
+        "扣费后期望 -0.5652763410460819 ≤ 0.0",
+        "PF 0.22916934977758638 < 1.1",
+        "均值 R 置信下限 -0.8557887204374982 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 16,
+        "expectancy_r": -0.5652763410460819,
+        "profit_factor": 0.22916934977758638,
+        "net_return": -0.04503132153018531,
+        "max_drawdown": -0.04832897210424458,
+        "win_rate": 0.25,
+        "sharpe": -1.3744240422967144,
+        "sortino": -0.20361848153627954,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.8557887204374982,
+          -0.30077494609522354
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 12 < 30",
+        "扣费后期望 -0.17392869698593197 ≤ 0.0",
+        "PF 0.7213332088483034 < 1.1",
+        "均值 R 置信下限 -0.7961832975494207 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 12,
+        "expectancy_r": -0.17392869698593197,
+        "profit_factor": 0.7213332088483034,
+        "net_return": -0.010767194898308326,
+        "max_drawdown": -0.024245260587638207,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.4480860912191232,
+        "sortino": -0.06666351316508838,
+        "max_consecutive_losses": 5,
+        "fold_nonneg_share": 0.5,
+        "ci_mean_r": [
+          -0.7961832975494207,
+          0.911743377779422
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/C_rejection/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.4829923308002153 ≤ 0.0",
+        "PF 0.3340344699164746 < 1.1",
+        "均值 R 置信下限 -0.4829923308002153 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.4829923308002153,
+        "profit_factor": 0.3340344699164746,
+        "net_return": -0.009789225275327856,
+        "max_drawdown": -0.014627475279331392,
+        "win_rate": 0.25,
+        "sharpe": -1.2888651687214252,
+        "sortino": -0.1742760753730689,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4829923308002153,
+          -0.4829923308002153
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 8 < 30",
+        "扣费后期望 -0.019396880078790313 ≤ 0.0",
+        "PF 0.9591473377424738 < 1.1",
+        "均值 R 置信下限 -0.7010077670851123 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 8,
+        "expectancy_r": -0.019396880078790313,
+        "profit_factor": 0.9591473377424738,
+        "net_return": -0.00097796962298047,
+        "max_drawdown": -0.014056161904155817,
+        "win_rate": 0.375,
+        "sharpe": -0.03945753221766512,
+        "sortino": -0.007184527287792271,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.7010077670851123,
+          0.5628643465746124
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2/C_rejection/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 6 < 30",
+        "扣费后期望 -0.4643915004934602 ≤ 0.0",
+        "PF 0.25995997344705046 < 1.1",
+        "均值 R 置信下限 -0.6210986995756475 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": -0.4643915004934602,
+        "profit_factor": 0.25995997344705046,
+        "net_return": -0.014019809073166373,
+        "max_drawdown": -0.014057874623730426,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -1.072001843664653,
+        "sortino": -0.10299471321903553,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6210986995756475,
+          -0.3022476463195159
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 6 < 30"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": 0.11653410652159614,
+        "profit_factor": 1.1651611533181918,
+        "net_return": 0.003252614174858051,
+        "max_drawdown": -0.0192518226860392,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.18432880505257965,
+        "sortino": 0.023923222283943883,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.11653410652159618,
+          1.043586129497254
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2/C_rejection/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 0.9983076370542112,
+        "profit_factor": Infinity,
+        "net_return": 0.004910071960221394,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.9983076370542112,
+          0.9983076370542112
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2/C_rejection/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.9767589867516908 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9767589867516908 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.9767589867516908,
+        "profit_factor": 0.0,
+        "net_return": -0.01469929723554925,
+        "max_drawdown": -0.014699297235549191,
+        "win_rate": 0.0,
+        "sharpe": -2.806619961970656,
+        "sortino": -0.4064536448828815,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9767589867516908,
+          -0.9767589867516908
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2/C_rejection/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 5 < 30",
+        "扣费后期望 -0.7569313280029945 ≤ 0.0",
+        "PF 0.0007802824215953819 < 1.1",
+        "均值 R 置信下限 -0.7569313280029945 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": -0.7569313280029945,
+        "profit_factor": 0.0007802824215953819,
+        "net_return": -0.018929881033387767,
+        "max_drawdown": -0.018944383181654256,
+        "win_rate": 0.2,
+        "sharpe": -1.6336738567425453,
+        "sortino": -0.1390659215207057,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.7569313280029945,
+          -0.7569313280029945
+        ]
+      }
+    },
+    {
+      "run": "h1_p2",
+      "variant": "基线",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 1.2098271997948833,
+        "profit_factor": 4.594493313084528,
+        "net_return": 0.017951911410407303,
+        "max_drawdown": -0.004882252382533925,
+        "win_rate": 0.6666666666666666,
+        "sharpe": 0.9678390391351804,
+        "sortino": null,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.2098271997948833,
+          1.2098271997948833
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 10 < 30",
+        "均值 R 置信下限 -0.36324344469590103 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 10,
+        "expectancy_r": 0.3461607373449482,
+        "profit_factor": 1.680697952199586,
+        "net_return": 0.01713607933224682,
+        "max_drawdown": -0.01935191654515367,
+        "win_rate": 0.5,
+        "sharpe": 0.9520609891332662,
+        "sortino": 0.3163266068643787,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": 0.5,
+        "ci_mean_r": [
+          -0.36324344469590103,
+          1.0555649193857974
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.5511259529931712,
+        "profit_factor": 2.0733150037889647,
+        "net_return": 0.010942412285319445,
+        "max_drawdown": -0.005050147754387724,
+        "win_rate": 0.5,
+        "sharpe": 3.2954042155737664,
+        "sortino": 2.929377878479222,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5511259529931712,
+          0.5511259529931712
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 6 < 30"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": 0.20951726024613285,
+        "profit_factor": 1.4134814756455345,
+        "net_return": 0.006193667046927377,
+        "max_drawdown": -0.014668728966476863,
+        "win_rate": 0.5,
+        "sharpe": 0.47676929488418074,
+        "sortino": 0.11502093706706769,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.20003779571065414,
+          0.7249520387531255
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "m15_p2/A_breakout_retest/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9718644662017659 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9718644662017659 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9718644662017659,
+        "profit_factor": 0.0,
+        "net_return": -0.004858987138332956,
+        "max_drawdown": -0.004858987138332993,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9718644662017659,
+          -0.9718644662017659
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 9 < 30",
+        "均值 R 置信下限 -0.07636481079006735 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 9,
+        "expectancy_r": 0.492607982183472,
+        "profit_factor": 2.08268529649215,
+        "net_return": 0.021995066470579774,
+        "max_drawdown": -0.014667237158039526,
+        "win_rate": 0.5555555555555556,
+        "sharpe": 2.8672120330379682,
+        "sortino": 2.1275090945006445,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.07636481079006735,
+          1.1716110068036012
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.5511259529931712,
+        "profit_factor": 2.0733150037889647,
+        "net_return": 0.010942412285319445,
+        "max_drawdown": -0.005050147754387724,
+        "win_rate": 0.5,
+        "sharpe": 3.2954042155737664,
+        "sortino": 2.929377878479222,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5511259529931712,
+          0.5511259529931712
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "m15_p2/A_breakout_retest/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9718644662017659 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9718644662017659 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9718644662017659,
+        "profit_factor": 0.0,
+        "net_return": -0.004858987138332956,
+        "max_drawdown": -0.004858987138332993,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9718644662017659,
+          -0.9718644662017659
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 0.4457936055357126,
+        "profit_factor": 2.0921247027830328,
+        "net_return": 0.011052654185260333,
+        "max_drawdown": -0.009910487954087444,
+        "win_rate": 0.6,
+        "sharpe": 2.027416519620193,
+        "sortino": 1.0699959812533264,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.4457936055357126,
+          0.4457936055357126
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 12 < 30",
+        "均值 R 置信下限 -0.4336461241892708 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 12,
+        "expectancy_r": 0.06283074791371399,
+        "profit_factor": 1.1446437299022427,
+        "net_return": 0.003565430788260668,
+        "max_drawdown": -0.013566416852888064,
+        "win_rate": 0.5,
+        "sharpe": 0.1969270580442905,
+        "sortino": 0.0755555850334928,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": 0.6666666666666666,
+        "ci_mean_r": [
+          -0.4336461241892708,
+          0.7186493948057907
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.07049290499071825,
+        "profit_factor": 1.2969533165554517,
+        "net_return": 0.0014396848072370937,
+        "max_drawdown": -0.004847040646353662,
+        "win_rate": 0.75,
+        "sharpe": 0.2744405774251698,
+        "sortino": 0.0341764165474905,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.07049290499071825,
+          0.07049290499071825
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 8 < 30",
+        "均值 R 置信下限 -0.3246626544459969 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 8,
+        "expectancy_r": 0.058999669375211866,
+        "profit_factor": 1.1073524636777297,
+        "net_return": 0.0021257459810235715,
+        "max_drawdown": -0.009699195506951752,
+        "win_rate": 0.375,
+        "sharpe": 0.12392160093986429,
+        "sortino": 0.045917699578156314,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3246626544459969,
+          0.6951603842234627
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "m15_p2/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 5 < 30",
+        "扣费后期望 -0.09894649110066196 ≤ 0.0",
+        "PF 0.7435054310023 < 1.1",
+        "均值 R 置信下限 -0.09894649110066196 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": -0.09894649110066196,
+        "profit_factor": 0.7435054310023,
+        "net_return": -0.002495143437973995,
+        "max_drawdown": -0.009727860701784996,
+        "win_rate": 0.6,
+        "sharpe": -0.3635916143521487,
+        "sortino": -0.048756498387046016,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.09894649110066196,
+          -0.09894649110066196
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "均值 R 置信下限 -0.28755595382821925 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": 0.17838591863826828,
+        "profit_factor": 1.4061534630854495,
+        "net_return": 0.00606057422623466,
+        "max_drawdown": -0.009727057795792193,
+        "win_rate": 0.42857142857142855,
+        "sharpe": 0.4626068323699818,
+        "sortino": 0.22160151978828455,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.28755595382821925,
+          1.0587302138093388
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "m15_p2/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 1.21066993025602,
+        "profit_factor": Infinity,
+        "net_return": 0.006051643648806203,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.21066993025602,
+          1.21066993025602
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.309566103431049 ≤ 0.0",
+        "PF 0.048724785496993654 < 1.1",
+        "均值 R 置信下限 -0.309566103431049 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.309566103431049,
+        "profit_factor": 0.048724785496993654,
+        "net_return": -0.004611958841569109,
+        "max_drawdown": -0.004847040646353662,
+        "win_rate": 0.6666666666666666,
+        "sharpe": -1.65732857420384,
+        "sortino": -0.15145072878906155,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.309566103431049,
+          -0.309566103431049
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "m15_p2/B_reclaim/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.4263505964398324 ≤ 0.0",
+        "PF 0.12141144401749555 < 1.1",
+        "均值 R 置信下限 -0.4263505964398324 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.4263505964398324,
+        "profit_factor": 0.12141144401749555,
+        "net_return": -0.008546787086780198,
+        "max_drawdown": -0.009727860701784996,
+        "win_rate": 0.5,
+        "sharpe": -1.6558588132456777,
+        "sortino": -0.16700900015166478,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4263505964398324,
+          -0.4263505964398324
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.5443499351902562,
+        "profit_factor": 2.0594455336502127,
+        "net_return": 0.01067253306780377,
+        "max_drawdown": -0.005104228600555594,
+        "win_rate": 0.25,
+        "sharpe": 0.8382936233535515,
+        "sortino": 0.4161945000788139,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5443499351902562,
+          0.5443499351902562
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2",
+      "variant": "基线",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h4_p2/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.04929210478595421 ≤ 0.0",
+        "PF 0.9291828558600379 < 1.1",
+        "测试折非负占比 0.3076923076923077 < 0.5",
+        "均值 R 置信下限 -0.282949091688239 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 219,
+        "expectancy_r": -0.04929210478595421,
+        "profit_factor": 0.9291828558600379,
+        "net_return": -0.05111618301518461,
+        "max_drawdown": -0.17188407295686847,
+        "win_rate": 0.3698630136986301,
+        "sharpe": -0.17655153189762016,
+        "sortino": -0.0666950395083644,
+        "max_consecutive_losses": 12,
+        "fold_nonneg_share": 0.3076923076923077,
+        "ci_mean_r": [
+          -0.282949091688239,
+          0.2058100927017675
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.08847548457606032 ≤ 0.0",
+        "PF 0.876622575222128 < 1.1",
+        "均值 R 置信下限 -0.3771709027619253 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 112,
+        "expectancy_r": -0.08847548457606032,
+        "profit_factor": 0.876622575222128,
+        "net_return": -0.04881137028160693,
+        "max_drawdown": -0.10662471974182508,
+        "win_rate": 0.35714285714285715,
+        "sharpe": -0.2346201110945847,
+        "sortino": -0.06106058328158588,
+        "max_consecutive_losses": 9,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3771709027619253,
+          0.19823697628383555
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.008277725940235632 ≤ 0.0",
+        "PF 0.992933897166275 < 1.1",
+        "均值 R 置信下限 -0.3111196982755669 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 107,
+        "expectancy_r": -0.008277725940235632,
+        "profit_factor": 0.992933897166275,
+        "net_return": -0.0023048127335777097,
+        "max_drawdown": -0.09479733668265411,
+        "win_rate": 0.38317757009345793,
+        "sharpe": -0.012029465523400756,
+        "sortino": -0.0035734299007559147,
+        "max_consecutive_losses": 9,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3111196982755669,
+          0.2303479730886012
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h4_p2/A_breakout_retest/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "均值 R 置信下限 -0.1105917253068669 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": 0.19610682224318493,
+        "profit_factor": 1.5290551091320141,
+        "net_return": 0.007393990792406381,
+        "max_drawdown": -0.009297504715746086,
+        "win_rate": 0.2857142857142857,
+        "sharpe": 0.18821426089761434,
+        "sortino": 0.020844507194008044,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.1105917253068669,
+          0.6345253153542461
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h4_p2/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.05739489954635027 ≤ 0.0",
+        "PF 0.917338588704692 < 1.1",
+        "均值 R 置信下限 -0.3064131274779618 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 212,
+        "expectancy_r": -0.05739489954635027,
+        "profit_factor": 0.917338588704692,
+        "net_return": -0.058510173807591014,
+        "max_drawdown": -0.16554058529748916,
+        "win_rate": 0.37264150943396224,
+        "sharpe": -0.20452026440424398,
+        "sortino": -0.07531548287553738,
+        "max_consecutive_losses": 12,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3064131274779618,
+          0.18382163069248666
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h4_p2/A_breakout_retest/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 0.6677922778163774,
+        "profit_factor": 21.004632357885896,
+        "net_return": 0.010479282705315045,
+        "max_drawdown": -0.0003071196516433172,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.6591562145491286,
+        "sortino": 0.987638600824169,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.6677922778163774,
+          0.6677922778163774
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h4_p2/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.10929019363273293 ≤ 0.0",
+        "PF 0.8499360553524217 < 1.1",
+        "均值 R 置信下限 -0.38701957226601685 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 109,
+        "expectancy_r": -0.10929019363273293,
+        "profit_factor": 0.8499360553524217,
+        "net_return": -0.05929065298692199,
+        "max_drawdown": -0.10744013177905276,
+        "win_rate": 0.3577981651376147,
+        "sharpe": -0.287772024254288,
+        "sortino": -0.07313417983682877,
+        "max_consecutive_losses": 9,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.38701957226601685,
+          0.17553733720351364
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h4_p2/A_breakout_retest/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.1576572694367095 ≤ 0.0",
+        "PF 0.7706443636506902 < 1.1",
+        "均值 R 置信下限 -0.1576572694367095 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.1576572694367095,
+        "profit_factor": 0.7706443636506902,
+        "net_return": -0.003085291912908665,
+        "max_drawdown": -0.013313977421155476,
+        "win_rate": 0.25,
+        "sharpe": -0.10306085018503447,
+        "sortino": -0.00674519395631493,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.1576572694367095,
+          -0.1576572694367095
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h4_p2/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.002476578619984209 ≤ 0.0",
+        "PF 1.002495722311373 < 1.1",
+        "均值 R 置信下限 -0.30578034246624486 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 103,
+        "expectancy_r": -0.002476578619984209,
+        "profit_factor": 1.002495722311373,
+        "net_return": 0.0007804791793309718,
+        "max_drawdown": -0.08625933119160234,
+        "win_rate": 0.3883495145631068,
+        "sharpe": 0.004138674080309601,
+        "sortino": 0.0012050048245657219,
+        "max_consecutive_losses": 9,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.30578034246624486,
+          0.26181094267271116
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h4_p2/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 12 < 30",
+        "测试折非负占比 0.2857142857142857 < 0.5",
+        "均值 R 置信下限 -0.42697249458595843 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 12,
+        "expectancy_r": 0.44125210075294924,
+        "profit_factor": 2.0682832600932732,
+        "net_return": 0.026406348611055227,
+        "max_drawdown": -0.014722603028151648,
+        "win_rate": 0.4166666666666667,
+        "sharpe": 0.2778465338940856,
+        "sortino": 0.06772838953623027,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": 0.2857142857142857,
+        "ci_mean_r": [
+          -0.42697249458595843,
+          1.1211197633810668
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 1.1672117138601925,
+        "profit_factor": 3.831496016328089,
+        "net_return": 0.02918331871545334,
+        "max_drawdown": -0.009915668353530749,
+        "win_rate": 0.4,
+        "sharpe": 0.35201747456283844,
+        "sortino": 0.08867609891450332,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.1672117138601925,
+          1.1672117138601925
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "扣费后期望 -0.0772904800379389 ≤ 0.0",
+        "PF 0.8073129001055873 < 1.1",
+        "均值 R 置信下限 -0.21373710383532712 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": -0.0772904800379389,
+        "profit_factor": 0.8073129001055873,
+        "net_return": -0.0027769701043981157,
+        "max_drawdown": -0.009277711595574112,
+        "win_rate": 0.42857142857142855,
+        "sharpe": -0.09538724931673549,
+        "sortino": -0.008382733947964186,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.21373710383532712,
+          0.3814463743518171
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h4_p2/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 1.8608680564399962,
+        "profit_factor": 11.179532922712946,
+        "net_return": 0.046430495925834495,
+        "max_drawdown": -0.004197877164040298,
+        "win_rate": 0.6,
+        "sharpe": 0.5023435936453273,
+        "sortino": 0.1556490454509479,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.8608680564399962,
+          1.8608680564399962
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h4_p2/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "扣费后期望 -0.57275929616637 ≤ 0.0",
+        "PF 0.006607052412425296 < 1.1",
+        "均值 R 置信下限 -0.5886238253688137 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": -0.57275929616637,
+        "profit_factor": 0.006607052412425296,
+        "net_return": -0.020024147314779268,
+        "max_drawdown": -0.02008059420808861,
+        "win_rate": 0.2857142857142857,
+        "sharpe": -1.0823205990289855,
+        "sortino": -0.06727753282115428,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.5886238253688137,
+          -0.42934460890715787
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h4_p2/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 7.889775723437906,
+        "profit_factor": Infinity,
+        "net_return": 0.039433550181274646,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          7.889775723437906,
+          7.889775723437906
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h4_p2/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.513429288534236 ≤ 0.0",
+        "PF 0.005476729877704507 < 1.1",
+        "均值 R 置信下限 -0.513429288534236 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.513429288534236,
+        "profit_factor": 0.005476729877704507,
+        "net_return": -0.0102502314658213,
+        "max_drawdown": -0.010306678359130683,
+        "win_rate": 0.25,
+        "sharpe": -0.7830704234019433,
+        "sortino": -0.037732543377055526,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.513429288534236,
+          -0.513429288534236
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h4_p2/B_reclaim/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.35364113969051847,
+        "profit_factor": 2.5340271118136486,
+        "net_return": 0.006996945744559852,
+        "max_drawdown": -0.0043615471753479795,
+        "win_rate": 0.5,
+        "sharpe": 0.2758828028140054,
+        "sortino": 0.02790255924541416,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.35364113969051847,
+          0.35364113969051847
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h4_p2/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.6518659730092153 ≤ 0.0",
+        "PF 0.007789702433061926 < 1.1",
+        "均值 R 置信下限 -0.6518659730092153 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.6518659730092153,
+        "profit_factor": 0.007789702433061926,
+        "net_return": -0.009773915848957968,
+        "max_drawdown": -0.009849893659079623,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.834435058394092,
+        "sortino": -0.03670116092803192,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6518659730092153,
+          -0.6518659730092153
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h4_p2/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.6828025368253333,
+        "profit_factor": 2.3764967842086637,
+        "net_return": 0.013584717146806377,
+        "max_drawdown": -0.0049294144216075475,
+        "win_rate": 0.5,
+        "sharpe": 0.3288749644487869,
+        "sortino": 0.027363708679314487,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.6666666666666666,
+        "ci_mean_r": [
+          0.6828025368253333,
+          0.6828025368253333
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/C_rejection/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.6519849795147639,
+        "profit_factor": 2.335185648368489,
+        "net_return": 0.006520276503678778,
+        "max_drawdown": -0.004828361959565375,
+        "win_rate": 0.5,
+        "sharpe": 0.22900537296274692,
+        "sortino": 0.013271949008904535,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.6519849795147639,
+          0.6519849795147639
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h4_p2/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.7136200941359028,
+        "profit_factor": 2.4169610462359756,
+        "net_return": 0.0070644406431276,
+        "max_drawdown": -0.004985627983135954,
+        "win_rate": 0.5,
+        "sharpe": 0.38767396272188054,
+        "sortino": 0.038021071317009,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.7136200941359028,
+          0.7136200941359028
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h4_p2/C_rejection/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 2.413182649035578,
+        "profit_factor": Infinity,
+        "net_return": 0.012050068626263498,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          2.413182649035578,
+          2.413182649035578
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h4_p2/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 0.10600916608858502,
+        "profit_factor": 1.1555011216346502,
+        "net_return": 0.0015346485205428792,
+        "max_drawdown": -0.009757776381172811,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.05000871909215209,
+        "sortino": 0.0030912439756722184,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.10600916608858502,
+          0.10600916608858502
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h4_p2/C_rejection/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.6519849795147639,
+        "profit_factor": 2.335185648368489,
+        "net_return": 0.006520276503678778,
+        "max_drawdown": -0.004828361959565375,
+        "win_rate": 0.5,
+        "sharpe": 0.22900537296274692,
+        "sortino": 0.013271949008904535,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.6519849795147639,
+          0.6519849795147639
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h4_p2/C_rejection/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 2.413182649035578,
+        "profit_factor": Infinity,
+        "net_return": 0.012050068626263498,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          2.413182649035578,
+          2.413182649035578
+        ]
+      }
+    },
+    {
+      "run": "h4_p2",
+      "variant": "基线",
+      "exec_tf": "4h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h4_p2/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9859424607637726 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9859424607637726 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9859424607637726,
+        "profit_factor": 0.0,
+        "net_return": -0.004985627983135899,
+        "max_drawdown": -0.004985627983135954,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9859424607637726,
+          -0.9859424607637726
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_rg/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.06695412472608363 ≤ 0.0",
+        "PF 0.8878971565491419 < 1.1",
+        "测试折非负占比 0.3333333333333333 < 0.5",
+        "均值 R 置信下限 -0.3528286717671463 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 75,
+        "expectancy_r": -0.06695412472608363,
+        "profit_factor": 0.8878971565491419,
+        "net_return": -0.025815923909939375,
+        "max_drawdown": -0.06659741262486363,
+        "win_rate": 0.3466666666666667,
+        "sharpe": -0.26316079931753655,
+        "sortino": -0.08796030798515929,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": 0.3333333333333333,
+        "ci_mean_r": [
+          -0.3528286717671463,
+          0.1831944786733095
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 24 < 30",
+        "扣费后期望 -0.12939925901226637 ≤ 0.0",
+        "PF 0.7685095049985888 < 1.1",
+        "均值 R 置信下限 -0.6134192263370514 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 24,
+        "expectancy_r": -0.12939925901226637,
+        "profit_factor": 0.7685095049985888,
+        "net_return": -0.01591735114257868,
+        "max_drawdown": -0.03743292527995634,
+        "win_rate": 0.375,
+        "sharpe": -0.4728270036400129,
+        "sortino": -0.12754381811857338,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6134192263370514,
+          0.30931863911304974
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.037568179179644744 ≤ 0.0",
+        "PF 0.9387189931126058 < 1.1",
+        "均值 R 置信下限 -0.4007861141882827 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 51,
+        "expectancy_r": -0.037568179179644744,
+        "profit_factor": 0.9387189931126058,
+        "net_return": -0.009898572767360685,
+        "max_drawdown": -0.06510419776961007,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.1194999016036984,
+        "sortino": -0.0358359438394354,
+        "max_consecutive_losses": 11,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4007861141882827,
+          0.33867625083398073
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2_rg/A_breakout_retest/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 20 < 30",
+        "扣费后期望 -0.06503737111741237 ≤ 0.0",
+        "PF 0.8931093532525979 < 1.1",
+        "均值 R 置信下限 -0.5798260574623979 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 20,
+        "expectancy_r": -0.06503737111741237,
+        "profit_factor": 0.8931093532525979,
+        "net_return": -0.006491351834562766,
+        "max_drawdown": -0.029371806226074937,
+        "win_rate": 0.35,
+        "sharpe": -0.18630574327731123,
+        "sortino": -0.04657904593133863,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.5798260574623979,
+          0.35489709624467813
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_rg/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.06765112603832772 ≤ 0.0",
+        "PF 0.8860303663689981 < 1.1",
+        "均值 R 置信下限 -0.4931007776197915 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 55,
+        "expectancy_r": -0.06765112603832772,
+        "profit_factor": 0.8860303663689981,
+        "net_return": -0.019324572075376596,
+        "max_drawdown": -0.06018024774155306,
+        "win_rate": 0.34545454545454546,
+        "sharpe": -0.22152053215788364,
+        "sortino": -0.0667561385137969,
+        "max_consecutive_losses": 12,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4931007776197915,
+          0.2574241201429593
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/A_breakout_retest/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30",
+        "扣费后期望 -0.04918633364707421 ≤ 0.0",
+        "PF 0.9181725674596021 < 1.1"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": -0.04918633364707421,
+        "profit_factor": 0.9181725674596021,
+        "net_return": -0.0011306174441990655,
+        "max_drawdown": -0.011137033182601064,
+        "win_rate": 0.4,
+        "sharpe": -0.1533053823530328,
+        "sortino": -0.04113947429454335,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.04918633364707421,
+          -0.04918633364707421
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 19 < 30",
+        "扣费后期望 -0.15050792358205375 ≤ 0.0",
+        "PF 0.7308722830100525 < 1.1",
+        "均值 R 置信下限 -0.6255263590664027 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 19,
+        "expectancy_r": -0.15050792358205375,
+        "profit_factor": 0.7308722830100525,
+        "net_return": -0.014786733698379618,
+        "max_drawdown": -0.029995287655390168,
+        "win_rate": 0.3684210526315789,
+        "sharpe": -0.5216847386648581,
+        "sortino": -0.13106867178878084,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6255263590664027,
+          0.42595953885166554
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/A_breakout_retest/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 15 < 30",
+        "扣费后期望 -0.07032105027419175 ≤ 0.0",
+        "PF 0.8857273990631787 < 1.1",
+        "均值 R 置信下限 -0.5673018749482331 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 15,
+        "expectancy_r": -0.07032105027419175,
+        "profit_factor": 0.8857273990631787,
+        "net_return": -0.005360734390363699,
+        "max_drawdown": -0.023037813391253437,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.17816273308028685,
+        "sortino": -0.04312905001813342,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.5673018749482331,
+          0.6878328376297193
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": true,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "扣费后期望 -0.023921149556916807 ≤ 0.0",
+        "PF 0.9604082552695944 < 1.1",
+        "均值 R 置信下限 -0.5385780909731991 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 36,
+        "expectancy_r": -0.023921149556916807,
+        "profit_factor": 0.9604082552695944,
+        "net_return": -0.0045378383769969785,
+        "max_drawdown": -0.05128469936430369,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.06114937433770754,
+        "sortino": -0.016292609135510346,
+        "max_consecutive_losses": 11,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.5385780909731991,
+          0.3692434512274871
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_rg/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 29 < 30",
+        "扣费后期望 -0.6396741406235987 ≤ 0.0",
+        "PF 0.16548990221527451 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.8667628021730021 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 29,
+        "expectancy_r": -0.6396741406235987,
+        "profit_factor": 0.16548990221527451,
+        "net_return": -0.09218227046247489,
+        "max_drawdown": -0.09235860465252543,
+        "win_rate": 0.20689655172413793,
+        "sharpe": -2.25234152331128,
+        "sortino": -0.427763528154477,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.8667628021730021,
+          -0.41490061168371406
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 6 < 30",
+        "扣费后期望 -0.6525360096402277 ≤ 0.0",
+        "PF 0.198437935299902 < 1.1",
+        "均值 R 置信下限 -0.6531596864267271 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": -0.6525360096402277,
+        "profit_factor": 0.198437935299902,
+        "net_return": -0.019508113779023013,
+        "max_drawdown": -0.01950811377902295,
+        "win_rate": 0.16666666666666666,
+        "sharpe": -1.144880681209877,
+        "sortino": -0.10221999398828845,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6531596864267271,
+          -0.3229350084932651
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 23 < 30",
+        "扣费后期望 -0.6363188704453477 ≤ 0.0",
+        "PF 0.15617929957060334 < 1.1",
+        "均值 R 置信下限 -0.8825184792651571 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 23,
+        "expectancy_r": -0.6363188704453477,
+        "profit_factor": 0.15617929957060334,
+        "net_return": -0.07267415668345188,
+        "max_drawdown": -0.07285292504479557,
+        "win_rate": 0.21739130434782608,
+        "sharpe": -1.9762431179609878,
+        "sortino": -0.3382802074565743,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.8825184792651571,
+          -0.3651573180246018
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2_rg/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 10 < 30",
+        "扣费后期望 -0.65649207386446 ≤ 0.0",
+        "PF 0.13066580870975067 < 1.1",
+        "均值 R 置信下限 -0.956112275125762 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 10,
+        "expectancy_r": -0.65649207386446,
+        "profit_factor": 0.13066580870975067,
+        "net_return": -0.03255084164742425,
+        "max_drawdown": -0.032613908590524265,
+        "win_rate": 0.2,
+        "sharpe": -1.6539464229730305,
+        "sortino": -0.1855304214162932,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.956112275125762,
+          -0.5507718533433608
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_rg/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 19 < 30",
+        "扣费后期望 -0.6308225968126192 ≤ 0.0",
+        "PF 0.18334727165211442 < 1.1",
+        "均值 R 置信下限 -0.9269511496753822 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 19,
+        "expectancy_r": -0.6308225968126192,
+        "profit_factor": 0.18334727165211442,
+        "net_return": -0.05963142881505064,
+        "max_drawdown": -0.05974876554001163,
+        "win_rate": 0.21052631578947367,
+        "sharpe": -1.707871825974403,
+        "sortino": -0.27370268944841103,
+        "max_consecutive_losses": 8,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9269511496753822,
+          -0.3328953902035771
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "PF 0.9926910026940223 < 1.1"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.003264304651107497,
+        "profit_factor": 0.9926910026940223,
+        "net_return": -3.5558754476143406e-05,
+        "max_drawdown": -0.0048416830821721435,
+        "win_rate": 0.5,
+        "sharpe": -0.004440795884698499,
+        "sortino": -0.00028096216793462665,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.003264304651107497,
+          0.003264304651107497
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.9804361667858954 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9804361667858954 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.9804361667858954,
+        "profit_factor": 0.0,
+        "net_return": -0.019472555024546867,
+        "max_drawdown": -0.01947255502454681,
+        "win_rate": 0.0,
+        "sharpe": -1.4471589798227817,
+        "sortino": -0.10915999554482785,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9804361667858954,
+          -0.9804361667858954
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/B_reclaim/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 8 < 30",
+        "扣费后期望 -0.8214311684933517 ≤ 0.0",
+        "PF 0.0019358544376085161 < 1.1",
+        "均值 R 置信下限 -0.9484356834072849 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 8,
+        "expectancy_r": -0.8214311684933517,
+        "profit_factor": 0.0019358544376085161,
+        "net_return": -0.032515282892948104,
+        "max_drawdown": -0.03257834983604824,
+        "win_rate": 0.125,
+        "sharpe": -1.8930351143493154,
+        "sortino": -0.18639568321454406,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9484356834072849,
+          -0.8214311684933517
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 15 < 30",
+        "扣费后期望 -0.5375923114864122 ≤ 0.0",
+        "PF 0.2500224420594863 < 1.1",
+        "均值 R 置信下限 -0.8471854021589063 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 15,
+        "expectancy_r": -0.5375923114864122,
+        "profit_factor": 0.2500224420594863,
+        "net_return": -0.04015887379050377,
+        "max_drawdown": -0.043575879351695934,
+        "win_rate": 0.26666666666666666,
+        "sharpe": -1.2674878231658484,
+        "sortino": -0.18418140195738958,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.8471854021589063,
+          -0.25434808622402205
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_rg/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 12 < 30",
+        "扣费后期望 -0.17392869698593197 ≤ 0.0",
+        "PF 0.7213332088483034 < 1.1",
+        "均值 R 置信下限 -0.7961832975494207 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 12,
+        "expectancy_r": -0.17392869698593197,
+        "profit_factor": 0.7213332088483034,
+        "net_return": -0.010767194898308326,
+        "max_drawdown": -0.024245260587638207,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.4480860912191232,
+        "sortino": -0.06666351316508838,
+        "max_consecutive_losses": 5,
+        "fold_nonneg_share": 0.5,
+        "ci_mean_r": [
+          -0.7961832975494207,
+          0.911743377779422
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/C_rejection/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.4829923308002153 ≤ 0.0",
+        "PF 0.3340344699164746 < 1.1",
+        "均值 R 置信下限 -0.4829923308002153 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.4829923308002153,
+        "profit_factor": 0.3340344699164746,
+        "net_return": -0.009789225275327856,
+        "max_drawdown": -0.014627475279331392,
+        "win_rate": 0.25,
+        "sharpe": -1.2888651687214252,
+        "sortino": -0.1742760753730689,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4829923308002153,
+          -0.4829923308002153
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_rg/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 8 < 30",
+        "扣费后期望 -0.019396880078790313 ≤ 0.0",
+        "PF 0.9591473377424738 < 1.1",
+        "均值 R 置信下限 -0.7010077670851123 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 8,
+        "expectancy_r": -0.019396880078790313,
+        "profit_factor": 0.9591473377424738,
+        "net_return": -0.00097796962298047,
+        "max_drawdown": -0.014056161904155817,
+        "win_rate": 0.375,
+        "sharpe": -0.03945753221766512,
+        "sortino": -0.007184527287792271,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.7010077670851123,
+          0.5628643465746124
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2_rg/C_rejection/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 6 < 30",
+        "扣费后期望 -0.4643915004934602 ≤ 0.0",
+        "PF 0.25995997344705046 < 1.1",
+        "均值 R 置信下限 -0.6210986995756475 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": -0.4643915004934602,
+        "profit_factor": 0.25995997344705046,
+        "net_return": -0.014019809073166373,
+        "max_drawdown": -0.014057874623730426,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -1.072001843664653,
+        "sortino": -0.10299471321903553,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6210986995756475,
+          -0.3022476463195159
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_rg/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 6 < 30"
+      ],
+      "stats": {
+        "n_trades": 6,
+        "expectancy_r": 0.11653410652159614,
+        "profit_factor": 1.1651611533181918,
+        "net_return": 0.003252614174858051,
+        "max_drawdown": -0.0192518226860392,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.18432880505257965,
+        "sortino": 0.023923222283943883,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.11653410652159618,
+          1.043586129497254
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/C_rejection/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 0.9983076370542112,
+        "profit_factor": Infinity,
+        "net_return": 0.004910071960221394,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.9983076370542112,
+          0.9983076370542112
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/C_rejection/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.9767589867516908 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9767589867516908 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.9767589867516908,
+        "profit_factor": 0.0,
+        "net_return": -0.01469929723554925,
+        "max_drawdown": -0.014699297235549191,
+        "win_rate": 0.0,
+        "sharpe": -2.806619961970656,
+        "sortino": -0.4064536448828815,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9767589867516908,
+          -0.9767589867516908
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2_rg/C_rejection/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 5 < 30",
+        "扣费后期望 -0.7569313280029945 ≤ 0.0",
+        "PF 0.0007802824215953819 < 1.1",
+        "均值 R 置信下限 -0.7569313280029945 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": -0.7569313280029945,
+        "profit_factor": 0.0007802824215953819,
+        "net_return": -0.018929881033387767,
+        "max_drawdown": -0.018944383181654256,
+        "win_rate": 0.2,
+        "sharpe": -1.6336738567425453,
+        "sortino": -0.1390659215207057,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.7569313280029945,
+          -0.7569313280029945
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2_rg/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 1.2098271997948833,
+        "profit_factor": 4.594493313084528,
+        "net_return": 0.017951911410407303,
+        "max_drawdown": -0.004882252382533925,
+        "win_rate": 0.6666666666666666,
+        "sharpe": 0.9678390391351804,
+        "sortino": null,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.2098271997948833,
+          1.2098271997948833
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_rg/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 9 < 30",
+        "均值 R 置信下限 -0.07636481079006735 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 9,
+        "expectancy_r": 0.492607982183472,
+        "profit_factor": 2.08268529649215,
+        "net_return": 0.021995066470579774,
+        "max_drawdown": -0.014667237158039526,
+        "win_rate": 0.5555555555555556,
+        "sharpe": 2.8672120330379682,
+        "sortino": 2.1275090945006445,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": 1.0,
+        "ci_mean_r": [
+          -0.07636481079006735,
+          1.1716110068036012
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_rg/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.5511259529931712,
+        "profit_factor": 2.0733150037889647,
+        "net_return": 0.010942412285319445,
+        "max_drawdown": -0.005050147754387724,
+        "win_rate": 0.5,
+        "sharpe": 3.2954042155737664,
+        "sortino": 2.929377878479222,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5511259529931712,
+          0.5511259529931712
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_rg/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 0.4457936055357126,
+        "profit_factor": 2.0921247027830328,
+        "net_return": 0.011052654185260333,
+        "max_drawdown": -0.009910487954087444,
+        "win_rate": 0.6,
+        "sharpe": 2.027416519620193,
+        "sortino": 1.0699959812533264,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.4457936055357126,
+          0.4457936055357126
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_rg/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 9 < 30",
+        "均值 R 置信下限 -0.07636481079006735 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 9,
+        "expectancy_r": 0.492607982183472,
+        "profit_factor": 2.08268529649215,
+        "net_return": 0.021995066470579774,
+        "max_drawdown": -0.014667237158039526,
+        "win_rate": 0.5555555555555556,
+        "sharpe": 2.8672120330379682,
+        "sortino": 2.1275090945006445,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.07636481079006735,
+          1.1716110068036012
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2_rg/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.5511259529931712,
+        "profit_factor": 2.0733150037889647,
+        "net_return": 0.010942412285319445,
+        "max_drawdown": -0.005050147754387724,
+        "win_rate": 0.5,
+        "sharpe": 3.2954042155737664,
+        "sortino": 2.929377878479222,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5511259529931712,
+          0.5511259529931712
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_rg/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 0.4457936055357126,
+        "profit_factor": 2.0921247027830328,
+        "net_return": 0.011052654185260333,
+        "max_drawdown": -0.009910487954087444,
+        "win_rate": 0.6,
+        "sharpe": 2.027416519620193,
+        "sortino": 1.0699959812533264,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.4457936055357126,
+          0.4457936055357126
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_rg/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "扣费后期望 -0.2082173051064884 ≤ 0.0",
+        "PF 0.5015695498816148 < 1.1",
+        "测试折非负占比 0.3333333333333333 < 0.5",
+        "均值 R 置信下限 -0.5205832242984504 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": -0.2082173051064884,
+        "profit_factor": 0.5015695498816148,
+        "net_return": -0.007260250210686408,
+        "max_drawdown": -0.013494938253440836,
+        "win_rate": 0.5714285714285714,
+        "sharpe": -0.9427009564578878,
+        "sortino": -0.14355519198517935,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": 0.3333333333333333,
+        "ci_mean_r": [
+          -0.5205832242984504,
+          -0.17963615499158275
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_rg/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 0.08401128153520909,
+        "profit_factor": 1.265761822365727,
+        "net_return": 0.0012884626527891734,
+        "max_drawdown": -0.00484777356398125,
+        "win_rate": 0.6666666666666666,
+        "sharpe": 0.24565541413182837,
+        "sortino": 0.03058658124767967,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.08401128153520909,
+          0.08401128153520909
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_rg/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 4 < 30",
+        "扣费后期望 -0.4273887450877615 ≤ 0.0",
+        "PF 0.1203253734284108 < 1.1",
+        "均值 R 置信下限 -0.4273887450877615 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": -0.4273887450877615,
+        "profit_factor": 0.1203253734284108,
+        "net_return": -0.008548712863475583,
+        "max_drawdown": -0.00864789973867841,
+        "win_rate": 0.5,
+        "sharpe": -1.8711765235158393,
+        "sortino": -0.2127361806113755,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4273887450877615,
+          -0.4273887450877615
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "m15_p2_rg/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.11811931142390714,
+        "profit_factor": 1.4853945086223261,
+        "net_return": 0.0023596555364026506,
+        "max_drawdown": -0.004861314857269261,
+        "win_rate": 0.75,
+        "sharpe": 0.4563452656121369,
+        "sortino": 0.05869271560949317,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.11811931142390714,
+          0.11811931142390714
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_rg/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.6433327938136825 ≤ 0.0",
+        "PF 0.008758932105126665 < 1.1",
+        "均值 R 置信下限 -0.6433327938136825 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.6433327938136825,
+        "profit_factor": 0.008758932105126665,
+        "net_return": -0.00961990574708906,
+        "max_drawdown": -0.009704085505950255,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -2.454620446359156,
+        "sortino": -0.31562711135132276,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.6433327938136825,
+          -0.6433327938136825
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "m15_p2_rg/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 1.21066993025602,
+        "profit_factor": Infinity,
+        "net_return": 0.006051643648806203,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.21066993025602,
+          1.21066993025602
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2_rg/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47931804282519636 ≤ 0.0",
+        "PF 0.01753329130726901 < 1.1",
+        "均值 R 置信下限 -0.47931804282519636 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47931804282519636,
+        "profit_factor": 0.01753329130726901,
+        "net_return": -0.00476318099601703,
+        "max_drawdown": -0.00484777356398125,
+        "win_rate": 0.5,
+        "sharpe": -1.7129431461678217,
+        "sortino": -0.1564166676204665,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47931804282519636,
+          -0.47931804282519636
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "m15_p2_rg/B_reclaim/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "扣费后期望 -0.24606422818679716 ≤ 0.0",
+        "PF 0.2405371343345967 < 1.1",
+        "均值 R 置信下限 -0.24606422818679716 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": -0.24606422818679716,
+        "profit_factor": 0.2405371343345967,
+        "net_return": -0.003691988112403552,
+        "max_drawdown": -0.004861314857269261,
+        "win_rate": 0.6666666666666666,
+        "sharpe": -1.1254880538884355,
+        "sortino": -0.09183239035189197,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.24606422818679716,
+          -0.24606422818679716
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_rg/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9713622957906546 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9713622957906546 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9713622957906546,
+        "profit_factor": 0.0,
+        "net_return": -0.004856724751072031,
+        "max_drawdown": -0.004856724751072017,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9713622957906546,
+          -0.9713622957906546
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_rg/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_rg/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_rg/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_rg",
+      "variant": "+环境启停",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_rg/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 27 < 30",
+        "均值 R 置信下限 -0.5828433927877917 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 27,
+        "expectancy_r": 0.13638992759495605,
+        "profit_factor": 1.2345389665441149,
+        "net_return": 0.018365448998826465,
+        "max_drawdown": -0.04263006389565027,
+        "win_rate": 0.4074074074074074,
+        "sharpe": 0.2995698598540356,
+        "sortino": 0.07419616696404632,
+        "max_consecutive_losses": 9,
+        "fold_nonneg_share": 0.6666666666666666,
+        "ci_mean_r": [
+          -0.5828433927877917,
+          0.5612588414181401
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 12 < 30",
+        "扣费后期望 -0.11106111723060459 ≤ 0.0",
+        "PF 0.8245776288348098 < 1.1",
+        "均值 R 置信下限 -0.4478398043224543 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 12,
+        "expectancy_r": -0.11106111723060459,
+        "profit_factor": 0.8245776288348098,
+        "net_return": -0.006937758188708622,
+        "max_drawdown": -0.019461574355918,
+        "win_rate": 0.3333333333333333,
+        "sharpe": -0.18206212821108786,
+        "sortino": -0.02775022047465859,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4478398043224543,
+          0.49987578385902043
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 15 < 30",
+        "均值 R 置信下限 -0.763744129103005 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 15,
+        "expectancy_r": 0.3343507634554046,
+        "profit_factor": 1.6528918295268953,
+        "net_return": 0.025303207187535093,
+        "max_drawdown": -0.03273418377682513,
+        "win_rate": 0.4666666666666667,
+        "sharpe": 0.5601492628367799,
+        "sortino": 0.11667756392502102,
+        "max_consecutive_losses": 7,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.763744129103005,
+          0.7403844099334437
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2_aligned/A_breakout_retest/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 7 < 30",
+        "扣费后期望 -0.08518258602397133 ≤ 0.0",
+        "PF 0.8756463884257113 < 1.1",
+        "均值 R 置信下限 -0.08518258602397134 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 7,
+        "expectancy_r": -0.08518258602397133,
+        "profit_factor": 0.8756463884257113,
+        "net_return": -0.0029571873669835278,
+        "max_drawdown": -0.018656418299511035,
+        "win_rate": 0.2857142857142857,
+        "sharpe": -0.1199536925720691,
+        "sortino": -0.017727689888047102,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.08518258602397134,
+          0.7824388465667846
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_aligned/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 20 < 30",
+        "均值 R 置信下限 -0.4627925302345387 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 20,
+        "expectancy_r": 0.2139403073615807,
+        "profit_factor": 1.3910688370045383,
+        "net_return": 0.021322636365810003,
+        "max_drawdown": -0.029135180681682415,
+        "win_rate": 0.45,
+        "sharpe": 0.44773770643720007,
+        "sortino": 0.10812739683873285,
+        "max_consecutive_losses": 6,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.4627925302345387,
+          0.6341232719145857
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2_aligned/A_breakout_retest/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.9619990505195933 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9619990505195933 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.9619990505195933,
+        "profit_factor": 0.0,
+        "net_return": -0.009666514174290727,
+        "max_drawdown": -0.009666514174290763,
+        "win_rate": 0.0,
+        "sharpe": -3.4044370586826576,
+        "sortino": -0.5970296609893243,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9619990505195933,
+          -0.9619990505195933
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2_aligned/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 10 < 30",
+        "PF 1.0913165999917382 < 1.1",
+        "均值 R 置信下限 -0.3457375069660503 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 10,
+        "expectancy_r": 0.059126469427193205,
+        "profit_factor": 1.0913165999917382,
+        "net_return": 0.0027287559855821036,
+        "max_drawdown": -0.009944983945007424,
+        "win_rate": 0.4,
+        "sharpe": 0.08523895219166883,
+        "sortino": 0.014048709621893177,
+        "max_consecutive_losses": 2,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.3457375069660503,
+          0.4904656018060319
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "long",
+      "label": "h1_p2_aligned/A_breakout_retest/ETHUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 0.2655439997742774,
+        "profit_factor": 1.4753682629178155,
+        "net_return": 0.006709326807307201,
+        "max_drawdown": -0.013826052328163696,
+        "win_rate": 0.4,
+        "sharpe": 0.30313378901482185,
+        "sortino": 0.043314263315417885,
+        "max_consecutive_losses": 3,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.2655439997742774,
+          0.2655439997742774
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2_aligned/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 10 < 30",
+        "均值 R 置信下限 -0.36300673705848824 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 10,
+        "expectancy_r": 0.36875414529596817,
+        "profit_factor": 1.7545717741087214,
+        "net_return": 0.01859388038022789,
+        "max_drawdown": -0.019443152888919957,
+        "win_rate": 0.5,
+        "sharpe": 0.5580380376169476,
+        "sortino": 0.1044605958698513,
+        "max_consecutive_losses": 4,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.36300673705848824,
+          1.1005150276504247
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 5 < 30"
+      ],
+      "stats": {
+        "n_trades": 5,
+        "expectancy_r": 0.5997748193712266,
+        "profit_factor": 2.5316850231431993,
+        "net_return": 0.014870307524757561,
+        "max_drawdown": -0.009487901502435392,
+        "win_rate": 0.6,
+        "sharpe": 0.535437480080708,
+        "sortino": 0.07242315987384103,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 1.0,
+        "ci_mean_r": [
+          0.5997748193712266,
+          0.5997748193712266
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9452127973822265 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9452127973822265 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9452127973822265,
+        "profit_factor": 0.0,
+        "net_return": -0.004775535849871297,
+        "max_drawdown": -0.004775535849871226,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9452127973822265,
+          -0.9452127973822265
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.9860217235595898,
+        "profit_factor": 4.982593374465213,
+        "net_return": 0.01964584337462886,
+        "max_drawdown": -0.004877386200906164,
+        "win_rate": 0.75,
+        "sharpe": 0.7320056190131913,
+        "sortino": 0.09416749948548242,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.9860217235595898,
+          0.9860217235595898
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "long",
+      "label": "h1_p2_aligned/B_reclaim/ALL/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9452127973822265 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9452127973822265 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9452127973822265,
+        "profit_factor": 0.0,
+        "net_return": -0.004775535849871297,
+        "max_drawdown": -0.004775535849871226,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9452127973822265,
+          -0.9452127973822265
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_aligned/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.9860217235595898,
+        "profit_factor": 4.982593374465213,
+        "net_return": 0.01964584337462886,
+        "max_drawdown": -0.004877386200906164,
+        "win_rate": 0.75,
+        "sharpe": 0.7320056190131913,
+        "sortino": 0.09416749948548242,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.9860217235595898,
+          0.9860217235595898
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "label": "h1_p2_aligned/B_reclaim/BTCUSDT/long",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9452127973822265 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9452127973822265 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9452127973822265,
+        "profit_factor": 0.0,
+        "net_return": -0.004775535849871297,
+        "max_drawdown": -0.004775535849871226,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9452127973822265,
+          -0.9452127973822265
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "h1_p2_aligned/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 4 < 30"
+      ],
+      "stats": {
+        "n_trades": 4,
+        "expectancy_r": 0.9860217235595898,
+        "profit_factor": 4.982593374465213,
+        "net_return": 0.01964584337462886,
+        "max_drawdown": -0.004877386200906164,
+        "win_rate": 0.75,
+        "sharpe": 0.7320056190131913,
+        "sortino": 0.09416749948548242,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.9860217235595898,
+          0.9860217235595898
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.975586510750039 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.975586510750039 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.975586510750039,
+        "profit_factor": 0.0,
+        "net_return": -0.004871214972052325,
+        "max_drawdown": -0.004871214972052229,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.975586510750039,
+          -0.975586510750039
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "h1_p2_aligned/C_rejection/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.975586510750039 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.975586510750039 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.975586510750039,
+        "profit_factor": 0.0,
+        "net_return": -0.004871214972052325,
+        "max_drawdown": -0.004871214972052229,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.975586510750039,
+          -0.975586510750039
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "h1_p2_aligned/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.975586510750039 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.975586510750039 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.975586510750039,
+        "profit_factor": 0.0,
+        "net_return": -0.004871214972052325,
+        "max_drawdown": -0.004871214972052229,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.975586510750039,
+          -0.975586510750039
+        ]
+      }
+    },
+    {
+      "run": "h1_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "1h",
+      "strategy": "C_rejection",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "h1_p2_aligned/C_rejection/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.975586510750039 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.975586510750039 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.975586510750039,
+        "profit_factor": 0.0,
+        "net_return": -0.004871214972052325,
+        "max_drawdown": -0.004871214972052229,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.975586510750039,
+          -0.975586510750039
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/A_breakout_retest/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "PF 1.0770214184698037 < 1.1"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 0.054642999399884484,
+        "profit_factor": 1.0770214184698037,
+        "net_return": 0.0007588580886866034,
+        "max_drawdown": -0.004916750985550444,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.18769785435674827,
+        "sortino": 0.08174898561951618,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 1.0,
+        "ci_mean_r": [
+          0.054642999399884484,
+          0.054642999399884484
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/A_breakout_retest/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.5736899393596238,
+        "profit_factor": 2.162169077159454,
+        "net_return": 0.005703652513353302,
+        "max_drawdown": -0.004907764821358018,
+        "win_rate": 0.5,
+        "sharpe": 4.1615482154186125,
+        "sortino": 5.550802260853634,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5736899393596238,
+          0.5736899393596238
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/A_breakout_retest/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9834508805195941 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9834508805195941 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9834508805195941,
+        "profit_factor": 0.0,
+        "net_return": -0.004944794424666698,
+        "max_drawdown": -0.004944794424666776,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9834508805195941,
+          -0.9834508805195941
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_aligned/A_breakout_retest/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30",
+        "PF 1.0770214184698037 < 1.1"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 0.054642999399884484,
+        "profit_factor": 1.0770214184698037,
+        "net_return": 0.0007588580886866034,
+        "max_drawdown": -0.004916750985550444,
+        "win_rate": 0.3333333333333333,
+        "sharpe": 0.18769785435674827,
+        "sortino": 0.08174898561951618,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.054642999399884484,
+          0.054642999399884484
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2_aligned/A_breakout_retest/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 0.5736899393596238,
+        "profit_factor": 2.162169077159454,
+        "net_return": 0.005703652513353302,
+        "max_drawdown": -0.004907764821358018,
+        "win_rate": 0.5,
+        "sharpe": 4.1615482154186125,
+        "sortino": 5.550802260853634,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.5736899393596238,
+          0.5736899393596238
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "A_breakout_retest",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_aligned/A_breakout_retest/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 1 < 30",
+        "扣费后期望 -0.9834508805195941 ≤ 0.0",
+        "PF 0.0 < 1.1",
+        "均值 R 置信下限 -0.9834508805195941 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": -0.9834508805195941,
+        "profit_factor": 0.0,
+        "net_return": -0.004944794424666698,
+        "max_drawdown": -0.004944794424666776,
+        "win_rate": 0.0,
+        "sharpe": null,
+        "sortino": -19.1049731745428,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.9834508805195941,
+          -0.9834508805195941
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/B_reclaim/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 1.0791213168708975,
+        "profit_factor": 4.331609908468718,
+        "net_return": 0.016180712303376848,
+        "max_drawdown": -0.0047566568813411925,
+        "win_rate": 0.6666666666666666,
+        "sharpe": 1.3097258793771753,
+        "sortino": 0.5304193160777988,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.5,
+        "ci_mean_r": [
+          1.0791213168708975,
+          1.0791213168708975
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/B_reclaim/BTCUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 0.017001880702093287,
+        "profit_factor": Infinity,
+        "net_return": 8.602470708071191e-05,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.017001880702093287,
+          0.017001880702093287
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/B_reclaim/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 1.6101810349552996,
+        "profit_factor": 4.31389741466068,
+        "net_return": 0.016094687596296137,
+        "max_drawdown": -0.00475705767418011,
+        "win_rate": 0.5,
+        "sharpe": 1.3027404600405177,
+        "sortino": 0.5275993434189918,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.6101810349552996,
+          1.6101810349552996
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_aligned/B_reclaim/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 3 < 30"
+      ],
+      "stats": {
+        "n_trades": 3,
+        "expectancy_r": 1.0791213168708975,
+        "profit_factor": 4.331609908468718,
+        "net_return": 0.016180712303376848,
+        "max_drawdown": -0.0047566568813411925,
+        "win_rate": 0.6666666666666666,
+        "sharpe": 1.3097258793771753,
+        "sortino": 0.5304193160777988,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.0791213168708975,
+          1.0791213168708975
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "BTCUSDT",
+      "direction": "short",
+      "label": "m15_p2_aligned/B_reclaim/BTCUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 1 < 30"
+      ],
+      "stats": {
+        "n_trades": 1,
+        "expectancy_r": 0.017001880702093287,
+        "profit_factor": Infinity,
+        "net_return": 8.602470708071191e-05,
+        "max_drawdown": 0.0,
+        "win_rate": 1.0,
+        "sharpe": null,
+        "sortino": null,
+        "max_consecutive_losses": 0,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          0.017001880702093287,
+          0.017001880702093287
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "B_reclaim",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_aligned/B_reclaim/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": true,
+        "profit_factor": true,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": true
+      },
+      "reasons": [
+        "样本外交易 2 < 30"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": 1.6101810349552996,
+        "profit_factor": 4.31389741466068,
+        "net_return": 0.016094687596296137,
+        "max_drawdown": -0.00475705767418011,
+        "win_rate": 0.5,
+        "sharpe": 1.3027404600405177,
+        "sortino": 0.5275993434189918,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          1.6101810349552996,
+          1.6101810349552996
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/C_rejection/ALL/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": false,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "测试折非负占比 0.0 < 0.5",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": 0.0,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "ALL",
+      "label": "m15_p2_aligned/C_rejection/ETHUSDT/ALL",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ALL",
+      "direction": "short",
+      "label": "m15_p2_aligned/C_rejection/ALL/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    },
+    {
+      "run": "m15_p2_aligned",
+      "variant": "+mtf.mode=aligned",
+      "exec_tf": "15m",
+      "strategy": "C_rejection",
+      "symbol": "ETHUSDT",
+      "direction": "short",
+      "label": "m15_p2_aligned/C_rejection/ETHUSDT/short",
+      "status": "unqualified",
+      "checks": {
+        "min_trades": false,
+        "expectancy_r": false,
+        "profit_factor": false,
+        "max_drawdown": true,
+        "fold_stability": true,
+        "ci_lower": false
+      },
+      "reasons": [
+        "样本外交易 2 < 30",
+        "扣费后期望 -0.47010414625579583 ≤ 0.0",
+        "PF 0.03116162500070484 < 1.1",
+        "均值 R 置信下限 -0.47010414625579583 < -0.05"
+      ],
+      "stats": {
+        "n_trades": 2,
+        "expectancy_r": -0.47010414625579583,
+        "profit_factor": 0.03116162500070484,
+        "net_return": -0.004700487326009927,
+        "max_drawdown": -0.004851673351618957,
+        "win_rate": 0.5,
+        "sharpe": -10.518876945499501,
+        "sortino": -6.169877054943057,
+        "max_consecutive_losses": 1,
+        "fold_nonneg_share": null,
+        "ci_mean_r": [
+          -0.47010414625579583,
+          -0.47010414625579583
+        ]
+      }
+    }
+  ],
+  "qualified_paper": [],
+  "research_only": [],
+  "unqualified": [
+    "h1_p2/A_breakout_retest/ALL/ALL",
+    "h1_p2/A_breakout_retest/BTCUSDT/ALL",
+    "h1_p2/A_breakout_retest/ETHUSDT/ALL",
+    "h1_p2/A_breakout_retest/ALL/long",
+    "h1_p2/A_breakout_retest/ALL/short",
+    "h1_p2/A_breakout_retest/BTCUSDT/long",
+    "h1_p2/A_breakout_retest/BTCUSDT/short",
+    "h1_p2/A_breakout_retest/ETHUSDT/long",
+    "h1_p2/A_breakout_retest/ETHUSDT/short",
+    "h1_p2/B_reclaim/ALL/ALL",
+    "h1_p2/B_reclaim/BTCUSDT/ALL",
+    "h1_p2/B_reclaim/ETHUSDT/ALL",
+    "h1_p2/B_reclaim/ALL/long",
+    "h1_p2/B_reclaim/ALL/short",
+    "h1_p2/B_reclaim/BTCUSDT/long",
+    "h1_p2/B_reclaim/BTCUSDT/short",
+    "h1_p2/B_reclaim/ETHUSDT/long",
+    "h1_p2/B_reclaim/ETHUSDT/short",
+    "h1_p2/C_rejection/ALL/ALL",
+    "h1_p2/C_rejection/BTCUSDT/ALL",
+    "h1_p2/C_rejection/ETHUSDT/ALL",
+    "h1_p2/C_rejection/ALL/long",
+    "h1_p2/C_rejection/ALL/short",
+    "h1_p2/C_rejection/BTCUSDT/long",
+    "h1_p2/C_rejection/BTCUSDT/short",
+    "h1_p2/C_rejection/ETHUSDT/long",
+    "h1_p2/C_rejection/ETHUSDT/short",
+    "m15_p2/A_breakout_retest/ALL/ALL",
+    "m15_p2/A_breakout_retest/BTCUSDT/ALL",
+    "m15_p2/A_breakout_retest/ETHUSDT/ALL",
+    "m15_p2/A_breakout_retest/ALL/long",
+    "m15_p2/A_breakout_retest/ALL/short",
+    "m15_p2/A_breakout_retest/BTCUSDT/short",
+    "m15_p2/A_breakout_retest/ETHUSDT/long",
+    "m15_p2/A_breakout_retest/ETHUSDT/short",
+    "m15_p2/B_reclaim/ALL/ALL",
+    "m15_p2/B_reclaim/BTCUSDT/ALL",
+    "m15_p2/B_reclaim/ETHUSDT/ALL",
+    "m15_p2/B_reclaim/ALL/long",
+    "m15_p2/B_reclaim/ALL/short",
+    "m15_p2/B_reclaim/BTCUSDT/long",
+    "m15_p2/B_reclaim/BTCUSDT/short",
+    "m15_p2/B_reclaim/ETHUSDT/long",
+    "m15_p2/B_reclaim/ETHUSDT/short",
+    "m15_p2/C_rejection/ALL/ALL",
+    "m15_p2/C_rejection/ETHUSDT/ALL",
+    "m15_p2/C_rejection/ALL/short",
+    "m15_p2/C_rejection/ETHUSDT/short",
+    "h4_p2/A_breakout_retest/ALL/ALL",
+    "h4_p2/A_breakout_retest/BTCUSDT/ALL",
+    "h4_p2/A_breakout_retest/ETHUSDT/ALL",
+    "h4_p2/A_breakout_retest/ALL/long",
+    "h4_p2/A_breakout_retest/ALL/short",
+    "h4_p2/A_breakout_retest/BTCUSDT/long",
+    "h4_p2/A_breakout_retest/BTCUSDT/short",
+    "h4_p2/A_breakout_retest/ETHUSDT/long",
+    "h4_p2/A_breakout_retest/ETHUSDT/short",
+    "h4_p2/B_reclaim/ALL/ALL",
+    "h4_p2/B_reclaim/BTCUSDT/ALL",
+    "h4_p2/B_reclaim/ETHUSDT/ALL",
+    "h4_p2/B_reclaim/ALL/long",
+    "h4_p2/B_reclaim/ALL/short",
+    "h4_p2/B_reclaim/BTCUSDT/long",
+    "h4_p2/B_reclaim/BTCUSDT/short",
+    "h4_p2/B_reclaim/ETHUSDT/long",
+    "h4_p2/B_reclaim/ETHUSDT/short",
+    "h4_p2/C_rejection/ALL/ALL",
+    "h4_p2/C_rejection/BTCUSDT/ALL",
+    "h4_p2/C_rejection/ETHUSDT/ALL",
+    "h4_p2/C_rejection/ALL/long",
+    "h4_p2/C_rejection/ALL/short",
+    "h4_p2/C_rejection/BTCUSDT/short",
+    "h4_p2/C_rejection/ETHUSDT/long",
+    "h4_p2/C_rejection/ETHUSDT/short",
+    "h1_p2_rg/A_breakout_retest/ALL/ALL",
+    "h1_p2_rg/A_breakout_retest/BTCUSDT/ALL",
+    "h1_p2_rg/A_breakout_retest/ETHUSDT/ALL",
+    "h1_p2_rg/A_breakout_retest/ALL/long",
+    "h1_p2_rg/A_breakout_retest/ALL/short",
+    "h1_p2_rg/A_breakout_retest/BTCUSDT/long",
+    "h1_p2_rg/A_breakout_retest/BTCUSDT/short",
+    "h1_p2_rg/A_breakout_retest/ETHUSDT/long",
+    "h1_p2_rg/A_breakout_retest/ETHUSDT/short",
+    "h1_p2_rg/B_reclaim/ALL/ALL",
+    "h1_p2_rg/B_reclaim/BTCUSDT/ALL",
+    "h1_p2_rg/B_reclaim/ETHUSDT/ALL",
+    "h1_p2_rg/B_reclaim/ALL/long",
+    "h1_p2_rg/B_reclaim/ALL/short",
+    "h1_p2_rg/B_reclaim/BTCUSDT/long",
+    "h1_p2_rg/B_reclaim/BTCUSDT/short",
+    "h1_p2_rg/B_reclaim/ETHUSDT/long",
+    "h1_p2_rg/B_reclaim/ETHUSDT/short",
+    "h1_p2_rg/C_rejection/ALL/ALL",
+    "h1_p2_rg/C_rejection/BTCUSDT/ALL",
+    "h1_p2_rg/C_rejection/ETHUSDT/ALL",
+    "h1_p2_rg/C_rejection/ALL/long",
+    "h1_p2_rg/C_rejection/ALL/short",
+    "h1_p2_rg/C_rejection/BTCUSDT/long",
+    "h1_p2_rg/C_rejection/BTCUSDT/short",
+    "h1_p2_rg/C_rejection/ETHUSDT/long",
+    "h1_p2_rg/C_rejection/ETHUSDT/short",
+    "m15_p2_rg/A_breakout_retest/ALL/ALL",
+    "m15_p2_rg/A_breakout_retest/BTCUSDT/ALL",
+    "m15_p2_rg/A_breakout_retest/ETHUSDT/ALL",
+    "m15_p2_rg/A_breakout_retest/ALL/short",
+    "m15_p2_rg/A_breakout_retest/BTCUSDT/short",
+    "m15_p2_rg/A_breakout_retest/ETHUSDT/short",
+    "m15_p2_rg/B_reclaim/ALL/ALL",
+    "m15_p2_rg/B_reclaim/BTCUSDT/ALL",
+    "m15_p2_rg/B_reclaim/ETHUSDT/ALL",
+    "m15_p2_rg/B_reclaim/ALL/long",
+    "m15_p2_rg/B_reclaim/ALL/short",
+    "m15_p2_rg/B_reclaim/BTCUSDT/long",
+    "m15_p2_rg/B_reclaim/BTCUSDT/short",
+    "m15_p2_rg/B_reclaim/ETHUSDT/long",
+    "m15_p2_rg/B_reclaim/ETHUSDT/short",
+    "m15_p2_rg/C_rejection/ALL/ALL",
+    "m15_p2_rg/C_rejection/ETHUSDT/ALL",
+    "m15_p2_rg/C_rejection/ALL/short",
+    "m15_p2_rg/C_rejection/ETHUSDT/short",
+    "h1_p2_aligned/A_breakout_retest/ALL/ALL",
+    "h1_p2_aligned/A_breakout_retest/BTCUSDT/ALL",
+    "h1_p2_aligned/A_breakout_retest/ETHUSDT/ALL",
+    "h1_p2_aligned/A_breakout_retest/ALL/long",
+    "h1_p2_aligned/A_breakout_retest/ALL/short",
+    "h1_p2_aligned/A_breakout_retest/BTCUSDT/long",
+    "h1_p2_aligned/A_breakout_retest/BTCUSDT/short",
+    "h1_p2_aligned/A_breakout_retest/ETHUSDT/long",
+    "h1_p2_aligned/A_breakout_retest/ETHUSDT/short",
+    "h1_p2_aligned/B_reclaim/ALL/ALL",
+    "h1_p2_aligned/B_reclaim/BTCUSDT/ALL",
+    "h1_p2_aligned/B_reclaim/ETHUSDT/ALL",
+    "h1_p2_aligned/B_reclaim/ALL/long",
+    "h1_p2_aligned/B_reclaim/ALL/short",
+    "h1_p2_aligned/B_reclaim/BTCUSDT/long",
+    "h1_p2_aligned/B_reclaim/ETHUSDT/short",
+    "h1_p2_aligned/C_rejection/ALL/ALL",
+    "h1_p2_aligned/C_rejection/BTCUSDT/ALL",
+    "h1_p2_aligned/C_rejection/ALL/short",
+    "h1_p2_aligned/C_rejection/BTCUSDT/short",
+    "m15_p2_aligned/A_breakout_retest/ALL/ALL",
+    "m15_p2_aligned/A_breakout_retest/BTCUSDT/ALL",
+    "m15_p2_aligned/A_breakout_retest/ETHUSDT/ALL",
+    "m15_p2_aligned/A_breakout_retest/ALL/short",
+    "m15_p2_aligned/A_breakout_retest/BTCUSDT/short",
+    "m15_p2_aligned/A_breakout_retest/ETHUSDT/short",
+    "m15_p2_aligned/B_reclaim/ALL/ALL",
+    "m15_p2_aligned/B_reclaim/BTCUSDT/ALL",
+    "m15_p2_aligned/B_reclaim/ETHUSDT/ALL",
+    "m15_p2_aligned/B_reclaim/ALL/short",
+    "m15_p2_aligned/B_reclaim/BTCUSDT/short",
+    "m15_p2_aligned/B_reclaim/ETHUSDT/short",
+    "m15_p2_aligned/C_rejection/ALL/ALL",
+    "m15_p2_aligned/C_rejection/ETHUSDT/ALL",
+    "m15_p2_aligned/C_rejection/ALL/short",
+    "m15_p2_aligned/C_rejection/ETHUSDT/short"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "perp_15m_tight_stop": {
+    "formula": "cost_to_risk = (entry×(fee+slip) + stop×(fee+slip+stop_slip) + funding_est) / |entry − stop_initial|",
+    "denominator": "初始结构止损距离（含 sl_buffer_atr 缓冲），不是保本止损/移动止损后的距离；移动止损发生在持仓期间，不参与开仓过滤",
+    "example": {
+      "entry": 100000.0,
+      "stop": 99500.0,
+      "instrument": "perp",
+      "direction": "long",
+      "hold_bars": 96,
+      "bar_seconds": 900,
+      "stop_distance": 500.0,
+      "stop_distance_pct": 0.005,
+      "cost_per_unit": 348.95,
+      "cost_bps": 34.895,
+      "ratio": 0.6979,
+      "components": {
+        "entry_cost": 109.99999999999999,
+        "exit_cost_at_stop": 208.95,
+        "funding_est": 30.0
+      }
+    },
+    "threshold": 0.25,
+    "semantic_check": "分母使用 Signal.risk_per_unit = |ref_price − stop_price|，在 FilterPipeline.apply 时 stop_price 为策略给出的初始止损，trail/breakeven 只在 PositionManager.manage 中修改持仓对象，不回写信号；审计结论：无混淆。",
+    "caveat": "资金费按 max_hold_bars 全程估算属于保守上界（多数交易更早退出）；止损额外滑点 10 bps 为假设。"
+  },
+  "perp_1h_wider_stop": {
+    "formula": "cost_to_risk = (entry×(fee+slip) + stop×(fee+slip+stop_slip) + funding_est) / |entry − stop_initial|",
+    "denominator": "初始结构止损距离（含 sl_buffer_atr 缓冲），不是保本止损/移动止损后的距离；移动止损发生在持仓期间，不参与开仓过滤",
+    "example": {
+      "entry": 100000.0,
+      "stop": 98500.0,
+      "instrument": "perp",
+      "direction": "long",
+      "hold_bars": 96,
+      "bar_seconds": 3600,
+      "stop_distance": 1500.0,
+      "stop_distance_pct": 0.015,
+      "cost_per_unit": 436.84999999999997,
+      "cost_bps": 43.685,
+      "ratio": 0.2912333333333333,
+      "components": {
+        "entry_cost": 109.99999999999999,
+        "exit_cost_at_stop": 206.85,
+        "funding_est": 120.0
+      }
+    },
+    "threshold": 0.25,
+    "semantic_check": "分母使用 Signal.risk_per_unit = |ref_price − stop_price|，在 FilterPipeline.apply 时 stop_price 为策略给出的初始止损，trail/breakeven 只在 PositionManager.manage 中修改持仓对象，不回写信号；审计结论：无混淆。",
+    "caveat": "资金费按 max_hold_bars 全程估算属于保守上界（多数交易更早退出）；止损额外滑点 10 bps 为假设。"
+  },
+  "spot_1h": {
+    "formula": "cost_to_risk = (entry×(fee+slip) + stop×(fee+slip+stop_slip) + funding_est) / |entry − stop_initial|",
+    "denominator": "初始结构止损距离（含 sl_buffer_atr 缓冲），不是保本止损/移动止损后的距离；移动止损发生在持仓期间，不参与开仓过滤",
+    "example": {
+      "entry": 100000.0,
+      "stop": 98500.0,
+      "instrument": "spot",
+      "direction": "long",
+      "hold_bars": 96,
+      "bar_seconds": 3600,
+      "stop_distance": 1500.0,
+      "stop_distance_pct": 0.015,
+      "cost_per_unit": 396.25,
+      "cost_bps": 39.625,
+      "ratio": 0.26416666666666666,
+      "components": {
+        "entry_cost": 150.0,
+        "exit_cost_at_stop": 246.25,
+        "funding_est": 0.0
+      }
+    },
+    "threshold": 0.25,
+    "semantic_check": "分母使用 Signal.risk_per_unit = |ref_price − stop_price|，在 FilterPipeline.apply 时 stop_price 为策略给出的初始止损，trail/breakeven 只在 PositionManager.manage 中修改持仓对象，不回写信号；审计结论：无混淆。",
+    "caveat": "资金费按 max_hold_bars 全程估算属于保守上界（多数交易更早退出）；止损额外滑点 10 bps 为假设。"
+  }
+}

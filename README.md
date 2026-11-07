@@ -87,7 +87,7 @@ iphone-farm/
 
 # brando_pa — Brando Price Action 量化交易引擎（独立模块，研究/回测/模拟盘）
 
-> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)。
+> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)（第一阶段）、[docs/21_brando_pa_第二阶段_成本审计与样本外验证.md](docs/21_brando_pa_第二阶段_成本审计与样本外验证.md)（第二阶段：成本审计、入场/退出/多周期对比、严格样本外、Strategy Evaluator；结论：无合格策略，不满足进入模拟盘条件）。
 > 不修改 spot90 / bgw_quant 的策略、数据与配置。**默认禁止真实下单**（仓库内没有任何交易所私有接口调用）。
 
 ```bash
