@@ -1,0 +1,61 @@
+"""模拟盘：回放全流程、状态持久化与恢复后不重复下单、数据过期时禁止新开仓。"""
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from brando_pa.config import cfg
+from brando_pa.data.store import BarStore
+from brando_pa.engine.context import MarketContext
+from brando_pa.paper.runner import PaperRunner
+
+HAVE = Path("data_store/brando_pa/bars/BTCUSDT_15m.parquet").exists()
+
+
+def _ctx(sym="ETHUSDT", n=5000):
+    st = BarStore(); c = cfg()
+    bars = {tf: st.load(sym, tf) for tf in ("1w", "1d", "4h", "15m")}
+    ex = bars["15m"].iloc[-n:].reset_index(drop=True)
+    bars["15m"] = ex
+    return {sym: MarketContext(sym, bars, "15m", c)}
+
+
+@pytest.mark.skipif(not HAVE, reason="无本地 15m 数据")
+def test_replay_then_resume_no_duplicate_orders(tmp_path):
+    c = cfg(); c["paper"]["state_file"] = str(tmp_path / "state.json"); c["paper"]["log_file"] = str(tmp_path / "trades.jsonl"); c["paper"]["lock_file"] = str(tmp_path / ".lock")
+    ctxs = _ctx()
+    r1 = PaperRunner(["ETHUSDT"], "15m", 10000.0, c, refresh_data=False)
+    out1 = r1.replay(n_bars=2500, contexts=ctxs, save_every=50)
+    assert out1["bars"] == 2500 and r1.state.path.exists()
+    st = json.loads(r1.state.path.read_text())
+    assert st["last_bar_ts"]["ETHUSDT"] and "order_ids" in st
+    n_orders_before = len(st["order_ids"]); n_trades_before = st["n_trades"]
+    # 重启：新实例从状态文件恢复，再回放同一段 → 已处理 K 线被跳过，不产生新订单
+    r2 = PaperRunner(["ETHUSDT"], "15m", 10000.0, c, refresh_data=False)
+    out2 = r2.replay(n_bars=2500, contexts=ctxs, save_every=50)
+    st2 = json.loads(r2.state.path.read_text())
+    assert len(st2["order_ids"]) == n_orders_before and st2["n_trades"] == n_trades_before
+    assert out2["equity"] == pytest.approx(out1["equity"], rel=1e-9)
+    # 事件日志存在且状态持久化字段齐全
+    ev = (tmp_path / "events.jsonl")
+    assert st2["risk"]["day"] is not None and st2["cash"] > 0
+    if n_trades_before:
+        trades = [json.loads(x) for x in (tmp_path / "trades.jsonl").read_text().splitlines()]
+        assert len(trades) == n_trades_before and all(t["fees"] > 0 for t in trades)
+        assert len({t["position_id"] for t in trades}) == len(trades)          # 每个持仓只平一次
+
+
+@pytest.mark.skipif(not HAVE, reason="无本地 15m 数据")
+def test_run_once_with_stale_data_blocks_new_entries(tmp_path):
+    c = cfg(); c["paper"]["state_file"] = str(tmp_path / "state.json"); c["paper"]["log_file"] = str(tmp_path / "trades.jsonl"); c["paper"]["lock_file"] = str(tmp_path / ".lock")
+    ctxs = _ctx(n=1200)
+    r = PaperRunner(["ETHUSDT"], "15m", 10000.0, c, refresh_data=False)
+    far_future = ctxs["ETHUSDT"].ts.iloc[-1] + pd.Timedelta(days=3)
+    rep = r.run_once(now=far_future, contexts=ctxs)
+    last = rep["symbols"]["ETHUSDT"]["last"]
+    assert "过期" in rep["symbols"]["ETHUSDT"]["stale"]
+    assert last["status"] in ("WAIT", "NO_TRADE") and not rep["pending"]
+    # 锁：运行中第二个实例被拒绝
+    r._lock(); assert r.run_once(now=far_future, contexts=ctxs).get("skipped"); r._unlock()

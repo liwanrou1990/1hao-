@@ -1,0 +1,146 @@
+"""命令行：python -m brando_pa.cli <command>
+
+  ingest        采集/更新 K 线（1w/1d/4h/1h/15m）
+  status        数据状态
+  analyze       当前多周期分析：关键区域、4h 结构、日线环境（每个标的）
+  signal        最新信号报告（WAIT/LONG/SHORT/EXIT/NO_TRADE + 理由）→ reports_out/brando_pa/signals/latest.json
+  backtest      回测矩阵（全部策略 / 单策略 × 过滤开/关）
+  walkforward   Walk-Forward 验证（每个策略独立）
+  paper         模拟盘：--once 单轮 / --loop 持续 / --replay 用历史 K 线回放整个流程
+  dashboard     启动 Streamlit 看板
+  export        导出最近回测/模拟盘为 CSV/JSON/HTML
+真实下单默认禁止；本 CLI 不包含任何真实下单路径（见 paper/broker.py 的 LiveBroker 闸门）。
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
+def _p(o):
+    print(json.dumps(o, ensure_ascii=False, indent=2, default=str))
+
+
+def cmd_ingest(a):
+    from .data.ingest import run_ingest
+    st = run_ingest(a.symbols, a.timeframes)
+    for s, v in st["symbols"].items():
+        for tf, e in v.items():
+            cr = e["continuity"]
+            print(f"{s} {tf}: {e['result']} {cr['n_bars']} 根 {str(cr['first'])[:10]} → {str(cr['last'])[:16]} 缺口 {cr['n_gap_bars']} 根；{e['freshness']}")
+    print("探测：", st["probe"])
+
+
+def cmd_status(a):
+    from .data.ingest import load_status
+    _p(load_status() or {"error": "尚未 ingest"})
+
+
+def cmd_analyze(a):
+    from .config import cfg
+    from .backtest.runner import load_contexts
+    c = cfg(); exec_tf = a.exec_tf or c["timeframes"]["execution"]
+    ctxs = load_contexts(a.symbols or c["symbols"], exec_tf, c)
+    out = {}
+    for s, mc in ctxs.items():
+        i = mc.n - 1
+        zones, by_tf = mc.zones_at(i)
+        price = float(mc.cl[i])
+        out[s] = {"as_of_bar_close": (mc.ts.iloc[i] + __import__("pandas").Timedelta(seconds=mc.bar_seconds)).isoformat(), "price": price, "regime_1d": mc.regime_at(i), "structure_4h": mc.structure_dict(i),
+                  "zones": [z.to_dict() | {"role": z.role(price)} for z in zones], "zones_by_tf": {tf: len(v) for tf, v in by_tf.items()}}
+    _p(out)
+
+
+def cmd_signal(a):
+    from .engine.live import latest_signals
+    rep = latest_signals(a.symbols, a.exec_tf, equity=a.equity)
+    for s, r in rep["symbols"].items():
+        print(f"{s} @ {r['ts']} 价格 {r['price']:.2f} → {r['status']}；日线环境 {r['trend_1d'].get('trend')}；4h 结构 {r['structure_4h'].get('trend')}；数据 {'正常' if r['data_ok'] else '过期'}")
+        for line in r["reasons"][:6]:
+            print("   -", line)
+    print("已写入", rep["path"])
+
+
+def cmd_backtest(a):
+    from .config import cfg
+    from .backtest.runner import run_matrix
+    c = cfg()
+    variants = None
+    if a.strategy or a.no_filters is not None:
+        base = a.strategy or "all"
+        variants = [f"{base}_{'nofilters' if a.no_filters else 'filters'}"]
+    out = run_matrix(a.symbols or c["symbols"], a.exec_tf or c["timeframes"]["execution"], a.start, a.end, a.name, c, variants)
+    print(open(Path(out["variants"][list(out["variants"])[0]]["paths"]["summary_json"]).parent / "compare.md", encoding="utf-8").read())
+
+
+def cmd_walkforward(a):
+    from .config import cfg, report_dir
+    from .backtest.runner import load_contexts
+    from .backtest.walkforward import run_walkforward, wf_to_dict
+    from spot90.atomic import atomic_write_json
+    c = cfg(); exec_tf = a.exec_tf or c["timeframes"]["execution"]
+    for k in ("train_months", "valid_months", "test_months"):
+        if getattr(a, k) is not None:
+            c["backtest"]["walkforward"][k] = int(getattr(a, k))
+    ctxs = load_contexts(a.symbols or c["symbols"], exec_tf, c)
+    strategies = a.strategy.split(",") if a.strategy else [k for k, v in c["strategies"].items() if isinstance(v, dict) and v.get("enabled", True)]
+    out_dir = report_dir(c) / "walkforward" / a.name; out_dir.mkdir(parents=True, exist_ok=True)
+    allres = {}
+    for sk in strategies:
+        r = run_walkforward(ctxs, exec_tf, sk, c, not a.no_filters, a.start, a.end, a.workers)
+        d = wf_to_dict(r); allres[sk] = d
+        if not r.oos_trades.empty:
+            r.oos_trades.to_csv(out_dir / f"{sk}_oos_trades.csv", index=False)
+        print(f"{sk}: 折数 {len(r.folds)} OOS 交易 {r.oos_stats.get('n_trades', 0)} ExpR {r.oos_stats.get('expectancy_r')} PF {r.oos_stats.get('profit_factor')} 拼接收益 {r.oos_stats.get('stitched_total_return')} | 默认参数全程 {r.default_full_stats}")
+        for f in r.folds:
+            print(f"   fold{f.fold} test {f.test[0]}→{f.test[1]} 参数 {f.chosen_params}{'（退回默认）' if f.fallback_to_default else ''} → {f.test_stats}")
+    atomic_write_json(out_dir / "walkforward.json", {"exec_tf": exec_tf, "symbols": a.symbols or c["symbols"], "results": allres}, indent=2, default=str)
+    print("已写入", out_dir / "walkforward.json")
+
+
+def cmd_paper(a):
+    from .paper.runner import PaperRunner
+    r = PaperRunner(symbols=a.symbols, exec_tf=a.exec_tf, equity=a.equity)
+    if a.replay:
+        _p(r.replay(a.replay_bars))
+    elif a.loop:
+        r.loop()
+    else:
+        _p(r.run_once())
+
+
+def cmd_dashboard(a):
+    import subprocess
+    app = Path(__file__).resolve().parent / "dashboard" / "app.py"
+    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app), "--server.port", str(a.port), "--server.headless", "true"], check=False)
+
+
+def cmd_export(a):
+    from .export import export_all
+    _p(export_all(a.out))
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="brando_pa", description="Brando Price Action 量化交易引擎（研究/回测/模拟盘；默认禁止真实下单）")
+    ap.add_argument("--symbols", nargs="*")
+    ap.add_argument("--exec-tf", dest="exec_tf", choices=["15m", "1h", "4h"])
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("ingest"); p.add_argument("--timeframes", nargs="*"); p.set_defaults(f=cmd_ingest)
+    p = sub.add_parser("status"); p.set_defaults(f=cmd_status)
+    p = sub.add_parser("analyze"); p.set_defaults(f=cmd_analyze)
+    p = sub.add_parser("signal"); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_signal)
+    p = sub.add_parser("backtest"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_const", const=True, default=None); p.set_defaults(f=cmd_backtest)
+    p = sub.add_parser("walkforward"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--name", default="latest"); p.add_argument("--strategy"); p.add_argument("--no-filters", dest="no_filters", action="store_true"); p.add_argument("--workers", type=int); p.add_argument("--train-months", dest="train_months", type=int); p.add_argument("--valid-months", dest="valid_months", type=int); p.add_argument("--test-months", dest="test_months", type=int); p.set_defaults(f=cmd_walkforward)
+    p = sub.add_parser("paper"); p.add_argument("--once", action="store_true"); p.add_argument("--loop", action="store_true"); p.add_argument("--replay", action="store_true"); p.add_argument("--replay-bars", dest="replay_bars", type=int, default=3000); p.add_argument("--equity", type=float, default=None); p.set_defaults(f=cmd_paper)
+    p = sub.add_parser("dashboard"); p.add_argument("--port", type=int, default=8502); p.set_defaults(f=cmd_dashboard)
+    p = sub.add_parser("export"); p.add_argument("--out"); p.set_defaults(f=cmd_export)
+    a = ap.parse_args(argv)
+    a.f(a)
+
+
+if __name__ == "__main__":
+    main()

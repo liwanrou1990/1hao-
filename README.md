@@ -82,3 +82,24 @@ iphone-farm/
   docs/                      00–08 文档
   state/ reports_out/        运行时注册表/锁/事件；测试报告（已 gitignore）
 ```
+
+---
+
+# brando_pa — Brando Price Action 量化交易引擎（独立模块，研究/回测/模拟盘）
+
+> 代码 `src/brando_pa/`，配置 `config/brando_pa.yaml`，数据 `data_store/brando_pa/`（15m/1h/1w 自有；1d/4h 只读复用 spot90），产物 `reports_out/brando_pa/`，测试 `tests/test_brando_pa_*.py`，报告 [docs/20_brando_pa_价格行为引擎.md](docs/20_brando_pa_价格行为引擎.md)。
+> 不修改 spot90 / bgw_quant 的策略、数据与配置。**默认禁止真实下单**（仓库内没有任何交易所私有接口调用）。
+
+```bash
+pip install -r requirements.txt && export PYTHONPATH=src
+python -m brando_pa.cli ingest                                  # 1w/1d/4h/1h/15m K 线（GitHub 公开 Binance 缓存；Bitget 可达时可切换适配器）
+python -m brando_pa.cli analyze                                 # 关键区域 / 4h 结构 / 日线环境
+python -m brando_pa.cli signal                                  # WAIT/LONG/SHORT/EXIT/NO_TRADE + 开仓/不交易理由 → reports_out/brando_pa/signals/latest.json
+python -m brando_pa.cli --exec-tf 15m backtest --start 2025-02-01 --name m15     # 回测矩阵：全部/单策略 × 过滤开/关，含买入持有基准
+python -m brando_pa.cli --exec-tf 1h  walkforward --start 2022-04-01 --name h1   # Walk-Forward（每个策略独立）
+python -m brando_pa.cli paper --replay --replay-bars 6000      # 模拟盘全流程回放（订单去重、状态恢复）
+python -m brando_pa.cli paper --once / --loop                   # 模拟盘单轮 / 持续运行（数据过期自动禁止新开仓）
+python -m brando_pa.cli dashboard --port 8502                   # Streamlit 控制面板
+python -m brando_pa.cli export                                 # CSV / JSON / HTML 研究导出
+pytest tests/test_brando_pa_*.py -q                            # 单元测试：关键价位、跨周期对齐、三策略状态机、仓位/风控、保守成交规则、订单去重、无未来函数
+```

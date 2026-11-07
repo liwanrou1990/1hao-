@@ -20,3 +20,5 @@ logs/
 iphone-farm/state/
 iphone-farm/reports_out/
 iphone-farm/.venv/
+data_store/brando_pa/raw_cache/
+data_store/brando_pa/.paper.lock
