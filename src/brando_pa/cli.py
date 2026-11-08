@@ -398,6 +398,22 @@ def cmd_forward_timeline_audit(a):
     raise SystemExit(0 if r["ok"] else 1)
 
 
+def cmd_forward_ledger_audit(a):
+    from .forward.ledger_audit import ledger_audit
+    from .config import cfg as _cfg, report_dir as _rd
+    from pathlib import Path as _P
+    c = _cfg(); d = _P(a.log_dir) if a.log_dir else (_rd(c) / "phase8_forward")
+    r = ledger_audit(d, _P(a.out) if a.out else None, int(c.get("forward", {}).get("interval_s", 600)), local_start=a.local_start, write=not a.no_write)
+    if a.json:
+        _p(r)
+    else:
+        from .forward.ledger_audit import render_md
+        print(render_md(r))
+        if r.get("written"):
+            print("\n已写入：" + "、".join(r["written"]))
+    raise SystemExit(0 if r["ok"] else 1)
+
+
 def cmd_forward_leaderboard(a):
     from .forward.report import leaderboard
     from .config import cfg as _cfg, report_dir as _rd
@@ -448,6 +464,7 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("forward-ledger-audit", help="只读：费用公式逐笔复核、事件链重放 vs state/nav、净值恒等式、费用明细、日线信号重复/错过/因果、72h 验收、服务进程（不改任何账户文件）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--out", help="审计结果输出目录（默认 reports_out/brando_pa/forward_audit）"); p.add_argument("--local-start", dest="local_start"); p.add_argument("--json", action="store_true"); p.add_argument("--no-write", dest="no_write", action="store_true"); p.set_defaults(f=cmd_forward_ledger_audit)
     p = sub.add_parser("forward-leaderboard", help="三账户 USDT 利润排行榜（含成本清仓净利润降序）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--json", action="store_true"); p.set_defaults(f=cmd_forward_leaderboard)
     p = sub.add_parser("forward-timeline-audit", help="前瞻事件时间顺序审计（--repair：作废决策前执行时隙的挂单并写纠错日志，不改原始事件）"); p.add_argument("--repair", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_timeline_audit)
     p = sub.add_parser("forward-data-audit", help="实时跨来源行情审计（只读）"); p.add_argument("--tf", default="1h"); p.add_argument("--hours", type=int, default=48); p.set_defaults(f=cmd_forward_data_audit)

@@ -36,7 +36,7 @@ def _segment_stats(win: pd.DataFrame, t0: pd.Timestamp, t1: pd.Timestamp, interv
             "alerts_by_kind": al["kind"].value_counts().to_dict() if len(al) else {}, "missed_signals": missed, "expired_orders": expired, "fills": fills, "fill_paused": paused, "per_day": per_day, "hosts": sorted(win["host"].dropna().unique().tolist()) if "host" in win else []}
 
 
-def acceptance_status(log_dir: Path, interval_s: int = 600, required_hours: float = 72.0, now: pd.Timestamp | None = None, local_start: str | None = None, cloud_hosts: tuple = ("vm",), cloud_segment_end: str | None = "2026-11-08 06:03:00") -> dict:
+def acceptance_status(log_dir: Path, interval_s: int = 600, required_hours: float = 72.0, now: pd.Timestamp | None = None, local_start: str | None = None, cloud_hosts: tuple = ("vm",), cloud_segment_end: str | None = "2026-11-08 06:03:00", write: bool = True) -> dict:
     """分段：cloud_legacy = 云容器历史记录（host 在 cloud_hosts 内，或无 host 字段且时间 ≤ cloud_segment_end）；local = 其余（Mac 本地），
     起点 = local_start（显式给定）或本地段第一条记录的时间；all = 全部。判定只看 local 段。"""
     log_dir = Path(log_dir); now = now or pd.Timestamp.now(tz="UTC")
@@ -44,7 +44,9 @@ def acceptance_status(log_dir: Path, interval_s: int = 600, required_hours: floa
     out = {"checked_at_utc": str(now), "required_hours": required_hours, "interval_s": interval_s, "category": "真实时间前瞻运行（非模拟）", "segments": {}, "status": "未开始", "verdict_segment": "local"}
     checks = re_[(re_["kind"] == "data_check") & (re_.get("mode", pd.Series(["forward"] * len(re_))) != "replay")].copy() if len(re_) else pd.DataFrame()
     if checks.empty:
-        atomic_write_json(log_dir / "acceptance_status.json", out, indent=1, default=str); return out
+        if write:
+            atomic_write_json(log_dir / "acceptance_status.json", out, indent=1, default=str)
+        return out
     checks["t"] = pd.to_datetime(checks["now"], utc=True)
     if "host" not in checks:
         checks["host"] = None
@@ -65,6 +67,8 @@ def acceptance_status(log_dir: Path, interval_s: int = 600, required_hours: floa
     else:
         out["segments"]["local"] = {"status": "未开始", "note": "没有本地（非云容器）运行记录"}
     out["segments"]["all"] = _segment_stats(checks, checks["t"].min(), now, interval_s, al, acc_ev) | {"note": "云端 + 本地全部记录；历史缺口原样保留"}
+    if not write:
+        return out                                                   # 只读模式（审计工具）：不写 acceptance_status.*
     atomic_write_json(log_dir / "acceptance_status.json", out, indent=1, default=str)
     L = [f"# 72 小时真实时间可用性验收 · 本地段状态：**{out['status']}**（{out['category']}）", "", "| 分段 | 起点 UTC | 终点 UTC | 时长 h | 实际轮询 | 预期轮询 | 覆盖率 | 最长中断 h | 行情正常占比 | 行情问题数 | 异常数 | 告警 | 错过信号 | 过期订单 | 成交 | 主机 |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for k, sgm in out["segments"].items():

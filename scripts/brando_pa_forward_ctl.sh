@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# brando_pa 前瞻服务日常操作（macOS launchd / 通用）：start | stop | restart | status | health | logs | report | acceptance
+# brando_pa 前瞻服务日常操作（macOS launchd / 通用）：start | stop | restart | status | health | logs | report | acceptance | audit
 set -euo pipefail
 cd "$(dirname "$0")/.."; LABEL="com.brando-pa.forward"; PY="${BRANDO_PY:-$PWD/.venv/bin/python}"; [ -x "$PY" ] || PY=python3
 export PYTHONPATH=src
@@ -13,6 +13,7 @@ case "${1:-status}" in
   logs)    tail -n "${2:-50}" "$D/service.log"; echo "--- alerts"; tail -n 10 "$D/alerts.jsonl" 2>/dev/null || true; echo "--- launchd"; tail -n 10 "$D/launchd.err.log" 2>/dev/null || true ;;
   report)  "$PY" -m brando_pa.cli forward-leaderboard; echo; "$PY" -m brando_pa.cli forward-daily-report ${2:+--date "$2"} > /dev/null && cat "$D/daily/$(ls "$D/daily" | grep '\.md$' | tail -1)"; echo; echo "完整 JSON：$D/leaderboard.json、$D/daily/*.json" ;;
   acceptance) "$PY" -m brando_pa.cli forward-acceptance ${2:+--local-start "$2"} ;;
+  audit)   "$PY" -m brando_pa.cli forward-ledger-audit ${2:+--local-start "$2"} ;;   # 只读：费用/净值一致性/信号/验收/进程审计，结果写 reports_out/brando_pa/forward_audit/
   backup)  "$PY" - <<'PYB'
 import sys; sys.path.insert(0, "src")
 from pathlib import Path
@@ -24,5 +25,5 @@ PYB
            ;;
   upgrade) bash scripts/brando_pa_safe_upgrade.sh "${2:-claude/brando-pa-phase9-deploy}" ;;      # 安全升级：见 scripts/brando_pa_safe_upgrade.sh（新版本升级器执行，备份校验/安全停服/预检/ff/核对/启动）
   upgrade-dry-run) bash scripts/brando_pa_safe_upgrade.sh "${2:-claude/brando-pa-phase9-deploy}" --dry-run ;;
-  *) echo "用法：$0 {start|stop|restart|status|health|logs [n]|report [YYYY-MM-DD]|acceptance [local_start_utc]|backup|upgrade [branch]|upgrade-dry-run}"; exit 2 ;;
+  *) echo "用法：$0 {start|stop|restart|status|health|logs [n]|report [YYYY-MM-DD]|acceptance [local_start_utc]|audit [local_start_utc]|backup|upgrade [branch]|upgrade-dry-run}"; exit 2 ;;
 esac
