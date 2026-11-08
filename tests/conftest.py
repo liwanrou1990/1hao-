@@ -38,3 +38,14 @@ def nvda_multi(sim_source):
     days = trading_days(date(2026, 7, 20), SAMPLE_DAY)
     frames = [apply_quality_flags(sim_source.fetch_minute_bars("NVDA", d)) for d in days]
     return pd.concat(frames, ignore_index=True)
+
+
+# ---- brando_pa 前瞻测试隔离：默认不访问实时报价接口（QuoteService.get → None）；需要报价行为的测试显式注入 FakeQuotes ----
+@pytest.fixture(autouse=True)
+def _brando_pa_no_live_quotes(monkeypatch):
+    try:
+        from brando_pa.forward import quotes as _q
+        monkeypatch.setattr(_q.QuoteService, "get", lambda self, symbol: None)
+    except Exception:  # noqa: BLE001
+        pass
+    yield

@@ -32,7 +32,7 @@ def test_decision_before_execution_slot_and_no_backdated_fill(tmp_path):
     assert pd.Timestamp(f["decision_time"]) < pd.Timestamp(f["price_time"]) <= pd.Timestamp(f["execution_time"]) == pd.Timestamp(f["fill_recorded_at"]) and "bar_open" not in f
     for k in REQUIRED:
         assert k in f, k
-    assert f["order_status"] == "filled" and abs(f["equity_after"] - (f["cash_after"] + sum(f["position_after"][s] * f["mark_prices"][s] for s in SYMS))) < 1e-6
+    assert f["order_status"] == "filled_estimated" and f["estimated"] and abs(f["equity_after"] - (f["cash_after"] + sum(f["position_after"][s] * f["mark_prices"][s] for s in SYMS))) < 1e-6
     a = audit_timeline(tmp_path / "fw"); assert a["ok"], a
     # 注入一张"决策后用更早 K 线"的坏订单 → fill_pending 拒绝成交并作废
     acc = r.accounts["A_BTC_SMA200"]; st = acc.state

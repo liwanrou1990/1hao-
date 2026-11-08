@@ -12,7 +12,7 @@
   "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318",
   "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318"
  ],
- "n_runs": 7,
+ "n_runs": 8,
  "ledgers": {
   "ideal": {
    "cash": 10.000000000001819,
@@ -38,8 +38,8 @@
    "realized": 0.0,
    "seq": 1,
    "peak_equity": 10000.0,
-   "max_drawdown": 0.0,
-   "max_drawdown_usdt": 0.0
+   "max_drawdown": -3.1281312625308644e-05,
+   "max_drawdown_usdt": -0.3128131262528768
   },
   "cost": {
    "cash": 9.999999999998181,
@@ -65,8 +65,8 @@
    "realized": 0.0,
    "seq": 1,
    "peak_equity": 10000.0,
-   "max_drawdown": -0.0014967536211913934,
-   "max_drawdown_usdt": -14.967536211914194
+   "max_drawdown": -0.0015279880665315382,
+   "max_drawdown_usdt": -15.279880665315432
   }
  },
  "risk": {
@@ -79,8 +79,8 @@
   "ETHUSDT": 1.0,
   "USDT": 0.0
  },
- "last_run_at": "2026-11-08 05:05:45.121977+00:00",
- "saved_at": "2026-11-08 05:05:47.075938+00:00",
+ "last_run_at": "2026-11-08 06:02:53.803842+00:00",
+ "saved_at": "2026-11-08 06:02:55.687968+00:00",
  "requeued_after_correction": {
   "at": "2026-11-08 03:52:18.972017+00:00",
   "orders": [

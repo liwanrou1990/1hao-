@@ -124,3 +124,8 @@
 # 前瞻成交机制最后一次真实性检查（2026-11-08）
 
 见 `docs/brando_pa_validation/phase9_forward/FINAL_FILL_CAUSALITY_CHECK.md`：修复“离线恢复后按旧 K 线开盘价回填成交”的问题（成交时间 = 引擎处理时刻、价格 = 当时可观察的最新已收盘收盘价、late/expired 只依赖时间），新增 7 项因果顺序测试；真实账户按修正规则于 05:05 UTC 以 filled_late 建仓。
+
+
+# 成交报价精度（2026-11-08 收尾）
+
+见 `FINAL_FILL_CAUSALITY_CHECK.md` §7：实时 Bid/Ask（Ask 买 / Bid 卖）+ 报价时间戳与来源；无新鲜报价时只做明确标记的估算；超过新鲜度阈值暂停成交；4 项新测试。

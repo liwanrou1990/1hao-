@@ -21,7 +21,8 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - `reports_out/brando_pa/phase8_forward/<账户>/state.json`、`events.jsonl`（哈希链）、`health.json`、`startup_check.json`、`alerts.jsonl`、`daily/`、`service.log`（10 MB × 5 轮转）、`service.lock`（单实例锁）
 - 建议每日备份 `reports_out/brando_pa/phase8_forward` 与 `data_store/brando_pa/forward_data_status.json`（例如 Time Machine 或 rsync）。
 
-## 成交时序规则（2026-11-08 第二次修正后）
+## 成交时序规则（2026-11-08 第二次修正后 + 报价精度）
+- 处理订单时实时获取 OKX/Coinbase 现货 Bid/Ask（BUY 用 Ask、SELL 用 Bid，保存报价时间戳与来源）；报价年龄 > 120 s 不用；无新鲜报价时用最新已收盘 1h 收盘价作为**估算**（明确标记 estimated，年龄 ≤ 70 min）；都没有 → fill_paused，等待或过期，不用历史价格。网络要求新增：允许访问 www.okx.com 与 api.exchange.coinbase.com 的 ticker 接口（与 K 线同主机）。
 - **前瞻成交 = 引擎实际处理时刻**，按当时可观察的最新已收盘 1h 收盘价成交（price_time ≥ exec_after > decision_time）；超过 exec_after 1 h → filled_late；超过 3 h → expired；断线无新价格 → pending。绝不按处理时刻之前某根 K 线的开盘价回填。回放模式另行标注。
 
 ### 旧说明（已被上面规则取代，保留以便审计）

@@ -61,8 +61,10 @@ def audit_account(acc_dir: Path) -> dict:
                 viol.append({"rule": "T3-exec_after", "order_id": oid, "exec_after": o["exec_after"], "execution_time": str(ex)})
             if rec < ex:
                 viol.append({"rule": "T4-forward", "order_id": oid, "execution_time": str(ex), "recorded_at": str(rec)})
-            if f.get("late") and f.get("order_status") != "filled_late":
+            if f.get("late") and not str(f.get("order_status", "")).startswith("filled_late"):
                 viol.append({"rule": "T7-late-flag", "order_id": oid})
+            if f.get("estimated") and "_estimated" not in str(f.get("order_status", "")):
+                viol.append({"rule": "T7-estimated-flag", "order_id": oid})
         if oid in expired or oid in cancelled:
             viol.append({"rule": "T5-status", "order_id": oid})
         if "cash_after" in f:

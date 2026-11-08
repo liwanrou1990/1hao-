@@ -1,5 +1,5 @@
 {
- "now": "2026-11-08 05:05:45.121977+00:00",
+ "now": "2026-11-08 06:02:53.803842+00:00",
  "mode": "forward",
  "data_check": {
   "ok": true,
@@ -7,11 +7,11 @@
   "anomalies": [],
   "latest": {
    "BTCUSDT": {
-    "1h": "2026-11-08 05:00:00+00:00",
+    "1h": "2026-11-08 06:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    },
    "ETHUSDT": {
-    "1h": "2026-11-08 05:00:00+00:00",
+    "1h": "2026-11-08 06:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    }
   }
@@ -21,140 +21,51 @@
    "label": "账户 A：BTC SMA200",
    "nav": {
     "ideal": {
-     "equity_usdt": 10000.0,
-     "liquidation_usdt": 10000.0,
-     "profit_usdt": 0.0,
-     "return": 0.0,
+     "equity_usdt": 9995.615042410582,
+     "liquidation_usdt": 9995.615042410582,
+     "profit_usdt": -4.3849575894182635,
+     "return": -0.000438495758941837,
      "realized_usdt": 0.0,
-     "unrealized_usdt": 0.0,
+     "unrealized_usdt": -4.384957589418498,
      "cash": 10.0,
      "holdings": {
       "BTCUSDT": 0.13168040809063408,
       "ETHUSDT": 0.0
      },
      "weights": {
-      "BTCUSDT": 0.999,
+      "BTCUSDT": 0.9989995613118782,
       "ETHUSDT": 0.0
      },
-     "exposure": 0.999,
-     "drawdown": 0.0,
-     "max_drawdown": 0.0,
-     "max_drawdown_usdt": 0.0,
+     "exposure": 0.9989995613118782,
+     "drawdown": -0.000438495758941837,
+     "max_drawdown": -0.000438495758941837,
+     "max_drawdown_usdt": -4.3849575894182635,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9985.032463788088,
-     "liquidation_usdt": 9970.074902608638,
-     "profit_usdt": -14.967536211912375,
-     "return": -0.0014967536211912824,
+     "equity_usdt": 9980.65407596959,
+     "liquidation_usdt": 9965.703080182675,
+     "profit_usdt": -19.34592403040915,
+     "return": -0.0019345924030409467,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -4.987516231893079,
+     "unrealized_usdt": -9.365904050389922,
      "cash": 10.000000000001819,
      "holdings": {
       "BTCUSDT": 0.1314831176725664,
       "ETHUSDT": 0.0
      },
      "weights": {
-      "BTCUSDT": 0.9989985010027491,
+      "BTCUSDT": 0.9989980616576944,
       "ETHUSDT": 0.0
      },
-     "exposure": 0.9989985010027491,
-     "drawdown": -0.0014967536211912824,
-     "max_drawdown": -0.0014967536211912824,
-     "max_drawdown_usdt": -14.967536211912375,
+     "exposure": 0.9989980616576944,
+     "drawdown": -0.0019345924030409467,
+     "max_drawdown": -0.0019345924030409467,
+     "max_drawdown_usdt": -19.34592403040915,
      "fees_paid": 9.980019980019978
     }
    },
-   "fills": [
-    {
-     "order_id": "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318",
-     "ledger": "ideal",
-     "symbol": "BTCUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 0.13168040809063408,
-     "execution_price": 75865.5,
-     "fill_price": 75865.5,
-     "reference_price": 75865.5,
-     "fee": 0.0,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 10.0,
-     "position_after": {
-      "BTCUSDT": 0.13168040809063408,
-      "ETHUSDT": 0.0
-     },
-     "equity_after": 10000.0,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": 0.0,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    },
-    {
-     "order_id": "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318",
-     "ledger": "cost",
-     "symbol": "BTCUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 0.1314831176725664,
-     "execution_price": 75903.43274999999,
-     "fill_price": 75903.43274999999,
-     "reference_price": 75865.5,
-     "fee": 9.980019980019978,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 10.000000000001819,
-     "position_after": {
-      "BTCUSDT": 0.1314831176725664,
-      "ETHUSDT": 0.0
-     },
-     "equity_after": 9985.032463788088,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": -4.987516231893079,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    }
-   ],
+   "fills": [],
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
@@ -164,228 +75,51 @@
    "label": "账户 B：模型 B 满额配置 + 状态机",
    "nav": {
     "ideal": {
-     "equity_usdt": 10000.0,
-     "liquidation_usdt": 10000.0,
-     "profit_usdt": 0.0,
-     "return": 0.0,
+     "equity_usdt": 9997.651114642165,
+     "liquidation_usdt": 9997.651114642165,
+     "profit_usdt": -2.3488853578346607,
+     "return": -0.0002348885357834618,
      "realized_usdt": 0.0,
-     "unrealized_usdt": 0.0,
+     "unrealized_usdt": -2.3488853578358673,
      "cash": 10.00000000000091,
      "holdings": {
       "BTCUSDT": 0.06584020404531704,
       "ETHUSDT": 2.2343794732321784
      },
      "weights": {
-      "BTCUSDT": 0.4995,
-      "ETHUSDT": 0.4994999999999999
+      "BTCUSDT": 0.49939805499844075,
+      "ETHUSDT": 0.49960171005783766
      },
-     "exposure": 0.999,
-     "drawdown": 0.0,
-     "max_drawdown": 0.0,
-     "max_drawdown_usdt": 0.0,
+     "exposure": 0.9989997650562784,
+     "drawdown": -0.0002348885357834618,
+     "max_drawdown": -0.0002348885357834618,
+     "max_drawdown_usdt": -2.3488853578346607,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9985.032463788088,
-     "liquidation_usdt": 9970.074902608636,
-     "profit_usdt": -14.967536211912375,
-     "return": -0.0014967536211912824,
+     "equity_usdt": 9982.687097652139,
+     "liquidation_usdt": 9967.73305334921,
+     "profit_usdt": -17.31290234786138,
+     "return": -0.0017312902347861314,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -4.9875162318937605,
+     "unrealized_usdt": -7.332882367842636,
      "cash": 10.0,
      "holdings": {
       "BTCUSDT": 0.0657415588362832,
       "ETHUSDT": 2.231031810001272
      },
      "weights": {
-      "BTCUSDT": 0.49949925050137456,
-      "ETHUSDT": 0.4994992505013746
+      "BTCUSDT": 0.49939730547672984,
+      "ETHUSDT": 0.4996009602304711
      },
-     "exposure": 0.9989985010027492,
-     "drawdown": -0.0014967536211912824,
-     "max_drawdown": -0.0014967536211912824,
-     "max_drawdown_usdt": -14.967536211912375,
+     "exposure": 0.9989982657072011,
+     "drawdown": -0.0017312902347861314,
+     "max_drawdown": -0.0017312902347861314,
+     "max_drawdown_usdt": -17.31290234786138,
      "fees_paid": 9.98001998001998
     }
    },
-   "fills": [
-    {
-     "order_id": "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318",
-     "ledger": "ideal",
-     "symbol": "BTCUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 0.06584020404531704,
-     "execution_price": 75865.5,
-     "fill_price": 75865.5,
-     "reference_price": 75865.5,
-     "fee": 0.0,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 5005.0,
-     "position_after": {
-      "BTCUSDT": 0.06584020404531704,
-      "ETHUSDT": 0.0
-     },
-     "equity_after": 10000.0,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": 0.0,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    },
-    {
-     "order_id": "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318",
-     "ledger": "ideal",
-     "symbol": "ETHUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 2.2343794732321784,
-     "execution_price": 2235.52,
-     "fill_price": 2235.52,
-     "reference_price": 2235.52,
-     "fee": 0.0,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 5005.0,
-     "position_before": {
-      "BTCUSDT": 0.06584020404531704,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 10.00000000000091,
-     "position_after": {
-      "BTCUSDT": 0.06584020404531704,
-      "ETHUSDT": 2.2343794732321784
-     },
-     "equity_after": 10000.0,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": 0.0,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    },
-    {
-     "order_id": "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318",
-     "ledger": "cost",
-     "symbol": "BTCUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 0.0657415588362832,
-     "execution_price": 75903.43274999999,
-     "fill_price": 75903.43274999999,
-     "reference_price": 75865.5,
-     "fee": 4.990009990009989,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 5005.000000000001,
-     "position_after": {
-      "BTCUSDT": 0.0657415588362832,
-      "ETHUSDT": 0.0
-     },
-     "equity_after": 9992.516231894044,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": -2.4937581159465396,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    },
-    {
-     "order_id": "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318",
-     "ledger": "cost",
-     "symbol": "ETHUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 2.231031810001272,
-     "execution_price": 2236.63776,
-     "fill_price": 2236.63776,
-     "reference_price": 2235.52,
-     "fee": 4.990009990009991,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 5005.000000000001,
-     "position_before": {
-      "BTCUSDT": 0.0657415588362832,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 10.0,
-     "position_after": {
-      "BTCUSDT": 0.0657415588362832,
-      "ETHUSDT": 2.231031810001272
-     },
-     "equity_after": 9985.032463788088,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": -4.9875162318937605,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    }
-   ],
+   "fills": [],
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
@@ -395,12 +129,12 @@
    "label": "参考：ETH SMA200",
    "nav": {
     "ideal": {
-     "equity_usdt": 10000.0,
-     "liquidation_usdt": 10000.0,
-     "profit_usdt": 0.0,
-     "return": 0.0,
+     "equity_usdt": 9999.687186873747,
+     "liquidation_usdt": 9999.687186873747,
+     "profit_usdt": -0.3128131262528768,
+     "return": -3.1281312625308644e-05,
      "realized_usdt": 0.0,
-     "unrealized_usdt": 0.0,
+     "unrealized_usdt": -0.31281312625323654,
      "cash": 10.000000000001819,
      "holdings": {
       "BTCUSDT": 0.0,
@@ -408,21 +142,21 @@
      },
      "weights": {
       "BTCUSDT": 0.0,
-      "ETHUSDT": 0.9989999999999998
+      "ETHUSDT": 0.9989999687177087
      },
-     "exposure": 0.9989999999999998,
-     "drawdown": 0.0,
-     "max_drawdown": 0.0,
-     "max_drawdown_usdt": 0.0,
+     "exposure": 0.9989999687177087,
+     "drawdown": -3.1281312625308644e-05,
+     "max_drawdown": -3.1281312625308644e-05,
+     "max_drawdown_usdt": -0.3128131262528768,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9985.032463788086,
-     "liquidation_usdt": 9970.074902608634,
-     "profit_usdt": -14.967536211914194,
-     "return": -0.0014967536211913934,
+     "equity_usdt": 9984.720119334685,
+     "liquidation_usdt": 9969.763026515742,
+     "profit_usdt": -15.279880665315432,
+     "return": -0.0015279880665315382,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -4.987516231894443,
+     "unrealized_usdt": -5.299860685295351,
      "cash": 9.999999999998181,
      "holdings": {
       "BTCUSDT": 0.0,
@@ -430,105 +164,16 @@
      },
      "weights": {
       "BTCUSDT": 0.0,
-      "ETHUSDT": 0.9989985010027495
+      "ETHUSDT": 0.9989984696736132
      },
-     "exposure": 0.9989985010027495,
-     "drawdown": -0.0014967536211913934,
-     "max_drawdown": -0.0014967536211913934,
-     "max_drawdown_usdt": -14.967536211914194,
+     "exposure": 0.9989984696736132,
+     "drawdown": -0.0015279880665315382,
+     "max_drawdown": -0.0015279880665315382,
+     "max_drawdown_usdt": -15.279880665315432,
      "fees_paid": 9.980019980019982
     }
    },
-   "fills": [
-    {
-     "order_id": "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318",
-     "ledger": "ideal",
-     "symbol": "ETHUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 4.468758946464357,
-     "execution_price": 2235.52,
-     "fill_price": 2235.52,
-     "reference_price": 2235.52,
-     "fee": 0.0,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 10.000000000001819,
-     "position_after": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 4.468758946464357
-     },
-     "equity_after": 10000.0,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": 0.0,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    },
-    {
-     "order_id": "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318",
-     "ledger": "cost",
-     "symbol": "ETHUSDT",
-     "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-     "decision_time": "2026-11-08 03:53:18.131220+00:00",
-     "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-     "exec_after": "2026-11-08 04:00:00+00:00",
-     "execution_time": "2026-11-08 05:05:45.121977+00:00",
-     "price_time": "2026-11-08 05:00:00+00:00",
-     "price_bar_open_time": "2026-11-08 04:00:00+00:00",
-     "execution_price_observed_at": "2026-11-08 05:00:00+00:00",
-     "fill_recorded_at": "2026-11-08 05:05:45.121977+00:00",
-     "market_data_source": "okx_spot",
-     "order_status": "filled_late",
-     "late": true,
-     "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-     "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-     "note": "simulated fill; not an exchange guarantee",
-     "side": "BUY",
-     "qty": 4.462063620002544,
-     "execution_price": 2236.63776,
-     "fill_price": 2236.63776,
-     "reference_price": 2235.52,
-     "fee": 9.980019980019982,
-     "fill_ts": "2026-11-08 05:05:45.121977+00:00",
-     "cash_before": 10000.0,
-     "position_before": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 0.0
-     },
-     "cash_after": 9.999999999998181,
-     "position_after": {
-      "BTCUSDT": 0.0,
-      "ETHUSDT": 4.462063620002544
-     },
-     "equity_after": 9985.032463788086,
-     "realized_pnl_usdt": 0.0,
-     "unrealized_pnl_usdt": -4.987516231894443,
-     "mark_prices": {
-      "BTCUSDT": 75865.5,
-      "ETHUSDT": 2235.52
-     }
-    }
-   ],
+   "fills": [],
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
@@ -538,31 +183,31 @@
  "buy_hold_since_forward_start": {
   "BTCUSDT": {
    "start_price": 75842.6,
-   "last_price": 75865.5,
-   "buy_hold_return": 0.0003019411254361337
+   "last_price": 75832.2,
+   "buy_hold_return": -0.00013712610063487674
   },
   "ETHUSDT": {
    "start_price": 2235.88,
-   "last_price": 2235.52,
-   "buy_hold_return": -0.00016101042989791203
+   "last_price": 2235.45,
+   "buy_hold_return": -0.00019231801348917887
   }
  },
  "chains": {
   "runner": {
    "ok": true,
-   "n": 7
+   "n": 8
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 25
+   "n": 26
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 33
+   "n": 34
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 25
+   "n": 26
   }
  },
  "real_trading": "disabled (no implementation)"

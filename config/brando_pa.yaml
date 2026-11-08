@@ -514,3 +514,7 @@ forward:
     max_bytes: 10485760                  # 10 MB × 5 轮转（事件链 JSONL 不轮转：只追加、体积极小、保证哈希链完整）
     backups: 5
   daily_report_dir: reports_out/brando_pa/phase8_forward/daily
+  quotes:                                # 第九阶段收尾：前瞻成交报价
+    priority: [okx_spot, coinbase_exchange]   # 实时现货 Bid/Ask 来源（公开 ticker，无密钥）
+    max_age_s: 120                       # 实时报价新鲜度：报价时间距处理时刻 > 120 s 视为过期
+    estimated_max_age_s: 4200            # 无实时报价时，用最新已收盘 1h 收盘价作为“估算”成交参考的最大年龄（70 min）；超过则暂停成交

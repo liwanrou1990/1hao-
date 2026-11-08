@@ -50,7 +50,7 @@ class ForwardAccount:
         self.name, self.spec, self.c = name, spec, c; self.dir = log_dir; self.dir.mkdir(parents=True, exist_ok=True)
         self.initial = float(initial); self.fee, self.slip = float(fee_bps), float(slip_bps)
         self.events = self.dir / "events.jsonl"; self.state_path = self.dir / "state.json"
-        self.risk = make_risk(spec["risk_mode"], c["trendsys"]["risk"])
+        self.risk = make_risk(spec["risk_mode"], c["trendsys"]["risk"]); self.quote_provider = None
         self.allocs = {k: PortfolioAllocator(spec["weights"], SYMS, c["usdt"]["allocator"], 0.0 if k == "ideal" else fee_bps, 0.0 if k == "ideal" else slip_bps) for k in self.LEDGERS}
         self.state = self._load()
 
@@ -140,20 +140,39 @@ class ForwardAccount:
             if now - ea > grace:
                 self.log("order_expired", **({**od, "order_status": "expired", "expired_at": str(now), "reason_expired": f"engine first processed the order {((now - ea).total_seconds() / 3600):.1f} h after exec_after (> grace {grace}); not executed; no backdated fill"}))
                 self.state["processed_orders"].append(od["order_id"]); continue
-            s = od["symbol"]; e = bars[s][tf]; closed = e[(e["ts"] + pd.Timedelta(seconds=sec)) <= now]
-            if closed.empty:
+            s = od["symbol"]; qc = self.c.get("forward", {}).get("quotes", {}); max_age = float(qc.get("max_age_s", 120)); est_max_age = float(qc.get("estimated_max_age_s", 4200))
+            # (a) 实时现货报价（处理时刻获取；BUY 用 Ask、SELL 用 Bid）
+            q = None; qerr = None
+            if self.quote_provider is not None:
+                try:
+                    q = self.quote_provider(s)
+                except Exception as e_:  # noqa: BLE001
+                    qerr = f"{type(e_).__name__}: {str(e_)[:100]}"
+            quote_info = q.as_dict(now) if q is not None else {"error": qerr or "no quote"}
+            price_kind = None; ref = None; price_time = None; src = None; estimated = False; bar = None
+            if q is not None and 0 <= q.age_s(now) <= max_age and q.ts > dec_t and q.ts >= ea - pd.Timedelta(seconds=max_age):
+                ref = float(q.ask if od["side"] == "BUY" else q.bid); price_time = q.ts; src = q.source; price_kind = "live_quote_ask" if od["side"] == "BUY" else "live_quote_bid"
+            else:
+                # (b) 只有已收盘 1h K 线：作为“估算”成交参考（明确标记 estimated），且必须在估算新鲜度阈值内、晚于决策与 exec_after
+                e = bars[s][tf]; closed = e[(e["ts"] + pd.Timedelta(seconds=sec)) <= now]
+                if not closed.empty:
+                    bar = closed.iloc[-1]; bt = bar["ts"] + pd.Timedelta(seconds=sec)
+                    if bt >= ea and bt > dec_t and (now - bt).total_seconds() <= est_max_age:
+                        ref = float(bar["close"]); price_time = bt; src = str(bar["source"]) if "source" in bar else None; price_kind = "estimated_closed_bar_close"; estimated = True
+            if ref is None:
+                # (c) 没有足够新鲜的可观察价格 → 暂停成交并记录原因；不用更早的历史价格；订单仍受 exec_after + grace 过期约束
+                self.log("fill_paused", order_id=od["order_id"], ledger=od["ledger"], symbol=s, paused_at=str(now), exec_after=str(ea), quote=quote_info, reason="no fresh price: live quote missing/stale (> max_age_s) and no closed 1h bar within estimated_max_age_s after exec_after")
                 keep.append(od); continue
-            bar = closed.iloc[-1]; price_time = bar["ts"] + pd.Timedelta(seconds=sec); ref = float(bar["close"])
-            if price_time < ea or price_time <= dec_t:
-                keep.append(od); continue                                   # 还没有 exec_after 之后可观察的价格（数据滞后）→ 继续等待（可能过期）
-            assert now >= dec_t and price_time <= now
+            assert now >= dec_t and price_time <= now and price_time > dec_t
             k = od["ledger"]; L = self.ledger(k); prices_now = {sym: float(bars[sym][tf]["close"].iloc[-1]) for sym in SYMS}
             before = {"cash_before": L.cash, "position_before": {sym: L.qty(sym) for sym in SYMS}}
             late = bool(now > ea + pd.Timedelta(hours=1))
             common = {"order_id": od["order_id"], "ledger": k, "symbol": s, "signal_candle_close_time": od.get("signal_ts"), "decision_time": str(dec_t), "order_submit_time": od.get("order_submit_time") or od.get("order_simulated_at"), "exec_after": str(ea),
-                      "execution_time": str(now), "price_time": str(price_time), "price_bar_open_time": str(bar["ts"]), "execution_price_observed_at": str(price_time), "fill_recorded_at": str(now), "market_data_source": str(bar["source"]) if "source" in bar else None,
-                      "order_status": "filled_late" if late else "filled", "late": late, "reason": od["reason"], "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
-                      "note": "simulated fill; not an exchange guarantee"}
+                      "execution_time": str(now), "price_time": str(price_time), "execution_price_observed_at": str(price_time), "fill_recorded_at": str(now), "market_data_source": src, "price_kind": price_kind, "estimated": estimated, "quote": quote_info,
+                      "price_bar_open_time": str(bar["ts"]) if (estimated and bar is not None) else None,
+                      "order_status": ("filled_late" if late else "filled") + ("_estimated" if estimated else ""), "late": late, "reason": od["reason"],
+                      "fill_rule": "forward: executed at engine processing time; BUY at live Ask / SELL at live Bid when a fresh quote (<= max_age_s) exists, else the latest closed 1h close as an explicitly ESTIMATED reference; never a price observed before decision_time",
+                      "note": "simulated fill; not an exchange guarantee" + ("; ESTIMATED from closed bar close, not a tradable quote" if estimated else "")}
             f = None
             if od["side"] == "SELL":
                 q = L.qty(s) if od.get("qty") is None else min(float(od["qty"]), L.qty(s))
@@ -207,13 +226,20 @@ class ForwardAccount:
 
 
 class ForwardRunner:
-    def __init__(self, c: dict | None = None, log_dir: Path | None = None, store: BarStore | None = None, accounts: list[str] | None = None, mode: str = "forward"):
+    def __init__(self, c: dict | None = None, log_dir: Path | None = None, store: BarStore | None = None, accounts: list[str] | None = None, mode: str = "forward", quote_provider=None):
+        """quote_provider(symbol) -> Quote | None：实时 Bid/Ask；默认 QuoteService（OKX → Coinbase）；回放模式不使用。"""
         self.c = c or cfg(); self.mode = mode
+        if quote_provider is None and mode != "replay":
+            from .quotes import QuoteService
+            quote_provider = QuoteService(list(self.c.get("forward", {}).get("quotes", {}).get("priority", ["okx_spot", "coinbase_exchange"]))).get
+        self.quote_provider = quote_provider
         self.dir = Path(log_dir or (report_dir(self.c) / "phase8_forward")); self.dir.mkdir(parents=True, exist_ok=True)
         self.store = store or BarStore(root=own_data_dir(self.c) / "forward_bars", fallback_root=None)
         cost = self.c["usdt"]["costs"]["round2"]; initial = float(self.c["usdt"]["initial_cash_usdt"])
         specs = account_specs(self.c); names = accounts or list(specs)
         self.accounts = {n: ForwardAccount(n, specs[n] | {"mode": mode}, self.c, self.dir / n, initial, float(cost["fee_bps"]), float(cost["slippage_bps"])) for n in names}
+        for a in self.accounts.values():
+            a.quote_provider = self.quote_provider
         self.runner_events = self.dir / "runner_events.jsonl"; self.status_path = self.dir / "status.json"
         self.mult = float(self.c["data"].get("max_bar_age_multiplier", 3)); self.sma = int(self.c["usdt"]["trend"]["sma"])
 

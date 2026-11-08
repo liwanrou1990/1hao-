@@ -40,3 +40,14 @@
 
 ## 6. 是否可以在 Mac 进行 72 小时连续运行验收
 可以开始（代码与脚本就绪，成交机制已通过因果审计），但只能在持续在线的 Mac 上由你用 `bash deploy/install_mac_brando_pa.sh` 启动后进行；`forward-acceptance` 按真实时间统计，不足 72 h 固定为"进行中"。当前状态：**未开始**。真实交易 API：无实现、硬性禁用。
+
+
+---
+
+## 7. 成交报价精度（最后一项改进，2026-11-08）
+- 新增 `forward/quotes.py`：处理订单时实时获取现货 Bid/Ask（OKX ticker 优先，Coinbase Exchange ticker 备用；公开接口、无密钥），保存报价时间戳、获取时刻、来源、年龄、点差。实测 OKX 报价年龄约 0.5 s、点差约 0.01 bp；Coinbase ticker 的时间为最后成交时间（实测约 7.5 min，通常超过新鲜度阈值而被拒绝）。
+- 成交价：BUY 用 Ask、SELL 用 Bid（`price_kind = live_quote_ask / live_quote_bid`），成本账本在此之上再按预登记规则计 5 bps 滑点与 10 bps 手续费；零成本账本按 Ask/Bid 原价。
+- 新鲜度：报价年龄 > `forward.quotes.max_age_s`（120 s）或报价时间不晚于决策时刻 → 不用；退回最新已收盘 1h 收盘价作为**估算**参考（`price_kind = estimated_closed_bar_close`，`estimated = true`，状态 `filled_estimated / filled_late_estimated`，备注“非可成交报价”），且该收盘价年龄 ≤ `estimated_max_age_s`（70 min）、时间 ≥ exec_after 且晚于决策；两者都没有 → 记 `fill_paused`（原因：无新鲜价格），订单保持 pending，绝不使用更早的历史价格；订单仍受 exec_after + 3 h 宽限的过期约束。
+- 不依赖后续价格：同一决策、同一处理时刻，之后价格路径不同（×1.3），成交与否与成交价完全相同（测试 `test_execution_does_not_depend_on_future_prices`）。
+- 审计新增：estimated 标志必须与订单状态一致。历史事件未改动（05:05 的 8 笔 `filled_late` 成交是改进前按已收盘收盘价记账的，字段中无 price_kind，保留原样供审计）。
+- 新增 `tests/test_brando_pa_quotes.py`（4 项）：Ask/Bid 与时间戳来源、过期报价→估算或暂停→恢复后实时成交、报价接口断线恢复、不依赖未来价格；测试默认隔离实时报价接口（conftest 固定 QuoteService.get → None，需要报价的测试显式注入模拟报价）。

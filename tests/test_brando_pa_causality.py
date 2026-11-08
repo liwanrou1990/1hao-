@@ -45,7 +45,7 @@ def test_normal_polling_executes_at_processing_time_with_observable_close(tmp_pa
     out = r.run_once(now=T("2024-08-02 01:05")); f = out["accounts"]["A_BTC_SMA200"]["fills"]; assert f
     f = f[0]; bar00 = bars["BTCUSDT"]["1h"].set_index("ts").loc[T("2024-08-02 00:00")]
     assert f["execution_time"] == "2024-08-02 01:05:00+00:00" and f["price_time"] == "2024-08-02 01:00:00+00:00" and abs(f["reference_price"] - float(bar00["close"])) < 1e-9
-    assert f["order_status"] == "filled" and not f["late"] and T(f["decision_time"]) < T(f["price_time"]) <= T(f["execution_time"]) == T(f["fill_recorded_at"])
+    assert f["order_status"] == "filled_estimated" and f["estimated"] and not f["late"] and T(f["decision_time"]) < T(f["price_time"]) <= T(f["execution_time"]) == T(f["fill_recorded_at"])   # 无实时报价 → 明确标记 estimated
     assert "bar_open" not in f                                                                   # 前瞻不使用任何 K 线开盘价
     assert audit_timeline(tmp_path / "fw" / "logs")["ok"]
 
@@ -55,7 +55,7 @@ def test_delayed_polling_marks_late_and_uses_latest_close_not_old_open(tmp_path)
     r.run_once(now=T("2024-08-01 05:00")); r.run_once(now=T("2024-08-02 00:30"))                 # exec_after 01:00
     out = r.run_once(now=T("2024-08-02 02:30")); f = out["accounts"]["A_BTC_SMA200"]["fills"][0]  # 引擎 02:30 才处理
     bar01 = bars["BTCUSDT"]["1h"].set_index("ts").loc[T("2024-08-02 01:00")]
-    assert f["late"] and f["order_status"] == "filled_late" and f["execution_time"] == "2024-08-02 02:30:00+00:00" and f["price_time"] == "2024-08-02 02:00:00+00:00"
+    assert f["late"] and f["order_status"] == "filled_late_estimated" and f["execution_time"] == "2024-08-02 02:30:00+00:00" and f["price_time"] == "2024-08-02 02:00:00+00:00"
     assert abs(f["reference_price"] - float(bar01["close"])) < 1e-9 and abs(f["reference_price"] - float(bar01["open"])) > 1e-9      # 用 02:00 可观察收盘价，不是 01:00 开盘价
     assert audit_timeline(tmp_path / "fw" / "logs")["ok"]
 
