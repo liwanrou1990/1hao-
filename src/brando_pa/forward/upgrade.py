@@ -244,12 +244,25 @@ def run_upgrade(repo: Path, branch: str, worktree_src: Path | None = None, use_l
         b = backup(repo, fdir, [p for p in extra if p.exists()], repo / "backups"); step("backup", **b)
     except Exception as e:  # noqa: BLE001
         return finish(False, f"备份失败：{e}")
+    # dry-run：只演练，不停止服务、不改代码、不装依赖、不写账户
+    if dry_run:
+        step("service_state", lock_free=lock_is_free(lock), processes=service_processes(), note="dry-run 不停止服务")
+        try:
+            _run(["git", "fetch", "origin", branch], cwd=repo)
+        except Exception as e:  # noqa: BLE001
+            return finish(False, f"git fetch 失败：{e}")
+        mods = classify_modified(repo); step("local_modifications", **mods)
+        ffok = ff_possible(repo, remote); step("git_refs", old_head=_run(["git", "rev-parse", "HEAD"], cwd=repo).stdout.strip(), new_head=_run(["git", "rev-parse", remote], cwd=repo).stdout.strip(), fast_forward_possible=ffok)
+        if worktree_src:
+            env = dict(os.environ, PYTHONPATH=str(worktree_src)); r = subprocess.run([python, "-m", "brando_pa.cli", "forward-timeline-audit", "--log-dir", str(fdir)], cwd=str(repo), env=env, capture_output=True, text=True)
+            step("timeline_audit_new_version", returncode=r.returncode, tail=r.stdout[-200:])
+        after = snapshot(fdir, repo / "data_store" / "brando_pa" / "forward_data_status.json"); diffs = compare_snapshots(before, after); step("verify_unchanged", diffs=diffs)
+        problems = [] + ([f"本地修改的非数据文件 {mods['other'][:5]}"] if mods["other"] else []) + ([] if ffok else ["不能 fast-forward"]) + ([] if not diffs else [f"演练期间账户数据发生变化 {diffs[:3]}"])
+        return finish(not problems, "dry-run 通过：备份已校验、服务未停止、代码未改动、账户数据不变；可执行正式升级" if not problems else "dry-run 发现问题：" + "；".join(problems))
     # 3 停止服务
     s = stop_service(lock, use_launchd); step("stop_service", **s)
     if not s["stopped"]:
         return finish(False, "无法确认服务已停止（锁仍被持有或进程仍在），中止升级")
-    if dry_run:
-        restart_old(); return finish(True, "dry-run：备份与停止/恢复流程已验证，未改动代码")
     # 4 Git 预检
     try:
         _run(["git", "fetch", "origin", branch], cwd=repo)

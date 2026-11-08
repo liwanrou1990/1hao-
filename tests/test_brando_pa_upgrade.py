@@ -144,12 +144,12 @@ def test_bootstrap_from_tmp_resolves_repo_and_dry_run_then_real_upgrade(tmp_path
     # 1) 从 /tmp 运行、cwd 也在 /tmp、无 BRANDO_REPO、~/1hao- 不存在 → 明确报错，不触碰服务
     env_nohome = dict(env, HOME=str(tmp_path / "nohome")); (tmp_path / "nohome").mkdir()
     r = subprocess.run(["bash", str(script_copy), "main", "--dry-run"], cwd=str(script_copy.parent), env=env_nohome, capture_output=True, text=True)
-    assert r.returncode == 1 and "找不到 brando_pa 仓库" in r.stdout and "not a git repository" not in (r.stdout + r.stderr)
+    assert r.returncode == 1 and "repository not found" in r.stdout and "not a git repository" not in (r.stdout + r.stderr)
     # 2) cwd = 仓库（含空格路径）→ dry-run：备份 + 停/恢复流程验证，不改代码
     fdir = work / "reports_out" / "brando_pa" / "phase8_forward"; before = U.snapshot(fdir); head0 = _git(work, "rev-parse", "HEAD")
     r = subprocess.run(["bash", str(script_copy), "main", "--dry-run"], cwd=str(work), env=env, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "仓库目录：" in r.stdout and "dry-run" in r.stdout and _git(work, "rev-parse", "HEAD") == head0 and not U.compare_snapshots(before, U.snapshot(fdir)) and list((work / "backups").glob("*.tgz"))
+    assert "repo: " in r.stdout and "dry-run" in r.stdout and _git(work, "rev-parse", "HEAD") == head0 and not U.compare_snapshots(before, U.snapshot(fdir)) and list((work / "backups").glob("*.tgz"))
     # 3) BRANDO_REPO 显式指定、cwd 在 /tmp → 正式升级到 origin 的新提交（数据文件保存/放回）
     _push_v2(tmp_path / "my repo dir", origin)
     (work / "data_store" / "brando_pa" / "forward_bars" / "tracked.parquet").write_bytes(b"local bars")
@@ -161,3 +161,35 @@ def test_bootstrap_from_tmp_resolves_repo_and_dry_run_then_real_upgrade(tmp_path
     p = fdir / "A_BTC_SMA200" / "events.jsonl"; lines = p.read_text().splitlines(); rec = json.loads(lines[1]); rec["kind"] = "zz"; lines[1] = json.dumps(rec, ensure_ascii=False); p.write_text("\n".join(lines) + "\n")
     r = subprocess.run(["bash", str(script_copy), "main"], cwd=str(work), env=env, capture_output=True, text=True)
     assert r.returncode == 1 and "事件链" in r.stdout
+
+
+MAC_SCRIPTS = ["scripts/brando_pa_safe_upgrade.sh", "scripts/brando_pa_forward_ctl.sh", "deploy/install_mac_brando_pa.sh", "deploy/uninstall_mac_brando_pa.sh"]
+
+
+def test_mac_scripts_have_no_variable_followed_by_non_ascii():
+    """真实报错回归：macOS bash 3.2 把 "$REPO（" 解析成变量 REPO+多字节首字节 → 'REPO?: unbound variable'。规则：$IDENT 后不得紧跟非 ASCII 字节。"""
+    import re
+    root = Path(__file__).resolve().parents[1]; bad = []
+    for f in MAC_SCRIPTS:
+        for i, line in enumerate((root / f).read_text(encoding="utf-8").splitlines(), 1):
+            if re.search(r"\$[A-Za-z_][A-Za-z0-9_]*[^\x00-\x7F]", line):
+                bad.append(f"{f}:{i}")
+    assert not bad, bad
+    assert "set -u" in (root / "scripts" / "brando_pa_safe_upgrade.sh").read_text()           # 不靠关闭 set -u 掩盖
+
+
+def test_bootstrap_dry_run_is_non_intrusive_and_tolerates_pasted_quotes(tmp_path):
+    """演练：不停服务（锁被持有仍通过）、不改 HEAD、账户快照不变；BRANDO_REPO 带智能引号、参数用长破折号、LC_ALL=C 都能工作。"""
+    import shutil, fcntl
+    origin, work = _make_repo_with_package(tmp_path)
+    script_copy = Path(tempfile.mkdtemp(prefix="brando tmp ")) / "brando_safe_upgrade.sh"; shutil.copy2(work / "scripts" / "brando_pa_safe_upgrade.sh", script_copy)
+    fdir = work / "reports_out" / "brando_pa" / "phase8_forward"; before = U.snapshot(fdir); head0 = _git(work, "rev-parse", "HEAD")
+    lock = fdir / "service.lock"; fh = open(lock, "a+"); fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)        # 模拟服务正在运行
+    env = dict(os.environ, BRANDO_NO_LAUNCHD="1", BRANDO_SKIP_PIP="1", BRANDO_PY=sys.executable, LC_ALL="C", BRANDO_REPO="”" + str(work) + "”")
+    r = subprocess.run(["bash", str(script_copy), "main", "–dry-run"], cwd=str(script_copy.parent), env=env, capture_output=True, text=True)
+    fcntl.flock(fh, fcntl.LOCK_UN); fh.close()
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "unbound variable" not in r.stderr and "mode: --dry-run" in r.stdout and "dry-run 通过" in r.stdout
+    rep = json.loads(sorted(fdir.glob("upgrade_report_*.json"))[-1].read_text())
+    assert rep["steps"]["service_state"]["lock_free"] is False and "stop_service" not in rep["steps"] and "fast_forward" not in rep["steps"]      # 未停服务、未切换代码
+    assert _git(work, "rev-parse", "HEAD") == head0 and not U.compare_snapshots(before, U.snapshot(fdir)) and list((work / "backups").glob("*.tgz"))

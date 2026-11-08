@@ -147,3 +147,8 @@
 # 安全升级引导脚本修复（2026-11-08）
 
 根因：`scripts/brando_pa_safe_upgrade.sh` 以 `dirname "$0"/..` 作为仓库目录，从 /tmp 运行副本时解析为 `/`，Git 命令报 `not a git repository`（服务未动，无数据影响）。修复：仓库目录按 `BRANDO_REPO` → 脚本所在仓库（且含 config/brando_pa.yaml）→ 当前目录 → `~/1hao-` 解析；全部路径加引号兼容空格；升级器 `--repo` 自动取 Git 顶层；新增回归测试（从临时目录运行、含空格路径、演练 → 正式升级 → 审计失败不启动）。
+
+
+# 引导脚本第二次修复（2026-11-08）
+
+根因：macOS bash 3.2 把 `$REPO（HEAD` 解析为变量 `REPO`+多字节首字节（显示为 `REPO?`），在 `set -u` 下报 unbound variable。修复：变量一律 `${VAR}` 且不紧跟非 ASCII；脚本输出 ASCII；`BRANDO_REPO` 去除粘贴的引号与 `~` 展开；`--dry-run` 改为完全不侵入（不停服务、不改代码）；静态扫描回归测试 + 带智能引号/长破折号/LC_ALL=C 的演练测试。

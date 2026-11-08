@@ -8,7 +8,9 @@ git show origin/claude/brando-pa-phase9-deploy:scripts/brando_pa_safe_upgrade.sh
 BRANDO_REPO="$HOME/1hao-" bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy --dry-run   # 演练：快照 → 完整备份 + 校验 → 安全停服务 → 恢复服务；不改代码
 BRANDO_REPO="$HOME/1hao-" bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy             # 正式升级
 ```
-（2026-11-08 修复：旧版引导脚本用 `dirname "$0"/..` 推断仓库，从 /tmp 运行时会得到 `fatal: not a git repository`；现已改为显式解析，并有回归测试。）
+（修复记录：① 旧版引导脚本用 `dirname "$0"/..` 推断仓库，从 /tmp 运行时得到 `fatal: not a git repository`；② macOS 自带 bash 3.2 把 `$REPO（` 解析成变量名 `REPO`+多字节首字节 → `REPO?: unbound variable`。现在：仓库目录显式解析；脚本内变量一律写 `${VAR}` 且不紧跟非 ASCII 字符，输出改为 ASCII；`BRANDO_REPO` 两侧若被粘贴成智能引号会自动去掉；`--dry-run` 允许长破折号；回归测试覆盖以上两次真实报错。）
+
+`--dry-run` 的实际行为：快照 → 完整备份并校验 → 记录服务/锁状态（**不停止服务**）→ git fetch → 本地修改分类与 fast-forward 可行性 → 新版本只读时间顺序审计 → 复核账户快照不变 → 输出结论。**不改代码、不装依赖、不写账户、不停服务**。只有演练输出 "dry-run 通过" 且账户数据一致，才执行正式升级。
 以后：`bash scripts/brando_pa_forward_ctl.sh upgrade`（同一引导脚本）。
 
 升级器（`src/brando_pa/forward/upgrade.py`，由新版本代码在临时 worktree 中执行）保证：
