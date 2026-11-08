@@ -7,12 +7,20 @@ cd "$(dirname "$0")/.."; ROOT="$(pwd)"; LABEL="com.brando-pa.forward"; LA="$HOME
 if [ "$(uname -s)" != "Darwin" ]; then echo "此脚本只在 macOS 上运行（当前 $(uname -s)）"; exit 1; fi
 [ -d .venv ] || python3 -m venv .venv
 .venv/bin/pip install -q --upgrade pip
-.venv/bin/pip install -q -r requirements.txt pyarrow duckdb httpx pyyaml streamlit plotly pytest
+.venv/bin/pip install -q -r deploy/requirements-forward.txt     # 最小依赖；完整研究环境另行 pip install -r requirements.txt
 mkdir -p "$HOME/.config/brando_pa" reports_out/brando_pa/phase8_forward data_store/brando_pa/forward_bars
 [ -f "$HOME/.config/brando_pa/env" ] || { cp deploy/.env.example "$HOME/.config/brando_pa/env"; chmod 600 "$HOME/.config/brando_pa/env"; }
 WEBHOOK="$(grep -E '^BRANDO_ALERT_WEBHOOK=' "$HOME/.config/brando_pa/env" | cut -d= -f2- || true)"
 # 真实交易硬性禁用：拒绝在配置里出现 live_trading: true
 if grep -Eq '^\s*live_trading:\s*true' config/brando_pa.yaml; then echo "config/brando_pa.yaml 含 live_trading: true，拒绝安装"; exit 1; fi
+# 0) 恢复已有前瞻记录（只在本机还没有账户状态时，从仓库内的审计副本恢复；绝不覆盖已有记录）
+RESTORE_SRC="docs/brando_pa_validation/phase9_forward/forward_logs"; DST="reports_out/brando_pa/phase8_forward"
+if [ ! -f "$DST/A_BTC_SMA200/state.json" ] && [ -f "$RESTORE_SRC/A_BTC_SMA200/state.json" ]; then
+  echo "0) 本机无账户状态，从 $RESTORE_SRC 恢复前瞻记录（事件链、状态、日报）..."; cp -Rn "$RESTORE_SRC"/. "$DST"/
+  PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-status | head -c 300; echo
+elif [ -f "$DST/A_BTC_SMA200/state.json" ]; then
+  echo "0) 检测到本机已有前瞻记录，保留不动（事件 $(wc -l < "$DST/A_BTC_SMA200/events.jsonl") 条）"
+fi
 echo "1) 行情与账户完整性检查（只读）..."
 PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-data | head -c 600; echo
 PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-status | head -c 400; echo

@@ -1,3 +1,19 @@
+# Mac 最简部署步骤（在持续在线的 Mac 终端执行）
+
+```bash
+# 1. 克隆（或已有仓库则拉取）并切到部署分支
+git clone https://github.com/liwanrou1990/1hao- && cd 1hao-
+git checkout claude/brando-pa-phase9-deploy          # 当前应为提交 fb1c577 之后的最新提交
+# 2. 安装：venv + 最小依赖（deploy/requirements-forward.txt）+ 恢复仓库内的前瞻记录副本（只在本机无记录时，cp -n 不覆盖）+ 行情/账户检查 + launchd 常驻 + 首轮验证
+bash deploy/install_mac_brando_pa.sh
+# 3. 检查
+bash scripts/brando_pa_forward_ctl.sh status     # launchd 状态 + 三账户 + 哈希链
+bash scripts/brando_pa_forward_ctl.sh health     # 退出码 0 = 健康
+bash scripts/brando_pa_forward_ctl.sh logs 50    # 服务日志 / 告警
+bash scripts/brando_pa_forward_ctl.sh acceptance # 72 小时真实时间验收（起点 = 首次运行）
+```
+前提：macOS 可访问 www.okx.com（K 线 + ticker）与 api.exchange.coinbase.com；`python3` 为 3.11+；不要让 Mac 睡眠（`sudo pmset -a sleep 0` 或 `caffeinate -s`）。真实下单无实现、禁用（安装脚本检测到 `live_trading: true` 会拒绝安装）。
+
 # Mac 运行手册（brando_pa 前瞻服务 · launchd）
 
 > 本文件由 Claude 云容器生成；**云容器不是 Mac，没有也不可能在你的 Mac 上执行安装**。以下脚本已提交到 Git，需你在持续在线的 Mac 上执行。
