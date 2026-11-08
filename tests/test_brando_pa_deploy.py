@@ -70,7 +70,7 @@ def test_acceptance_requires_72_real_hours(tmp_path):
     bars = _synth(); svc, _ = _service(tmp_path, bars, None, [], clock=_Clock("2024-08-01 05:00")); svc.feed.sources = []
     for k in range(12):
         svc.clock.t = pd.Timestamp("2024-08-01 05:00", tz="UTC") + pd.Timedelta(minutes=10 * k); svc.cycle()
-    st = acceptance_status(tmp_path / "svc" / "fw", 600, now=svc.clock.t)
-    assert st["status"] == "进行中" and st["cycles_observed"] == 12 and "不得宣称" in st["verdict_note"] and (tmp_path / "svc" / "fw" / "acceptance_status.md").exists()
-    st2 = acceptance_status(tmp_path / "svc" / "fw", 600, now=svc.clock.t + pd.Timedelta(hours=80))
-    assert st2["status"] == "未通过" and st2["coverage"] < 0.5                                     # 真实时间过去 80h 但只有 2h 心跳 → 未通过，不会因模拟而通过
+    st = acceptance_status(tmp_path / "svc" / "fw", 600, now=svc.clock.t, cloud_hosts=())            # 测试主机视为本地段
+    loc = st["segments"]["local"]; assert st["status"] == "进行中" and loc["cycles_observed"] == 12 and "不得宣称" in loc["verdict_note"] and (tmp_path / "svc" / "fw" / "acceptance_status.md").exists()
+    st2 = acceptance_status(tmp_path / "svc" / "fw", 600, now=svc.clock.t + pd.Timedelta(hours=80), cloud_hosts=())
+    assert st2["status"] == "未通过" and st2["segments"]["local"]["coverage"] < 0.5                   # 真实时间过去 80h 但只有 2h 心跳 → 未通过，不会因模拟而通过
