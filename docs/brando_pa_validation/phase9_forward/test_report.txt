@@ -1,3 +1,5 @@
-阶段性记录 (2026-11-08T05:15Z, Claude 云容器)
-前瞻相关 5 个测试文件（causality/timeline/forward/service/deploy）：23 passed, 0 failed
-全套 tests/test_brando_pa_*.py 正在运行，结果将在后续提交中更新（预期 71 + 7 = 78）
+pytest tests/test_brando_pa_*.py -q  (2026-11-08T05:24Z, Claude 云容器)
+........................................................................ [ 92%]
+......                                                                   [100%]
+exit=0
+78 passed, 0 failed/error = 原有 71 + 因果顺序测试 7（test_brando_pa_causality.py）
