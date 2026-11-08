@@ -1,1 +1,5 @@
-第一次全套运行 (2026-11-08T13:15Z, Claude 云容器)：86 passed, 1 failed（test_brando_pa_deploy.py::test_acceptance_requires_72_real_hours —— 该测试使用旧的未分段 API，已改为按分段读取；修正后 deploy + acceptance_report 两文件 10 passed）；全套复跑结果见下一次提交。
+pytest tests/test_brando_pa_*.py -q  (2026-11-08T13:28Z, Claude 云容器, 全套复跑)
+........................................................................ [ 82%]
+...............                                                          [100%]
+exit=0
+87 passed, 0 failed, 0 skipped = 原有 82 + 验收/报告测试 5

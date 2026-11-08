@@ -13,13 +13,16 @@ case "${1:-status}" in
   logs)    tail -n "${2:-50}" "$D/service.log"; echo "--- alerts"; tail -n 10 "$D/alerts.jsonl" 2>/dev/null || true; echo "--- launchd"; tail -n 10 "$D/launchd.err.log" 2>/dev/null || true ;;
   report)  "$PY" -m brando_pa.cli forward-leaderboard; echo; "$PY" -m brando_pa.cli forward-daily-report ${2:+--date "$2"} > /dev/null && cat "$D/daily/$(ls "$D/daily" | grep '\.md$' | tail -1)"; echo; echo "完整 JSON：$D/leaderboard.json、$D/daily/*.json" ;;
   acceptance) "$PY" -m brando_pa.cli forward-acceptance ${2:+--local-start "$2"} ;;
-  backup)  TS=$(date -u +%Y%m%dT%H%M%SZ); mkdir -p backups && tar -czf "backups/phase8_forward_$TS.tgz" "$D" data_store/brando_pa/forward_data_status.json data_store/brando_pa/forward_bars 2>/dev/null; echo "备份：backups/phase8_forward_$TS.tgz" ;;
-  upgrade) # 安全升级：备份 → 停止服务（释放单实例锁）→ 拉取代码 → 依赖 → 只读检查 → 重新启动。不删除、不重置任何账户状态与日志。
-           "$0" backup; launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true; sleep 3
-           if [ -f "$D/service.lock" ] && command -v flock >/dev/null 2>&1; then :; fi
-           pgrep -f "brando_pa.cli forward-service" >/dev/null && { echo "仍有 forward-service 进程在运行，拒绝升级"; exit 1; }
-           git pull --ff-only && "$PY" -m pip install -q -r deploy/requirements-forward.txt
-           "$PY" -m brando_pa.cli forward-timeline-audit >/dev/null && echo "时间顺序审计通过" || echo "警告：时间顺序审计未通过，请检查 $D/timeline_audit.md"
-           launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$LABEL.plist" 2>/dev/null || true; launchctl kickstart "gui/$(id -u)/$LABEL"; sleep 15; "$PY" -m brando_pa.cli forward-health | head -c 600; echo ;;
-  *) echo "用法：$0 {start|stop|restart|status|health|logs [n]|report [YYYY-MM-DD]|acceptance [local_start_utc]|backup|upgrade}"; exit 2 ;;
+  backup)  "$PY" - <<'PYB'
+import sys; sys.path.insert(0, "src")
+from pathlib import Path
+from brando_pa.forward.upgrade import backup, LABEL
+repo = Path(".").resolve(); fdir = repo / "reports_out/brando_pa/phase8_forward"
+extra = [repo / "data_store/brando_pa/forward_bars", repo / "data_store/brando_pa/forward_data_status.json", repo / "data_store/brando_pa/data_events.jsonl", repo / "config/brando_pa.yaml", Path.home() / ".config/brando_pa/env", Path.home() / "Library/LaunchAgents" / f"{LABEL}.plist"]
+print(backup(repo, fdir, [p for p in extra if p.exists()], repo / "backups"))
+PYB
+           ;;
+  upgrade) bash scripts/brando_pa_safe_upgrade.sh "${2:-claude/brando-pa-phase9-deploy}" ;;      # 安全升级：见 scripts/brando_pa_safe_upgrade.sh（新版本升级器执行，备份校验/安全停服/预检/ff/核对/启动）
+  upgrade-dry-run) bash scripts/brando_pa_safe_upgrade.sh "${2:-claude/brando-pa-phase9-deploy}" --dry-run ;;
+  *) echo "用法：$0 {start|stop|restart|status|health|logs [n]|report [YYYY-MM-DD]|acceptance [local_start_utc]|backup|upgrade [branch]|upgrade-dry-run}"; exit 2 ;;
 esac

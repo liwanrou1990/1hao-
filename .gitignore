@@ -22,3 +22,10 @@ iphone-farm/reports_out/
 iphone-farm/.venv/
 data_store/brando_pa/raw_cache/
 data_store/brando_pa/.paper.lock
+
+# brando_pa 前瞻运行时数据（每台主机自有，不入库，升级时由升级器保存/放回）
+data_store/brando_pa/forward_bars/
+data_store/brando_pa/forward_data_status.json
+data_store/brando_pa/data_events.jsonl
+backups/
+.upgrade_worktree/

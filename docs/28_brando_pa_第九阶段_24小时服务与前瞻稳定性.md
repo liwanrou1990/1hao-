@@ -137,3 +137,8 @@
 - 日线语义：`last_daily_ts` 为最后已处理日线开盘（UTC 日期），`2026-11-07 00:00` 即 11-08 00:00 收盘已处理；下一次 11-09 00:00。审计 T8：无重复、无遗漏。
 - 报告：`forward-leaderboard`（含成本清仓净利润降序；权益、清仓余额、已实现、未实现、最大回撤、BTC/ETH/USDT 比例），服务每轮写 `leaderboard.json/.md`；`ctl report` 不再截断 JSON。
 - 运维：`ctl backup` / `ctl upgrade`（备份 → 停服务 → 拉取 → 依赖 → 审计 → 启动），禁止双实例。
+
+
+# 安全升级机制（2026-11-08）
+
+`src/brando_pa/forward/upgrade.py` + `scripts/brando_pa_safe_upgrade.sh`：完整备份与 SHA256 校验、安全停服务（锁 + 进程）、仅 fast-forward、数据文件保存/放回、代码修改中止、依赖与新版审计前置、失败恢复旧版本、升级后快照逐项核对、live_trading 守卫；forward_bars / forward_data_status / data_events 改为不入库（每台主机自有）。测试 `tests/test_brando_pa_upgrade.py`。

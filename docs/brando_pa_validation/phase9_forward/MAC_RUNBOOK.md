@@ -1,13 +1,25 @@
-# Mac 安全更新步骤（已在运行的 Mac：不删除、不重置账户与日志；不会同时运行两个实例）
+# Mac 安全更新步骤（已在运行的 Mac；不删除、不重置账户与日志；绝不 reset / clean / 强制覆盖；不会双实例）
 
+一次性引导（当前 Mac 检出还是旧版本，先只取新版本的升级引导脚本）：
 ```bash
 cd ~/1hao-
-bash scripts/brando_pa_forward_ctl.sh upgrade     # 备份 → 停止 launchd 服务（释放 service.lock）→ git pull --ff-only → 最小依赖 → 时间顺序审计 → 重新启动 → 健康检查
-bash scripts/brando_pa_forward_ctl.sh status
-bash scripts/brando_pa_forward_ctl.sh report      # 三账户排行榜 + 当日日报（完整 JSON 在 reports_out/brando_pa/phase8_forward/leaderboard.json、daily/）
-bash scripts/brando_pa_forward_ctl.sh acceptance  # 云端历史段 / 本地段 / 全部；本地段起点 = Mac 首次运行（可显式：acceptance "2026-11-08 12:23:00"）
+git fetch origin claude/brando-pa-phase9-deploy
+git show origin/claude/brando-pa-phase9-deploy:scripts/brando_pa_safe_upgrade.sh > /tmp/brando_safe_upgrade.sh
+bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy --dry-run   # 只做：快照 → 完整备份 + 校验 → 安全停服务 → 恢复服务；不改代码
+bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy             # 正式升级
 ```
-手动等价步骤：`backup` → `stop`（launchctl bootout）→ 确认 `pgrep -f "brando_pa.cli forward-service"` 为空 → `git pull --ff-only` → `pip install -r deploy/requirements-forward.txt` → `start`。备份文件在 `backups/phase8_forward_<UTC>.tgz`。
+以后：`bash scripts/brando_pa_forward_ctl.sh upgrade`（同一引导脚本）。
+
+升级器（`src/brando_pa/forward/upgrade.py`，由新版本代码在临时 worktree 中执行）保证：
+1. 备份 `backups/brando_pa_forward_backup_<UTC>.tgz` + `.manifest.json`（SHA256）：三账户 state.json / events.jsonl / corrections.jsonl、日报、排行榜、心跳、告警、service.log、runner_events、forward_bars 行情仓、forward_data_status.json、data_events.jsonl、config/brando_pa.yaml、~/.config/brando_pa/env、launchd plist；备份后解包逐文件比对哈希，失败即禁止升级。
+2. 停服务：`launchctl bootout` 后等待 `service.lock` 可获取且无 `forward-service` 进程（最多 90 s），否则中止。
+3. Git：只允许 fast-forward；本地修改的被跟踪**数据文件**（data_store/**、reports_out/**）先原样保存、合并后字节级放回并校验；本地修改的**代码**文件 → 中止不覆盖；本地有未推送提交 → 中止。
+4. 依赖安装与**新版本**时间顺序审计在切换代码之前完成；失败 → 恢复旧版本服务并报告原因；审计不通过不启动新版本。
+5. 升级后核对：每个账户现金、各批次持仓数量、挂单数、已处理订单数、last_daily_ts、forward_start、事件链条数与末尾哈希、纠错链、runner_events 链全部相同；任一不同 → 不启动，提示用备份核对。
+6. 真实交易：config `live_trading: true` 时拒绝升级；升级器不触碰任何策略参数。
+每一步写入 `reports_out/brando_pa/phase8_forward/upgrade_log.jsonl` 与 `upgrade_report_<UTC>.json`。
+
+macOS 兼容性：锁用 `fcntl.flock`（macOS 原生支持；同一目录第二个实例立即退出）；哈希用 Python `hashlib`（不依赖 sha256sum）；进程检查用 `pgrep -f`；服务管理用 `launchctl bootout/bootstrap/kickstart`；`KeepAlive` 在升级期间因 bootout 而不会重启进程。
 
 # Mac 最简部署步骤（首次安装，在持续在线的 Mac 终端执行）
 
