@@ -105,7 +105,7 @@ bash scripts/brando_pa_forward_ctl.sh audit "2026-11-08 12:23:00"
 ## 9. 测试与提交
 
 - 测试命令：`pytest tests/test_brando_pa_*.py -q`；结果见 `docs/brando_pa_validation/phase9_forward/test_report.txt`（本次：原 106 + Mac 一键检查 1 = 107，通过 / 失败 / 跳过 数见该文件）。**测试通过不代表 72 小时验收通过**；验收只能由 Mac 本地段真实时间决定。
-- 最新提交哈希：见 `git log --oneline -1`（本报告提交时写入 README 与 test_report.txt）。
+- 最新提交哈希：`c19938e`（本报告随该提交推送；测试 107 passed / 0 failed / 0 skipped）。
 
 ## 10. 系统健康与下一阶段建议
 
