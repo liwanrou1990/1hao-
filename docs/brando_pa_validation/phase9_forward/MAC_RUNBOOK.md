@@ -72,6 +72,12 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - 任何开盘不晚于决策时刻的 K 线绝不成交（cancelled_invalid）；执行 K 线收盘后超过宽限期仍未记账（服务离线）→ order_expired；收盘后超过宽限期才首次处理的日线 → missed_signal。
 - 审计：`PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-timeline-audit`（退出码 0/1）；纠错需先停止服务：`... forward-timeline-audit --repair`，只写 corrections.jsonl 与 order_cancelled 事件，不改原始记录。
 
+## Mac 一键只读检查（2026-11-08 新增）
+```bash
+BRANDO_REPO="$HOME/1hao-" BRANDO_LOCAL_START="2026-11-08 12:23:00" bash scripts/brando_pa_mac_check.sh   # 或从 /tmp 运行 origin 上的副本
+```
+环境识别 → Git 版本 / 是否已应用 22d58c3、f2141f8 → 真实交易守卫 → launchd / 进程 / pmset → health / status / logs / report / acceptance → 费用与净值只读审计（本机代码缺审计工具时自动用 origin 代码的临时工作树，不切换本机代码）→ `reports_out/brando_pa/mac_check/mac_check_<UTC>.md`。不停服务、不改 HEAD、不改账户文件。
+
 ## 排行榜 / 日报口径（2026-11-08 F1/F3）
 `bash scripts/brando_pa_forward_ctl.sh report` 输出：当前账面权益、当前账面利润、预计清仓余额、预计清仓净利润（排名依据）、已实现、未实现；成本明细（买入手续费、买入滑点、卖出手续费估计、卖出滑点估计、当前持仓成本、交易成本合计）；对账行（本金 + 已实现 + 未实现 − 买入手续费 = 账面权益；账面权益 − 清仓估计成本 = 预计清仓余额）。清仓成本是“假设此刻全部卖出”的估计，尚未发生；买入成本已在成交时扣一次，不重复。
 

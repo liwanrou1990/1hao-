@@ -29,3 +29,5 @@ data_store/brando_pa/forward_data_status.json
 data_store/brando_pa/data_events.jsonl
 backups/
 .upgrade_worktree/
+.mac_check_worktree/
+reports_out/brando_pa/mac_check/
