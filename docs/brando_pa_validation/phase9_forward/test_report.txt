@@ -1,3 +1,5 @@
-阶段性记录 (2026-11-08T06:03Z, Claude 云容器)
-前瞻相关 6 个测试文件（quotes/causality/timeline/forward/service/deploy）：27 passed, 0 failed
-全套 tests/test_brando_pa_*.py 正在运行，结果将在后续提交中更新（预期 78 + 4 = 82）
+pytest tests/test_brando_pa_*.py -q  (2026-11-08T06:13Z, Claude 云容器)
+........................................................................ [ 87%]
+..........                                                               [100%]
+exit=0
+82 passed, 0 failed/error = 原有 78 + 报价精度测试 4（test_brando_pa_quotes.py）
