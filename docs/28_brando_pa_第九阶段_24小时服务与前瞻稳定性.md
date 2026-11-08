@@ -70,3 +70,45 @@
 - 前瞻账户运行报告：`forward_logs/`（事件链、状态、心跳、日报、服务日志）。
 - 看板：`dashboard_three_accounts.png`。
 - **必须在何种主机启动**：持续在线、可访问任一交易所公开行情、NTP 对时的 Mac/Linux/VPS；用上述配置启动后，用 `forward-health` 与 `health.json` 心跳监控。云容器内的一次成功运行不代表 24 小时运行成功。
+
+
+---
+
+# 部署验收补充（2026-11-08，Claude 云容器内执行；**Mac 上尚未安装**）
+
+## 1. 环境判定
+- 当前执行环境：Linux 云容器（`uname` = Linux vm 6.18），**不是你的 Mac**。因此本轮只生成并提交 Mac 可执行安装脚本与操作步骤（`deploy/install_mac_brando_pa.sh`、`deploy/uninstall_mac_brando_pa.sh`、`scripts/brando_pa_forward_ctl.sh`、`MAC_RUNBOOK.md`），**没有、也不可能在 Mac 上完成安装**。仓库内原有 `deploy/install_mac.sh` 等属于 spot90 项目（标签 com.spot90.*），与本服务（com.brando-pa.forward）互不影响。
+- Git：分支 `claude/brando-pa-phase9-deploy`，起点 bcb6645 与 origin 一致；本轮新增提交见 Git 日志。
+
+## 2. 2026-11-08 00:00 UTC 日线的处理（只读检查 → 单轮运行）
+- 只读检查（03:22 UTC）：三账户 `last_daily_ts = None`，服务最后一轮为 11-07 18:17，**该日线尚未被处理**，没有任何追补成交。
+- 随后执行一轮 `forward-service --once`（03:26 UTC，含启动完整性检查）：日线收盘 00:00 距处理时刻 3 h 27 min，在宽限期（1 h 执行 K 线 + 3 h）内 → 按规则记为**实时但迟到（late）**信号：BTC 日线收盘 75868.0 > SMA200 73,240.19、ETH 2,240.10 > 2,157.24，三账户均为 BUY；订单 `exec_after = 03:00`（在**当前**正在形成的 03:00 1h K 线收盘后按其开盘价成交，**不回填 00:00 的价格**）；若 04:00–07:00 之间没有任何一轮运行（云容器不常驻），这些挂单将在下一轮被标记 `order_expired`、不成交，由下一次实时日线收盘重新决策。
+
+| 账户 | 事件 | 信号 | 目标权重 | 订单（账本, 标的, 方向, USDT, exec_after, late） |
+|---|---|---|---|---|
+| A_BTC_SMA200 | signal | BUY | {'BTCUSDT': 1.0, 'ETHUSDT': 0.0, 'USDT': 0.0} | [('ideal', 'BTCUSDT', 'BUY', 9990, '2026-11-08 03:00:00+00:00', True), ('cost', 'BTCUSDT', 'BUY', 9990, '2026-11-08 03:00:00+00:00', True)] |
+| B_modelB_state_machine | signal | BUY | {'BTCUSDT': 0.5, 'ETHUSDT': 0.5, 'USDT': 0.0} | [('ideal', 'BTCUSDT', 'BUY', 4995, '2026-11-08 03:00:00+00:00', True), ('ideal', 'ETHUSDT', 'BUY', 4995, '2026-11-08 03:00:00+00:00', True), ('cost', 'BTCUSDT', 'BUY', 4995, '2026-11-08 03:00:00+00:00', True), ('cost', 'ETHUSDT', 'BUY', 4995, '2026-11-08 03:00:00+00:00', True)] |
+| REF_ETH_SMA200 | signal | BUY | {'BTCUSDT': 0.0, 'ETHUSDT': 1.0, 'USDT': 0.0} | [('ideal', 'ETHUSDT', 'BUY', 9990, '2026-11-08 03:00:00+00:00', True), ('cost', 'ETHUSDT', 'BUY', 9990, '2026-11-08 03:00:00+00:00', True)] |
+
+启动完整性检查 `startup_check.json`：ok = True，哈希链全部通过，三账户状态可载入、无负现金，与 OKX 服务器时钟偏差 0.08 s。
+
+## 3. 行情来源配置与跨来源审计（§4）
+- 配置 `forward.source_priority = [okx_spot, coinbase_exchange, binance_spot, bybit_spot, static_klines_mirror]`：OKX 主、Coinbase 备；Binance（451 地区限制）与 Bybit（CloudFront 封锁）保留为合法来源但不绕过限制；GitHub 镜像为最后回退。
+- 实时审计 `cross_source_audit_1h.json` / `_1d.json`（2026-11-08 03:25 UTC，48 h 1h 与 30 日 1d）：OKX BTC-USDT / ETH-USDT 47 根已收盘 1h、无重复、无缺口、整点对齐、OHLC 一致、滞后 0.43 h；Coinbase 45/46 根（BTC-USDT 低流动性小时有 1–2 个空缺 K 线，已记录）；镜像滞后 17 h。两两收盘价最大偏差（%）：{'coinbase_exchange vs okx_spot BTCUSDT': 0.228, 'coinbase_exchange vs okx_spot ETHUSDT': 0.179, 'coinbase_exchange vs static_klines_mirror BTCUSDT': 0.227, 'coinbase_exchange vs static_klines_mirror ETHUSDT': 0.118, 'okx_spot vs static_klines_mirror BTCUSDT': 0.016, 'okx_spot vs static_klines_mirror ETHUSDT': 0.013}；1d 全部 < 0.13%。全部低于 0.5% 门控。
+- 当前 `forward_data_status.json`：来源 okx_spot，最后成功 2026-11-08 03:26:52，1h 最新收盘 2026-11-08 03:00，1h→1d 一致性 {'checked_days': 10, 'max_rel_err': 5.5373759693665634e-05, 'ok': True}，质量异常 False。
+
+## 4. 新增保护（§5、§6、§10）
+- 单实例锁 `service.lock`（flock）：同一目录第二个实例立即退出（含 `--once`）。
+- 启动完整性检查：事件链、状态文件与账本一致、行情新鲜度、时钟偏差 → `startup_check.json`，失败即告警。
+- 离线挂单过期：执行 K 线收盘超过宽限期仍未成交 → `order_expired`，不回填；离线期间日线 → `missed_signal`。
+- 健康检查新增：最新 K 线年龄、最近成功轮询、进程存活（pid）、数据源、账户净值与风险状态、最新日志时间、连续失败次数（≥ 3 告警）、时钟偏差（启动检查）。`--once` 模式下进程已退出，`process_alive=false` 属正常。
+- 持久化目录与重启不清空：见 `MAC_RUNBOOK.md`。
+
+## 5. 72 小时真实时间验收（§11）
+状态：**未开始**。`forward-acceptance` 工具只统计真实时间推进的心跳与记录，不足 72 小时固定为"进行中"，云容器内的记录（11-07 17:38 起共 3 轮）只是基线，不构成验收。Mac 上启动后请按 `MAC_RUNBOOK.md` 的协议每日记录到 `acceptance_log/`。**本报告不宣称验收成功。**
+
+## 6. 测试（§13）
+全部原有测试 + 新增 `tests/test_brando_pa_deploy.py`（单实例锁与启动检查、健康字段与连续失败、离线挂单过期不回填、来源优先级与跨来源审计、72h 验收"未完成"语义）结果见 `test_report.txt`。
+
+## 7. 风险与真实交易（§15）
+最大回撤上限未获批准；全部风险保护保留；真实下单无实现；安装脚本在检测到 `live_trading: true` 时拒绝安装。

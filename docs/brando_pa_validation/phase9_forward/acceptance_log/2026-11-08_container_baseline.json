@@ -1,0 +1,39 @@
+{
+ "checked_at_utc": "2026-11-08 03:27:59.130174+00:00",
+ "required_hours": 72.0,
+ "category": "真实时间前瞻运行（非模拟）",
+ "status": "进行中",
+ "window_start_utc": "2026-11-07 17:38:03.379343+00:00",
+ "elapsed_hours": 9.83,
+ "cycles_observed": 4,
+ "cycles_expected": 58,
+ "coverage": 0.069,
+ "cycle_gaps_gt_3x": 2,
+ "longest_gap_hours": 9.16,
+ "data_ok_share": 1.0,
+ "per_day": {
+  "2026-11-07": {
+   "cycles": 3,
+   "data_ok_share": 1.0,
+   "issues": []
+  },
+  "2026-11-08": {
+   "cycles": 1,
+   "data_ok_share": 1.0,
+   "issues": []
+  }
+ },
+ "missed_signals": {
+  "A_BTC_SMA200": 0,
+  "B_modelB_state_machine": 0,
+  "REF_ETH_SMA200": 0
+ },
+ "expired_orders": {
+  "A_BTC_SMA200": 0,
+  "B_modelB_state_machine": 0,
+  "REF_ETH_SMA200": 0
+ },
+ "service_starts": 0,
+ "alerts_by_kind": {},
+ "verdict_note": "elapsed < 72h → 不得宣称验收成功"
+}

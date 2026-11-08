@@ -4,10 +4,41 @@
  "fee_bps": 10.0,
  "slippage_bps": 5.0,
  "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
- "last_daily_ts": null,
- "pending": [],
+ "last_daily_ts": "2026-11-07 00:00:00+00:00",
+ "pending": [
+  {
+   "order_id": "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0",
+   "ledger": "ideal",
+   "symbol": "ETHUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 9990.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+   "est_cost": 0.0,
+   "order_simulated_at": "2026-11-08 03:26:55.198332+00:00",
+   "mode": "forward"
+  },
+  {
+   "order_id": "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0",
+   "ledger": "cost",
+   "symbol": "ETHUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 9990.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+   "est_cost": 14.985,
+   "order_simulated_at": "2026-11-08 03:26:55.198942+00:00",
+   "mode": "forward"
+  }
+ ],
  "processed_orders": [],
- "n_runs": 3,
+ "n_runs": 4,
  "ledgers": {
   "ideal": {
    "cash": 10000.0,
@@ -31,10 +62,15 @@
   }
  },
  "risk": {
-  "hwm_all": null,
-  "data_fault": false
+  "hwm_all": 10000.0,
+  "data_fault": false,
+  "fault_why": ""
  },
- "alloc_last_target": null,
- "last_run_at": "2026-11-07 18:17:29.001336+00:00",
- "saved_at": "2026-11-07 18:17:35.385132+00:00"
+ "alloc_last_target": {
+  "BTCUSDT": 0.0,
+  "ETHUSDT": 1.0,
+  "USDT": 0.0
+ },
+ "last_run_at": "2026-11-08 03:26:52.971273+00:00",
+ "saved_at": "2026-11-08 03:26:55.203948+00:00"
 }

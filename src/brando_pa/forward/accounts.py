@@ -123,11 +123,16 @@ class ForwardAccount:
 
     def fill_pending(self, bars: dict, now: pd.Timestamp) -> list[dict]:
         keep = []; fills = []; tf = "1h"; sec = tf_seconds(tf)
+        grace = pd.Timedelta(hours=float(self.c.get("forward", {}).get("missed_signal_grace_hours", 3)))
         for od in sorted(self.state["pending"], key=lambda o: 0 if o["side"] == "SELL" else 1):
             e = bars[od["symbol"]][tf]; m = e[(e["ts"] >= pd.Timestamp(od["exec_after"])) & ((e["ts"] + pd.Timedelta(seconds=sec)) <= now)]
             if m.empty:
                 keep.append(od); continue
             bar = m.iloc[0]; o = float(bar["open"]); t = bar["ts"]; k = od["ledger"]; L = self.ledger(k); s = od["symbol"]
+            if self.spec.get("mode", "forward") != "replay" and (now - (t + pd.Timedelta(seconds=sec))) > grace:
+                # 执行 K 线早已收盘（服务离线）：不按过期价格回填，订单作废并记录；下一次实时日线收盘重新决策
+                self.log("order_expired", **od, would_fill_bar=str(t), expired_at=str(now), reason_expired=f"exec bar closed {((now - (t + pd.Timedelta(seconds=sec))).total_seconds() / 3600):.1f} h ago > grace; no backdated fill")
+                self.state["processed_orders"].append(od["order_id"]); continue
             if od["side"] == "SELL":
                 q = L.qty(s) if od.get("qty") is None else min(float(od["qty"]), L.qty(s))
                 if q > 1e-12:
@@ -157,7 +162,7 @@ class ForwardRunner:
         self.store = store or BarStore(root=own_data_dir(self.c) / "forward_bars", fallback_root=None)
         cost = self.c["usdt"]["costs"]["round2"]; initial = float(self.c["usdt"]["initial_cash_usdt"])
         specs = account_specs(self.c); names = accounts or list(specs)
-        self.accounts = {n: ForwardAccount(n, specs[n], self.c, self.dir / n, initial, float(cost["fee_bps"]), float(cost["slippage_bps"])) for n in names}
+        self.accounts = {n: ForwardAccount(n, specs[n] | {"mode": mode}, self.c, self.dir / n, initial, float(cost["fee_bps"]), float(cost["slippage_bps"])) for n in names}
         self.runner_events = self.dir / "runner_events.jsonl"; self.status_path = self.dir / "status.json"
         self.mult = float(self.c["data"].get("max_bar_age_multiplier", 3)); self.sma = int(self.c["usdt"]["trend"]["sma"])
 

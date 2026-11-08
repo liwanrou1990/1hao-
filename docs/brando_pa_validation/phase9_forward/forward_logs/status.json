@@ -1,5 +1,5 @@
 {
- "now": "2026-11-07 18:17:29.001336+00:00",
+ "now": "2026-11-08 03:26:52.971273+00:00",
  "mode": "forward",
  "data_check": {
   "ok": true,
@@ -7,12 +7,12 @@
   "anomalies": [],
   "latest": {
    "BTCUSDT": {
-    "1h": "2026-11-07 18:00:00+00:00",
-    "1d": "2026-11-07 00:00:00+00:00"
+    "1h": "2026-11-08 03:00:00+00:00",
+    "1d": "2026-11-08 00:00:00+00:00"
    },
    "ETHUSDT": {
-    "1h": "2026-11-07 18:00:00+00:00",
-    "1d": "2026-11-07 00:00:00+00:00"
+    "1h": "2026-11-08 03:00:00+00:00",
+    "1d": "2026-11-08 00:00:00+00:00"
    }
   }
  },
@@ -66,10 +66,41 @@
     }
    },
    "fills": [],
-   "pending": [],
+   "pending": [
+    {
+     "order_id": "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+     "ledger": "ideal",
+     "symbol": "BTCUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 9990.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+     "est_cost": 0.0,
+     "order_simulated_at": "2026-11-08 03:26:55.152576+00:00",
+     "mode": "forward"
+    },
+    {
+     "order_id": "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0",
+     "ledger": "cost",
+     "symbol": "BTCUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 9990.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+     "est_cost": 14.985,
+     "order_simulated_at": "2026-11-08 03:26:55.153222+00:00",
+     "mode": "forward"
+    }
+   ],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null
+   "last_daily_ts": "2026-11-07 00:00:00+00:00"
   },
   "B_modelB_state_machine": {
    "label": "账户 B：模型 B 满额配置 + 状态机",
@@ -120,10 +151,71 @@
     }
    },
    "fills": [],
-   "pending": [],
+   "pending": [
+    {
+     "order_id": "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0",
+     "ledger": "ideal",
+     "symbol": "BTCUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 4995.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+     "est_cost": 0.0,
+     "order_simulated_at": "2026-11-08 03:26:55.173353+00:00",
+     "mode": "forward"
+    },
+    {
+     "order_id": "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1",
+     "ledger": "ideal",
+     "symbol": "ETHUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 4995.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+     "est_cost": 0.0,
+     "order_simulated_at": "2026-11-08 03:26:55.173639+00:00",
+     "mode": "forward"
+    },
+    {
+     "order_id": "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0",
+     "ledger": "cost",
+     "symbol": "BTCUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 4995.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+     "est_cost": 7.4925,
+     "order_simulated_at": "2026-11-08 03:26:55.174324+00:00",
+     "mode": "forward"
+    },
+    {
+     "order_id": "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1",
+     "ledger": "cost",
+     "symbol": "ETHUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 4995.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+     "est_cost": 7.4925,
+     "order_simulated_at": "2026-11-08 03:26:55.174613+00:00",
+     "mode": "forward"
+    }
+   ],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null
+   "last_daily_ts": "2026-11-07 00:00:00+00:00"
   },
   "REF_ETH_SMA200": {
    "label": "参考：ETH SMA200",
@@ -174,29 +266,71 @@
     }
    },
    "fills": [],
-   "pending": [],
+   "pending": [
+    {
+     "order_id": "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0",
+     "ledger": "ideal",
+     "symbol": "ETHUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 9990.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+     "est_cost": 0.0,
+     "order_simulated_at": "2026-11-08 03:26:55.198332+00:00",
+     "mode": "forward"
+    },
+    {
+     "order_id": "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0",
+     "ledger": "cost",
+     "symbol": "ETHUSDT",
+     "side": "BUY",
+     "qty": null,
+     "amount": 9990.0,
+     "signal_ts": "2026-11-08 00:00:00+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "late": true,
+     "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+     "est_cost": 14.985,
+     "order_simulated_at": "2026-11-08 03:26:55.198942+00:00",
+     "mode": "forward"
+    }
+   ],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null
+   "last_daily_ts": "2026-11-07 00:00:00+00:00"
   }
  },
- "buy_hold_since_forward_start": {},
+ "buy_hold_since_forward_start": {
+  "BTCUSDT": {
+   "start_price": 75842.6,
+   "last_price": 75792.5,
+   "buy_hold_return": -0.0006605786194039398
+  },
+  "ETHUSDT": {
+   "start_price": 2235.88,
+   "last_price": 2236.53,
+   "buy_hold_return": 0.0002907132762044462
+  }
+ },
  "chains": {
   "runner": {
    "ok": true,
-   "n": 3
+   "n": 4
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 4
+   "n": 10
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 4
+   "n": 12
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 4
+   "n": 10
   }
  },
  "real_trading": "disabled (no implementation)"

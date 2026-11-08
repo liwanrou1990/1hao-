@@ -1,0 +1,149 @@
+{
+  "checked_at_utc": "2026-11-08 03:25:43.737108+00:00",
+  "tf": "1d",
+  "hours": 720,
+  "sources": {
+    "okx_spot": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 29,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-08 00:00:00+00:00",
+        "lag_hours": 3.428815863333333,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTC-USDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 29,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-08 00:00:00+00:00",
+        "lag_hours": 3.428815863333333,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETH-USDT"
+      }
+    },
+    "coinbase_exchange": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 29,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-08 00:00:00+00:00",
+        "lag_hours": 3.428815863333333,
+        "duplicates": 0,
+        "unclosed_dropped": 1,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTC-USDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 29,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-08 00:00:00+00:00",
+        "lag_hours": 3.428815863333333,
+        "duplicates": 0,
+        "unclosed_dropped": 1,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETH-USDT"
+      }
+    },
+    "binance_spot": {
+      "BTCUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=1791516343737&endTime=1794108343737&"
+      },
+      "ETHUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&startTime=1791516343737&endTime=1794108343737&"
+      }
+    },
+    "bybit_spot": {
+      "BTCUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://api.bybit.com/v5/market/kline?category=spot&symbol=BTCUSDT&interval=D&start=1791516343737&end="
+      },
+      "ETHUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://api.bybit.com/v5/market/kline?category=spot&symbol=ETHUSDT&interval=D&start=1791516343737&end="
+      }
+    },
+    "static_klines_mirror": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 28,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-07 00:00:00+00:00",
+        "lag_hours": 27.428815863333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTCUSDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 28,
+        "first": "2026-10-10 00:00:00+00:00",
+        "last_close": "2026-11-07 00:00:00+00:00",
+        "lag_hours": 27.428815863333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETHUSDT"
+      }
+    }
+  },
+  "pairwise_close_diff": {
+    "coinbase_exchange vs okx_spot BTCUSDT": {
+      "overlap_bars": 29,
+      "max_rel_diff": 0.0012577954178734085,
+      "mean_rel_diff": 0.00037025289554769926,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs okx_spot ETHUSDT": {
+      "overlap_bars": 29,
+      "max_rel_diff": 0.0011785077624094642,
+      "mean_rel_diff": 0.0004487372327285202,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs static_klines_mirror BTCUSDT": {
+      "overlap_bars": 28,
+      "max_rel_diff": 0.0018005973211154824,
+      "mean_rel_diff": 0.00041030243320111515,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs static_klines_mirror ETHUSDT": {
+      "overlap_bars": 28,
+      "max_rel_diff": 0.0011487601899284883,
+      "mean_rel_diff": 0.0004710447847551179,
+      "exceeds_gate": false
+    },
+    "okx_spot vs static_klines_mirror BTCUSDT": {
+      "overlap_bars": 28,
+      "max_rel_diff": 0.0008100167548223958,
+      "mean_rel_diff": 0.00010803864218329937,
+      "exceeds_gate": false
+    },
+    "okx_spot vs static_klines_mirror ETHUSDT": {
+      "overlap_bars": 28,
+      "max_rel_diff": 0.0006145515109952093,
+      "mean_rel_diff": 9.518959118454922e-05,
+      "exceeds_gate": false
+    }
+  }
+}

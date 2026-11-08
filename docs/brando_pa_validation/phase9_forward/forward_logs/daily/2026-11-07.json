@@ -200,82 +200,13 @@
  },
  "data_status": {
   "source": "okx_spot",
-  "last_success_utc": "2026-11-07 18:17:29.001336+00:00",
+  "last_success_utc": "2026-11-08 03:26:52.971273+00:00",
   "stale": false,
   "quality_fault": false,
   "source_switch": null
  },
  "service": {
-  "heartbeat_utc": "2026-11-07 18:17:35.411321+00:00",
-  "pid": 1042,
-  "n_cycles": 1,
-  "last_ok_cycle_at": "2026-11-07 18:17:29.001336+00:00",
-  "last_report_day": "2026-11-06",
-  "interval_s": 600,
-  "last_cycle": {
-   "now": "2026-11-07 18:17:29.001336+00:00",
-   "data": {
-    "ok": true,
-    "source": "okx_spot",
-    "stale": false,
-    "quality_fault": false,
-    "quality_note": "",
-    "errors": [
-     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
-     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en",
-     "binance_spot BTCUSDT 1h: HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1794056400000&en"
-    ],
-    "source_switch": {}
-   },
-   "accounts": {
-    "A_BTC_SMA200": {
-     "cost_equity": 10000.0,
-     "ideal_equity": 10000.0,
-     "risk_state": "NORMAL",
-     "fills": 0,
-     "pending": 0,
-     "last_daily_ts": null
-    },
-    "B_modelB_state_machine": {
-     "cost_equity": 10000.0,
-     "ideal_equity": 10000.0,
-     "risk_state": "NORMAL",
-     "fills": 0,
-     "pending": 0,
-     "last_daily_ts": null
-    },
-    "REF_ETH_SMA200": {
-     "cost_equity": 10000.0,
-     "ideal_equity": 10000.0,
-     "risk_state": "NORMAL",
-     "fills": 0,
-     "pending": 0,
-     "last_daily_ts": null
-    }
-   },
-   "data_check": {
-    "ok": true,
-    "issues": [],
-    "anomalies": [],
-    "latest": {
-     "BTCUSDT": {
-      "1h": "2026-11-07 18:00:00+00:00",
-      "1d": "2026-11-07 00:00:00+00:00"
-     },
-     "ETHUSDT": {
-      "1h": "2026-11-07 18:00:00+00:00",
-      "1d": "2026-11-07 00:00:00+00:00"
-     }
-    }
-   },
-   "daily_report": "2026-11-06",
-   "storage": {
-    "free_disk_mb": 26757,
-    "log_dir_mb": 0.0,
-    "ok": true
-   },
-   "elapsed_s": 6.4
-  },
-  "real_trading": "disabled (no implementation)"
+  "n_cycles": 0,
+  "last_ok_cycle_at": "2026-11-08 03:26:52.971273+00:00"
  }
 }

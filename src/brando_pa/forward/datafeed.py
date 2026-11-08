@@ -182,7 +182,9 @@ class MarketDataService:
         self.c = c or cfg(); self.dir = Path(log_dir or (own_data_dir(self.c))); self.dir.mkdir(parents=True, exist_ok=True)
         self.store = store or BarStore(root=own_data_dir(self.c) / "forward_bars", fallback_root=None); self.seed_from = seed_from if seed_from is not None else BarStore()
         self.client = httpx.Client(timeout=timeout, headers={"User-Agent": "brando-pa-research/0.8"})
-        self.sources = sources if sources is not None else [S(self.client) for S in self.SOURCES]
+        by_name = {S.name: S for S in self.SOURCES}
+        order = list(self.c.get("forward", {}).get("source_priority", [S.name for S in self.SOURCES]))
+        self.sources = sources if sources is not None else [by_name[n](self.client) for n in order if n in by_name]
         self.max_retries = max_retries; self.mult = float(self.c["data"].get("max_bar_age_multiplier", 3))
         self.status_path = self.dir / "forward_data_status.json"; self.events_path = self.dir / "data_events.jsonl"
 
@@ -309,3 +311,29 @@ class MarketDataService:
             k += 1
             if max_iter is None or k < max_iter:
                 time.sleep(interval_s)
+
+
+def cross_source_audit(svc: "MarketDataService", symbols: list[str], tf: str = "1h", hours: int = 48, now: pd.Timestamp | None = None) -> dict:
+    """实时跨来源审计：对每个可达来源直接拉取最近 N 小时 K 线，检查交易对、时间戳对齐、闭合、重复、缺口，并两两比较收盘价偏差。只读，不入库。"""
+    now = now or utcnow(); start = now - pd.Timedelta(hours=hours); out = {"checked_at_utc": str(now), "tf": tf, "hours": hours, "sources": {}, "pairwise_close_diff": {}}
+    data = {}
+    for src in svc.sources:
+        for s in symbols:
+            try:
+                raw = src.fetch(s, tf, start, now); d, rep = normalize(raw, tf, now)
+                bad_ts = int((d["ts"].dt.minute != 0).sum()) if not d.empty else 0
+                ok_ohlc = bool(((d["high"] >= d[["open", "close"]].max(axis=1)) & (d["low"] <= d[["open", "close"]].min(axis=1))).all()) if not d.empty else None
+                out["sources"].setdefault(src.name, {})[s] = {"ok": True, "n_closed": int(len(d)), "first": str(d["ts"].iloc[0]) if len(d) else None, "last_close": str(d["ts"].iloc[-1] + pd.Timedelta(seconds=tf_seconds(tf))) if len(d) else None, "lag_hours": float((now - (d["ts"].iloc[-1] + pd.Timedelta(seconds=tf_seconds(tf)))).total_seconds() / 3600) if len(d) else None,
+                                                             "duplicates": rep["duplicates"], "unclosed_dropped": rep["unclosed_dropped"], "gaps": rep["gaps"], "non_hour_aligned": bad_ts, "ohlc_consistent": ok_ohlc, "pair": PAIR[s].get(src.name.split("_")[0], s)}
+                data[(src.name, s)] = d.set_index("ts")["close"]
+            except Exception as e:  # noqa: BLE001
+                out["sources"].setdefault(src.name, {})[s] = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:140]}"}
+    names = sorted({k[0] for k in data})
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            for s in symbols:
+                if (a, s) in data and (b, s) in data:
+                    j = pd.concat([data[(a, s)].rename("a"), data[(b, s)].rename("b")], axis=1).dropna()
+                    if len(j):
+                        r = (j["a"] / j["b"] - 1).abs(); out["pairwise_close_diff"][f"{a} vs {b} {s}"] = {"overlap_bars": int(len(j)), "max_rel_diff": float(r.max()), "mean_rel_diff": float(r.mean()), "exceeds_gate": bool(r.max() > float(svc.c.get("forward", {}).get("cross_source_max_rel_diff", 0.005)))}
+    return out

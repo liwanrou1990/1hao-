@@ -497,6 +497,7 @@ usdt:
 # ===================== 第九阶段：24 小时前瞻服务 =====================
 forward:
   interval_s: 600                        # 服务主循环间隔（行情更新 + 账户推进）
+  source_priority: [okx_spot, coinbase_exchange, binance_spot, bybit_spot, static_klines_mirror]   # 当前部署：OKX 主、Coinbase 备；其余为合法来源但在本地区受限（不绕过）
   symbols: [BTCUSDT, ETHUSDT]
   tfs: [1h, 1d]
   missed_signal_grace_hours: 3           # 日线收盘后超过该时长仍未有机会成交（服务离线）→ 标记 missed，不补成交

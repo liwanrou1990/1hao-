@@ -4,10 +4,71 @@
  "fee_bps": 10.0,
  "slippage_bps": 5.0,
  "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
- "last_daily_ts": null,
- "pending": [],
+ "last_daily_ts": "2026-11-07 00:00:00+00:00",
+ "pending": [
+  {
+   "order_id": "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0",
+   "ledger": "ideal",
+   "symbol": "BTCUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 4995.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+   "est_cost": 0.0,
+   "order_simulated_at": "2026-11-08 03:26:55.173353+00:00",
+   "mode": "forward"
+  },
+  {
+   "order_id": "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1",
+   "ledger": "ideal",
+   "symbol": "ETHUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 4995.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+   "est_cost": 0.0,
+   "order_simulated_at": "2026-11-08 03:26:55.173639+00:00",
+   "mode": "forward"
+  },
+  {
+   "order_id": "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0",
+   "ledger": "cost",
+   "symbol": "BTCUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 4995.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+   "est_cost": 7.4925,
+   "order_simulated_at": "2026-11-08 03:26:55.174324+00:00",
+   "mode": "forward"
+  },
+  {
+   "order_id": "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1",
+   "ledger": "cost",
+   "symbol": "ETHUSDT",
+   "side": "BUY",
+   "qty": null,
+   "amount": 4995.0,
+   "signal_ts": "2026-11-08 00:00:00+00:00",
+   "exec_after": "2026-11-08 03:00:00+00:00",
+   "late": true,
+   "reason": "target_changed[both|NORMAL|cap=1.00];drift 0.500 ≥ 0.1;scaled_to_cash",
+   "est_cost": 7.4925,
+   "order_simulated_at": "2026-11-08 03:26:55.174613+00:00",
+   "mode": "forward"
+  }
+ ],
  "processed_orders": [],
- "n_runs": 3,
+ "n_runs": 4,
  "ledgers": {
   "ideal": {
    "cash": 10000.0,
@@ -31,19 +92,24 @@
   }
  },
  "risk": {
-  "hwm_all": null,
+  "hwm_all": 10000.0,
   "data_fault": false,
   "state": "NORMAL",
-  "hwm_ref": null,
+  "hwm_ref": 10000.0,
   "halt_count": 0,
-  "state_since": null,
+  "state_since": "2026-11-08 00:00:00+00:00",
   "cooldown_until": null,
   "recovery_since": null,
   "recovery_peak": null,
-  "normal_since": null,
-  "transitions": []
+  "normal_since": "2026-11-08 00:00:00+00:00",
+  "transitions": [],
+  "fault_why": ""
  },
- "alloc_last_target": null,
- "last_run_at": "2026-11-07 18:17:29.001336+00:00",
- "saved_at": "2026-11-07 18:17:35.383620+00:00"
+ "alloc_last_target": {
+  "BTCUSDT": 0.5,
+  "ETHUSDT": 0.5,
+  "USDT": 0.0
+ },
+ "last_run_at": "2026-11-08 03:26:52.971273+00:00",
+ "saved_at": "2026-11-08 03:26:55.183679+00:00"
 }

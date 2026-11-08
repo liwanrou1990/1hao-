@@ -1,0 +1,166 @@
+{
+  "checked_at_utc": "2026-11-08 03:25:40.593768+00:00",
+  "tf": "1h",
+  "hours": 48,
+  "sources": {
+    "okx_spot": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 47,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-08 03:00:00+00:00",
+        "lag_hours": 0.42794271333333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTC-USDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 47,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-08 03:00:00+00:00",
+        "lag_hours": 0.42794271333333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETH-USDT"
+      }
+    },
+    "coinbase_exchange": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 45,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-08 03:00:00+00:00",
+        "lag_hours": 0.42794271333333334,
+        "duplicates": 0,
+        "unclosed_dropped": 1,
+        "gaps": [
+          {
+            "after": "2026-11-07 06:00:00+00:00",
+            "before": "2026-11-07 08:00:00+00:00",
+            "missing_bars": 1
+          },
+          {
+            "after": "2026-11-07 13:00:00+00:00",
+            "before": "2026-11-07 15:00:00+00:00",
+            "missing_bars": 1
+          }
+        ],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTC-USDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 46,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-08 03:00:00+00:00",
+        "lag_hours": 0.42794271333333334,
+        "duplicates": 0,
+        "unclosed_dropped": 1,
+        "gaps": [
+          {
+            "after": "2026-11-07 08:00:00+00:00",
+            "before": "2026-11-07 10:00:00+00:00",
+            "missing_bars": 1
+          }
+        ],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETH-USDT"
+      }
+    },
+    "binance_spot": {
+      "BTCUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1793935540593&endTime=1794108340593&"
+      },
+      "ETHUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1h&startTime=1793935540593&endTime=1794108340593&"
+      }
+    },
+    "bybit_spot": {
+      "BTCUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://api.bybit.com/v5/market/kline?category=spot&symbol=BTCUSDT&interval=60&start=1793935540593&end"
+      },
+      "ETHUSDT": {
+        "ok": false,
+        "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://api.bybit.com/v5/market/kline?category=spot&symbol=ETHUSDT&interval=60&start=1793935540593&end"
+      }
+    },
+    "static_klines_mirror": {
+      "BTCUSDT": {
+        "ok": true,
+        "n_closed": 30,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-07 10:00:00+00:00",
+        "lag_hours": 17.427942713333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "BTCUSDT"
+      },
+      "ETHUSDT": {
+        "ok": true,
+        "n_closed": 30,
+        "first": "2026-11-06 04:00:00+00:00",
+        "last_close": "2026-11-07 10:00:00+00:00",
+        "lag_hours": 17.427942713333334,
+        "duplicates": 0,
+        "unclosed_dropped": 0,
+        "gaps": [],
+        "non_hour_aligned": 0,
+        "ohlc_consistent": true,
+        "pair": "ETHUSDT"
+      }
+    }
+  },
+  "pairwise_close_diff": {
+    "coinbase_exchange vs okx_spot BTCUSDT": {
+      "overlap_bars": 45,
+      "max_rel_diff": 0.002275365316686817,
+      "mean_rel_diff": 0.0006256880711117185,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs okx_spot ETHUSDT": {
+      "overlap_bars": 46,
+      "max_rel_diff": 0.001789418394508857,
+      "mean_rel_diff": 0.0003338260686621396,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs static_klines_mirror BTCUSDT": {
+      "overlap_bars": 29,
+      "max_rel_diff": 0.0022666210093773564,
+      "mean_rel_diff": 0.0007070293487282463,
+      "exceeds_gate": false
+    },
+    "coinbase_exchange vs static_klines_mirror ETHUSDT": {
+      "overlap_bars": 29,
+      "max_rel_diff": 0.0011783119458599334,
+      "mean_rel_diff": 0.00032826693537950797,
+      "exceeds_gate": false
+    },
+    "okx_spot vs static_klines_mirror BTCUSDT": {
+      "overlap_bars": 30,
+      "max_rel_diff": 0.00015898127025892883,
+      "mean_rel_diff": 5.890303219594495e-05,
+      "exceeds_gate": false
+    },
+    "okx_spot vs static_klines_mirror ETHUSDT": {
+      "overlap_bars": 30,
+      "max_rel_diff": 0.00012548007331614208,
+      "mean_rel_diff": 5.57064101422459e-05,
+      "exceeds_gate": false
+    }
+  }
+}

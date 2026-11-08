@@ -135,4 +135,8 @@ python -m brando_pa.cli forward-replay --start 2025-09-01 --log-dir reports_out/
 python -m brando_pa.cli forward-service [--once]               # 后台服务主循环（由 deploy/ 下 launchd / systemd / Docker 管理）
 python -m brando_pa.cli forward-health                         # 健康检查（退出码 0/1）
 python -m brando_pa.cli forward-daily-report [--date YYYY-MM-DD]   # 每日 UTC 三账户报告
+python -m brando_pa.cli forward-acceptance                     # 72 小时真实时间验收状态（不足 72h 为“进行中”）
+python -m brando_pa.cli forward-data-audit --hours 48          # 实时跨来源行情审计（只读）
+bash deploy/install_mac_brando_pa.sh                           # Mac：安装 launchd 常驻服务（见 docs/brando_pa_validation/phase9_forward/MAC_RUNBOOK.md）
+bash scripts/brando_pa_forward_ctl.sh {status|health|logs|report|acceptance|restart|stop|start}
 ```
