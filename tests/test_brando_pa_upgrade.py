@@ -163,7 +163,7 @@ def test_bootstrap_from_tmp_resolves_repo_and_dry_run_then_real_upgrade(tmp_path
     assert r.returncode == 1 and "事件链" in r.stdout
 
 
-MAC_SCRIPTS = ["scripts/brando_pa_safe_upgrade.sh", "scripts/brando_pa_forward_ctl.sh", "scripts/brando_pa_mac_check.sh", "deploy/install_mac_brando_pa.sh", "deploy/uninstall_mac_brando_pa.sh"]
+MAC_SCRIPTS = ["scripts/brando_pa_safe_upgrade.sh", "scripts/brando_pa_forward_ctl.sh", "scripts/brando_pa_mac_check.sh", "scripts/brando_pa_mac_upgrade_verified.sh", "deploy/install_mac_brando_pa.sh", "deploy/uninstall_mac_brando_pa.sh"]
 
 
 def test_mac_scripts_have_no_variable_followed_by_non_ascii():

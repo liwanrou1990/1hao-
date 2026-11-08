@@ -72,6 +72,12 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - 任何开盘不晚于决策时刻的 K 线绝不成交（cancelled_invalid）；执行 K 线收盘后超过宽限期仍未记账（服务离线）→ order_expired；收盘后超过宽限期才首次处理的日线 → missed_signal。
 - 审计：`PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-timeline-audit`（退出码 0/1）；纠错需先停止服务：`... forward-timeline-audit --repair`，只写 corrections.jsonl 与 order_cancelled 事件，不改原始记录。
 
+## Mac 门控升级（2026-11-08 新增；dry-run → 硬门控 → 升级 → 复核，任一检查失败立即停止）
+```bash
+BRANDO_REPO="$HOME/1hao-" BRANDO_LOCAL_START="2026-11-08 12:23:00" bash scripts/brando_pa_mac_upgrade_verified.sh   # 或从 /tmp 运行 origin 上的副本
+```
+预检（未推送提交 / 待应用提交触碰 config、accounts、ledger、trend/risk、allocator、engine、账户目录 → 拒绝）→ dry-run 并读取 upgrade_report：备份 verified、可 ff、无本地修改非数据文件、账户 diffs=[]、新版本审计通过 → 正式升级并读取报告：merged、restored_ok、verify_after diffs=[]、服务已启动 → 三账户资金 / 持仓 / 手续费 / 已实现与升级前逐项比对 → health / status / report / acceptance / audit / 一键检查。日志 `reports_out/brando_pa/mac_check/upgrade_verified_<UTC>.log`。每次升级约损失 1–2 轮验收轮询。
+
 ## Mac 一键只读检查（2026-11-08 新增）
 ```bash
 BRANDO_REPO="$HOME/1hao-" BRANDO_LOCAL_START="2026-11-08 12:23:00" bash scripts/brando_pa_mac_check.sh   # 或从 /tmp 运行 origin 上的副本
