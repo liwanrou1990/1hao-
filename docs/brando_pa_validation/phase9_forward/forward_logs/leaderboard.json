@@ -1,0 +1,193 @@
+{
+ "generated_at_utc": "2026-11-08 13:02:03.403752+00:00",
+ "category": "forward（真正前瞻；含成本 = 10 bps 手续费 + 5 bps 滑点；零成本仅对照）",
+ "ranking_key": "cost ledger liquidation_net_profit_usdt desc",
+ "cost": [
+  {
+   "account": "REF_ETH_SMA200",
+   "ledger": "cost",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10002.256029361295,
+   "liquidation_usdt": 9987.272641445268,
+   "liquidation_net_profit_usdt": -12.727358554731836,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 12.236049341315946,
+   "max_drawdown": -0.0015279880665310002,
+   "max_drawdown_usdt": -15.279880665315432,
+   "weights": {
+    "BTC": 0.0,
+    "ETH": 0.999000225552051,
+    "USDT": 0.0009997744479488936
+   },
+   "holdings": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 4.462063620002544
+   },
+   "cash_usdt": 9.999999999998181,
+   "fees_paid_usdt": 9.980019980019982,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   },
+   "rank": 1
+  },
+  {
+   "account": "B_modelB_state_machine",
+   "ledger": "cost",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10001.184803373213,
+   "liquidation_usdt": 9986.203021760555,
+   "liquidation_net_profit_usdt": -13.796978239444798,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 11.164823353232926,
+   "max_drawdown": -0.0017312902347860002,
+   "max_drawdown_usdt": -17.31290234786138,
+   "weights": {
+    "BTC": 0.49944650427895504,
+    "ETH": 0.49955361418734506,
+    "USDT": 0.0009998815336986061
+   },
+   "holdings": {
+    "BTCUSDT": 0.065741558836283,
+    "ETHUSDT": 2.231031810001272
+   },
+   "cash_usdt": 10.0,
+   "fees_paid_usdt": 9.98001998001998,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   },
+   "rank": 2
+  },
+  {
+   "account": "A_BTC_SMA200",
+   "ledger": "cost",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10000.113577385131,
+   "liquidation_usdt": 9985.133402075842,
+   "liquidation_net_profit_usdt": -14.866597924157759,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 10.093597365149904,
+   "max_drawdown": -0.0019345924030400002,
+   "max_drawdown_usdt": -19.34592403040915,
+   "weights": {
+    "BTC": 0.9990000113576091,
+    "ETH": 0.0,
+    "USDT": 0.0009999886423906655
+   },
+   "holdings": {
+    "BTCUSDT": 0.131483117672566,
+    "ETHUSDT": 0.0
+   },
+   "cash_usdt": 10.000000000001819,
+   "fees_paid_usdt": 9.980019980019978,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   },
+   "rank": 3
+  }
+ ],
+ "ideal": [
+  {
+   "account": "REF_ETH_SMA200",
+   "ledger": "ideal",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10017.249409533353,
+   "liquidation_usdt": 10017.249409533353,
+   "liquidation_net_profit_usdt": 17.249409533353173,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 17.249409533352985,
+   "max_drawdown": -3.1281312625308644e-05,
+   "max_drawdown_usdt": -0.31281312625287605,
+   "weights": {
+    "BTC": 0.0,
+    "ETH": 0.9990017219706551,
+    "USDT": 0.0009982780293445507
+   },
+   "holdings": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 4.468758946464357
+   },
+   "cash_usdt": 10.000000000001819,
+   "fees_paid_usdt": 0.0,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   }
+  },
+  {
+   "account": "B_modelB_state_machine",
+   "ledger": "ideal",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10016.176576170674,
+   "liquidation_usdt": 10016.176576170674,
+   "liquidation_net_profit_usdt": 16.176576170673798,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 16.176576170674167,
+   "max_drawdown": -0.00023488853578300002,
+   "max_drawdown_usdt": -2.34888535783466,
+   "weights": {
+    "BTC": 0.499447252488088,
+    "ETH": 0.499554362556938,
+    "USDT": 0.0009983849549729136
+   },
+   "holdings": {
+    "BTCUSDT": 0.065840204045317,
+    "ETHUSDT": 2.234379473232178
+   },
+   "cash_usdt": 10.00000000000091,
+   "fees_paid_usdt": 0.0,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   }
+  },
+  {
+   "account": "A_BTC_SMA200",
+   "ledger": "ideal",
+   "category": "forward",
+   "as_of_utc": "2026-11-08 13:02:01.087065+00:00",
+   "initial_usdt": 10000.0,
+   "equity_usdt": 10015.103742807994,
+   "liquidation_usdt": 10015.103742807994,
+   "liquidation_net_profit_usdt": 15.103742807994422,
+   "realized_usdt": 0.0,
+   "unrealized_usdt": 15.103742807995346,
+   "max_drawdown": -0.00043849575894100006,
+   "max_drawdown_usdt": -4.384957589418263,
+   "weights": {
+    "BTC": 0.9990015080964901,
+    "ETH": 0.0,
+    "USDT": 0.000998491903509353
+   },
+   "holdings": {
+    "BTCUSDT": 0.131680408090634,
+    "ETHUSDT": 0.0
+   },
+   "cash_usdt": 10.0,
+   "fees_paid_usdt": 0.0,
+   "risk_state": "NORMAL",
+   "prices": {
+    "BTCUSDT": 75980.2,
+    "ETHUSDT": 2239.38
+   }
+  }
+ ],
+ "real_trading": "disabled (no implementation)"
+}

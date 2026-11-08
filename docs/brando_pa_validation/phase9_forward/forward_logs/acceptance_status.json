@@ -1,39 +1,114 @@
 {
- "checked_at_utc": "2026-11-08 03:27:59.130174+00:00",
+ "checked_at_utc": "2026-11-08 13:00:46.439466+00:00",
  "required_hours": 72.0,
+ "interval_s": 600,
  "category": "真实时间前瞻运行（非模拟）",
- "status": "进行中",
- "window_start_utc": "2026-11-07 17:38:03.379343+00:00",
- "elapsed_hours": 9.83,
- "cycles_observed": 4,
- "cycles_expected": 58,
- "coverage": 0.069,
- "cycle_gaps_gt_3x": 2,
- "longest_gap_hours": 9.16,
- "data_ok_share": 1.0,
- "per_day": {
-  "2026-11-07": {
-   "cycles": 3,
+ "segments": {
+  "cloud_legacy": {
+   "start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "end_utc": "2026-11-08 06:02:53.803842+00:00",
+   "elapsed_hours": 12.41,
+   "cycles_observed": 8,
+   "cycles_expected": 74,
+   "coverage": 0.108,
+   "cycle_gaps_gt_3x": 4,
+   "longest_gap_hours": 9.16,
    "data_ok_share": 1.0,
-   "issues": []
+   "n_data_issues": 0,
+   "n_anomalies": 0,
+   "alerts_by_kind": {},
+   "missed_signals": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "expired_orders": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "fills": {
+    "A_BTC_SMA200": 2,
+    "B_modelB_state_machine": 4,
+    "REF_ETH_SMA200": 2
+   },
+   "fill_paused": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "per_day": {
+    "2026-11-07": {
+     "cycles": 3,
+     "data_ok_share": 1.0,
+     "issues": [],
+     "anomalies": []
+    },
+    "2026-11-08": {
+     "cycles": 5,
+     "data_ok_share": 1.0,
+     "issues": [],
+     "anomalies": []
+    }
+   },
+   "hosts": [],
+   "note": "云容器内的单轮/手动运行，不构成连续运行；原样保留"
   },
-  "2026-11-08": {
-   "cycles": 1,
+  "local": {
+   "status": "未开始",
+   "note": "没有本地（非云容器）运行记录"
+  },
+  "all": {
+   "start_utc": "2026-11-07 17:38:03.379343+00:00",
+   "end_utc": "2026-11-08 13:00:46.439466+00:00",
+   "elapsed_hours": 19.38,
+   "cycles_observed": 8,
+   "cycles_expected": 116,
+   "coverage": 0.069,
+   "cycle_gaps_gt_3x": 4,
+   "longest_gap_hours": 9.16,
    "data_ok_share": 1.0,
-   "issues": []
+   "n_data_issues": 0,
+   "n_anomalies": 0,
+   "alerts_by_kind": {},
+   "missed_signals": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "expired_orders": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "fills": {
+    "A_BTC_SMA200": 2,
+    "B_modelB_state_machine": 4,
+    "REF_ETH_SMA200": 2
+   },
+   "fill_paused": {
+    "A_BTC_SMA200": 0,
+    "B_modelB_state_machine": 0,
+    "REF_ETH_SMA200": 0
+   },
+   "per_day": {
+    "2026-11-07": {
+     "cycles": 3,
+     "data_ok_share": 1.0,
+     "issues": [],
+     "anomalies": []
+    },
+    "2026-11-08": {
+     "cycles": 5,
+     "data_ok_share": 1.0,
+     "issues": [],
+     "anomalies": []
+    }
+   },
+   "hosts": [],
+   "note": "云端 + 本地全部记录；历史缺口原样保留"
   }
  },
- "missed_signals": {
-  "A_BTC_SMA200": 0,
-  "B_modelB_state_machine": 0,
-  "REF_ETH_SMA200": 0
- },
- "expired_orders": {
-  "A_BTC_SMA200": 0,
-  "B_modelB_state_machine": 0,
-  "REF_ETH_SMA200": 0
- },
- "service_starts": 0,
- "alerts_by_kind": {},
- "verdict_note": "elapsed < 72h → 不得宣称验收成功"
+ "status": "未开始",
+ "verdict_segment": "local"
 }

@@ -13,6 +13,8 @@
 from __future__ import annotations
 
 import json
+import os
+import socket
 from dataclasses import asdict
 from pathlib import Path
 
@@ -33,6 +35,7 @@ from ..usdt.allocator import PortfolioAllocator
 from ..usdt.engine import liquidation_value
 
 SYMS = ["BTCUSDT", "ETHUSDT"]
+_HOST = socket.gethostname()
 
 
 def account_specs(c: dict) -> dict:
@@ -83,7 +86,7 @@ class ForwardAccount:
         s = self.state["ledgers"][k]; s.update({"cash": L.cash, "lots": {sym: [asdict(l) for l in ls if l.qty > 1e-15] for sym, ls in L.lots.items()}, "fees_paid": L.fees_paid, "realized": L.realized, "seq": L._seq})
 
     def log(self, kind: str, **kw) -> None:
-        _append(self.events, {"kind": kind, "account": self.name, **kw})
+        _append(self.events, {"kind": kind, "account": self.name, "host": _HOST, "pid": os.getpid(), **kw})
 
     # ---- 一次日线收盘决策 ----
     def decide(self, close_t: pd.Timestamp, on: dict, prices: dict, daily_drop: float, data_fault: bool, data_ts, indicators: dict, execute: bool = True, missed_reason: str = "", quality_fault: bool = False, source: dict | None = None, mode: str = "forward", exec_after: pd.Timestamp | None = None, now: pd.Timestamp | None = None) -> list[dict]:
@@ -244,7 +247,7 @@ class ForwardRunner:
         self.mult = float(self.c["data"].get("max_bar_age_multiplier", 3)); self.sma = int(self.c["usdt"]["trend"]["sma"])
 
     def _log(self, kind: str, **kw) -> None:
-        _append(self.runner_events, {"kind": kind, "mode": self.mode, **kw})
+        _append(self.runner_events, {"kind": kind, "mode": self.mode, "host": _HOST, "pid": os.getpid(), **kw})
 
     def load_bars(self) -> dict:
         return {s: {tf: self.store.load(s, tf, allow_fallback=False) for tf in ("1h", "1d")} for s in SYMS}
@@ -318,7 +321,9 @@ class ForwardRunner:
                     fills += acc.fill_pending(bars, now)
             nav = acc.mark(px_last, now, "nav", data_ts=data_ts, data_fault=data_fault, pending=len(st["pending"]), mode=self.mode, source={s: str(bars[s]["1h"]["source"].iloc[-1]) if "source" in bars[s]["1h"] else None for s in SYMS})
             st["n_runs"] = int(st.get("n_runs", 0)) + 1; st["last_run_at"] = str(now); acc.save()
-            out["accounts"][name] = {"label": acc.spec["label"], "nav": nav, "fills": fills, "pending": st["pending"], "risk_state": getattr(acc.risk, "state", "NORMAL"), "forward_start_utc": st["forward_start_utc"], "last_daily_ts": st["last_daily_ts"]}
+            ldc = (pd.Timestamp(st["last_daily_ts"]) + pd.Timedelta(days=1)) if st.get("last_daily_ts") else None
+            out["accounts"][name] = {"label": acc.spec["label"], "nav": nav, "fills": fills, "pending": st["pending"], "risk_state": getattr(acc.risk, "state", "NORMAL"), "forward_start_utc": st["forward_start_utc"], "last_daily_ts": st["last_daily_ts"],
+                                     "last_processed_daily_close_utc": str(ldc) if ldc is not None else None, "next_daily_close_utc": str((ldc + pd.Timedelta(days=1)) if ldc is not None else (now.normalize() + pd.Timedelta(days=1))), "note_last_daily_ts": "last_daily_ts 是最后已处理日线的开盘时刻（UTC 日期）；其收盘 = +1 天"}
         self._write_status(out, bars); return out
 
     def _write_status(self, out: dict, bars: dict) -> None:

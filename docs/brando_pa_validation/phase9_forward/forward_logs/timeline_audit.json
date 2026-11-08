@@ -1,9 +1,9 @@
 {
- "checked_at_utc": "2026-11-08 06:02:56.108023+00:00",
+ "checked_at_utc": "2026-11-08 13:02:04.009360+00:00",
  "accounts": {
   "A_BTC_SMA200": {
    "account": "A_BTC_SMA200",
-   "n_events": 26,
+   "n_events": 27,
    "n_orders": 4,
    "n_fills": 2,
    "n_expired": 0,
@@ -44,7 +44,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 26
+    "n": 27
    },
    "corrections_chain": {
     "ok": true,
@@ -54,7 +54,7 @@
   },
   "B_modelB_state_machine": {
    "account": "B_modelB_state_machine",
-   "n_events": 34,
+   "n_events": 35,
    "n_orders": 8,
    "n_fills": 4,
    "n_expired": 0,
@@ -123,7 +123,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 34
+    "n": 35
    },
    "corrections_chain": {
     "ok": true,
@@ -133,7 +133,7 @@
   },
   "REF_ETH_SMA200": {
    "account": "REF_ETH_SMA200",
-   "n_events": 26,
+   "n_events": 27,
    "n_orders": 4,
    "n_fills": 2,
    "n_expired": 0,
@@ -174,7 +174,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 26
+    "n": 27
    },
    "corrections_chain": {
     "ok": true,

@@ -378,7 +378,8 @@ def cmd_forward_acceptance(a):
     from .config import cfg as _cfg, report_dir as _rd
     from pathlib import Path as _P
     c = _cfg(); d = _P(a.log_dir) if a.log_dir else (_rd(c) / "phase8_forward")
-    _p(acceptance_status(d, int(c.get("forward", {}).get("interval_s", 600)), start=a.start))
+    r = acceptance_status(d, int(c.get("forward", {}).get("interval_s", 600)), local_start=a.local_start)
+    print((d / "acceptance_status.md").read_text()); _p({"status": r["status"], "local": {k: v for k, v in r["segments"].get("local", {}).items() if k != "per_day"}})
 
 
 def cmd_forward_data_audit(a):
@@ -395,6 +396,17 @@ def cmd_forward_timeline_audit(a):
         _p({"repaired": repair_invalid_orders(d)})
     r = audit_timeline(d); _p({n: {"ok": v["ok"], "violations": v["violations"], "n_fills": v["n_fills"], "n_cancelled": v["n_cancelled"], "n_invalidated": v["n_invalidated"]} for n, v in r["accounts"].items()} | {"ok": r["ok"]})
     raise SystemExit(0 if r["ok"] else 1)
+
+
+def cmd_forward_leaderboard(a):
+    from .forward.report import leaderboard
+    from .config import cfg as _cfg, report_dir as _rd
+    from pathlib import Path as _P
+    d = _P(a.log_dir) if a.log_dir else (_rd(_cfg()) / "phase8_forward"); rep = leaderboard(d)
+    if a.json:
+        _p(rep)
+    else:
+        print((d / "leaderboard.md").read_text())
 
 
 def cmd_dashboard(a):
@@ -435,7 +447,8 @@ def main(argv=None):
     p = sub.add_parser("forward-service", help="第九阶段：24 小时前瞻服务（行情→账户→心跳→日报→容量→告警；由 launchd/systemd/Docker 管理）"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=int); p.add_argument("--max-cycles", dest="max_cycles", type=int); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_service)
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
-    p = sub.add_parser("forward-acceptance", help="72 小时真实时间可用性验收状态（不足 72h 固定为未完成）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--start"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("forward-leaderboard", help="三账户 USDT 利润排行榜（含成本清仓净利润降序）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--json", action="store_true"); p.set_defaults(f=cmd_forward_leaderboard)
     p = sub.add_parser("forward-timeline-audit", help="前瞻事件时间顺序审计（--repair：作废决策前执行时隙的挂单并写纠错日志，不改原始事件）"); p.add_argument("--repair", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_timeline_audit)
     p = sub.add_parser("forward-data-audit", help="实时跨来源行情审计（只读）"); p.add_argument("--tf", default="1h"); p.add_argument("--hours", type=int, default=48); p.set_defaults(f=cmd_forward_data_audit)
     p = sub.add_parser("forward-replay", help="独立历史回放（mode=replay，单独目录，不是前瞻）"); p.add_argument("--start", required=True); p.add_argument("--end"); p.add_argument("--log-dir", dest="log_dir", required=True); p.set_defaults(f=cmd_forward_replay)

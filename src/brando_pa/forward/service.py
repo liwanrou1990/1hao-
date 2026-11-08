@@ -144,6 +144,11 @@ class ForwardService:
                 daily_report(self.dir, day, ds, {"n_cycles": self.n_cycles, "last_ok_cycle_at": self.last_ok_cycle_at}, self.daily_dir); self.last_report_day = day; out["daily_report"] = day
             except Exception as e:  # noqa: BLE001
                 self.alert("daily_report_failed", str(e))
+        try:
+            from .report import leaderboard
+            leaderboard(self.dir)
+        except Exception as e:  # noqa: BLE001
+            self.alert("leaderboard_failed", str(e))
         out["storage"] = self.storage_check(); self.n_cycles += 1; out["elapsed_s"] = round(time.time() - t0, 1)
         self.heartbeat(out); self.log.info("cycle %s", json.dumps({k: v for k, v in out.items() if k != "data_check"}, default=str, ensure_ascii=False)[:1500])
         return out

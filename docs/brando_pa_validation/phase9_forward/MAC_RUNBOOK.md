@@ -1,4 +1,15 @@
-# Mac 最简部署步骤（在持续在线的 Mac 终端执行）
+# Mac 安全更新步骤（已在运行的 Mac：不删除、不重置账户与日志；不会同时运行两个实例）
+
+```bash
+cd ~/1hao-
+bash scripts/brando_pa_forward_ctl.sh upgrade     # 备份 → 停止 launchd 服务（释放 service.lock）→ git pull --ff-only → 最小依赖 → 时间顺序审计 → 重新启动 → 健康检查
+bash scripts/brando_pa_forward_ctl.sh status
+bash scripts/brando_pa_forward_ctl.sh report      # 三账户排行榜 + 当日日报（完整 JSON 在 reports_out/brando_pa/phase8_forward/leaderboard.json、daily/）
+bash scripts/brando_pa_forward_ctl.sh acceptance  # 云端历史段 / 本地段 / 全部；本地段起点 = Mac 首次运行（可显式：acceptance "2026-11-08 12:23:00"）
+```
+手动等价步骤：`backup` → `stop`（launchctl bootout）→ 确认 `pgrep -f "brando_pa.cli forward-service"` 为空 → `git pull --ff-only` → `pip install -r deploy/requirements-forward.txt` → `start`。备份文件在 `backups/phase8_forward_<UTC>.tgz`。
+
+# Mac 最简部署步骤（首次安装，在持续在线的 Mac 终端执行）
 
 ```bash
 # 1. 克隆（或已有仓库则拉取）并切到部署分支
@@ -45,6 +56,10 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - 日线收盘 → 服务下一轮形成决策（decision_time = 运行时钟）→ 订单提交 → 执行时隙 = 决策之后第一根**开盘**的 1h K 线 → 该 K 线收盘后按其开盘价记账（fill 事件含 decision_time / execution_time / execution_price_observed_at / fill_recorded_at）。
 - 任何开盘不晚于决策时刻的 K 线绝不成交（cancelled_invalid）；执行 K 线收盘后超过宽限期仍未记账（服务离线）→ order_expired；收盘后超过宽限期才首次处理的日线 → missed_signal。
 - 审计：`PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-timeline-audit`（退出码 0/1）；纠错需先停止服务：`... forward-timeline-audit --repair`，只写 corrections.jsonl 与 order_cancelled 事件，不改原始记录。
+
+## 日线更新语义
+- `last_daily_ts` 是**最后已处理日线的开盘时刻**（UTC 日期）；其收盘 = +1 天。例如 `last_daily_ts = 2026-11-07 00:00` 表示 2026-11-08 00:00 UTC 收盘的日线已处理（状态里另有 `last_processed_daily_close_utc` 与 `next_daily_close_utc`）。
+- 每个日线收盘只决策一次（signal 或 missed_signal）；同一时刻重复运行或重启不会再次决策；审计规则 T8 检查无重复、无遗漏。
 
 ## 单实例与重复订单
 - `service.lock` 用 `flock` 独占；第二个实例（含 `forward-service --once`）立即退出。

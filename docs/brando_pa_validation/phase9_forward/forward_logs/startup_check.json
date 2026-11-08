@@ -1,21 +1,21 @@
 {
- "checked_at_utc": "2026-11-08 06:02:53.250120+00:00",
+ "checked_at_utc": "2026-11-08 13:01:59.405813+00:00",
  "chains": {
   "runner": {
    "ok": true,
-   "n": 7
+   "n": 8
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 25
+   "n": 26
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 33
+   "n": 34
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 25
+   "n": 26
   }
  },
  "accounts": {
@@ -29,7 +29,7 @@
    "holdings_cost": {
     "BTCUSDT": 0.1314831176725664
    },
-   "n_events": 25
+   "n_events": 26
   },
   "B_modelB_state_machine": {
    "state_loaded": true,
@@ -42,7 +42,7 @@
     "BTCUSDT": 0.0657415588362832,
     "ETHUSDT": 2.231031810001272
    },
-   "n_events": 33
+   "n_events": 34
   },
   "REF_ETH_SMA200": {
    "state_loaded": true,
@@ -54,24 +54,27 @@
    "holdings_cost": {
     "ETHUSDT": 4.462063620002544
    },
-   "n_events": 25
+   "n_events": 26
   }
  },
  "data": {
-  "ok": true,
-  "issues": [],
+  "ok": false,
+  "issues": [
+   "BTCUSDT 1h 过期：最新收盘 2026-11-08 06:00:00+00:00，落后 7.0 小时",
+   "ETHUSDT 1h 过期：最新收盘 2026-11-08 06:00:00+00:00，落后 7.0 小时"
+  ],
   "anomalies": [],
   "latest": {
    "BTCUSDT": {
-    "1h": "2026-11-08 05:00:00+00:00",
+    "1h": "2026-11-08 06:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    },
    "ETHUSDT": {
-    "1h": "2026-11-08 05:00:00+00:00",
+    "1h": "2026-11-08 06:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    }
   }
  },
- "clock_skew_s": 0.05103731155395508,
+ "clock_skew_s": 0.09029984474182129,
  "ok": true
 }

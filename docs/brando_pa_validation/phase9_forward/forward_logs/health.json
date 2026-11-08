@@ -1,13 +1,13 @@
 {
- "heartbeat_utc": "2026-11-08 06:02:55.695123+00:00",
- "pid": 8766,
+ "heartbeat_utc": "2026-11-08 13:02:03.406334+00:00",
+ "pid": 480,
  "n_cycles": 1,
- "last_ok_cycle_at": "2026-11-08 06:02:53.803842+00:00",
+ "last_ok_cycle_at": "2026-11-08 13:02:01.087065+00:00",
  "consecutive_failures": 0,
  "last_report_day": "2026-11-07",
  "interval_s": 600,
  "last_cycle": {
-  "now": "2026-11-08 06:02:53.803842+00:00",
+  "now": "2026-11-08 13:02:01.087065+00:00",
   "data": {
    "ok": true,
    "source": "okx_spot",
@@ -19,24 +19,24 @@
   },
   "accounts": {
    "A_BTC_SMA200": {
-    "cost_equity": 9980.65407596959,
-    "ideal_equity": 9995.615042410582,
+    "cost_equity": 10000.113577385131,
+    "ideal_equity": 10015.103742807994,
     "risk_state": "NORMAL",
     "fills": 0,
     "pending": 0,
     "last_daily_ts": "2026-11-07 00:00:00+00:00"
    },
    "B_modelB_state_machine": {
-    "cost_equity": 9982.687097652139,
-    "ideal_equity": 9997.651114642165,
+    "cost_equity": 10001.184803373213,
+    "ideal_equity": 10016.176576170674,
     "risk_state": "NORMAL",
     "fills": 0,
     "pending": 0,
     "last_daily_ts": "2026-11-07 00:00:00+00:00"
    },
    "REF_ETH_SMA200": {
-    "cost_equity": 9984.720119334685,
-    "ideal_equity": 9999.687186873747,
+    "cost_equity": 10002.256029361295,
+    "ideal_equity": 10017.249409533353,
     "risk_state": "NORMAL",
     "fills": 0,
     "pending": 0,
@@ -49,21 +49,21 @@
    "anomalies": [],
    "latest": {
     "BTCUSDT": {
-     "1h": "2026-11-08 06:00:00+00:00",
+     "1h": "2026-11-08 13:00:00+00:00",
      "1d": "2026-11-08 00:00:00+00:00"
     },
     "ETHUSDT": {
-     "1h": "2026-11-08 06:00:00+00:00",
+     "1h": "2026-11-08 13:00:00+00:00",
      "1d": "2026-11-08 00:00:00+00:00"
     }
    }
   },
   "storage": {
-   "free_disk_mb": 26640,
-   "log_dir_mb": 0.1,
+   "free_disk_mb": 26746,
+   "log_dir_mb": 0.2,
    "ok": true
   },
-  "elapsed_s": 1.9
+  "elapsed_s": 2.3
  },
  "real_trading": "disabled (no implementation)"
 }

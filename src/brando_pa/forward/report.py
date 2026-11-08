@@ -56,3 +56,32 @@ def daily_report(log_dir: Path, day: str | None = None, data_status: dict | None
     L += ["", f"数据状态：{rep['data_status']}", f"服务状态：{rep['service']}"]
     atomic_write_text(out_dir / f"{rep['date_utc']}.md", "\n".join(L))
     return rep
+
+
+def leaderboard(log_dir: Path, out_dir: Path | None = None) -> dict:
+    """三账户 USDT 排行榜（真正前瞻）：按含成本账本“假设全部清仓后的净利润”从高到低。数据来自各账户最新 nav 事件。"""
+    log_dir = Path(log_dir); out_dir = Path(out_dir or log_dir); rows = []
+    for acc_dir in sorted(p for p in log_dir.iterdir() if p.is_dir() and (p / "events.jsonl").exists()):
+        ev = _events(acc_dir / "events.jsonl")
+        if ev.empty or "kind" not in ev:
+            continue
+        nav = ev[ev["kind"] == "nav"]
+        if nav.empty:
+            continue
+        last = nav.iloc[-1]; st = json.loads((acc_dir / "state.json").read_text()) if (acc_dir / "state.json").exists() else {}
+        initial = float(st.get("initial_usdt", 10000.0))
+        for k in ("cost", "ideal"):
+            L = last["ledgers"][k]; eq = L["equity_usdt"]; liq = L["liquidation_usdt"]; w = L["weights"]
+            rows.append({"account": acc_dir.name, "ledger": k, "category": "forward", "as_of_utc": str(last["ts"]), "initial_usdt": initial, "equity_usdt": eq, "liquidation_usdt": liq, "liquidation_net_profit_usdt": liq - initial, "realized_usdt": L.get("realized_usdt"), "unrealized_usdt": L.get("unrealized_usdt"),
+                         "max_drawdown": L["max_drawdown"], "max_drawdown_usdt": L["max_drawdown_usdt"], "weights": {"BTC": w.get("BTCUSDT", 0.0), "ETH": w.get("ETHUSDT", 0.0), "USDT": (L["cash"] / eq) if eq else 1.0}, "holdings": L["holdings"], "cash_usdt": L["cash"], "fees_paid_usdt": L["fees_paid"], "risk_state": last.get("risk_state"), "prices": last.get("prices")})
+    cost = sorted([r for r in rows if r["ledger"] == "cost"], key=lambda r: -r["liquidation_net_profit_usdt"]); ideal = sorted([r for r in rows if r["ledger"] == "ideal"], key=lambda r: -r["liquidation_net_profit_usdt"])
+    for i, r in enumerate(cost, 1):
+        r["rank"] = i
+    rep = {"generated_at_utc": str(pd.Timestamp.now(tz="UTC")), "category": "forward（真正前瞻；含成本 = 10 bps 手续费 + 5 bps 滑点；零成本仅对照）", "ranking_key": "cost ledger liquidation_net_profit_usdt desc", "cost": cost, "ideal": ideal, "real_trading": "disabled (no implementation)"}
+    atomic_write_json(out_dir / "leaderboard.json", rep, indent=1, default=str)
+    L = [f"# 三账户 USDT 利润排行榜（含成本，真正前瞻）· {rep['generated_at_utc'][:19]} UTC", "", "| 名次 | 账户 | 当前权益 | 清仓余额 | 清仓净利润 | 已实现 | 未实现 | 最大回撤 | BTC/ETH/USDT | 风险状态 | 数据时点 |", "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for r in cost:
+        w = r["weights"]; L.append(f"| {r['rank']} | {r['account']} | {r['equity_usdt']:,.2f} | {r['liquidation_usdt']:,.2f} | {r['liquidation_net_profit_usdt']:+,.2f} | {(r['realized_usdt'] or 0):+,.2f} | {(r['unrealized_usdt'] or 0):+,.2f} | {r['max_drawdown']*100:.2f}% | {w['BTC']*100:.0f}/{w['ETH']*100:.0f}/{w['USDT']*100:.0f} | {r['risk_state']} | {r['as_of_utc'][:16]} |")
+    L += ["", "零成本对照（仅供比较，不是可实际获得的收益）：", "", "| 账户 | 当前权益 | 清仓净利润 | 最大回撤 |", "|---|---|---|---|"] + [f"| {r['account']} | {r['equity_usdt']:,.2f} | {r['liquidation_net_profit_usdt']:+,.2f} | {r['max_drawdown']*100:.2f}% |" for r in ideal]
+    L += ["", "初始本金各 10,000 USDT；真实交易 API 禁用（无实现）。"]
+    atomic_write_text(out_dir / "leaderboard.md", "\n".join(L)); return rep

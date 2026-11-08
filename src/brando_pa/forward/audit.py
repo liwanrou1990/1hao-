@@ -79,6 +79,27 @@ def audit_account(acc_dir: Path) -> dict:
         for k, l in e["ledgers"].items():
             if l["cash"] < -1e-9 or any(v < -1e-12 for v in l["holdings"].values()):
                 viol.append({"rule": "T6-nav", "ts": e["ts"], "ledger": k})
+    # T8 日线信号无重复、无遗漏：同一 signal_ts 至多一次产生成交的决策；forward_start 之后每个已到的日线收盘恰有一次 signal/missed_signal 决策（纠错后的重决策除外，需在 state.requeued_after_correction 中登记）
+    sigs = [e for e in ev if e["kind"] in ("signal", "missed_signal")]
+    by_ts = {}
+    for e in sigs:
+        by_ts.setdefault(e["signal_ts"], []).append(e)
+    filled_oids = {f["order_id"] for f in fills}
+    st_path = acc_dir / "state.json"; st = json.loads(st_path.read_text()) if st_path.exists() else {}
+    requeued = bool(st.get("requeued_after_correction"))
+    for ts_, es in by_ts.items():
+        dec_with_fill = [e for e in es if any(o["order_id"] in filled_oids for o in orders.values() if o.get("signal_ts") == ts_ and str(o.get("decision_time")) == str(e.get("decision_time") or e.get("signal_generated_at")))]
+        if len(dec_with_fill) > 1:
+            viol.append({"rule": "T8-duplicate-executed-decision", "signal_ts": ts_, "n": len(dec_with_fill)})
+        if len(es) > 1 and not requeued:
+            viol.append({"rule": "T8-duplicate-decision", "signal_ts": ts_, "n": len(es)})
+    fs = st.get("forward_start_utc"); last_d = st.get("last_daily_ts")
+    if fs and last_d and sigs:
+        first_close = (pd.Timestamp(fs).normalize() + pd.Timedelta(days=1)); last_close = pd.Timestamp(last_d) + pd.Timedelta(days=1)
+        expected = pd.date_range(first_close, last_close, freq="1D"); have = {pd.Timestamp(k) for k in by_ts}
+        missing = [str(x) for x in expected if x not in have]
+        if missing:
+            viol.append({"rule": "T8-missing-daily-decision", "missing_closes": missing[:10]})
     statuses = {}
     for oid in orders:
         st = []

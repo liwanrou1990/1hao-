@@ -1,5 +1,5 @@
 {
- "now": "2026-11-08 06:02:53.803842+00:00",
+ "now": "2026-11-08 13:02:01.087065+00:00",
  "mode": "forward",
  "data_check": {
   "ok": true,
@@ -7,11 +7,11 @@
   "anomalies": [],
   "latest": {
    "BTCUSDT": {
-    "1h": "2026-11-08 06:00:00+00:00",
+    "1h": "2026-11-08 13:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    },
    "ETHUSDT": {
-    "1h": "2026-11-08 06:00:00+00:00",
+    "1h": "2026-11-08 13:00:00+00:00",
     "1d": "2026-11-08 00:00:00+00:00"
    }
   }
@@ -21,45 +21,45 @@
    "label": "账户 A：BTC SMA200",
    "nav": {
     "ideal": {
-     "equity_usdt": 9995.615042410582,
-     "liquidation_usdt": 9995.615042410582,
-     "profit_usdt": -4.3849575894182635,
-     "return": -0.000438495758941837,
+     "equity_usdt": 10015.103742807994,
+     "liquidation_usdt": 10015.103742807994,
+     "profit_usdt": 15.103742807994422,
+     "return": 0.0015103742807993648,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -4.384957589418498,
+     "unrealized_usdt": 15.103742807995346,
      "cash": 10.0,
      "holdings": {
       "BTCUSDT": 0.13168040809063408,
       "ETHUSDT": 0.0
      },
      "weights": {
-      "BTCUSDT": 0.9989995613118782,
+      "BTCUSDT": 0.9990015080964907,
       "ETHUSDT": 0.0
      },
-     "exposure": 0.9989995613118782,
-     "drawdown": -0.000438495758941837,
+     "exposure": 0.9990015080964907,
+     "drawdown": 0.0,
      "max_drawdown": -0.000438495758941837,
      "max_drawdown_usdt": -4.3849575894182635,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9980.65407596959,
-     "liquidation_usdt": 9965.703080182675,
-     "profit_usdt": -19.34592403040915,
-     "return": -0.0019345924030409467,
+     "equity_usdt": 10000.113577385131,
+     "liquidation_usdt": 9985.133402075842,
+     "profit_usdt": 0.11357738513106597,
+     "return": 1.1357738513018134e-05,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -9.365904050389922,
+     "unrealized_usdt": 10.093597365149904,
      "cash": 10.000000000001819,
      "holdings": {
       "BTCUSDT": 0.1314831176725664,
       "ETHUSDT": 0.0
      },
      "weights": {
-      "BTCUSDT": 0.9989980616576944,
+      "BTCUSDT": 0.9990000113576093,
       "ETHUSDT": 0.0
      },
-     "exposure": 0.9989980616576944,
-     "drawdown": -0.0019345924030409467,
+     "exposure": 0.9990000113576093,
+     "drawdown": 0.0,
      "max_drawdown": -0.0019345924030409467,
      "max_drawdown_usdt": -19.34592403040915,
      "fees_paid": 9.980019980019978
@@ -69,51 +69,54 @@
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-07 00:00:00+00:00"
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "last_processed_daily_close_utc": "2026-11-08 00:00:00+00:00",
+   "next_daily_close_utc": "2026-11-09 00:00:00+00:00",
+   "note_last_daily_ts": "last_daily_ts 是最后已处理日线的开盘时刻（UTC 日期）；其收盘 = +1 天"
   },
   "B_modelB_state_machine": {
    "label": "账户 B：模型 B 满额配置 + 状态机",
    "nav": {
     "ideal": {
-     "equity_usdt": 9997.651114642165,
-     "liquidation_usdt": 9997.651114642165,
-     "profit_usdt": -2.3488853578346607,
-     "return": -0.0002348885357834618,
+     "equity_usdt": 10016.176576170674,
+     "liquidation_usdt": 10016.176576170674,
+     "profit_usdt": 16.176576170673798,
+     "return": 0.0016176576170674473,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -2.3488853578358673,
+     "unrealized_usdt": 16.176576170674167,
      "cash": 10.00000000000091,
      "holdings": {
       "BTCUSDT": 0.06584020404531704,
       "ETHUSDT": 2.2343794732321784
      },
      "weights": {
-      "BTCUSDT": 0.49939805499844075,
-      "ETHUSDT": 0.49960171005783766
+      "BTCUSDT": 0.49944725248808897,
+      "ETHUSDT": 0.4995543625569381
      },
-     "exposure": 0.9989997650562784,
-     "drawdown": -0.0002348885357834618,
+     "exposure": 0.9990016150450272,
+     "drawdown": 0.0,
      "max_drawdown": -0.0002348885357834618,
      "max_drawdown_usdt": -2.3488853578346607,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9982.687097652139,
-     "liquidation_usdt": 9967.73305334921,
-     "profit_usdt": -17.31290234786138,
-     "return": -0.0017312902347861314,
+     "equity_usdt": 10001.184803373213,
+     "liquidation_usdt": 9986.203021760555,
+     "profit_usdt": 1.1848033732130716,
+     "return": 0.00011848033732131391,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -7.332882367842636,
+     "unrealized_usdt": 11.164823353232926,
      "cash": 10.0,
      "holdings": {
       "BTCUSDT": 0.0657415588362832,
       "ETHUSDT": 2.231031810001272
      },
      "weights": {
-      "BTCUSDT": 0.49939730547672984,
-      "ETHUSDT": 0.4996009602304711
+      "BTCUSDT": 0.49944650427895554,
+      "ETHUSDT": 0.49955361418734584
      },
-     "exposure": 0.9989982657072011,
-     "drawdown": -0.0017312902347861314,
+     "exposure": 0.9990001184663014,
+     "drawdown": 0.0,
      "max_drawdown": -0.0017312902347861314,
      "max_drawdown_usdt": -17.31290234786138,
      "fees_paid": 9.98001998001998
@@ -123,18 +126,21 @@
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-07 00:00:00+00:00"
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "last_processed_daily_close_utc": "2026-11-08 00:00:00+00:00",
+   "next_daily_close_utc": "2026-11-09 00:00:00+00:00",
+   "note_last_daily_ts": "last_daily_ts 是最后已处理日线的开盘时刻（UTC 日期）；其收盘 = +1 天"
   },
   "REF_ETH_SMA200": {
    "label": "参考：ETH SMA200",
    "nav": {
     "ideal": {
-     "equity_usdt": 9999.687186873747,
-     "liquidation_usdt": 9999.687186873747,
-     "profit_usdt": -0.3128131262528768,
-     "return": -3.1281312625308644e-05,
+     "equity_usdt": 10017.249409533353,
+     "liquidation_usdt": 10017.249409533353,
+     "profit_usdt": 17.249409533353173,
+     "return": 0.0017249409533353077,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -0.31281312625323654,
+     "unrealized_usdt": 17.249409533352985,
      "cash": 10.000000000001819,
      "holdings": {
       "BTCUSDT": 0.0,
@@ -142,21 +148,21 @@
      },
      "weights": {
       "BTCUSDT": 0.0,
-      "ETHUSDT": 0.9989999687177087
+      "ETHUSDT": 0.9990017219706554
      },
-     "exposure": 0.9989999687177087,
-     "drawdown": -3.1281312625308644e-05,
+     "exposure": 0.9990017219706554,
+     "drawdown": 0.0,
      "max_drawdown": -3.1281312625308644e-05,
      "max_drawdown_usdt": -0.3128131262528768,
      "fees_paid": 0.0
     },
     "cost": {
-     "equity_usdt": 9984.720119334685,
-     "liquidation_usdt": 9969.763026515742,
-     "profit_usdt": -15.279880665315432,
-     "return": -0.0015279880665315382,
+     "equity_usdt": 10002.256029361295,
+     "liquidation_usdt": 9987.272641445268,
+     "profit_usdt": 2.2560293612950773,
+     "return": 0.0002256029361296097,
      "realized_usdt": 0.0,
-     "unrealized_usdt": -5.299860685295351,
+     "unrealized_usdt": 12.236049341315946,
      "cash": 9.999999999998181,
      "holdings": {
       "BTCUSDT": 0.0,
@@ -164,10 +170,10 @@
      },
      "weights": {
       "BTCUSDT": 0.0,
-      "ETHUSDT": 0.9989984696736132
+      "ETHUSDT": 0.9990002255520511
      },
-     "exposure": 0.9989984696736132,
-     "drawdown": -0.0015279880665315382,
+     "exposure": 0.9990002255520511,
+     "drawdown": 0.0,
      "max_drawdown": -0.0015279880665315382,
      "max_drawdown_usdt": -15.279880665315432,
      "fees_paid": 9.980019980019982
@@ -177,37 +183,40 @@
    "pending": [],
    "risk_state": "NORMAL",
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-07 00:00:00+00:00"
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "last_processed_daily_close_utc": "2026-11-08 00:00:00+00:00",
+   "next_daily_close_utc": "2026-11-09 00:00:00+00:00",
+   "note_last_daily_ts": "last_daily_ts 是最后已处理日线的开盘时刻（UTC 日期）；其收盘 = +1 天"
   }
  },
  "buy_hold_since_forward_start": {
   "BTCUSDT": {
    "start_price": 75842.6,
-   "last_price": 75832.2,
-   "buy_hold_return": -0.00013712610063487674
+   "last_price": 75980.2,
+   "buy_hold_return": 0.0018142837930132938
   },
   "ETHUSDT": {
    "start_price": 2235.88,
-   "last_price": 2235.45,
-   "buy_hold_return": -0.00019231801348917887
+   "last_price": 2239.38,
+   "buy_hold_return": 0.0015653791795624539
   }
  },
  "chains": {
   "runner": {
    "ok": true,
-   "n": 8
+   "n": 9
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 26
+   "n": 27
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 34
+   "n": 35
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 26
+   "n": 27
   }
  },
  "real_trading": "disabled (no implementation)"

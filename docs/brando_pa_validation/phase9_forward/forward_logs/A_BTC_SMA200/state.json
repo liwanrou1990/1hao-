@@ -12,7 +12,7 @@
   "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318",
   "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318"
  ],
- "n_runs": 8,
+ "n_runs": 9,
  "ledgers": {
   "ideal": {
    "cash": 10.0,
@@ -37,7 +37,7 @@
    "fees_paid": 0.0,
    "realized": 0.0,
    "seq": 1,
-   "peak_equity": 10000.0,
+   "peak_equity": 10015.103742807994,
    "max_drawdown": -0.000438495758941837,
    "max_drawdown_usdt": -4.3849575894182635
   },
@@ -64,7 +64,7 @@
    "fees_paid": 9.980019980019978,
    "realized": 0.0,
    "seq": 1,
-   "peak_equity": 10000.0,
+   "peak_equity": 10000.113577385131,
    "max_drawdown": -0.0019345924030409467,
    "max_drawdown_usdt": -19.34592403040915
   }
@@ -79,8 +79,8 @@
   "ETHUSDT": 0.0,
   "USDT": 0.0
  },
- "last_run_at": "2026-11-08 06:02:53.803842+00:00",
- "saved_at": "2026-11-08 06:02:55.684367+00:00",
+ "last_run_at": "2026-11-08 13:02:01.087065+00:00",
+ "saved_at": "2026-11-08 13:02:03.334444+00:00",
  "requeued_after_correction": {
   "at": "2026-11-08 03:52:18.968523+00:00",
   "orders": [
