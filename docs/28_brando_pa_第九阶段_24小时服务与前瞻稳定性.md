@@ -152,3 +152,8 @@
 # 引导脚本第二次修复（2026-11-08）
 
 根因：macOS bash 3.2 把 `$REPO（HEAD` 解析为变量 `REPO`+多字节首字节（显示为 `REPO?`），在 `set -u` 下报 unbound variable。修复：变量一律 `${VAR}` 且不紧跟非 ASCII；脚本输出 ASCII；`BRANDO_REPO` 去除粘贴的引号与 `~` 展开；`--dry-run` 改为完全不侵入（不停服务、不改代码）；静态扫描回归测试 + 带智能引号/长破折号/LC_ALL=C 的演练测试。
+
+
+# 升级器真实交易守卫修复（2026-11-08）
+
+根因：守卫用文本扫描 `startswith('live_trading:') and 'true' in line`，而配置行 `live_trading: false   # …即便为 true…` 的注释含 "true" → 误判拒绝。修复：`check_live_trading_disabled` 用严格 YAML（SafeLoader + 重复键报错）读取，要求布尔 False，并检查确认环境变量；安装脚本同样改用该守卫；回归测试覆盖 false 通过、true/字符串/yes/重复键/缺失/解析失败/环境变量拒绝，并与服务自身解析一致。

@@ -31,6 +31,47 @@ DATA_PREFIXES = ("data_store/", "reports_out/", "backups/")
 DATA_SUBSTR = ("/forward_logs/",)
 
 
+class _StrictLoader(__import__("yaml").SafeLoader):
+    """与服务相同的 SafeLoader 语义，但重复键直接报错（PyYAML 默认静默取最后一个）。"""
+
+
+def _strict_construct_mapping(loader, node, deep=False):
+    import yaml
+    mapping = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise yaml.constructor.ConstructorError("while constructing a mapping", node.start_mark, f"duplicate key: {key!r}", key_node.start_mark)
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+_StrictLoader.add_constructor(__import__("yaml").resolver.BaseResolver.DEFAULT_MAPPING_TAG, _strict_construct_mapping)
+
+
+def check_live_trading_disabled(cfg_path: Path) -> dict:
+    """升级前真实交易守卫：用与服务同一套 YAML 解析（SafeLoader）读取 execution.live_trading，要求**布尔 False**。
+    解析失败、重复键、键缺失、非布尔值（如字符串 "false"/"yes"）、True、或环境变量 BRANDO_LIVE_CONFIRM 已设置 → 全部拒绝（宁可误拒不可误放）。"""
+    import yaml
+    out = {"path": str(cfg_path), "ok": False, "value": None, "reason": ""}
+    if not Path(cfg_path).exists():
+        out["reason"] = "配置文件不存在"; return out
+    try:
+        doc = yaml.load(Path(cfg_path).read_text(encoding="utf-8"), Loader=_StrictLoader)
+    except Exception as e:  # noqa: BLE001
+        out["reason"] = f"YAML 解析失败或存在重复键：{type(e).__name__}: {str(e)[:160]}"; return out
+    ex = (doc or {}).get("execution") if isinstance(doc, dict) else None
+    if not isinstance(ex, dict) or "live_trading" not in ex:
+        out["reason"] = "缺少 execution.live_trading"; return out
+    v = ex["live_trading"]; out["value"] = v
+    if v is not False:
+        out["reason"] = f"execution.live_trading 必须是布尔 false，实际为 {v!r}（{type(v).__name__}）"; return out
+    env = ex.get("live_confirm_env", "BRANDO_LIVE_CONFIRM")
+    if os.environ.get(env):
+        out["reason"] = f"环境变量 {env} 已设置，拒绝在此环境升级"; return out
+    out["ok"] = True; out["reason"] = "execution.live_trading == False（布尔），无重复键，确认环境变量未设置"; return out
+
+
 def sha256(p: Path) -> str:
     h = hashlib.sha256()
     with open(p, "rb") as f:
@@ -231,9 +272,9 @@ def run_upgrade(repo: Path, branch: str, worktree_src: Path | None = None, use_l
     def restart_old():
         r = start_service(repo, use_launchd); rep["service_restarted_old_version"] = bool(r.get("started")); step("restart_old_version", **r)
     # 0 前置：真实交易禁用
-    cfgp = repo / "config" / "brando_pa.yaml"
-    if cfgp.exists() and any(l.strip().startswith("live_trading:") and "true" in l for l in cfgp.read_text().splitlines()):
-        return finish(False, "config live_trading: true —— 拒绝升级")
+    cfgp = repo / "config" / "brando_pa.yaml"; guard = check_live_trading_disabled(cfgp); step("live_trading_guard", **guard)
+    if not guard["ok"]:
+        return finish(False, f"真实交易守卫拒绝升级：{guard['reason']}")
     # 1 快照
     before = snapshot(fdir, repo / "data_store" / "brando_pa" / "forward_data_status.json"); step("snapshot_before", accounts=list(before["accounts"]), chains_ok=all(v["events"]["ok"] for v in before["accounts"].values()))
     if not all(v["events"]["ok"] for v in before["accounts"].values()):

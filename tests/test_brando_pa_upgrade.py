@@ -193,3 +193,39 @@ def test_bootstrap_dry_run_is_non_intrusive_and_tolerates_pasted_quotes(tmp_path
     rep = json.loads(sorted(fdir.glob("upgrade_report_*.json"))[-1].read_text())
     assert rep["steps"]["service_state"]["lock_free"] is False and "stop_service" not in rep["steps"] and "fast_forward" not in rep["steps"]      # 未停服务、未切换代码
     assert _git(work, "rev-parse", "HEAD") == head0 and not U.compare_snapshots(before, U.snapshot(fdir)) and list((work / "backups").glob("*.tgz"))
+
+
+def test_live_trading_guard_strict(tmp_path, monkeypatch):
+    """真实报错回归：注释里含 "true" 的 live_trading: false 曾被文本扫描误判为 true。守卫改为严格 YAML：false 通过；true/字符串/重复键/缺失/解析失败/确认环境变量 → 拒绝。"""
+    monkeypatch.delenv("BRANDO_LIVE_CONFIRM", raising=False)
+    def w(txt):
+        p = tmp_path / "brando_pa.yaml"; p.write_text(txt, encoding="utf-8"); return p
+    real = Path(__file__).resolve().parents[1] / "config" / "brando_pa.yaml"
+    g = U.check_live_trading_disabled(real); assert g["ok"] and g["value"] is False, g                                   # 真实配置（注释含 "true"）通过
+    assert U.check_live_trading_disabled(w("execution:\n  live_trading: false   # 即便为 true，还需 BRANDO_LIVE_CONFIRM\n"))["ok"]
+    assert not U.check_live_trading_disabled(w("execution:\n  live_trading: true\n"))["ok"]
+    assert not U.check_live_trading_disabled(w('execution:\n  live_trading: "false"\n'))["ok"]                          # 字符串不是布尔
+    assert not U.check_live_trading_disabled(w("execution:\n  live_trading: yes\n"))["ok"]
+    assert not U.check_live_trading_disabled(w("execution:\n  live_trading: false\n  live_trading: true\n"))["ok"]       # 重复键
+    assert not U.check_live_trading_disabled(w("execution:\n  live_trading: false\nexecution:\n  live_trading: true\n"))["ok"]
+    assert not U.check_live_trading_disabled(w("execution:\n  other: 1\n"))["ok"]                                        # 缺失
+    assert not U.check_live_trading_disabled(w("execution: [\n"))["ok"]                                                  # 解析失败
+    assert not U.check_live_trading_disabled(tmp_path / "missing.yaml")["ok"]
+    monkeypatch.setenv("BRANDO_LIVE_CONFIRM", "I_UNDERSTAND"); assert not U.check_live_trading_disabled(real)["ok"]       # 确认环境变量存在 → 拒绝
+    monkeypatch.delenv("BRANDO_LIVE_CONFIRM")
+    # 与服务自身解析一致
+    from brando_pa.config import cfg
+    assert cfg()["execution"]["live_trading"] is False
+
+
+def test_run_upgrade_uses_strict_guard_on_real_style_config(tmp_path):
+    origin, work = _make_repo(tmp_path)
+    (work / "config" / "brando_pa.yaml").write_text("execution:\n  live_trading: false                 # 真实下单总开关；即便为 true，还需 BRANDO_LIVE_CONFIRM\n")
+    _git(work, "add", "-A"); _git(work, "commit", "-q", "-m", "cfg"); _git(work, "push", "-q", "origin", "main")
+    wt_src = Path(__file__).resolve().parents[1] / "src"
+    rep = U.run_upgrade(work, "main", worktree_src=wt_src, use_launchd=False, skip_pip=True, dry_run=True, log=lambda *_: None)
+    assert rep["steps"]["live_trading_guard"]["ok"] and rep["ok"], rep["reason"]
+    (work / "config" / "brando_pa.yaml").write_text("execution:\n  live_trading: false\n  live_trading: true\n")
+    _git(work, "add", "-A"); _git(work, "commit", "-q", "-m", "cfg2"); _git(work, "push", "-q", "origin", "main")
+    rep2 = U.run_upgrade(work, "main", worktree_src=wt_src, use_launchd=False, skip_pip=True, dry_run=True, log=lambda *_: None)
+    assert not rep2["ok"] and "守卫" in rep2["reason"]

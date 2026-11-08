@@ -19,7 +19,7 @@ BRANDO_REPO="$HOME/1hao-" bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phas
 3. Git：只允许 fast-forward；本地修改的被跟踪**数据文件**（data_store/**、reports_out/**）先原样保存、合并后字节级放回并校验；本地修改的**代码**文件 → 中止不覆盖；本地有未推送提交 → 中止。
 4. 依赖安装与**新版本**时间顺序审计在切换代码之前完成；失败 → 恢复旧版本服务并报告原因；审计不通过不启动新版本。
 5. 升级后核对：每个账户现金、各批次持仓数量、挂单数、已处理订单数、last_daily_ts、forward_start、事件链条数与末尾哈希、纠错链、runner_events 链全部相同；任一不同 → 不启动，提示用备份核对。
-6. 真实交易：config `live_trading: true` 时拒绝升级；升级器不触碰任何策略参数。
+6. 真实交易守卫：用与服务相同的 YAML SafeLoader 严格读取 `execution.live_trading`，要求布尔 false；true、字符串、重复键、键缺失、解析失败或 `BRANDO_LIVE_CONFIRM` 已设置一律拒绝（2026-11-08 修复：旧守卫是文本扫描，被行尾注释里的 "true" 误触发）。升级器不触碰任何策略参数。
 每一步写入 `reports_out/brando_pa/phase8_forward/upgrade_log.jsonl` 与 `upgrade_report_<UTC>.json`。
 
 macOS 兼容性：锁用 `fcntl.flock`（macOS 原生支持；同一目录第二个实例立即退出）；哈希用 Python `hashlib`（不依赖 sha256sum）；进程检查用 `pgrep -f`；服务管理用 `launchctl bootout/bootstrap/kickstart`；`KeepAlive` 在升级期间因 bootout 而不会重启进程。

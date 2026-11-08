@@ -11,8 +11,12 @@ if [ "$(uname -s)" != "Darwin" ]; then echo "此脚本只在 macOS 上运行（�
 mkdir -p "$HOME/.config/brando_pa" reports_out/brando_pa/phase8_forward data_store/brando_pa/forward_bars
 [ -f "$HOME/.config/brando_pa/env" ] || { cp deploy/.env.example "$HOME/.config/brando_pa/env"; chmod 600 "$HOME/.config/brando_pa/env"; }
 WEBHOOK="$(grep -E '^BRANDO_ALERT_WEBHOOK=' "$HOME/.config/brando_pa/env" | cut -d= -f2- || true)"
-# 真实交易硬性禁用：拒绝在配置里出现 live_trading: true
-if grep -Eq '^\s*live_trading:\s*true' config/brando_pa.yaml; then echo "config/brando_pa.yaml 含 live_trading: true，拒绝安装"; exit 1; fi
+# 真实交易硬性禁用：用与服务相同的 YAML 解析严格检查 execution.live_trading（必须是布尔 false；重复键/解析失败/非布尔/true 一律拒绝安装）
+PYTHONPATH=src .venv/bin/python - <<'PYG' || { echo "live trading guard refused installation"; exit 1; }
+from pathlib import Path
+from brando_pa.forward.upgrade import check_live_trading_disabled
+g = check_live_trading_disabled(Path("config/brando_pa.yaml")); print("live_trading guard:", g["ok"], g["reason"]); raise SystemExit(0 if g["ok"] else 1)
+PYG
 # 0) 恢复已有前瞻记录（只在本机还没有账户状态时，从仓库内的审计副本恢复；绝不覆盖已有记录）
 RESTORE_SRC="docs/brando_pa_validation/phase9_forward/forward_logs"; DST="reports_out/brando_pa/phase8_forward"
 if [ ! -f "$DST/A_BTC_SMA200/state.json" ] && [ -f "$RESTORE_SRC/A_BTC_SMA200/state.json" ]; then
