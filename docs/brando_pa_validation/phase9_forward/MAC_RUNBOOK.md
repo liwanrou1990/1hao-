@@ -21,7 +21,10 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - `reports_out/brando_pa/phase8_forward/<账户>/state.json`、`events.jsonl`（哈希链）、`health.json`、`startup_check.json`、`alerts.jsonl`、`daily/`、`service.log`（10 MB × 5 轮转）、`service.lock`（单实例锁）
 - 建议每日备份 `reports_out/brando_pa/phase8_forward` 与 `data_store/brando_pa/forward_data_status.json`（例如 Time Machine 或 rsync）。
 
-## 成交时序规则（2026-11-08 修正后）
+## 成交时序规则（2026-11-08 第二次修正后）
+- **前瞻成交 = 引擎实际处理时刻**，按当时可观察的最新已收盘 1h 收盘价成交（price_time ≥ exec_after > decision_time）；超过 exec_after 1 h → filled_late；超过 3 h → expired；断线无新价格 → pending。绝不按处理时刻之前某根 K 线的开盘价回填。回放模式另行标注。
+
+### 旧说明（已被上面规则取代，保留以便审计）
 - 日线收盘 → 服务下一轮形成决策（decision_time = 运行时钟）→ 订单提交 → 执行时隙 = 决策之后第一根**开盘**的 1h K 线 → 该 K 线收盘后按其开盘价记账（fill 事件含 decision_time / execution_time / execution_price_observed_at / fill_recorded_at）。
 - 任何开盘不晚于决策时刻的 K 线绝不成交（cancelled_invalid）；执行 K 线收盘后超过宽限期仍未记账（服务离线）→ order_expired；收盘后超过宽限期才首次处理的日线 → missed_signal。
 - 审计：`PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-timeline-audit`（退出码 0/1）；纠错需先停止服务：`... forward-timeline-audit --repair`，只写 corrections.jsonl 与 order_cancelled 事件，不改原始记录。

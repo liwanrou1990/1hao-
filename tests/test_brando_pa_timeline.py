@@ -24,11 +24,12 @@ def test_decision_before_execution_slot_and_no_backdated_fill(tmp_path):
     out = r.run_once(now=pd.Timestamp("2024-08-02 03:26", tz="UTC"))
     pend = out["accounts"]["A_BTC_SMA200"]["pending"]; assert pend and all(o["exec_after"] == "2024-08-02 04:00:00+00:00" for o in pend)
     assert all(pd.Timestamp(o["order_submit_time"]) >= pd.Timestamp(o["decision_time"]) for o in pend) and all(pd.Timestamp(o["exec_after"]) > pd.Timestamp(o["decision_time"]) for o in pend)
-    # 04:30：04:00 K 线尚未收盘 → 不成交；05:10：已收盘 → 按 04:00 开盘价成交，记账时间 ≥ 05:00
-    out = r.run_once(now=pd.Timestamp("2024-08-02 04:30", tz="UTC")); assert not out["accounts"]["A_BTC_SMA200"]["fills"]
-    out = r.run_once(now=pd.Timestamp("2024-08-02 05:10", tz="UTC")); fills = out["accounts"]["A_BTC_SMA200"]["fills"]; assert fills
-    f = fills[0]; bar = bars["BTCUSDT"]["1h"].set_index("ts").loc[pd.Timestamp("2024-08-02 04:00", tz="UTC")]
-    assert f["execution_time"] == "2024-08-02 04:00:00+00:00" and abs(f["bar_open"] - float(bar["open"])) < 1e-9 and pd.Timestamp(f["execution_time"]) > pd.Timestamp(f["decision_time"]) and pd.Timestamp(f["fill_recorded_at"]) >= pd.Timestamp("2024-08-02 05:00", tz="UTC")
+    # 前瞻成交 = 引擎处理时刻（04:30 ≥ exec_after 04:00）按当时可观察的最新已收盘 1h 收盘价（03:00 K 线，04:00 收盘）成交；不用任何 K 线开盘价
+    out = r.run_once(now=pd.Timestamp("2024-08-02 03:59", tz="UTC")); assert not out["accounts"]["A_BTC_SMA200"]["fills"]      # 未到 exec_after
+    out = r.run_once(now=pd.Timestamp("2024-08-02 04:30", tz="UTC")); fills = out["accounts"]["A_BTC_SMA200"]["fills"]; assert fills
+    f = fills[0]; bar03 = bars["BTCUSDT"]["1h"].set_index("ts").loc[pd.Timestamp("2024-08-02 03:00", tz="UTC")]
+    assert f["execution_time"] == "2024-08-02 04:30:00+00:00" and f["price_time"] == "2024-08-02 04:00:00+00:00" and abs(f["reference_price"] - float(bar03["close"])) < 1e-9
+    assert pd.Timestamp(f["decision_time"]) < pd.Timestamp(f["price_time"]) <= pd.Timestamp(f["execution_time"]) == pd.Timestamp(f["fill_recorded_at"]) and "bar_open" not in f
     for k in REQUIRED:
         assert k in f, k
     assert f["order_status"] == "filled" and abs(f["equity_after"] - (f["cash_after"] + sum(f["position_after"][s] * f["mark_prices"][s] for s in SYMS))) < 1e-6
@@ -38,7 +39,8 @@ def test_decision_before_execution_slot_and_no_backdated_fill(tmp_path):
     st["pending"].append({"order_id": "A_BTC_SMA200:cost:BTCUSDT:bad:SELL:9", "ledger": "cost", "symbol": "BTCUSDT", "side": "SELL", "qty": 0.001, "amount": None, "signal_ts": "2024-08-02 00:00:00+00:00", "decision_time": "2024-08-02 03:26:00+00:00", "order_submit_time": "2024-08-02 03:26:00+00:00", "exec_after": "2024-08-02 03:00:00+00:00", "reason": "injected", "order_status": "submitted"})
     acc.save(); out = r.run_once(now=pd.Timestamp("2024-08-02 06:10", tz="UTC"))
     ev = [json.loads(l) for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl")]
-    assert any(e["kind"] == "order_cancelled" and e["order_id"].endswith(":bad:SELL:9") and e["order_status"] == "cancelled_invalid" for e in ev) and not any(e["kind"] == "fill" and e["order_id"].endswith(":bad:SELL:9") for e in ev)
+    # 该坏订单 exec_after 03:00，引擎 06:10 处理：已超过宽限（3h）→ expired，绝不以 03:00 开盘价成交
+    assert any(e["kind"] == "order_expired" and e["order_id"].endswith(":bad:SELL:9") for e in ev) and not any(e["kind"] == "fill" and e["order_id"].endswith(":bad:SELL:9") for e in ev)
 
 
 def test_corrections_log_marks_invalid_orders_without_touching_originals(tmp_path):

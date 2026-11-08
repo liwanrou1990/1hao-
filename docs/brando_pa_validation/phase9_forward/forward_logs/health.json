@@ -1,13 +1,13 @@
 {
- "heartbeat_utc": "2026-11-08 03:53:20.120027+00:00",
- "pid": 1464,
+ "heartbeat_utc": "2026-11-08 05:05:47.083714+00:00",
+ "pid": 5597,
  "n_cycles": 1,
- "last_ok_cycle_at": "2026-11-08 03:53:18.131220+00:00",
+ "last_ok_cycle_at": "2026-11-08 05:05:45.121977+00:00",
  "consecutive_failures": 0,
  "last_report_day": "2026-11-07",
  "interval_s": 600,
  "last_cycle": {
-  "now": "2026-11-08 03:53:18.131220+00:00",
+  "now": "2026-11-08 05:05:45.121977+00:00",
   "data": {
    "ok": true,
    "source": "okx_spot",
@@ -19,27 +19,27 @@
   },
   "accounts": {
    "A_BTC_SMA200": {
-    "cost_equity": 10000.0,
+    "cost_equity": 9985.032463788088,
     "ideal_equity": 10000.0,
     "risk_state": "NORMAL",
-    "fills": 0,
-    "pending": 2,
+    "fills": 2,
+    "pending": 0,
     "last_daily_ts": "2026-11-07 00:00:00+00:00"
    },
    "B_modelB_state_machine": {
-    "cost_equity": 10000.0,
+    "cost_equity": 9985.032463788088,
     "ideal_equity": 10000.0,
     "risk_state": "NORMAL",
-    "fills": 0,
-    "pending": 4,
+    "fills": 4,
+    "pending": 0,
     "last_daily_ts": "2026-11-07 00:00:00+00:00"
    },
    "REF_ETH_SMA200": {
-    "cost_equity": 10000.0,
+    "cost_equity": 9985.032463788086,
     "ideal_equity": 10000.0,
     "risk_state": "NORMAL",
-    "fills": 0,
-    "pending": 2,
+    "fills": 2,
+    "pending": 0,
     "last_daily_ts": "2026-11-07 00:00:00+00:00"
    }
   },
@@ -49,17 +49,17 @@
    "anomalies": [],
    "latest": {
     "BTCUSDT": {
-     "1h": "2026-11-08 03:00:00+00:00",
+     "1h": "2026-11-08 05:00:00+00:00",
      "1d": "2026-11-08 00:00:00+00:00"
     },
     "ETHUSDT": {
-     "1h": "2026-11-08 03:00:00+00:00",
+     "1h": "2026-11-08 05:00:00+00:00",
      "1d": "2026-11-08 00:00:00+00:00"
     }
    }
   },
   "storage": {
-   "free_disk_mb": 26749,
+   "free_disk_mb": 26698,
    "log_dir_mb": 0.1,
    "ok": true
   },

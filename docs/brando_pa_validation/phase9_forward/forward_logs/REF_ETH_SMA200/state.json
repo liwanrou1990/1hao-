@@ -5,73 +5,68 @@
  "slippage_bps": 5.0,
  "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
  "last_daily_ts": "2026-11-07 00:00:00+00:00",
- "pending": [
-  {
-   "order_id": "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318",
-   "ledger": "ideal",
-   "symbol": "ETHUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 9990.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.106862+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-   "est_cost": 0.0,
-   "order_simulated_at": "2026-11-08 03:53:20.107266+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  },
-  {
-   "order_id": "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318",
-   "ledger": "cost",
-   "symbol": "ETHUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 9990.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.106862+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
-   "est_cost": 14.985,
-   "order_simulated_at": "2026-11-08 03:53:20.108005+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  }
- ],
+ "pending": [],
  "processed_orders": [
   "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0",
-  "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0"
+  "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0",
+  "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318",
+  "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318"
  ],
- "n_runs": 6,
+ "n_runs": 7,
  "ledgers": {
   "ideal": {
-   "cash": 10000.0,
-   "lots": {},
+   "cash": 10.000000000001819,
+   "lots": {
+    "ETHUSDT": [
+     {
+      "qty": 4.468758946464357,
+      "price": 2235.52,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-1",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
    "fees_paid": 0.0,
    "realized": 0.0,
-   "seq": 0,
+   "seq": 1,
    "peak_equity": 10000.0,
    "max_drawdown": 0.0,
    "max_drawdown_usdt": 0.0
   },
   "cost": {
-   "cash": 10000.0,
-   "lots": {},
-   "fees_paid": 0.0,
+   "cash": 9.999999999998181,
+   "lots": {
+    "ETHUSDT": [
+     {
+      "qty": 4.462063620002544,
+      "price": 2236.63776,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 1.000 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-1",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 9.980019980019982,
    "realized": 0.0,
-   "seq": 0,
+   "seq": 1,
    "peak_equity": 10000.0,
-   "max_drawdown": 0.0,
-   "max_drawdown_usdt": 0.0
+   "max_drawdown": -0.0014967536211913934,
+   "max_drawdown_usdt": -14.967536211914194
   }
  },
  "risk": {
@@ -84,8 +79,8 @@
   "ETHUSDT": 1.0,
   "USDT": 0.0
  },
- "last_run_at": "2026-11-08 03:53:18.131220+00:00",
- "saved_at": "2026-11-08 03:53:20.113331+00:00",
+ "last_run_at": "2026-11-08 05:05:45.121977+00:00",
+ "saved_at": "2026-11-08 05:05:47.075938+00:00",
  "requeued_after_correction": {
   "at": "2026-11-08 03:52:18.972017+00:00",
   "orders": [

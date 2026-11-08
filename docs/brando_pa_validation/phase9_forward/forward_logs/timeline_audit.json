@@ -1,11 +1,11 @@
 {
- "checked_at_utc": "2026-11-08 03:53:20.535905+00:00",
+ "checked_at_utc": "2026-11-08 05:05:47.548987+00:00",
  "accounts": {
   "A_BTC_SMA200": {
    "account": "A_BTC_SMA200",
-   "n_events": 22,
+   "n_events": 25,
    "n_orders": 4,
-   "n_fills": 0,
+   "n_fills": 2,
    "n_expired": 0,
    "n_cancelled": 2,
    "n_invalidated": 2,
@@ -19,10 +19,10 @@
      "invalidated"
     ],
     "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ],
     "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ]
    },
    "violations": [
@@ -44,7 +44,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 22
+    "n": 25
    },
    "corrections_chain": {
     "ok": true,
@@ -54,9 +54,9 @@
   },
   "B_modelB_state_machine": {
    "account": "B_modelB_state_machine",
-   "n_events": 28,
+   "n_events": 33,
    "n_orders": 8,
-   "n_fills": 0,
+   "n_fills": 4,
    "n_expired": 0,
    "n_cancelled": 4,
    "n_invalidated": 4,
@@ -78,16 +78,16 @@
      "invalidated"
     ],
     "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ],
     "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318": [
-     "pending"
+     "filled"
     ],
     "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ],
     "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318": [
-     "pending"
+     "filled"
     ]
    },
    "violations": [
@@ -123,7 +123,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 28
+    "n": 33
    },
    "corrections_chain": {
     "ok": true,
@@ -133,9 +133,9 @@
   },
   "REF_ETH_SMA200": {
    "account": "REF_ETH_SMA200",
-   "n_events": 22,
+   "n_events": 25,
    "n_orders": 4,
-   "n_fills": 0,
+   "n_fills": 2,
    "n_expired": 0,
    "n_cancelled": 2,
    "n_invalidated": 2,
@@ -149,10 +149,10 @@
      "invalidated"
     ],
     "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ],
     "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318": [
-     "pending"
+     "filled"
     ]
    },
    "violations": [
@@ -174,7 +174,7 @@
    "open_violations": [],
    "chain": {
     "ok": true,
-    "n": 22
+    "n": 25
    },
    "corrections_chain": {
     "ok": true,

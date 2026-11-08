@@ -85,7 +85,7 @@ def test_restart_consistency_dedupe_no_negative_cash_and_isolation(tmp_path):
         # 日线收盘时序：信号时间 = 日线收盘；执行 K 线开盘严格晚于决策且 = exec_after；成交在该 K 线收盘后记账
         orders_by_id = {e["order_id"]: e for e in ev if e["kind"] == "order"}
         for e in fills:
-            o = orders_by_id[e["order_id"]]; assert pd.Timestamp(e["execution_time"]) > pd.Timestamp(o["decision_time"]) and e["execution_time"] == o["exec_after"] and pd.Timestamp(e["fill_recorded_at"]) >= pd.Timestamp(e["execution_time"]) + pd.Timedelta(hours=1)
+            o = orders_by_id[e["order_id"]]; assert pd.Timestamp(o["decision_time"]) < pd.Timestamp(e["price_time"]) <= pd.Timestamp(e["execution_time"]) == pd.Timestamp(e["fill_recorded_at"]) and pd.Timestamp(e["execution_time"]) >= pd.Timestamp(o["exec_after"])
         for e in [x for x in ev if x["kind"] == "signal"]:
             assert pd.Timestamp(e["signal_ts"]).hour == 0 and pd.Timestamp(e["signal_generated_at"]) >= pd.Timestamp(e["signal_ts"])
     # 账户隔离：篡改 A 的事件链不影响 B；A 状态文件独立

@@ -119,3 +119,8 @@
 # 部署前最终检查（2026-11-08）
 
 见 `docs/brando_pa_validation/phase9_forward/FINAL_PREDEPLOY_CHECK.md`：发现并修复“决策之后用更早开盘 K 线成交”的时隙缺陷（无成交发生），纠错日志、时间顺序审计工具与回归测试、数据源缺口补齐/切换一致性、Mac 部署文件就绪状态、三账户最新真实状态、72 小时验收未开始。
+
+
+# 前瞻成交机制最后一次真实性检查（2026-11-08）
+
+见 `docs/brando_pa_validation/phase9_forward/FINAL_FILL_CAUSALITY_CHECK.md`：修复“离线恢复后按旧 K 线开盘价回填成交”的问题（成交时间 = 引擎处理时刻、价格 = 当时可观察的最新已收盘收盘价、late/expired 只依赖时间），新增 7 项因果顺序测试；真实账户按修正规则于 05:05 UTC 以 filled_late 建仓。

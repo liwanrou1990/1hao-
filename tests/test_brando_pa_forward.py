@@ -102,13 +102,13 @@ def test_forward_accounts_warmup_separation_restart_dedupe_and_usdt(tmp_path):
     n_pending = len(a["pending"]); n_orders = sum(1 for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl") if json.loads(l)["kind"] == "order")
     out = r.run_once(now=pd.Timestamp("2024-08-02 00:35", tz="UTC"))                      # 同一信号日重复运行：不产生重复订单
     assert len(out["accounts"]["A_BTC_SMA200"]["pending"]) == n_pending and sum(1 for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl") if json.loads(l)["kind"] == "order") == n_orders
-    # 执行时隙 = 决策（00:30）之后第一根开盘的 1h K 线 = 01:00；02:10 该 K 线已收盘 → 按其开盘价成交；两本账（含成本更低）
+    # exec_after = 01:00；引擎 02:10 处理 → 以当时可观察的最新已收盘收盘价（02:00）成交，执行时间 02:10（late）；两本账（含成本更低）
     out = r.run_once(now=pd.Timestamp("2024-08-02 02:10", tz="UTC"))
     a = out["accounts"]["A_BTC_SMA200"]; b = out["accounts"]["B_modelB_state_machine"]
     assert a["nav"]["ideal"]["holdings"]["BTCUSDT"] > 0 and a["nav"]["cost"]["holdings"]["BTCUSDT"] > 0 and a["nav"]["cost"]["equity_usdt"] < a["nav"]["ideal"]["equity_usdt"] and not a["pending"]
     assert abs(b["nav"]["ideal"]["weights"]["BTCUSDT"] - 0.5) < 0.02 and abs(b["nav"]["ideal"]["weights"]["ETHUSDT"] - 0.5) < 0.02
     fills_a = [json.loads(l) for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl") if json.loads(l)["kind"] == "fill"]
-    assert fills_a and all(f["fill_ts"].startswith("2024-08-02 01:00") and pd.Timestamp(f["execution_time"]) > pd.Timestamp(f["decision_time"]) for f in fills_a)
+    assert fills_a and all(f["execution_time"] == "2024-08-02 02:10:00+00:00" and f["price_time"] == "2024-08-02 02:00:00+00:00" and pd.Timestamp(f["price_time"]) > pd.Timestamp(f["decision_time"]) for f in fills_a)
     for n, v in out["accounts"].items():
         for k, nav in v["nav"].items():
             assert nav["cash"] >= 0 and all(q >= 0 for q in nav["holdings"].values())
@@ -123,7 +123,7 @@ def test_forward_accounts_warmup_separation_restart_dedupe_and_usdt(tmp_path):
     out = r2.run_once(now=pd.Timestamp("2024-09-16 00:30", tz="UTC"))
     evA = [json.loads(l) for l in open(tmp_path / "fw" / "A_BTC_SMA200" / "events.jsonl")]
     missed = [e for e in evA if e["kind"] == "missed_signal"]; assert len(missed) >= 40 and all(not e["executed"] and "late" in e["missed_reason"] for e in missed)
-    assert not [e for e in evA if e["kind"] == "fill" and pd.Timestamp(e["fill_ts"]) > pd.Timestamp("2024-08-02 01:00", tz="UTC")]       # 没有回填成交
+    assert not [e for e in evA if e["kind"] == "fill" and pd.Timestamp(e["fill_ts"]) > pd.Timestamp("2024-08-02 03:00", tz="UTC")]       # 离线期间没有任何回填成交
     live = [e for e in evA if e["kind"] == "signal" and e["signal_ts"].startswith("2024-09-16")]; assert live and live[0]["executed"]
     out = r2.run_once(now=pd.Timestamp("2024-09-16 02:10", tz="UTC"))                     # 01:00 那根 1h 收盘 → 成交：A 卖出 BTC，B 切到 ETH（状态机限仓）
     a = out["accounts"]["A_BTC_SMA200"]["nav"]["cost"]; b = out["accounts"]["B_modelB_state_machine"]["nav"]["cost"]

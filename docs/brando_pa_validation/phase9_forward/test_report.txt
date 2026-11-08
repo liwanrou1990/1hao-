@@ -1,3 +1,3 @@
-pytest tests/test_brando_pa_*.py -q  (2026-11-08T04:39Z, Claude 云容器, exit code 0)
-.......................................................................  [100%]
-71 passed, 0 failed = 原有 67 + 时间顺序回归 4（test_brando_pa_timeline.py）
+阶段性记录 (2026-11-08T05:15Z, Claude 云容器)
+前瞻相关 5 个测试文件（causality/timeline/forward/service/deploy）：23 passed, 0 failed
+全套 tests/test_brando_pa_*.py 正在运行，结果将在后续提交中更新（预期 71 + 7 = 78）

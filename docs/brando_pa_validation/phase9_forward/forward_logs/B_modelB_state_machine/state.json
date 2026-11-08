@@ -5,115 +5,104 @@
  "slippage_bps": 5.0,
  "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
  "last_daily_ts": "2026-11-07 00:00:00+00:00",
- "pending": [
-  {
-   "order_id": "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318",
-   "ledger": "ideal",
-   "symbol": "BTCUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 4995.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.080520+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-   "est_cost": 0.0,
-   "order_simulated_at": "2026-11-08 03:53:20.081036+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  },
-  {
-   "order_id": "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318",
-   "ledger": "ideal",
-   "symbol": "ETHUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 4995.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.080520+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-   "est_cost": 0.0,
-   "order_simulated_at": "2026-11-08 03:53:20.081389+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  },
-  {
-   "order_id": "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318",
-   "ledger": "cost",
-   "symbol": "BTCUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 4995.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.080520+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-   "est_cost": 7.4925,
-   "order_simulated_at": "2026-11-08 03:53:20.082142+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  },
-  {
-   "order_id": "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318",
-   "ledger": "cost",
-   "symbol": "ETHUSDT",
-   "side": "BUY",
-   "qty": null,
-   "amount": 4995.0,
-   "signal_ts": "2026-11-08 00:00:00+00:00",
-   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
-   "decision_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
-   "order_submit_wall_clock": "2026-11-08 03:53:20.080520+00:00",
-   "exec_after": "2026-11-08 04:00:00+00:00",
-   "late": true,
-   "reason": "drift 0.500 ≥ 0.1;scaled_to_cash",
-   "est_cost": 7.4925,
-   "order_simulated_at": "2026-11-08 03:53:20.082480+00:00",
-   "order_status": "submitted",
-   "mode": "forward"
-  }
- ],
+ "pending": [],
  "processed_orders": [
   "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0",
   "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1",
   "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0",
-  "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1"
+  "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1",
+  "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318",
+  "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318",
+  "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318",
+  "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318"
  ],
- "n_runs": 6,
+ "n_runs": 7,
  "ledgers": {
   "ideal": {
-   "cash": 10000.0,
-   "lots": {},
+   "cash": 10.00000000000091,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.06584020404531704,
+      "price": 75865.5,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-1",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ],
+    "ETHUSDT": [
+     {
+      "qty": 2.2343794732321784,
+      "price": 2235.52,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-2",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
    "fees_paid": 0.0,
    "realized": 0.0,
-   "seq": 0,
+   "seq": 2,
    "peak_equity": 10000.0,
    "max_drawdown": 0.0,
    "max_drawdown_usdt": 0.0
   },
   "cost": {
-   "cash": 10000.0,
-   "lots": {},
-   "fees_paid": 0.0,
+   "cash": 10.0,
+   "lots": {
+    "BTCUSDT": [
+     {
+      "qty": 0.0657415588362832,
+      "price": 75903.43274999999,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "BTCUSDT-1",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ],
+    "ETHUSDT": [
+     {
+      "qty": 2.231031810001272,
+      "price": 2236.63776,
+      "ts": "2026-11-08 05:05:45.121977+00:00",
+      "strategy": "drift 0.500 ≥ 0.1;scaled_to_cash",
+      "stop": 0.0,
+      "init_stop": 0.0,
+      "atr": 0.0,
+      "risk_usd": 0.0,
+      "lot_id": "ETHUSDT-2",
+      "trailed": false,
+      "mae": 0.0,
+      "mfe": 0.0
+     }
+    ]
+   },
+   "fees_paid": 9.98001998001998,
    "realized": 0.0,
-   "seq": 0,
+   "seq": 2,
    "peak_equity": 10000.0,
-   "max_drawdown": 0.0,
-   "max_drawdown_usdt": 0.0
+   "max_drawdown": -0.0014967536211912824,
+   "max_drawdown_usdt": -14.967536211912375
   }
  },
  "risk": {
@@ -135,8 +124,8 @@
   "ETHUSDT": 0.5,
   "USDT": 0.0
  },
- "last_run_at": "2026-11-08 03:53:18.131220+00:00",
- "saved_at": "2026-11-08 03:53:20.091688+00:00",
+ "last_run_at": "2026-11-08 05:05:45.121977+00:00",
+ "saved_at": "2026-11-08 05:05:47.067821+00:00",
  "requeued_after_correction": {
   "at": "2026-11-08 03:52:18.970208+00:00",
   "orders": [

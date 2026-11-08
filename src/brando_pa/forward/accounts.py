@@ -125,26 +125,63 @@ class ForwardAccount:
         return orders
 
     def fill_pending(self, bars: dict, now: pd.Timestamp) -> list[dict]:
+        """前瞻模式（mode=forward）：订单在 exec_after 之后、由执行引擎**实际处理时**成交——成交时间 = 处理时刻 now，
+        成交参考价 = 此刻可观察的最新已收盘 1h K 线收盘价（price_time = 该 K 线收盘时刻 ≤ now，且 ≥ exec_after > decision_time）。
+        绝不等待未来 K 线、绝不用处理时刻之前某根 K 线的开盘价回填。now > exec_after + 1h → late；now > exec_after + grace → expired（不成交）。
+        回放模式（mode=replay，历史机制检查）：沿用回测口径（exec_after 之后第一根 1h K 线开盘，收盘后记账），事件标注 mode=replay。"""
+        if self.spec.get("mode", "forward") == "replay":
+            return self._fill_pending_replay(bars, now)
         keep = []; fills = []; tf = "1h"; sec = tf_seconds(tf)
         grace = pd.Timedelta(hours=float(self.c.get("forward", {}).get("missed_signal_grace_hours", 3)))
+        for od in sorted(self.state["pending"], key=lambda o: 0 if o["side"] == "SELL" else 1):
+            ea = pd.Timestamp(od["exec_after"]); dec_t = pd.Timestamp(od.get("decision_time") or od.get("order_simulated_at"))
+            if now < ea:
+                keep.append(od); continue                                   # 尚未到可执行时间
+            if now - ea > grace:
+                self.log("order_expired", **({**od, "order_status": "expired", "expired_at": str(now), "reason_expired": f"engine first processed the order {((now - ea).total_seconds() / 3600):.1f} h after exec_after (> grace {grace}); not executed; no backdated fill"}))
+                self.state["processed_orders"].append(od["order_id"]); continue
+            s = od["symbol"]; e = bars[s][tf]; closed = e[(e["ts"] + pd.Timedelta(seconds=sec)) <= now]
+            if closed.empty:
+                keep.append(od); continue
+            bar = closed.iloc[-1]; price_time = bar["ts"] + pd.Timedelta(seconds=sec); ref = float(bar["close"])
+            if price_time < ea or price_time <= dec_t:
+                keep.append(od); continue                                   # 还没有 exec_after 之后可观察的价格（数据滞后）→ 继续等待（可能过期）
+            assert now >= dec_t and price_time <= now
+            k = od["ledger"]; L = self.ledger(k); prices_now = {sym: float(bars[sym][tf]["close"].iloc[-1]) for sym in SYMS}
+            before = {"cash_before": L.cash, "position_before": {sym: L.qty(sym) for sym in SYMS}}
+            late = bool(now > ea + pd.Timedelta(hours=1))
+            common = {"order_id": od["order_id"], "ledger": k, "symbol": s, "signal_candle_close_time": od.get("signal_ts"), "decision_time": str(dec_t), "order_submit_time": od.get("order_submit_time") or od.get("order_simulated_at"), "exec_after": str(ea),
+                      "execution_time": str(now), "price_time": str(price_time), "price_bar_open_time": str(bar["ts"]), "execution_price_observed_at": str(price_time), "fill_recorded_at": str(now), "market_data_source": str(bar["source"]) if "source" in bar else None,
+                      "order_status": "filled_late" if late else "filled", "late": late, "reason": od["reason"], "fill_rule": "forward: executed at engine processing time at the latest closed 1h bar close observable then; never a bar opened before processing",
+                      "note": "simulated fill; not an exchange guarantee"}
+            f = None
+            if od["side"] == "SELL":
+                q = L.qty(s) if od.get("qty") is None else min(float(od["qty"]), L.qty(s))
+                if q > 1e-12:
+                    rec = L.sell(s, q, ref, now, od["reason"]); f = common | {"side": "SELL", "qty": q, "execution_price": rec["price"], "fill_price": rec["price"], "reference_price": ref, "fee": rec["fee"], "fill_ts": str(now), "net_pnl": rec["net_pnl"]}
+            else:
+                buf = float(self.c["usdt"]["allocator"].get("cash_buffer", 0.001)); amt = min(float(od["amount"]), L.cash * (1 - buf)); px = ref * (1 + L.slippage_bps / 1e4) * (1 + L.fee_bps / 1e4); q = amt / px
+                if q > 0 and q * ref >= 10:
+                    lot = L.buy(s, q, ref, now, od["reason"], 0.0, 0.0, 0.0); f = common | {"side": "BUY", "qty": q, "execution_price": lot.price, "fill_price": lot.price, "reference_price": ref, "fee": L.trade_log[-1]["fee"], "fill_ts": str(now)}
+            if f is not None:
+                f |= before | {"cash_after": L.cash, "position_after": {sym: L.qty(sym) for sym in SYMS}, "equity_after": L.equity(prices_now), "realized_pnl_usdt": L.realized, "unrealized_pnl_usdt": L.unrealized(prices_now), "mark_prices": prices_now}
+                self.log("fill", **f); fills.append(f)
+            else:
+                self.log("order_cancelled", **({**od, "order_status": "cancelled_below_minimum", "cancelled_at": str(now)}))
+            self.store_ledger(k, L); self.state["processed_orders"].append(od["order_id"])
+        self.state["pending"] = keep; return fills
+
+    def _fill_pending_replay(self, bars: dict, now: pd.Timestamp) -> list[dict]:
+        """回放口径（历史机制检查，mode=replay）：exec_after 之后第一根 1h K 线开盘价，收盘后记账。"""
+        keep = []; fills = []; tf = "1h"; sec = tf_seconds(tf)
         for od in sorted(self.state["pending"], key=lambda o: 0 if o["side"] == "SELL" else 1):
             e = bars[od["symbol"]][tf]; m = e[(e["ts"] >= pd.Timestamp(od["exec_after"])) & ((e["ts"] + pd.Timedelta(seconds=sec)) <= now)]
             if m.empty:
                 keep.append(od); continue
             bar = m.iloc[0]; o = float(bar["open"]); t = bar["ts"]; k = od["ledger"]; L = self.ledger(k); s = od["symbol"]
-            dec_t = od.get("decision_time") or od.get("order_simulated_at")
-            if dec_t and pd.Timestamp(t) <= pd.Timestamp(dec_t):
-                # 时间穿越保护：成交 K 线的开盘不晚于决策时刻 → 作废并记录，绝不成交
-                self.log("order_cancelled", **({**od, "order_status": "cancelled_invalid", "would_fill_bar": str(t), "cancelled_at": str(now), "reason_cancelled": "execution bar opened before/at decision_time; refusing backdated fill"}))
-                self.state["processed_orders"].append(od["order_id"]); continue
-            if self.spec.get("mode", "forward") != "replay" and (now - (t + pd.Timedelta(seconds=sec))) > grace:
-                # 执行 K 线早已收盘（服务离线）：不按过期价格回填，订单作废并记录；下一次实时日线收盘重新决策
-                self.log("order_expired", **({**od, "order_status": "expired", "would_fill_bar": str(t), "expired_at": str(now), "reason_expired": f"exec bar closed {((now - (t + pd.Timedelta(seconds=sec))).total_seconds() / 3600):.1f} h ago > grace; no backdated fill"}))
-                self.state["processed_orders"].append(od["order_id"]); continue
-            prices_now = {sym: float(bars[sym][tf]["close"].iloc[-1]) for sym in SYMS}
-            before = {"cash_before": L.cash, "position_before": {sym: L.qty(sym) for sym in SYMS}}
-            common = {"order_id": od["order_id"], "ledger": k, "symbol": s, "signal_candle_close_time": od.get("signal_ts"), "decision_time": dec_t, "order_submit_time": od.get("order_submit_time") or od.get("order_simulated_at"), "execution_time": str(t), "execution_price_observed_at": str(t + pd.Timedelta(seconds=sec)), "fill_recorded_at": str(now),
-                      "market_data_source": str(bar["source"]) if "source" in bar else None, "order_status": "filled", "reason": od["reason"], "note": "simulated fill at the open of the first 1h bar opening after decision_time; booked only after that bar closed; not an exchange guarantee"}
+            prices_now = {sym: float(bars[sym][tf]["close"].iloc[-1]) for sym in SYMS}; before = {"cash_before": L.cash, "position_before": {sym: L.qty(sym) for sym in SYMS}}
+            common = {"order_id": od["order_id"], "ledger": k, "symbol": s, "signal_candle_close_time": od.get("signal_ts"), "decision_time": od.get("decision_time"), "order_submit_time": od.get("order_submit_time"), "exec_after": od["exec_after"], "execution_time": str(t), "price_time": str(t), "execution_price_observed_at": str(t + pd.Timedelta(seconds=sec)), "fill_recorded_at": str(now),
+                      "market_data_source": str(bar["source"]) if "source" in bar else None, "order_status": "filled", "reason": od["reason"], "fill_rule": "replay: open of first 1h bar after exec_after (backtest convention)", "mode": "replay"}
             f = None
             if od["side"] == "SELL":
                 q = L.qty(s) if od.get("qty") is None else min(float(od["qty"]), L.qty(s))
@@ -157,8 +194,6 @@ class ForwardAccount:
             if f is not None:
                 f |= before | {"cash_after": L.cash, "position_after": {sym: L.qty(sym) for sym in SYMS}, "equity_after": L.equity(prices_now), "realized_pnl_usdt": L.realized, "unrealized_pnl_usdt": L.unrealized(prices_now), "mark_prices": prices_now}
                 self.log("fill", **f); fills.append(f)
-            else:
-                self.log("order_cancelled", **({**od, "order_status": "cancelled_below_minimum", "cancelled_at": str(now)}))
             self.store_ledger(k, L); self.state["processed_orders"].append(od["order_id"])
         self.state["pending"] = keep; return fills
 

@@ -1,53 +1,53 @@
 {
- "checked_at_utc": "2026-11-08 03:53:17.507703+00:00",
+ "checked_at_utc": "2026-11-08 05:05:44.541380+00:00",
  "chains": {
   "runner": {
    "ok": true,
-   "n": 5
+   "n": 6
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 16
+   "n": 22
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 20
+   "n": 28
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 16
+   "n": 22
   }
  },
  "accounts": {
   "A_BTC_SMA200": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-06 00:00:00+00:00",
-   "pending": 0,
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "pending": 2,
    "processed_orders": 2,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 16
+   "n_events": 22
   },
   "B_modelB_state_machine": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-06 00:00:00+00:00",
-   "pending": 0,
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "pending": 4,
    "processed_orders": 4,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 20
+   "n_events": 28
   },
   "REF_ETH_SMA200": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": "2026-11-06 00:00:00+00:00",
-   "pending": 0,
+   "last_daily_ts": "2026-11-07 00:00:00+00:00",
+   "pending": 2,
    "processed_orders": 2,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 16
+   "n_events": 22
   }
  },
  "data": {
@@ -65,6 +65,6 @@
    }
   }
  },
- "clock_skew_s": 0.07748222351074219,
+ "clock_skew_s": 0.0611414909362793,
  "ok": true
 }

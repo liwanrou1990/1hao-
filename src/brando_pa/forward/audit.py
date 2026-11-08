@@ -41,14 +41,28 @@ def audit_account(acc_dir: Path) -> dict:
     seen = {}
     for f in fills:
         oid = f["order_id"]; seen[oid] = seen.get(oid, 0) + 1
-        o = orders.get(oid, {}); dec = f.get("decision_time") or o.get("decision_time") or o.get("order_simulated_at"); t_open = pd.Timestamp(f.get("execution_time") or f["fill_ts"])
-        if dec and t_open <= pd.Timestamp(dec):
-            viol.append({"rule": "T3-fill", "order_id": oid, "decision": dec, "execution_bar_open": str(t_open)})
-        if o and t_open < pd.Timestamp(o["exec_after"]):
-            viol.append({"rule": "T3-exec_after", "order_id": oid, "exec_after": o["exec_after"], "execution_bar_open": str(t_open)})
-        rec = pd.Timestamp(f.get("fill_recorded_at") or f["recorded_at"])
-        if rec < t_open + H:
-            viol.append({"rule": "T4", "order_id": oid, "bar_close": str(t_open + H), "recorded_at": str(rec)})
+        o = orders.get(oid, {}); dec = f.get("decision_time") or o.get("decision_time") or o.get("order_simulated_at")
+        if f.get("mode") == "replay" or "price_time" not in f:
+            # 回放/旧格式：K 线口径——执行 K 线开盘晚于决策、≥ exec_after，记账在该 K 线收盘后
+            t_open = pd.Timestamp(f.get("execution_time") or f["fill_ts"])
+            if dec and t_open <= pd.Timestamp(dec):
+                viol.append({"rule": "T3-fill", "order_id": oid, "decision": dec, "execution_bar_open": str(t_open)})
+            if o and t_open < pd.Timestamp(o["exec_after"]):
+                viol.append({"rule": "T3-exec_after", "order_id": oid, "exec_after": o["exec_after"], "execution_bar_open": str(t_open)})
+            rec = pd.Timestamp(f.get("fill_recorded_at") or f["recorded_at"])
+            if rec < t_open + H:
+                viol.append({"rule": "T4", "order_id": oid, "bar_close": str(t_open + H), "recorded_at": str(rec)})
+        else:
+            # 前瞻：执行时间 = 引擎处理时刻；价格时间 ≤ 执行时间；决策 < 价格时间；执行时间 ≥ exec_after；记账时间 = 执行时间
+            ex = pd.Timestamp(f["execution_time"]); pt = pd.Timestamp(f["price_time"]); rec = pd.Timestamp(f.get("fill_recorded_at") or f["recorded_at"])
+            if dec and not (pd.Timestamp(dec) < pt <= ex):
+                viol.append({"rule": "T3-forward-causality", "order_id": oid, "decision": dec, "price_time": str(pt), "execution_time": str(ex)})
+            if o and ex < pd.Timestamp(o["exec_after"]):
+                viol.append({"rule": "T3-exec_after", "order_id": oid, "exec_after": o["exec_after"], "execution_time": str(ex)})
+            if rec < ex:
+                viol.append({"rule": "T4-forward", "order_id": oid, "execution_time": str(ex), "recorded_at": str(rec)})
+            if f.get("late") and f.get("order_status") != "filled_late":
+                viol.append({"rule": "T7-late-flag", "order_id": oid})
         if oid in expired or oid in cancelled:
             viol.append({"rule": "T5-status", "order_id": oid})
         if "cash_after" in f:
