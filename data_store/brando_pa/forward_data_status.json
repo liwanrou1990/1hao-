@@ -1,8 +1,8 @@
 {
- "checked_at_utc": "2026-11-08 03:26:52.971273+00:00",
+ "checked_at_utc": "2026-11-08 03:53:18.131220+00:00",
  "ok": true,
  "source": "okx_spot",
- "last_success_utc": "2026-11-08 03:26:52.971273+00:00",
+ "last_success_utc": "2026-11-08 03:53:18.131220+00:00",
  "last_success_source": "okx_spot",
  "stale": false,
  "quality_fault": false,
@@ -10,62 +10,58 @@
  "source_switch": null,
  "per_tf": {
   "BTCUSDT_1h": {
-   "n_fetched": 13,
+   "n_fetched": 4,
    "quality": {
-    "n_raw": 13,
+    "n_raw": 4,
     "duplicates": 0,
-    "out_of_order": 12,
+    "out_of_order": 3,
     "unclosed_dropped": 0,
-    "gaps": [],
-    "added": 9
+    "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-08 03:00:00+00:00",
-   "lag_hours": 0.4480475758333334,
+   "lag_hours": 0.8883697833333334,
    "stale": false,
    "n_stored": 42530
   },
   "BTCUSDT_1d": {
-   "n_fetched": 5,
+   "n_fetched": 4,
    "quality": {
-    "n_raw": 5,
+    "n_raw": 4,
     "duplicates": 0,
-    "out_of_order": 4,
+    "out_of_order": 3,
     "unclosed_dropped": 0,
-    "gaps": [],
-    "added": 1
+    "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-08 00:00:00+00:00",
-   "lag_hours": 3.4480475758333333,
+   "lag_hours": 3.8883697833333333,
    "stale": false,
    "n_stored": 3370
   },
   "ETHUSDT_1h": {
-   "n_fetched": 13,
+   "n_fetched": 4,
    "quality": {
-    "n_raw": 13,
+    "n_raw": 4,
     "duplicates": 0,
-    "out_of_order": 12,
+    "out_of_order": 3,
     "unclosed_dropped": 0,
-    "gaps": [],
-    "added": 9
+    "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-08 03:00:00+00:00",
-   "lag_hours": 0.4480475758333334,
+   "lag_hours": 0.8883697833333334,
    "stale": false,
    "n_stored": 42530
   },
   "ETHUSDT_1d": {
-   "n_fetched": 5,
+   "n_fetched": 4,
    "quality": {
-    "n_raw": 5,
+    "n_raw": 4,
     "duplicates": 0,
-    "out_of_order": 4,
+    "out_of_order": 3,
     "unclosed_dropped": 0,
-    "gaps": [],
-    "added": 1
+    "gaps": []
    },
    "last_closed_bar_close_utc": "2026-11-08 00:00:00+00:00",
-   "lag_hours": 3.4480475758333333,
+   "lag_hours": 3.8883697833333333,
    "stale": false,
    "n_stored": 3370
   }
@@ -83,31 +79,31 @@
   },
   "cross_source": {
    "BTCUSDT_1d": {
-    "overlap_bars": 4,
+    "overlap_bars": 3,
     "other_source": "binance_spot_via_static_klines",
     "max_rel_close_diff": 5.4058330256845366e-05
    },
    "ETHUSDT_1d": {
-    "overlap_bars": 4,
+    "overlap_bars": 3,
     "other_source": "binance_spot_via_static_klines",
-    "max_rel_close_diff": 6.154468363828158e-05
+    "max_rel_close_diff": 5.807019346315556e-05
    }
   }
  },
  "reference_check": {
   "BTCUSDT": {
-   "reference_usd": 75798,
-   "reference_updated_at": 1794108403,
+   "reference_usd": 75811,
+   "reference_updated_at": 1794109996,
    "last_1h_close": 75792.5,
-   "rel_diff": -7.256128130028738e-05,
+   "rel_diff": -0.0002440279115167865,
    "flag_gt_3pct": false,
    "note": "non-exchange reference, alerts only"
   },
   "ETHUSDT": {
-   "reference_usd": 2234.97,
-   "reference_updated_at": 1794108389,
+   "reference_usd": 2235.86,
+   "reference_updated_at": 1794109983,
    "last_1h_close": 2236.53,
-   "rel_diff": 0.000697995946254526,
+   "rel_diff": 0.0002996609805623329,
    "flag_gt_3pct": false,
    "note": "non-exchange reference, alerts only"
   }

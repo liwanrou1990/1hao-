@@ -1,4 +1,3 @@
-pytest tests/test_brando_pa_*.py -q  (2026-11-08T03:38Z, Claude 云容器)
-...................................................................      [100%]
-
-67 passed = 原有 62 + 部署测试 5（test_brando_pa_deploy.py）
+pytest tests/test_brando_pa_*.py -q  (2026-11-08T04:39Z, Claude 云容器, exit code 0)
+.......................................................................  [100%]
+71 passed, 0 failed = 原有 67 + 时间顺序回归 4（test_brando_pa_timeline.py）

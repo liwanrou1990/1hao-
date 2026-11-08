@@ -7,38 +7,51 @@
  "last_daily_ts": "2026-11-07 00:00:00+00:00",
  "pending": [
   {
-   "order_id": "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+   "order_id": "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318",
    "ledger": "ideal",
    "symbol": "BTCUSDT",
    "side": "BUY",
    "qty": null,
    "amount": 9990.0,
    "signal_ts": "2026-11-08 00:00:00+00:00",
-   "exec_after": "2026-11-08 03:00:00+00:00",
+   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
+   "decision_time": "2026-11-08 03:53:18.131220+00:00",
+   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
+   "order_submit_wall_clock": "2026-11-08 03:53:20.058542+00:00",
+   "exec_after": "2026-11-08 04:00:00+00:00",
    "late": true,
-   "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+   "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
    "est_cost": 0.0,
-   "order_simulated_at": "2026-11-08 03:26:55.152576+00:00",
+   "order_simulated_at": "2026-11-08 03:53:20.059102+00:00",
+   "order_status": "submitted",
    "mode": "forward"
   },
   {
-   "order_id": "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0",
+   "order_id": "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318",
    "ledger": "cost",
    "symbol": "BTCUSDT",
    "side": "BUY",
    "qty": null,
    "amount": 9990.0,
    "signal_ts": "2026-11-08 00:00:00+00:00",
-   "exec_after": "2026-11-08 03:00:00+00:00",
+   "signal_candle_close_time": "2026-11-08 00:00:00+00:00",
+   "decision_time": "2026-11-08 03:53:18.131220+00:00",
+   "order_submit_time": "2026-11-08 03:53:18.131220+00:00",
+   "order_submit_wall_clock": "2026-11-08 03:53:20.058542+00:00",
+   "exec_after": "2026-11-08 04:00:00+00:00",
    "late": true,
-   "reason": "target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash",
+   "reason": "drift 1.000 ≥ 0.1;scaled_to_cash",
    "est_cost": 14.985,
-   "order_simulated_at": "2026-11-08 03:26:55.153222+00:00",
+   "order_simulated_at": "2026-11-08 03:53:20.059963+00:00",
+   "order_status": "submitted",
    "mode": "forward"
   }
  ],
- "processed_orders": [],
- "n_runs": 4,
+ "processed_orders": [
+  "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+  "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0"
+ ],
+ "n_runs": 6,
  "ledgers": {
   "ideal": {
    "cash": 10000.0,
@@ -71,6 +84,18 @@
   "ETHUSDT": 0.0,
   "USDT": 0.0
  },
- "last_run_at": "2026-11-08 03:26:52.971273+00:00",
- "saved_at": "2026-11-08 03:26:55.158508+00:00"
+ "last_run_at": "2026-11-08 03:53:18.131220+00:00",
+ "saved_at": "2026-11-08 03:53:20.065284+00:00",
+ "requeued_after_correction": {
+  "at": "2026-11-08 03:52:18.968523+00:00",
+  "orders": [
+   "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+   "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0"
+  ],
+  "note": "同一已收盘日线按修正后的执行时隙规则重新决策；若超过宽限期则记为 missed_signal",
+  "second_requeue": {
+   "at": "2026-11-08 03:53:17.100671+00:00",
+   "note": "03:52 的重新决策因订单号与已作废订单相同被去重（未下单）；修正订单号规则后再次对同一已收盘日线决策"
+  }
+ }
 }

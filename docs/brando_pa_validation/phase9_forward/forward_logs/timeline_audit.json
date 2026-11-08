@@ -1,0 +1,187 @@
+{
+ "checked_at_utc": "2026-11-08 03:53:20.535905+00:00",
+ "accounts": {
+  "A_BTC_SMA200": {
+   "account": "A_BTC_SMA200",
+   "n_events": 22,
+   "n_orders": 4,
+   "n_fills": 0,
+   "n_expired": 0,
+   "n_cancelled": 2,
+   "n_invalidated": 2,
+   "order_statuses": {
+    "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ],
+    "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ]
+   },
+   "violations": [
+    {
+     "rule": "T3-slot",
+     "order_id": "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.152576+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    },
+    {
+     "rule": "T3-slot",
+     "order_id": "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.153222+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    }
+   ],
+   "open_violations": [],
+   "chain": {
+    "ok": true,
+    "n": 22
+   },
+   "corrections_chain": {
+    "ok": true,
+    "n": 2
+   },
+   "ok": true
+  },
+  "B_modelB_state_machine": {
+   "account": "B_modelB_state_machine",
+   "n_events": 28,
+   "n_orders": 8,
+   "n_fills": 0,
+   "n_expired": 0,
+   "n_cancelled": 4,
+   "n_invalidated": 4,
+   "order_statuses": {
+    "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1": [
+     "cancelled",
+     "invalidated"
+    ],
+    "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1": [
+     "cancelled",
+     "invalidated"
+    ],
+    "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ],
+    "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318": [
+     "pending"
+    ],
+    "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ],
+    "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318": [
+     "pending"
+    ]
+   },
+   "violations": [
+    {
+     "rule": "T3-slot",
+     "order_id": "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.173353+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    },
+    {
+     "rule": "T3-slot",
+     "order_id": "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1",
+     "decision": "2026-11-08 03:26:55.173639+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    },
+    {
+     "rule": "T3-slot",
+     "order_id": "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.174324+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    },
+    {
+     "rule": "T3-slot",
+     "order_id": "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1",
+     "decision": "2026-11-08 03:26:55.174613+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    }
+   ],
+   "open_violations": [],
+   "chain": {
+    "ok": true,
+    "n": 28
+   },
+   "corrections_chain": {
+    "ok": true,
+    "n": 4
+   },
+   "ok": true
+  },
+  "REF_ETH_SMA200": {
+   "account": "REF_ETH_SMA200",
+   "n_events": 22,
+   "n_orders": 4,
+   "n_fills": 0,
+   "n_expired": 0,
+   "n_cancelled": 2,
+   "n_invalidated": 2,
+   "order_statuses": {
+    "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0": [
+     "cancelled",
+     "invalidated"
+    ],
+    "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ],
+    "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318": [
+     "pending"
+    ]
+   },
+   "violations": [
+    {
+     "rule": "T3-slot",
+     "order_id": "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.198332+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    },
+    {
+     "rule": "T3-slot",
+     "order_id": "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0",
+     "decision": "2026-11-08 03:26:55.198942+00:00",
+     "exec_after": "2026-11-08 03:00:00+00:00",
+     "status": "invalidated"
+    }
+   ],
+   "open_violations": [],
+   "chain": {
+    "ok": true,
+    "n": 22
+   },
+   "corrections_chain": {
+    "ok": true,
+    "n": 2
+   },
+   "ok": true
+  }
+ },
+ "ok": true
+}

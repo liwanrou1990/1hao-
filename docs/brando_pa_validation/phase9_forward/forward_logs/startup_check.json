@@ -1,73 +1,70 @@
 {
- "checked_at_utc": "2026-11-08 03:26:52.060602+00:00",
+ "checked_at_utc": "2026-11-08 03:53:17.507703+00:00",
  "chains": {
   "runner": {
    "ok": true,
-   "n": 3
+   "n": 5
   },
   "A_BTC_SMA200": {
    "ok": true,
-   "n": 4
+   "n": 16
   },
   "B_modelB_state_machine": {
    "ok": true,
-   "n": 4
+   "n": 20
   },
   "REF_ETH_SMA200": {
    "ok": true,
-   "n": 4
+   "n": 16
   }
  },
  "accounts": {
   "A_BTC_SMA200": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null,
+   "last_daily_ts": "2026-11-06 00:00:00+00:00",
    "pending": 0,
-   "processed_orders": 0,
+   "processed_orders": 2,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 4
+   "n_events": 16
   },
   "B_modelB_state_machine": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null,
+   "last_daily_ts": "2026-11-06 00:00:00+00:00",
    "pending": 0,
-   "processed_orders": 0,
+   "processed_orders": 4,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 4
+   "n_events": 20
   },
   "REF_ETH_SMA200": {
    "state_loaded": true,
    "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
-   "last_daily_ts": null,
+   "last_daily_ts": "2026-11-06 00:00:00+00:00",
    "pending": 0,
-   "processed_orders": 0,
+   "processed_orders": 2,
    "cash_cost": 10000.0,
    "holdings_cost": {},
-   "n_events": 4
+   "n_events": 16
   }
  },
  "data": {
-  "ok": false,
-  "issues": [
-   "BTCUSDT 1h 过期：最新收盘 2026-11-07 18:00:00+00:00，落后 9.4 小时",
-   "ETHUSDT 1h 过期：最新收盘 2026-11-07 18:00:00+00:00，落后 9.4 小时"
-  ],
+  "ok": true,
+  "issues": [],
   "anomalies": [],
   "latest": {
    "BTCUSDT": {
-    "1h": "2026-11-07 18:00:00+00:00",
-    "1d": "2026-11-07 00:00:00+00:00"
+    "1h": "2026-11-08 03:00:00+00:00",
+    "1d": "2026-11-08 00:00:00+00:00"
    },
    "ETHUSDT": {
-    "1h": "2026-11-07 18:00:00+00:00",
-    "1d": "2026-11-07 00:00:00+00:00"
+    "1h": "2026-11-08 03:00:00+00:00",
+    "1d": "2026-11-08 00:00:00+00:00"
    }
   }
  },
- "clock_skew_s": 0.08381462097167969,
+ "clock_skew_s": 0.07748222351074219,
  "ok": true
 }

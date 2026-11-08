@@ -216,10 +216,13 @@ class MarketDataService:
             st.errors += errs
             if got is None:
                 self._event("source_failed", source=src.name, errors=errs[-3:]); continue
-            # 全部拉取成功 → 规范化、入库、质量报告
-            any_new = False; xsrc = {}
+            # 全部拉取成功 → 规范化、入库、质量报告；该来源返回的窗口内若有缺口，用其他可达来源补齐并验证（否则质量异常）
+            any_new = False; xsrc = {}; gap_fill = {}
             for (s, tf), df in got.items():
                 d, rep = normalize(df, tf, now)
+                if rep["gaps"]:
+                    d, filled = self._fill_gaps(d, s, tf, now, exclude=src.name); gap_fill[f"{s}_{tf}"] = filled
+                    rep["gaps_after_fill"] = normalize(d, tf, now)[1]["gaps"]
                 have0 = self.store.load(s, tf, allow_fallback=False)
                 if not d.empty:
                     # 跨来源一致性：与已存的、来源不同的同时刻 K 线比较收盘价（只报告，不改写既有 K 线）
@@ -229,7 +232,8 @@ class MarketDataService:
                             xsrc[f"{s}_{tf}"] = {"overlap_bars": int(len(ov)), "other_source": str(ov["source"].iloc[-1]), "max_rel_close_diff": float((ov["close_new"] / ov["close_old"] - 1).abs().max())}
                         d = d[~d["ts"].isin(have0["ts"])]           # 既有 K 线不被新来源覆盖（历史不可改写）
                     if not d.empty:
-                        d = d.assign(symbol=s, tf=tf, quote_volume=np.nan, source=src.name, ingested_at=now)
+                        src_col = d["gap_filled_from"].fillna(src.name) if "gap_filled_from" in d else src.name
+                        d = d.drop(columns=[c for c in ("gap_filled_from",) if c in d]).assign(symbol=s, tf=tf, quote_volume=np.nan, source=src_col, ingested_at=now)
                         res = self.store.upsert(d, prefer_new=True); any_new |= bool(res.get("added", 0))
                         rep["added"] = int(res.get("added", 0))
                 have = self.store.load(s, tf, allow_fallback=False)
@@ -242,6 +246,15 @@ class MarketDataService:
             prev_src = self._prev_source()
             if prev_src and prev_src != src.name:
                 st.source_switch = {"from": prev_src, "to": src.name, "at": str(now), "overlap": xsrc}; self._event("source_switch", **st.source_switch)
+            if gap_fill:
+                st.consistency["gap_fill"] = gap_fill; self._event("gap_fill", detail=gap_fill)
+                if any(v.get("remaining_gaps") for v in gap_fill.values()):
+                    st.quality_fault = True; st.quality_note += f" 备用来源缺口未能补齐并验证：{gap_fill}"; self._event("data_quality_fault", note=st.quality_note)
+            prev_src2 = self._prev_source()
+            if prev_src2 and prev_src2 != src.name:
+                sc = self.signal_consistency(symbols, src); st.consistency["switch_signal_check"] = sc
+                if any(v.get("trend_mismatch") for v in sc.values() if isinstance(v, dict)):
+                    st.quality_fault = True; st.quality_note += f" 来源切换后 SMA200 趋势判定不一致：{sc}"; self._event("data_quality_fault", note=st.quality_note)
             thr = float(self.c.get("forward", {}).get("cross_source_max_rel_diff", 0.005))
             bad = {k: v for k, v in xsrc.items() if v.get("max_rel_close_diff", 0) > thr}
             if bad:
@@ -254,6 +267,52 @@ class MarketDataService:
         st.reference_check = self.reference_check(symbols)
         self._write_status(st, now)
         return st
+
+    def _fill_gaps(self, d: pd.DataFrame, s: str, tf: str, now: pd.Timestamp, exclude: str) -> tuple[pd.DataFrame, dict]:
+        """用优先级中其他可达来源补齐缺口；补齐 K 线与原来源重叠部分收盘价偏差必须 ≤ 门控，否则不采用。"""
+        thr = float(self.c.get("forward", {}).get("cross_source_max_rel_diff", 0.005)); sec = tf_seconds(tf); info = {"from": None, "filled_bars": 0, "remaining_gaps": None, "overlap_max_rel_diff": None}
+        if d.empty:
+            return d, info
+        full = pd.date_range(d["ts"].iloc[0], d["ts"].iloc[-1], freq=f"{sec}s", tz="UTC"); missing = full.difference(d["ts"])
+        if len(missing) == 0:
+            return d, info
+        for other in self.sources:
+            if other.name == exclude:
+                continue
+            try:
+                od, _ = normalize(other.fetch(s, tf, missing.min() - pd.Timedelta(seconds=sec * 3), missing.max() + pd.Timedelta(seconds=sec * 3)), tf, now)
+            except Exception:  # noqa: BLE001
+                continue
+            if od.empty:
+                continue
+            ov = d.merge(od[["ts", "close"]], on="ts", suffixes=("", "_o"))
+            dev = float((ov["close_o"] / ov["close"] - 1).abs().max()) if len(ov) else 0.0
+            if dev > thr:
+                info["rejected"] = {other.name: dev}; continue
+            add = od[od["ts"].isin(missing)]
+            if add.empty:
+                continue
+            d = pd.concat([d, add.assign(gap_filled_from=other.name)], ignore_index=True).sort_values("ts").reset_index(drop=True)
+            info.update({"from": other.name, "filled_bars": int(len(add)), "overlap_max_rel_diff": dev}); break
+        rem = pd.date_range(d["ts"].iloc[0], d["ts"].iloc[-1], freq=f"{sec}s", tz="UTC").difference(d["ts"])
+        info["remaining_gaps"] = int(len(rem)) if len(rem) else None
+        return d, info
+
+    def signal_consistency(self, symbols: list[str], src) -> dict:
+        """来源切换时：用新来源最近 210 根日线独立计算 SMA200 与趋势（收盘 > SMA200），与已存日线序列比较；趋势判定不一致 → 质量异常。"""
+        out = {}
+        for s in symbols:
+            try:
+                now = utcnow(); nd, _ = normalize(src.fetch(s, "1d", now - pd.Timedelta(days=215), now), "1d", now)
+                have = self.store.load(s, "1d", allow_fallback=False)
+                if len(nd) < 200 or have.empty:
+                    out[s] = {"checked": False, "n_new": int(len(nd))}; continue
+                sma_new = float(nd["close"].tail(200).mean()); c_new = float(nd["close"].iloc[-1])
+                h = have[have["ts"] <= nd["ts"].iloc[-1]]; sma_old = float(h["close"].tail(200).mean()); c_old = float(h["close"].iloc[-1])
+                out[s] = {"checked": True, "last_day": str(nd["ts"].iloc[-1])[:10], "sma200_new": sma_new, "sma200_stored": sma_old, "sma_rel_diff": sma_new / sma_old - 1, "close_rel_diff": c_new / c_old - 1, "trend_new": c_new > sma_new, "trend_stored": c_old > sma_old, "trend_mismatch": (c_new > sma_new) != (c_old > sma_old)}
+            except Exception as e:  # noqa: BLE001
+                out[s] = {"checked": False, "error": f"{type(e).__name__}: {str(e)[:100]}"}
+        return out
 
     def _prev_source(self) -> str | None:
         try:

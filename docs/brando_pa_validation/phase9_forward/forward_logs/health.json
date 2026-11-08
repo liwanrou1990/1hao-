@@ -1,13 +1,13 @@
 {
- "heartbeat_utc": "2026-11-08 03:26:55.251506+00:00",
- "pid": 425,
+ "heartbeat_utc": "2026-11-08 03:53:20.120027+00:00",
+ "pid": 1464,
  "n_cycles": 1,
- "last_ok_cycle_at": "2026-11-08 03:26:52.971273+00:00",
+ "last_ok_cycle_at": "2026-11-08 03:53:18.131220+00:00",
  "consecutive_failures": 0,
  "last_report_day": "2026-11-07",
  "interval_s": 600,
  "last_cycle": {
-  "now": "2026-11-08 03:26:52.971273+00:00",
+  "now": "2026-11-08 03:53:18.131220+00:00",
   "data": {
    "ok": true,
    "source": "okx_spot",
@@ -58,13 +58,12 @@
     }
    }
   },
-  "daily_report": "2026-11-07",
   "storage": {
-   "free_disk_mb": 26756,
+   "free_disk_mb": 26749,
    "log_dir_mb": 0.1,
    "ok": true
   },
-  "elapsed_s": 2.3
+  "elapsed_s": 2.0
  },
  "real_trading": "disabled (no implementation)"
 }

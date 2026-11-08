@@ -54,10 +54,10 @@ def test_service_disconnect_reconnect_stale_and_health(tmp_path):
     # 重连：补齐缺失 K 线，无缺口；下一个日线收盘（宽限期内）正常执行，并在 1h 收盘后成交
     src.fail = 0; clk.t = pd.Timestamp("2024-08-03 00:30", tz="UTC"); out = svc.cycle(); assert out["data"]["ok"]
     h1 = store.load("BTCUSDT", "1h", allow_fallback=False); assert (h1["ts"].diff().dropna() == pd.Timedelta(hours=1)).all() and h1["ts"].iloc[-1] == pd.Timestamp("2024-08-02 23:00", tz="UTC")
-    clk.t = pd.Timestamp("2024-08-03 01:30", tz="UTC"); out = svc.cycle()
+    clk.t = pd.Timestamp("2024-08-03 02:10", tz="UTC"); out = svc.cycle()                     # 执行时隙 01:00（决策 00:30 之后首根开盘），02:00 收盘后记账
     assert out["accounts"]["A_BTC_SMA200"]["cost_equity"] != 10000.0 and svc.health()["ok"]
     # 心跳过期告警（外部监控语义）
-    clk.t = pd.Timestamp("2024-08-03 03:00", tz="UTC"); assert "heartbeat age" in " ".join(svc.health()["reasons"])
+    clk.t = pd.Timestamp("2024-08-03 03:40", tz="UTC"); assert "heartbeat age" in " ".join(svc.health()["reasons"])
     # 日志持久化与轮转
     logs = list((tmp_path / "svc" / "fw").glob("service.log*")); assert (tmp_path / "svc" / "fw" / "service.log").exists() and len(logs) >= 1
     assert all(v["ok"] for v in svc.runner.verify_all().values())
@@ -82,9 +82,10 @@ def test_restart_consistency_dedupe_no_negative_cash_and_isolation(tmp_path):
         fills = [e for e in ev if e["kind"] == "fill"]; assert len({f["order_id"] for f in fills}) == len(fills)
         navs = [e for e in ev if e["kind"] == "nav"]; assert all(l["cash"] >= -1e-9 and all(q >= 0 for q in l["holdings"].values()) for e in navs for l in e["ledgers"].values())
         assert all(e["ledgers"]["cost"]["liquidation_usdt"] <= e["ledgers"]["cost"]["equity_usdt"] + 1e-6 and abs(e["ledgers"]["ideal"]["liquidation_usdt"] - e["ledgers"]["ideal"]["equity_usdt"]) < 1e-6 for e in navs)
-        # 日线收盘时序：信号时间 = 日线收盘；成交 K 线开盘 = 收盘时刻；成交发生在该 K 线收盘后
+        # 日线收盘时序：信号时间 = 日线收盘；执行 K 线开盘严格晚于决策且 = exec_after；成交在该 K 线收盘后记账
+        orders_by_id = {e["order_id"]: e for e in ev if e["kind"] == "order"}
         for e in fills:
-            assert pd.Timestamp(e["fill_ts"]).hour == 0
+            o = orders_by_id[e["order_id"]]; assert pd.Timestamp(e["execution_time"]) > pd.Timestamp(o["decision_time"]) and e["execution_time"] == o["exec_after"] and pd.Timestamp(e["fill_recorded_at"]) >= pd.Timestamp(e["execution_time"]) + pd.Timedelta(hours=1)
         for e in [x for x in ev if x["kind"] == "signal"]:
             assert pd.Timestamp(e["signal_ts"]).hour == 0 and pd.Timestamp(e["signal_generated_at"]) >= pd.Timestamp(e["signal_ts"])
     # 账户隔离：篡改 A 的事件链不影响 B；A 状态文件独立

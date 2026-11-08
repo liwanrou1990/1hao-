@@ -386,6 +386,17 @@ def cmd_forward_data_audit(a):
     _p(cross_source_audit(MarketDataService(), ["BTCUSDT", "ETHUSDT"], a.tf, a.hours))
 
 
+def cmd_forward_timeline_audit(a):
+    from .forward.audit import audit_timeline, repair_invalid_orders
+    from .config import cfg as _cfg, report_dir as _rd
+    from pathlib import Path as _P
+    d = _P(a.log_dir) if a.log_dir else (_rd(_cfg()) / "phase8_forward")
+    if a.repair:
+        _p({"repaired": repair_invalid_orders(d)})
+    r = audit_timeline(d); _p({n: {"ok": v["ok"], "violations": v["violations"], "n_fills": v["n_fills"], "n_cancelled": v["n_cancelled"], "n_invalidated": v["n_invalidated"]} for n, v in r["accounts"].items()} | {"ok": r["ok"]})
+    raise SystemExit(0 if r["ok"] else 1)
+
+
 def cmd_dashboard(a):
     import subprocess
     app = Path(__file__).resolve().parent / "dashboard" / "app.py"
@@ -425,6 +436,7 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间可用性验收状态（不足 72h 固定为未完成）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--start"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("forward-timeline-audit", help="前瞻事件时间顺序审计（--repair：作废决策前执行时隙的挂单并写纠错日志，不改原始事件）"); p.add_argument("--repair", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_timeline_audit)
     p = sub.add_parser("forward-data-audit", help="实时跨来源行情审计（只读）"); p.add_argument("--tf", default="1h"); p.add_argument("--hours", type=int, default=48); p.set_defaults(f=cmd_forward_data_audit)
     p = sub.add_parser("forward-replay", help="独立历史回放（mode=replay，单独目录，不是前瞻）"); p.add_argument("--start", required=True); p.add_argument("--end"); p.add_argument("--log-dir", dest="log_dir", required=True); p.set_defaults(f=cmd_forward_replay)
     p = sub.add_parser("usdt-paper", help="第七阶段前瞻模拟（资金配置；只读行情、追加记录、真实下单禁用）"); p.add_argument("--replay", action="store_true"); p.add_argument("--start"); p.add_argument("--end"); p.add_argument("--verify", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--model"); p.add_argument("--risk-mode", dest="risk_mode"); p.set_defaults(f=cmd_usdt_paper)

@@ -21,6 +21,11 @@ bash deploy/uninstall_mac_brando_pa.sh            # 只移除 launchd 任务，�
 - `reports_out/brando_pa/phase8_forward/<账户>/state.json`、`events.jsonl`（哈希链）、`health.json`、`startup_check.json`、`alerts.jsonl`、`daily/`、`service.log`（10 MB × 5 轮转）、`service.lock`（单实例锁）
 - 建议每日备份 `reports_out/brando_pa/phase8_forward` 与 `data_store/brando_pa/forward_data_status.json`（例如 Time Machine 或 rsync）。
 
+## 成交时序规则（2026-11-08 修正后）
+- 日线收盘 → 服务下一轮形成决策（decision_time = 运行时钟）→ 订单提交 → 执行时隙 = 决策之后第一根**开盘**的 1h K 线 → 该 K 线收盘后按其开盘价记账（fill 事件含 decision_time / execution_time / execution_price_observed_at / fill_recorded_at）。
+- 任何开盘不晚于决策时刻的 K 线绝不成交（cancelled_invalid）；执行 K 线收盘后超过宽限期仍未记账（服务离线）→ order_expired；收盘后超过宽限期才首次处理的日线 → missed_signal。
+- 审计：`PYTHONPATH=src .venv/bin/python -m brando_pa.cli forward-timeline-audit`（退出码 0/1）；纠错需先停止服务：`... forward-timeline-audit --repair`，只写 corrections.jsonl 与 order_cancelled 事件，不改原始记录。
+
 ## 单实例与重复订单
 - `service.lock` 用 `flock` 独占；第二个实例（含 `forward-service --once`）立即退出。
 - 订单号 `账户:账本:标的:信号日:方向:序号` 去重；成交只发生一次；重启后从 `state.json` 恢复挂单与已处理订单。
