@@ -142,3 +142,8 @@
 # 安全升级机制（2026-11-08）
 
 `src/brando_pa/forward/upgrade.py` + `scripts/brando_pa_safe_upgrade.sh`：完整备份与 SHA256 校验、安全停服务（锁 + 进程）、仅 fast-forward、数据文件保存/放回、代码修改中止、依赖与新版审计前置、失败恢复旧版本、升级后快照逐项核对、live_trading 守卫；forward_bars / forward_data_status / data_events 改为不入库（每台主机自有）。测试 `tests/test_brando_pa_upgrade.py`。
+
+
+# 安全升级引导脚本修复（2026-11-08）
+
+根因：`scripts/brando_pa_safe_upgrade.sh` 以 `dirname "$0"/..` 作为仓库目录，从 /tmp 运行副本时解析为 `/`，Git 命令报 `not a git repository`（服务未动，无数据影响）。修复：仓库目录按 `BRANDO_REPO` → 脚本所在仓库（且含 config/brando_pa.yaml）→ 当前目录 → `~/1hao-` 解析；全部路径加引号兼容空格；升级器 `--repo` 自动取 Git 顶层；新增回归测试（从临时目录运行、含空格路径、演练 → 正式升级 → 审计失败不启动）。

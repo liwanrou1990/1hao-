@@ -215,7 +215,10 @@ def apply_fast_forward(repo: Path, remote_ref: str, data_files: list[str]) -> di
 
 # ---------- 主流程 ----------
 def run_upgrade(repo: Path, branch: str, worktree_src: Path | None = None, use_launchd: bool | None = None, python: str | None = None, dry_run: bool = False, skip_pip: bool = False, log=print) -> dict:
-    repo = Path(repo).resolve(); use_launchd = (sys.platform == "darwin") if use_launchd is None else use_launchd; python = python or sys.executable
+    top = _run(["git", "rev-parse", "--show-toplevel"], cwd=Path(repo).resolve(), check=False)
+    if top.returncode != 0:
+        raise SystemExit(f"--repo {repo} 不是 Git 仓库（请指向 ~/1hao- 这类项目目录）")
+    repo = Path(top.stdout.strip()).resolve(); use_launchd = (sys.platform == "darwin") if use_launchd is None else use_launchd; python = python or sys.executable
     fdir = repo / "reports_out" / "brando_pa" / "phase8_forward"; lock = fdir / "service.lock"; remote = f"origin/{branch}"
     ulog = fdir / "upgrade_log.jsonl"; rep = {"started_utc": str(pd.Timestamp.now(tz="UTC")), "repo": str(repo), "branch": branch, "steps": {}, "ok": False, "service_restarted_old_version": False}
     def step(name, **kw):

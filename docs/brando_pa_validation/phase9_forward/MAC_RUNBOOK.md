@@ -1,13 +1,14 @@
 # Mac 安全更新步骤（已在运行的 Mac；不删除、不重置账户与日志；绝不 reset / clean / 强制覆盖；不会双实例）
 
-一次性引导（当前 Mac 检出还是旧版本，先只取新版本的升级引导脚本）：
+一次性引导（当前 Mac 检出还是旧版本，先只取新版本的升级引导脚本；脚本可放在 /tmp，仓库目录按 BRANDO_REPO → 脚本所在仓库 → 当前目录 → ~/1hao- 解析，路径可含空格）：
 ```bash
 cd ~/1hao-
 git fetch origin claude/brando-pa-phase9-deploy
 git show origin/claude/brando-pa-phase9-deploy:scripts/brando_pa_safe_upgrade.sh > /tmp/brando_safe_upgrade.sh
-bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy --dry-run   # 只做：快照 → 完整备份 + 校验 → 安全停服务 → 恢复服务；不改代码
-bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy             # 正式升级
+BRANDO_REPO="$HOME/1hao-" bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy --dry-run   # 演练：快照 → 完整备份 + 校验 → 安全停服务 → 恢复服务；不改代码
+BRANDO_REPO="$HOME/1hao-" bash /tmp/brando_safe_upgrade.sh claude/brando-pa-phase9-deploy             # 正式升级
 ```
+（2026-11-08 修复：旧版引导脚本用 `dirname "$0"/..` 推断仓库，从 /tmp 运行时会得到 `fatal: not a git repository`；现已改为显式解析，并有回归测试。）
 以后：`bash scripts/brando_pa_forward_ctl.sh upgrade`（同一引导脚本）。
 
 升级器（`src/brando_pa/forward/upgrade.py`，由新版本代码在临时 worktree 中执行）保证：
