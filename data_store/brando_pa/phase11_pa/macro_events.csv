@@ -1,0 +1,290 @@
+date,event,source,approx,time_et
+2018-01-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-01-31,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-02-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-02-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-03-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-03-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-03-21,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-04-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-05-02,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-05-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-06-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-06-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-06-13,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-07-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-08-01,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-08-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-09-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-09-26,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-10-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-11-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-11-08,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2018-11-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-12-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2018-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2018-12-19,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-01-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-01-30,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-02-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-02-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-03-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-03-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-03-20,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-04-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-05-01,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-05-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-06-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-06-19,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-07-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-07-31,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-08-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-08-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-09-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-09-18,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-10-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-10-30,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2019-11-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-11-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-12-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2019-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2019-12-11,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-01-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-01-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-02-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-03-03,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-03-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-03-15,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-04-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-04-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-05-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-05-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-06-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-06-10,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-07-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-07-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-08-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-09-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-09-16,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-10-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-10-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-11-05,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2020-11-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-12-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2020-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2020-12-16,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-01-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-01-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-01-27,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-02-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-03-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-03-17,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-04-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-04-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-04-28,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-05-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-06-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-06-16,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-07-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-07-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-07-28,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-08-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-09-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-09-22,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-10-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-10-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-11-03,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2021-11-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-12-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2021-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2021-12-15,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-01-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-01-26,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-02-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-03-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-03-16,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-04-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-04-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-05-04,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-05-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-06-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-06-15,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-07-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-07-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-07-27,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-08-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-09-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-09-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-09-21,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-10-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-11-02,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2022-11-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-12-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2022-12-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2022-12-14,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-01-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-02-01,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-02-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-03-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-03-22,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-04-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-05-03,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-05-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-06-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-06-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-06-14,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-07-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-07-26,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-08-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-09-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-09-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-09-20,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-10-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-11-01,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2023-11-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-12-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2023-12-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2023-12-13,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-01-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-01-31,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-02-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-02-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-03-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-03-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-03-20,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-04-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-05-01,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-05-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-05-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-06-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-06-12,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-07-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-07-31,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-08-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-08-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-09-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-09-18,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-10-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-11-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-11-07,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2024-11-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-12-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2024-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2024-12-18,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-01-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-01-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-01-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-02-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-03-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-03-19,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-04-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-05-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-05-07,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-05-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-06-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-06-18,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-07-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-07-30,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-08-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-08-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-09-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-09-17,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-10-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-10-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-10-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2025-11-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-12-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2025-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2025-12-10,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-01-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-01-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-01-28,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-02-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-02-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-03-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-03-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-03-18,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-04-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-04-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-04-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-05-01,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-05-11,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-06-05,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-06-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-06-17,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-07-03,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-07-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-07-29,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-08-07,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-08-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-09-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-09-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-09-16,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-10-02,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-10-12,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-10-28,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-11-06,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-11-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30
+2026-12-04,NFP,rule: first Friday 08:30 ET (BLS Employment Situation); 未逐条核验例外日期,True,08:30
+2026-12-09,FOMC,Federal Reserve FOMC calendar (meeting decision day; 2020-03-03 与 2020-03-15 为紧急会议),False,14:00
+2026-12-10,CPI,rule: first weekday on/after the 10th 08:30 ET (BLS CPI); 未逐条核验,True,08:30

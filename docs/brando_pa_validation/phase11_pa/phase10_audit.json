@@ -1,0 +1,602 @@
+{
+ "checked_at_utc": "2026-11-09 01:03:40.243645+00:00",
+ "source_commit_claimed": "5a19020",
+ "data": {
+  "BTCUSDT": {
+   "bars": 3370,
+   "calendar_span_days": 3370,
+   "bars_equal_span": true,
+   "duplicates": 0,
+   "first": "2017-08-17",
+   "last": "2026-11-07",
+   "bars_warmup_before_2018": 137,
+   "bars_from_2018": 3233,
+   "sources": {
+    "binance_spot_via_static_klines": 3369,
+    "okx_spot": 1
+   },
+   "ohlc_valid": true,
+   "adjustment": "现货，无复权；无其他资产混入（文件按币种分开）"
+  },
+  "ETHUSDT": {
+   "bars": 3370,
+   "calendar_span_days": 3370,
+   "bars_equal_span": true,
+   "duplicates": 0,
+   "first": "2017-08-17",
+   "last": "2026-11-07",
+   "bars_warmup_before_2018": 137,
+   "bars_from_2018": 3233,
+   "sources": {
+    "binance_spot_via_static_klines": 3369,
+    "okx_spot": 1
+   },
+   "ohlc_valid": true,
+   "adjustment": "现货，无复权；无其他资产混入（文件按币种分开）"
+  }
+ },
+ "cost_convention": {
+  "costs_one_side_bps": [
+   0,
+   10,
+   15,
+   25
+  ],
+  "split": {
+   "0": [
+    0.0,
+    0.0
+   ],
+   "10": [
+    5.0,
+    5.0
+   ],
+   "15": [
+    10.0,
+    5.0
+   ],
+   "25": [
+    20.0,
+    5.0
+   ]
+  },
+  "statement": "25 bps = 单侧（买入 25 + 卖出 25 = 往返 50 bps；清仓估值另扣一次卖出成本）",
+  "verified_from_fills": true
+ },
+ "strategies": {
+  "S1_BTC_SMA200": {
+   "final_equity_full": 64341.417320355205,
+   "liquidation_net_profit_full": 54180.77544148984,
+   "max_drawdown": -0.6501775320855758,
+   "longest_drawdown_days": 1054,
+   "closed_trades": 32,
+   "sum_closed_net_pnl": 48952.78839144545,
+   "top2_pnl": 53673.4782205217,
+   "top2_share_of_closed_pnl": 1.0964335226693889,
+   "top5_pnl": 79163.10715353183,
+   "top5_share": 1.6171317253781945,
+   "pnl_excluding_top5": -30210.318762086383,
+   "top5_trades": [
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2023-10-17 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 262,
+     "net_pnl": 27274.551215242165
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2020-04-30 00:00:00+00:00",
+     "exit_ts": "2021-05-20 00:00:00+00:00",
+     "hold_days": 385,
+     "net_pnl": 26398.927005279533
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2024-10-15 00:00:00+00:00",
+     "exit_ts": "2025-03-10 00:00:00+00:00",
+     "hold_days": 146,
+     "net_pnl": 11114.912850772736
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2025-04-23 00:00:00+00:00",
+     "exit_ts": "2025-10-18 00:00:00+00:00",
+     "hold_days": 178,
+     "net_pnl": 7423.422951955036
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2023-01-14 00:00:00+00:00",
+     "exit_ts": "2023-08-18 00:00:00+00:00",
+     "hold_days": 216,
+     "net_pnl": 6951.293130282351
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": 7816.557022247391,
+    "S8b_BUYHOLD_ETH": 34677.68924003583,
+    "S8c_BUYHOLD_5050": 21223.917816617468
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -2036.1653312130893,
+    "S8b_BUYHOLD_ETH": 5566.6954305326,
+    "S8c_BUYHOLD_5050": 1761.7215486097793
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 109237.97903780773,
+     "avg_month_usdt": 3310.2417890244765,
+     "share_positive": 0.7272727272727273
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -29045.48706925785,
+     "avg_month_usdt": -1383.1184318694216,
+     "share_positive": 0.0
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": -25851.074648194684,
+     "avg_month_usdt": -487.75612543763555,
+     "share_positive": 0.20754716981132076
+    }
+   },
+   "segments": {
+    "full": 54180.77544148984,
+    "train": 11137.96018578031,
+    "valid": 9219.613470032793,
+    "oos": 5043.749766637598
+   },
+   "beats_btc_bh_all_three_segments": false
+  },
+  "S2_ETH_SMA200": {
+   "final_equity_full": 80049.34108342789,
+   "liquidation_net_profit_full": 69849.49945987566,
+   "max_drawdown": -0.7418924248537399,
+   "longest_drawdown_days": 973,
+   "closed_trades": 28,
+   "sum_closed_net_pnl": 70704.20778176005,
+   "top2_pnl": 56020.81500090813,
+   "top2_share_of_closed_pnl": 0.792326464838209,
+   "top5_pnl": 96957.73205508708,
+   "top5_share": 1.3713148778126865,
+   "pnl_excluding_top5": -26253.524273327028,
+   "top5_trades": [
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2023-10-30 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 249,
+     "net_pnl": 31380.75556230253
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2020-04-23 00:00:00+00:00",
+     "exit_ts": "2021-06-26 00:00:00+00:00",
+     "hold_days": 429,
+     "net_pnl": 24640.059438605604
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-07-06 00:00:00+00:00",
+     "exit_ts": "2025-11-05 00:00:00+00:00",
+     "hold_days": 122,
+     "net_pnl": 20649.90996114196
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2021-07-24 00:00:00+00:00",
+     "exit_ts": "2022-01-08 00:00:00+00:00",
+     "hold_days": 168,
+     "net_pnl": 13297.85748157362
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2023-01-13 00:00:00+00:00",
+     "exit_ts": "2023-08-18 00:00:00+00:00",
+     "hold_days": 217,
+     "net_pnl": 6989.149611463359
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": 23485.281040633214,
+    "S8b_BUYHOLD_ETH": 50346.41325842165,
+    "S8c_BUYHOLD_5050": 36892.64183500329
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -3575.5604747942925,
+    "S8b_BUYHOLD_ETH": 4027.3002869513966,
+    "S8c_BUYHOLD_5050": 222.32640502857612
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 100708.27041278365,
+     "avg_month_usdt": 3051.765770084353,
+     "share_positive": 0.696969696969697
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -21268.053192366337,
+     "avg_month_usdt": -1012.7644377317304,
+     "share_positive": 0.047619047619047616
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": -9390.876136989424,
+     "avg_month_usdt": -177.18634220734762,
+     "share_positive": 0.20754716981132076
+    }
+   },
+   "segments": {
+    "full": 69849.49945987566,
+    "train": 35982.030500986075,
+    "valid": 2059.169951133985,
+    "oos": 3504.354623056395
+   },
+   "beats_btc_bh_all_three_segments": false
+  },
+  "S3_DYN_BTC_ETH": {
+   "final_equity_full": 60549.10572747169,
+   "liquidation_net_profit_full": 50397.86614039311,
+   "max_drawdown": -0.7720610819907022,
+   "longest_drawdown_days": 935,
+   "closed_trades": 86,
+   "sum_closed_net_pnl": 48125.75779427738,
+   "top2_pnl": 27441.142550065502,
+   "top2_share_of_closed_pnl": 0.5701965809529241,
+   "top5_pnl": 57053.739709637506,
+   "top5_share": 1.1855135861657382,
+   "pnl_excluding_top5": -8927.981915360127,
+   "top5_trades": [
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-07-06 00:00:00+00:00",
+     "exit_ts": "2025-10-20 00:00:00+00:00",
+     "hold_days": 106,
+     "net_pnl": 14018.286891542268
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2020-04-23 00:00:00+00:00",
+     "exit_ts": "2021-05-21 00:00:00+00:00",
+     "hold_days": 393,
+     "net_pnl": 13422.855658523236
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2023-10-30 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 249,
+     "net_pnl": 12505.099972330743
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2023-10-17 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 262,
+     "net_pnl": 11936.320647266117
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2020-04-30 00:00:00+00:00",
+     "exit_ts": "2021-05-20 00:00:00+00:00",
+     "hold_days": 385,
+     "net_pnl": 5171.17653997514
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": 4033.6477211506644,
+    "S8b_BUYHOLD_ETH": 30894.7799389391,
+    "S8c_BUYHOLD_5050": 17441.00851552074
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -4145.477796346338,
+    "S8b_BUYHOLD_ETH": 3457.3829653993507,
+    "S8c_BUYHOLD_5050": -347.5909165234698
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 97293.19107130003,
+     "avg_month_usdt": 2948.278517312122,
+     "share_positive": 0.7878787878787878
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -19702.03877452179,
+     "avg_month_usdt": -938.1923225962756,
+     "share_positive": 0.047619047619047616
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": -27042.046569306563,
+     "avg_month_usdt": -510.2272937605012,
+     "share_positive": 0.24528301886792453
+    }
+   },
+   "segments": {
+    "full": 50397.86614039311,
+    "train": 18841.621623778658,
+    "valid": 5081.582487467247,
+    "oos": 2934.4373015043493
+   },
+   "beats_btc_bh_all_three_segments": false
+  },
+  "S7_HOLD90_EXTEND": {
+   "final_equity_full": 60089.81561746192,
+   "liquidation_net_profit_full": 49939.723245453686,
+   "max_drawdown": -0.7937358482076127,
+   "longest_drawdown_days": 825,
+   "closed_trades": 43,
+   "sum_closed_net_pnl": 47684.84978463812,
+   "top2_pnl": 25828.294392508968,
+   "top2_share_of_closed_pnl": 0.5416457115658077,
+   "top5_pnl": 56283.58786541115,
+   "top5_share": 1.180324319351073,
+   "pnl_excluding_top5": -8598.73808077303,
+   "top5_trades": [
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-06-10 00:00:00+00:00",
+     "exit_ts": "2025-10-20 00:00:00+00:00",
+     "hold_days": 132,
+     "net_pnl": 13236.21246222946
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2023-08-30 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 310,
+     "net_pnl": 12592.081930279508
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2020-04-09 00:00:00+00:00",
+     "exit_ts": "2021-05-21 00:00:00+00:00",
+     "hold_days": 407,
+     "net_pnl": 12263.791710080775
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2023-10-25 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 254,
+     "net_pnl": 10333.043402120044
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2021-06-28 00:00:00+00:00",
+     "exit_ts": "2021-12-15 00:00:00+00:00",
+     "hold_days": 170,
+     "net_pnl": 7858.458360701361
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": 3575.5048262112396,
+    "S8b_BUYHOLD_ETH": 30436.637043999675,
+    "S8c_BUYHOLD_5050": 16982.865620581317
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -1511.3247610591843,
+    "S8b_BUYHOLD_ETH": 6091.536000686505,
+    "S8c_BUYHOLD_5050": 2286.5621187636843
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 84852.22865075008,
+     "avg_month_usdt": 2571.279656083336,
+     "share_positive": 0.7575757575757576
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -26204.113412620023,
+     "avg_month_usdt": -1247.8149244104773,
+     "share_positive": 0.047619047619047616
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": -8558.299620668146,
+     "avg_month_usdt": -161.47735133336124,
+     "share_positive": 0.32075471698113206
+    }
+   },
+   "segments": {
+    "full": 49939.723245453686,
+    "train": 20893.197308254967,
+    "valid": 2248.694348221128,
+    "oos": 5568.590336791503
+   },
+   "beats_btc_bh_all_three_segments": false
+  },
+  "B2_modelB_state_machine_daily_repro": {
+   "final_equity_full": 64401.52772467955,
+   "liquidation_net_profit_full": 54323.603194954216,
+   "max_drawdown": -0.25491936182676145,
+   "longest_drawdown_days": 702,
+   "closed_trades": 91,
+   "sum_closed_net_pnl": 53284.66301932836,
+   "top2_pnl": 14863.880006861564,
+   "top2_share_of_closed_pnl": 0.2789523131913187,
+   "top5_pnl": 29393.532334184634,
+   "top5_share": 0.5516321333124033,
+   "pnl_excluding_top5": 23891.13068514373,
+   "top5_trades": [
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-07-06 00:00:00+00:00",
+     "exit_ts": "2025-08-20 00:00:00+00:00",
+     "hold_days": 45,
+     "net_pnl": 8942.230899681952
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-07-06 00:00:00+00:00",
+     "exit_ts": "2025-10-20 00:00:00+00:00",
+     "hold_days": 106,
+     "net_pnl": 5921.649107179612
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2020-06-08 00:00:00+00:00",
+     "exit_ts": "2021-01-22 00:00:00+00:00",
+     "hold_days": 228,
+     "net_pnl": 5738.577712315204
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2023-10-30 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 249,
+     "net_pnl": 4451.5278308775405
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2023-10-17 00:00:00+00:00",
+     "exit_ts": "2024-07-05 00:00:00+00:00",
+     "hold_days": 262,
+     "net_pnl": 4339.546784130325
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": 7959.384775711769,
+    "S8b_BUYHOLD_ETH": 34820.516993500205,
+    "S8c_BUYHOLD_5050": 21366.745570081846
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -2148.5893159000298,
+    "S8b_BUYHOLD_ETH": 5454.271445845659,
+    "S8c_BUYHOLD_5050": 1649.297563922839
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 48038.20136307919,
+     "avg_month_usdt": 1455.7030716084603,
+     "share_positive": 0.6666666666666666
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -5246.663666851048,
+     "avg_month_usdt": -249.84112699290705,
+     "share_positive": 0.0
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": 11609.99002845141,
+     "avg_month_usdt": 219.05641563115867,
+     "share_positive": 0.20754716981132076
+    }
+   },
+   "segments": {
+    "full": 54323.603194954216,
+    "train": 17791.936091264826,
+    "valid": 3181.9995147242917,
+    "oos": 4931.325781950658
+   },
+   "beats_btc_bh_all_three_segments": false
+  },
+  "S4_HOLD30": {
+   "final_equity_full": 45199.71690714224,
+   "liquidation_net_profit_full": 35086.82474397268,
+   "max_drawdown": -0.7802369525010584,
+   "longest_drawdown_days": 1020,
+   "closed_trades": 213,
+   "sum_closed_net_pnl": 39563.330439102836,
+   "top2_pnl": 15483.273827137396,
+   "top2_share_of_closed_pnl": 0.39135415687437525,
+   "top5_pnl": 32831.903148315774,
+   "top5_share": 0.8298569100205481,
+   "pnl_excluding_top5": 6731.427290787062,
+   "top5_trades": [
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2024-10-26 00:00:00+00:00",
+     "exit_ts": "2024-11-25 00:00:00+00:00",
+     "hold_days": 30,
+     "net_pnl": 7995.150340294829
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2025-04-23 00:00:00+00:00",
+     "exit_ts": "2025-05-23 00:00:00+00:00",
+     "hold_days": 30,
+     "net_pnl": 7488.123486842566
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2025-07-11 00:00:00+00:00",
+     "exit_ts": "2025-07-25 00:00:00+00:00",
+     "hold_days": 14,
+     "net_pnl": 5966.322254532931
+    },
+    {
+     "symbol": "BTCUSDT",
+     "entry_ts": "2024-02-18 00:00:00+00:00",
+     "exit_ts": "2024-03-19 00:00:00+00:00",
+     "hold_days": 30,
+     "net_pnl": 5923.433955858962
+    },
+    {
+     "symbol": "ETHUSDT",
+     "entry_ts": "2024-04-28 00:00:00+00:00",
+     "exit_ts": "2024-05-28 00:00:00+00:00",
+     "hold_days": 30,
+     "net_pnl": 5458.873110786485
+    }
+   ],
+   "vs_buyhold_full": {
+    "S8a_BUYHOLD_BTC": -11277.39367526977,
+    "S8b_BUYHOLD_ETH": 15583.738542518666,
+    "S8c_BUYHOLD_5050": 2129.967119100307
+   },
+   "vs_buyhold_oos": {
+    "S8a_BUYHOLD_BTC": -2387.681986262827,
+    "S8b_BUYHOLD_ETH": 5215.178775482862,
+    "S8c_BUYHOLD_5050": 1410.2048935600415
+   },
+   "regimes": {
+    "bull": {
+     "months": 33,
+     "pnl_usdt": 75074.1093441232,
+     "avg_month_usdt": 2274.9730104279756,
+     "share_positive": 0.7272727272727273
+    },
+    "bear": {
+     "months": 21,
+     "pnl_usdt": -22931.822206912977,
+     "avg_month_usdt": -1091.9915336625227,
+     "share_positive": 0.047619047619047616
+    },
+    "sideways": {
+     "months": 53,
+     "pnl_usdt": -16942.570230067984,
+     "avg_month_usdt": -319.67113641637707,
+     "share_positive": 0.32075471698113206
+    }
+   },
+   "segments": {
+    "full": 35086.82474397268,
+    "train": 17341.845970815386,
+    "valid": 674.6435663364973,
+    "oos": 4692.233111587861
+   },
+   "beats_btc_bh_all_three_segments": false
+  }
+ },
+ "notes": [
+  "3,370 根 = 2017-08-17 → 2026-11-07 的日历天数（含 137 根 2017 年预热，仅用于 SMA200；研究窗口 2018-01-01 起 3,233 根）；无重复、无其他资产。",
+  "S1/S2 的闭合交易净额中最大两笔占比 > 79%，去掉最大五笔后为负：收益高度依赖少数长持仓。",
+  "没有任何趋势策略在训练 / 验证 / 测试三段都战胜 BTC 买入持有；2024–2026 段全部落后。",
+  "2024–2026 数据已在 Phase 10 被查看，Phase 11 对该段的任何结果都不是盲测；真正的样本外只能来自后续前瞻。",
+  "全部核心策略只在牛市月盈利，熊市与震荡市亏损；B2 状态机例外（震荡为正）。"
+ ],
+ "lookahead_check": {
+  "method": "S1 在截断于 2021-12-31 的数据上重跑，与全量数据下 2018–2021 的成交与净值逐项比较",
+  "identical": true,
+  "n_fills": 32
+ }
+}

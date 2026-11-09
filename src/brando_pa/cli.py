@@ -398,6 +398,24 @@ def cmd_forward_timeline_audit(a):
     raise SystemExit(0 if r["ok"] else 1)
 
 
+def cmd_phase11_audit(a):
+    from .pa11.audit_phase10 import audit_phase10
+    from pathlib import Path as _P
+    audit_phase10(_P(a.out) if a.out else _P("reports_out/brando_pa/phase11_pa")); print((_P(a.out) if a.out else _P("reports_out/brando_pa/phase11_pa")).joinpath("phase10_audit.md").read_text())
+
+
+def cmd_phase11(a):
+    from .pa11.competition import run_phase11, render_summary
+    from pathlib import Path as _P
+    r = run_phase11(out=_P(a.out) if a.out else None, dry_run=a.dry_run); print(render_summary(r))
+
+
+def cmd_phase11_dashboard(a):
+    from .pa11.dashboard_html import build_dashboard
+    from pathlib import Path as _P
+    print(build_dashboard(_P(a.results_dir) if a.results_dir else None, _P(a.out) if a.out else None, embed=not a.cdn))
+
+
 def cmd_phase10_data(a):
     from .holding.data import build_dataset
     _p(build_dataset(cross_check=not a.no_cross_check))
@@ -483,6 +501,9 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("phase11-audit", help="第十一阶段：Phase 10 结果独立复核（只读）"); p.add_argument("--out"); p.set_defaults(f=cmd_phase11_audit)
+    p = sub.add_parser("phase11", help="第十一阶段：价格行为中长期系统统一比较回测（V0–V5 + 实验组 C；--dry-run 短窗口）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.set_defaults(f=cmd_phase11)
+    p = sub.add_parser("phase11-dashboard", help="第十一阶段只读静态 HTML 研究页面（Plotly）"); p.add_argument("--results-dir", dest="results_dir"); p.add_argument("--out"); p.add_argument("--cdn", action="store_true", help="用 CDN 加载 plotly.js（文件更小，需联网）"); p.set_defaults(f=cmd_phase11_dashboard)
     p = sub.add_parser("phase10-data", help="第十阶段：构建 BTC/ETH 日线独立副本（2017-08 起，已收盘），验证缺口/OHLC，OKX 抽样交叉比对，写 data_manifest.json"); p.add_argument("--no-cross-check", dest="no_cross_check", action="store_true"); p.set_defaults(f=cmd_phase10_data)
     p = sub.add_parser("phase10", help="第十阶段：中长期现货持仓历史回测（预登记策略 × 成本 × 窗口；--dry-run 短窗口验证流程）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.add_argument("--costs", help="逗号分隔单侧 bps，默认 0,10,15,25"); p.set_defaults(f=cmd_phase10)
     p = sub.add_parser("phase10-dashboard", help="第十阶段只读回测仪表盘（Streamlit）"); p.add_argument("--port", type=int, default=8520); p.set_defaults(f=cmd_phase10_dashboard)
