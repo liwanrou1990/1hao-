@@ -398,6 +398,50 @@ def cmd_forward_timeline_audit(a):
     raise SystemExit(0 if r["ok"] else 1)
 
 
+def _p13_dirs(a):
+    from pathlib import Path as _P
+    from .pa13.shadow import shadow_dirs
+    d = shadow_dirs(); return _P(a.log_dir) if getattr(a, "log_dir", None) else d["log_dir"]
+
+
+def cmd_phase13_freeze(a):
+    from .pa13.freeze import freeze_manifest
+    from pathlib import Path as _P
+    d = _P(a.out) if a.out else _P("docs/brando_pa_validation/phase13_forward"); freeze_manifest(d); print((d / "freeze_manifest.md").read_text())
+
+
+def cmd_phase13_service(a):
+    from .pa13.shadow import build_service
+    from .config import live_trading_allowed
+    assert not live_trading_allowed(), "真实交易必须禁用"
+    svc = build_service(log_dir=_p13_dirs(a))
+    if a.once:
+        svc.startup_check(); out = svc.cycle(); _p({"accounts": out.get("accounts"), "data": out.get("data"), "elapsed_s": out.get("elapsed_s")})
+    else:
+        svc.run(max_cycles=a.max_cycles)
+
+
+def cmd_phase13_audit(a):
+    from .pa13.audit13 import shadow_audit, render_audit_md
+    r = shadow_audit(_p13_dirs(a)); print(render_audit_md(r)); raise SystemExit(0 if r["ok"] else 1)
+
+
+def cmd_phase13_report(a):
+    from .pa13.report13 import daily_report13, weekly_report13
+    d = _p13_dirs(a); p = weekly_report13(d) if a.weekly else daily_report13(d, a.date); print(open(p, encoding="utf-8").read()); print("\n已写入：" + p)
+
+
+def cmd_phase13_dashboard(a):
+    from .pa13.dashboard13 import build_dashboard13
+    from pathlib import Path as _P
+    print(build_dashboard13(_p13_dirs(a), _P(a.out) if a.out else None, embed=not a.cdn))
+
+
+def cmd_phase13_isolation(a):
+    from .pa13.isolation import isolation_check
+    _p(isolation_check(_p13_dirs(a)))
+
+
 def cmd_phase12_audit(a):
     from .pa12.reject_audit import reject_audit
     from pathlib import Path as _P
@@ -519,6 +563,12 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("phase13-freeze", help="第十三阶段：策略冻结清单（Git 提交、规则、参数、成本、历史 B2 vs Mac B 比对）"); p.add_argument("--out"); p.set_defaults(f=cmd_phase13_freeze)
+    p = sub.add_parser("phase13-service", help="第十三阶段：独立影子前瞻服务（独立目录/行情仓/锁；--once 单轮）"); p.add_argument("--once", action="store_true"); p.add_argument("--max-cycles", dest="max_cycles", type=int); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_phase13_service)
+    p = sub.add_parser("phase13-audit", help="第十三阶段：影子账户数据与订单审计 + 已到期窗口绩效（只读）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_phase13_audit)
+    p = sub.add_parser("phase13-report", help="第十三阶段：每日 / 每周中文报告（--weekly）"); p.add_argument("--weekly", action="store_true"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_phase13_report)
+    p = sub.add_parser("phase13-dashboard", help="第十三阶段：前瞻监控只读页面"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--out"); p.add_argument("--cdn", action="store_true"); p.set_defaults(f=cmd_phase13_dashboard)
+    p = sub.add_parser("phase13-isolation-check", help="第十三阶段：隔离检查（路径/锁/生产目录哈希不变/真实交易禁用）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_phase13_isolation)
     p = sub.add_parser("phase12-audit", help="第十二阶段：Phase 11 入场拒绝原因完整归因（只读）"); p.add_argument("--out"); p.set_defaults(f=cmd_phase12_audit)
     p = sub.add_parser("phase12", help="第十二阶段：趋势核心 + PA 择时增强隔离实验（A–G × core_frac × risk × 成本 × 窗口 + 扰动；--dry-run）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.set_defaults(f=cmd_phase12)
     p = sub.add_parser("phase12-dashboard", help="第十二阶段只读研究页面（沿用 Phase 11 页面并增加核心/机会仓位等）"); p.add_argument("--results-dir", dest="results_dir"); p.add_argument("--out"); p.add_argument("--cdn", action="store_true"); p.set_defaults(f=cmd_phase12_dashboard)

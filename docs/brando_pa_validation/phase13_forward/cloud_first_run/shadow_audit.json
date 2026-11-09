@@ -1,0 +1,347 @@
+{
+ "checked_at_utc": "2026-11-09 02:42:03.127390+00:00",
+ "category": "forward（前瞻模拟；独立影子账户；非历史回测）",
+ "log_dir": "/home/user/1hao-/reports_out/brando_pa/phase13_forward",
+ "accounts": {
+  "A_B2_state_machine": {
+   "label": "A_B2_state_machine",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  },
+  "B_BTC_SMA200": {
+   "label": "B_BTC_SMA200",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  },
+  "C_BUYHOLD_BTC": {
+   "label": "C_BUYHOLD_BTC",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  },
+  "D_BUYHOLD_ETH": {
+   "label": "D_BUYHOLD_ETH",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  },
+  "E_BUYHOLD_5050": {
+   "label": "E_BUYHOLD_5050",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  },
+  "F_B2_vol_trail": {
+   "label": "F_B2_vol_trail",
+   "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "elapsed_days": 0.0,
+   "n_runs": 1,
+   "last_daily_ts": null,
+   "n_signals": 0,
+   "n_missed": 0,
+   "n_fills": 0,
+   "n_fills_estimated": 0,
+   "n_fills_late": 0,
+   "signal_latency_min": null,
+   "fill_latency_min": null,
+   "latest": {
+    "day": "2026-11-09",
+    "equity_usdt": 10000.0,
+    "liquidation_usdt": 10000.0,
+    "cash_usdt": 10000.0,
+    "exposure": 0.0
+   },
+   "drawdown": {
+    "max_drawdown": 0.0,
+    "max_drawdown_usdt": 0.0,
+    "longest_drawdown_days": 0
+   },
+   "diff_vs_btc_buyhold_usdt": 0.0,
+   "horizons": {
+    "30d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "90d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "180d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    },
+    "365d": {
+     "status": "未到期",
+     "elapsed_days": 0.0
+    }
+   },
+   "behaviour": {
+    "note": "前瞻不足 31 日：主升 / 主跌段观察未到期",
+    "longest_flat_days": 1,
+    "sell_then_rebuy_higher_within_10d": 0
+   },
+   "timeline_ok": true,
+   "ledger_ok": true,
+   "chain_ok": true
+  }
+ },
+ "ok": true,
+ "future_dates_found": false,
+ "service": {
+  "continuity": {
+   "start_utc": "2026-11-09 02:39:37.755981+00:00",
+   "end_utc": "2026-11-09 02:42:03.127390+00:00",
+   "elapsed_hours": 0.04,
+   "cycles_observed": 1,
+   "cycles_expected": 1,
+   "coverage": 1.0,
+   "longest_gap_hours": 0.04,
+   "data_ok_share": 1.0,
+   "n_data_issues": 0,
+   "hosts": [
+    "vm"
+   ],
+   "status": "进行中"
+  },
+  "gaps_gt_3_intervals": [],
+  "runner_chain": true
+ },
+ "evaluation_rules": "docs/brando_pa_validation/phase13_forward/evaluation_rules.md"
+}

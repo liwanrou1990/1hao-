@@ -1,0 +1,59 @@
+{
+ "account": "A_B2_state_machine",
+ "initial_usdt": 10000.0,
+ "fee_bps": 10.0,
+ "slippage_bps": 5.0,
+ "forward_start_utc": "2026-11-09 02:39:37.755981+00:00",
+ "last_daily_ts": null,
+ "pending": [],
+ "processed_orders": [],
+ "n_runs": 1,
+ "ledgers": {
+  "ideal": {
+   "cash": 10000.0,
+   "lots": {},
+   "fees_paid": 0.0,
+   "realized": 0.0,
+   "seq": 0,
+   "peak_equity": 10000.0,
+   "max_drawdown": 0.0,
+   "max_drawdown_usdt": 0.0
+  },
+  "cost": {
+   "cash": 10000.0,
+   "lots": {},
+   "fees_paid": 0.0,
+   "realized": 0.0,
+   "seq": 0,
+   "peak_equity": 10000.0,
+   "max_drawdown": 0.0,
+   "max_drawdown_usdt": 0.0
+  }
+ },
+ "risk": {
+  "hwm_all": null,
+  "data_fault": false,
+  "state": "NORMAL",
+  "hwm_ref": null,
+  "halt_count": 0,
+  "state_since": null,
+  "cooldown_until": null,
+  "recovery_since": null,
+  "recovery_peak": null,
+  "normal_since": null,
+  "transitions": []
+ },
+ "alloc_last_target": null,
+ "vol_trail": {
+  "BTCUSDT": {
+   "reduced": false,
+   "peak_close": null
+  },
+  "ETHUSDT": {
+   "reduced": false,
+   "peak_close": null
+  }
+ },
+ "last_run_at": "2026-11-09 02:39:37.755981+00:00",
+ "saved_at": "2026-11-09 02:39:40.713407+00:00"
+}

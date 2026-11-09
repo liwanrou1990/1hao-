@@ -31,3 +31,5 @@ backups/
 .upgrade_worktree/
 .mac_check_worktree/
 reports_out/brando_pa/mac_check/
+data_store/brando_pa/phase13_bars/
+data_store/brando_pa/phase13_feed/
