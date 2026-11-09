@@ -331,8 +331,22 @@ class DashData:
                 if r["signal"]:
                     plan = EntryRiskRewardEvaluator(1.5).plan(det.close[i], r["invalidation"], zones, ss, 0.0015, (r["zone"].low, r["zone"].high), r["reason"]) | {"trigger": k}; break
             state = "研究候选（非执行信号）" if plan and plan.get("ok") else ("证据不足" if plan else "WAIT")
+            res_above = SupportResistanceZones.resistances_above(zones, det.close[i]); sma_ok = bool(tr.get("sma200") and det.close[i] > tr["sma200"] and tr.get("sma200_rising"))
+            # 尚未满足的入场条件（研究性，逐条列出；全部满足才会形成候选）
+            unmet = []
+            if not sma_ok:
+                unmet.append("日线趋势过滤未通过（需要收盘 > SMA200 且 SMA200 上行）")
+            if not a["signal"]:
+                unmet.append("回调买入条件未满足：" + a["reason"])
+            if not b["signal"]:
+                unmet.append("突破回踩条件未满足：" + b["reason"])
+            if plan and not plan.get("ok"):
+                unmet.append("风险收益条件未满足：" + str(plan.get("reason", "")))
+            buy_conf = bool((a["signal"] or b["signal"]) and np.isfinite(vol["vol_rel20"]) and vol["vol_rel20"] >= 0.8 and vol["close_pos"] >= 0.6)
             return {"label": "研究性分析 · 第十一阶段结构检测（不是冻结策略，不可执行）", "as_of_day": str(d["ts"].iloc[-1].date()), "state": state, "pullback": {"signal": a["signal"], "reason": a["reason"]}, "breakout_retest": {"signal": b["signal"], "reason": b["reason"]},
-                    "support_zone": [sup.low, sup.high, sup.strength] if sup else None, "structure_invalidation": (ss["last_low"] - 0.25 * det.atr[i]) if ss["last_low"] else None, "volume_confirmation": {"vol_rel20": vol["vol_rel20"], "close_pos": vol["close_pos"]}, "plan": plan,
+                    "support_zone": [sup.low, sup.high, sup.strength] if sup else None, "next_resistance": [res_above[0].low, res_above[0].high, res_above[0].strength] if res_above else None, "second_resistance": [res_above[1].low, res_above[1].high, res_above[1].strength] if len(res_above) > 1 else None,
+                    "structure_invalidation": (ss["last_low"] - 0.25 * det.atr[i]) if ss["last_low"] else None, "last_confirmed_high": ss["last_high"], "last_confirmed_low": ss["last_low"], "atr14": float(det.atr[i]) if np.isfinite(det.atr[i]) else None,
+                    "volume_confirmation": {"vol_rel20": vol["vol_rel20"], "close_pos": vol["close_pos"], "buy_confirmed": buy_conf}, "plan": plan, "unmet_conditions": unmet, "daily_filter_ok": sma_ok,
                     "candidate_holding_period": "数周至数月（趋势有效期间）", "est_cost_round_trip_bps": 30, "evidence_note": "历史上该规则 8.8 年仅 5 次通过全部门槛（第十一阶段），证据不足以作为独立买入依据"}
         except Exception as e_:  # noqa: BLE001
             return {"label": "研究性分析不可用", "error": f"{type(e_).__name__}: {e_}"}

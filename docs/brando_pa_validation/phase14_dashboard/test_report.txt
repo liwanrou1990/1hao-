@@ -1,7 +1,8 @@
-pytest tests/test_brando_pa_*.py -q  (2026-11-09T10:43Z, Claude 云容器, 分支 claude/brando-pa-phase14-dashboard)
+pytest tests/test_brando_pa_*.py -q  (2026-11-09T17:49Z, Claude 云容器, 分支 claude/brando-pa-phase14-dashboard, 界面中文化后)
 ........................................................................ [ 48%]
 ........................................................................ [ 96%]
-.....                                                                    [100%]
+......                                                                   [100%]
 exit=0
-149 passed, 0 failed, 0 skipped = 原有 142 + 第十四阶段只读看板 7（API 与账本一致 / 交易顺序与 CSV / K 线结构与机会 / 空数据与过期提示 / 只读+仅 GET+拒绝 0.0.0.0 / 真实副本 / Playwright 桌面与 iPhone）
-说明：UI 测试曾因 test_brando_pa_service.py 导入时将全局 time.sleep 置空而误判超时，已改为单调时钟判定；未删除或弱化任何测试。
+150 passed, 0 failed, 0 skipped = 原有 142 + 第十四阶段看板 8（API 与账本一致 / 交易顺序与 CSV / K 线结构与机会 / 空数据与过期提示 / 只读+仅 GET+拒绝 0.0.0.0 / 真实副本 / 买入机会页研究字段与不可执行标注 / Playwright 桌面+iPhone：默认中文、状态编码映射、原始编码零露出、English 切换、两种语言无横向溢出）
+浏览器截图：docs/brando_pa_validation/phase14_dashboard/screens/{desktop,iphone}_{zh,en}_<page>.png（Playwright Chromium，桌面 1440×900 @2x，iPhone 13 设备描述；28 张，全部 scrollWidth ≤ 视口，无页面错误，中文页面无原始状态编码）
+说明：UI 测试在全套运行中用单调时钟判定服务端口超时（test_brando_pa_service.py 导入时会把全局 time.sleep 置空）；未删除或弱化任何测试。

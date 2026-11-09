@@ -43,7 +43,7 @@
 
 ## 5. 测试
 
-`tests/test_brando_pa_dashboard14.py` 7 项：① 合成前瞻数据上 API 正确且与账本一致（权益 = 现金 + 市值；清仓净利润恒等式；已实现 + 未实现 = 利润）；② 交易记录信号 ≤ 决策 < 价格时刻 ≤ 执行、CSV、详情含当时结构；③ 五个周期 K 线 OHLC 合法、结构“当时已确认 ≠ 事后”、机会状态枚举、错误参数 400/404；④ 空影子目录 → “未启动”、无心跳 → 不显示运行中、验收未满 → 无“验收成功”、分析不足 90 日 → “数据不足 / 统计证据不足”；⑤ 只读：访问全部端点后数据目录哈希不变、POST/PUT/DELETE/PATCH 405、源码无下单接口、`--host 0.0.0.0` 拒绝；⑥ 真实云端副本可读且账本一致、目录哈希不变；⑦ Playwright：10 个页面桌面与 iPhone 13 均无页面错误、iPhone 无横向溢出。全套结果见 `docs/brando_pa_validation/phase14_dashboard/test_report.txt`。调试记录：UI 测试在全套运行中曾两次失败（单独运行通过），根因是 `tests/test_brando_pa_service.py` 在导入时把全局 `time.sleep` 替换为空操作，使测试里“按睡眠次数等待服务端口”的 10–60 s 实际为 0 s；修复为用单调时钟判定超时（未删除或弱化任何测试）。
+`tests/test_brando_pa_dashboard14.py` 8 项（2026-11-09 中文化后）：① 合成前瞻数据上 API 正确且与账本一致（权益 = 现金 + 市值；清仓净利润恒等式；已实现 + 未实现 = 利润）；② 交易记录信号 ≤ 决策 < 价格时刻 ≤ 执行、CSV、详情含当时结构；③ 五个周期 K 线 OHLC 合法、结构“当时已确认 ≠ 事后”、机会状态枚举、错误参数 400/404；④ 空影子目录 → “未启动”、无心跳 → 不显示运行中、验收未满 → 无“验收成功”、分析不足 90 日 → “数据不足 / 统计证据不足”；⑤ 只读：访问全部端点后数据目录哈希不变、POST/PUT/DELETE/PATCH 405、源码无下单接口、`--host 0.0.0.0` 拒绝；⑥ 真实云端副本可读且账本一致、目录哈希不变；⑦ 买入机会页研究字段齐全（`next_resistance / second_resistance / structure_invalidation / last_confirmed_high|low / atr14 / volume_confirmation.buy_confirmed / unmet_conditions / daily_filter_ok / plan`），研究性观察标注“不可执行”，非 BUY 时必须列出尚未满足的条件，冻结策略状态编码仍为 BUY/WAIT/HOLD/REDUCE/EXIT；⑧ Playwright（桌面 1440×900 + iPhone 13）：10 个页面默认 `lang=zh-CN`，正文出现“投资总览 / 买入机会 / 使用说明”与中文状态（买入信号 / 等待买入条件 / 继续持有 / 减少仓位 / 卖出退出），正文不得出现原始编码（WAIT / HOLD / REDUCE / EXIT / NORMAL / RISK_REDUCED / filled_late / filled_estimated / live_quote_ask|bid / estimated_closed_bar_close / cancelled_invalid / mac_prod / shadow13），顶栏切换 English 后出现 Overview / Help / Buy Opportunity Monitor 且 `localStorage.brando_lang=en`，切回中文恢复“买入机会监控”；两种语言、两种设备每页 `scrollWidth ≤ 视口宽度 + 2`，无页面错误。全套结果见 `docs/brando_pa_validation/phase14_dashboard/test_report.txt`。调试记录：UI 测试在全套运行中曾两次失败（单独运行通过），根因是 `tests/test_brando_pa_service.py` 在导入时把全局 `time.sleep` 替换为空操作，使测试里“按睡眠次数等待服务端口”的 10–60 s 实际为 0 s；修复为用单调时钟判定超时（未删除或弱化任何测试）。
 
 ## 6. 使用（Mac 本机）
 
@@ -79,3 +79,48 @@ bash scripts/brando_dashboard14.sh status | logs | stop
 | 历史研究（只读） | `docs/brando_pa_validation/phase10_holding/phase10_results.json`、`phase12_core_pa/phase12_results.json`、`phase12_core_pa/phase11_reject_audit.json`、`phase13_forward/freeze_manifest.json` |
 | 看板自有写入 | `reports_out/brando_pa/dashboard14_cache/`（pid、日志）仅此一处 |
 | 截图 | `docs/brando_pa_validation/phase14_dashboard/screens/{desktop,iphone}_<页面>.png` |
+
+## 9. 界面中文化（2026-11-09，仅展示层）
+
+**原则**：API 字段、状态编码、数据结构、账本计算、策略、参数、账户数据、事件链、验收计时全部不变；中文化只在 `static/app.js` 的 `I18N` 字典与格式化函数中完成（后端 `data.py` 仅新增买入机会页需要的研究字段，不改任何既有字段）。默认简体中文；顶栏下拉可切换 English，选择保存在浏览器 `localStorage.brando_lang`（不写服务端）。
+
+**状态编码 → 中文（展示层映射，编码本身不变）**
+
+| 类别 | 编码 | 中文 | English |
+|---|---|---|---|
+| 策略状态 | BUY | 买入信号 | Buy signal |
+| | WAIT | 等待买入条件 | Waiting for buy conditions |
+| | HOLD | 继续持有 | Keep holding |
+| | REDUCE | 减少仓位 | Reduce position |
+| | EXIT | 卖出退出 | Sell / exit |
+| 信号 | BUY / SELL / HOLD / REBALANCE | 买入 / 卖出 / 持有 / 再平衡 | Buy / Sell / Hold / Rebalance |
+| 风险状态 | NORMAL / RISK_REDUCED / COOLDOWN / RECOVERY / EMERGENCY_HALT | 正常 / 限仓（回撤 −10%） / 冷静期 / 恢复期 / 紧急熔断 | Normal / Risk reduced / Cooldown / Recovery / Emergency halt |
+| 订单状态 | filled / filled_late / filled_estimated / filled_late_estimated / expired / cancelled_invalid / cancelled_below_minimum / submitted | 已成交 / 迟到成交 / 估算价成交 / 迟到·估算价成交 / 已过期 / 已作废 / 低于最小下单取消 / 已提交 | Filled / Filled late / … |
+| 价格类型 | live_quote_ask / live_quote_bid / estimated_closed_bar_close | 实时卖一价 / 实时买一价 / 已收盘 K 线估算价 | Live ask / Live bid / Estimated (closed bar) |
+| 数据分区 | mac_prod / shadow13 / research | 原 Mac 账户 / 前瞻模拟 / 历史回测 | Mac paper accounts / Forward sim / Backtest |
+| 引擎理由 | `target_changed[both|NORMAL|cap=1.00];drift 1.000 ≥ 0.1;scaled_to_cash` | 目标权重变化（BTC+ETH 双标的，风险状态：正常，仓位上限 100%）；权重偏离 1.000 ≥ 再平衡阈值 0.1；按可用现金等比缩减 | 同样逐段翻译 |
+
+引擎理由的翻译只识别已知片段（`target_changed[...]`、`drift a ≥ b`、`scaled_to_cash`、`exposure … > hard_cap …`、`data_quality_fault`、`late: close … first processed at …`、`no fresh price …`、`engine first processed the order … h after exec_after`），未识别片段保持原文；原始字符串仍在交易详情的“事件原文”中逐字可见。第十一阶段检测器给出的理由本来就是中文，`→ WAIT` 显示为“→ 继续等待”。
+
+**买入机会监控页（面向普通用户）**：每个标的一组卡片——当前价格、当前是否适合买入（只由冻结策略最新信号事件推导：BUY → “策略已发出买入信号”，已持有 → “已持有，继续持有”，EXIT/REDUCE → “策略要求卖出 / 减仓”，否则 “暂不买入 · 继续等待”）、候选买入价格区域（最近已确认支撑区）、买盘是否获得确认（量比 ≥ 0.8 且收盘位置 ≥ 0.6 且有触发）、当前趋势方向、关键支撑 / 阻力、结构失效价格（最近已确认摆动低点 − 0.25 ATR）、下一候选卖出区域（上方第一 / 第二已确认阻力区，无则“尚无可信目标”）、风险收益比（仅在有候选计划时）、预计持仓周期、尚未满足的入场条件（逐条列出）。下方两张表严格分开：“已确认的策略信号（冻结策略，唯一可执行口径）”与“研究性观察（第十一阶段结构检测，不可执行）”，研究性内容全部带“研究性观察”标签；没有证据时显示“继续等待”，不制造信号。
+
+**时间与金额**：所有时间按浏览器本机时区显示，顶栏与各页说明标注时区（如 `UTC`、`GMT+8`）；UTC 原值仍可在交易详情事件原文查看。金额统一 `USDT` 两位小数；百分比两位小数；数量六位小数。Plotly 日期轴改为 `YYYY/MM/DD HH:MM` 数字格式（不依赖 Plotly 语言包）。
+
+**布局修复（iPhone）**：卡片 `grid-column:span 3` 在两列网格中会生成隐式第三列，导致前两张卡片被压成竖排文字，改为 `.span2/.span3` 类并在 ≤ 900px 时占满整行；表格可换行单元格改为 `td.wrap`（最小宽度 240px，手机 180px），避免桌面表格行被拉高；≤ 600px 隐藏顶栏副标题。截图：`docs/brando_pa_validation/phase14_dashboard/screens/{desktop,iphone}_{zh,en}_<page>.png`（中文 10 页 × 2 设备，英文 4 页 × 2 设备，云端副本数据）。
+
+**已知限制**：英文模式下，策略引擎 / 第十一阶段检测器的原始中文理由（如“回调深度 130% > 61.8%，结构破坏”）以及后端生成的尚未满足条件文本保持中文（它们是数据而非界面文案）；浏览器原生日期选择框的占位符（`mm/dd/yyyy` 或 `年/月/日`）由系统语言决定。
+
+**安全更新 Mac 上的看板（不碰生产服务）**
+
+```bash
+# 1) 生产服务不动：不要切换 ~/1hao- 的分支，不要 restart launchd
+cd ~/1hao-dash14                                    # 第 6 节创建的独立工作树（或独立克隆）
+bash scripts/brando_dashboard14.sh stop             # 只停看板进程（pid 文件在 reports_out/brando_pa/dashboard14_cache）
+git fetch origin claude/brando-pa-phase14-dashboard
+git checkout --detach origin/claude/brando-pa-phase14-dashboard
+git log --oneline -1                                # 确认是中文化提交
+BRANDO_DASH_PROD_DIR="$HOME/1hao-/reports_out/brando_pa/phase8_forward" BRANDO_DASH_BARS="$HOME/1hao-/data_store/brando_pa/forward_bars" bash scripts/brando_dashboard14.sh start
+bash scripts/brando_dashboard14.sh status           # healthz ok
+bash ~/1hao-/scripts/brando_pa_forward_ctl.sh health   # 生产服务仍 ok（看板从未写入生产目录）
+```
+浏览器用 Shift+刷新 清缓存（静态文件无版本号）。回滚：`git checkout --detach <上一提交>` 后 `restart`。看板依赖未变（无需重新安装 venv）。

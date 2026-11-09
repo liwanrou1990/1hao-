@@ -1,5 +1,5 @@
 """第十四阶段只读看板：API 在合成前瞻数据与真实云端副本上正确读取；账户权益 / 费用 / 净利润口径与账本一致；历史与前瞻分区；信号时间顺序；
-空数据 / 服务过期提示；只有 GET；CSV 导出；运行前后数据目录哈希不变（无意外写入）；不监听 0.0.0.0；不导入下单代码；页面导航与 iPhone 布局（Playwright，可选）。"""
+空数据 / 服务过期提示；只有 GET；CSV 导出；运行前后数据目录哈希不变（无意外写入）；不监听 0.0.0.0；不导入下单代码；页面导航与 iPhone 布局（Playwright，可选）；中文默认界面、状态编码映射为中文、英文切换、两种语言均无横向溢出。"""
 import hashlib
 import json
 import os
@@ -74,6 +74,24 @@ def test_market_bars_structure_and_opportunities(synth):
     assert c.get("/api/market/bars?symbol=XXX&tf=1d").status_code == 400 and c.get("/api/accounts/mac_prod/NOPE").status_code == 404
 
 
+def test_opportunities_research_fields_for_lay_users(synth):
+    """买入机会页所需的面向普通用户的研究字段齐全；研究性观察绝不冒充可执行信号；未满足条件时给出中文说明。"""
+    c = synth["client"]; o = c.get("/api/opportunities").json()
+    for sym, s_ in o["symbols"].items():
+        r = s_["research"]; assert "研究性分析" in r["label"] and r.get("executable") in (False, None)
+        if "error" in r:                                                                                                   # 数据不足时明确标注不可用，而不是编造字段
+            assert "不可用" in r["label"]; continue
+        for k in ("state", "next_resistance", "second_resistance", "structure_invalidation", "last_confirmed_high", "last_confirmed_low", "atr14", "volume_confirmation", "unmet_conditions", "daily_filter_ok", "plan"):
+            assert k in r, (sym, k)
+        assert isinstance(r["unmet_conditions"], list) and isinstance(r["volume_confirmation"]["buy_confirmed"], bool)
+        if r["state"] in ("WAIT", "证据不足"):
+            assert len(r["unmet_conditions"]) >= 1 and all(isinstance(x, str) and x for x in r["unmet_conditions"]), sym      # 非 BUY 时必须说明尚未满足的条件
+        if r["next_resistance"] is not None:
+            assert s_["trend"].get("close") is None or r["next_resistance"][0] >= s_["trend"]["close"] * 0.999                                                            # 卖出候选区在现价上方
+        for f in s_["frozen_strategies"]:
+            assert set(f) >= {"account", "state", "signal_ts"} and f["state"] in ("BUY", "WAIT", "HOLD", "REDUCE", "EXIT")   # 状态编码不变（展示层再映射为中文）
+
+
 def test_health_empty_shadow_and_stale_service_flags(synth):
     c = synth["client"]; h = c.get("/api/health").json()
     assert h["real_trading"]["live_trading_disabled"] and h["acceptance"]["passed"] is False and "验收成功" not in json.dumps(h, ensure_ascii=False)
@@ -128,22 +146,38 @@ def test_ui_navigation_and_iphone_layout(synth, tmp_path):
         assert up, "dashboard server did not open port %d within 60 s: %s" % (port, errlog.read_text()[-800:])
         js = tmp_path / "ui.js"; js.write_text("""
 const { chromium, devices } = require('playwright');
+const RAW = [/\\bWAIT\\b/, /\\bHOLD\\b/, /\\bREDUCE\\b/, /\\bEXIT\\b/, /\\bNORMAL\\b/, /\\bRISK_REDUCED\\b/, /filled_late/, /filled_estimated/, /live_quote_(ask|bid)/, /estimated_closed_bar_close/, /cancelled_invalid/, /\\bmac_prod\\b/, /\\bshadow13\\b/];
 (async () => { const b = await chromium.launch(); const out = {};
   for (const [name, ctxOpts] of [['desktop', { viewport: { width: 1440, height: 900 } }], ['iphone', devices['iPhone 13']]]) {
     const ctx = await b.newContext(ctxOpts); const p = await ctx.newPage(); const errors = []; p.on('pageerror', e => errors.push(String(e)));
+    await p.goto('http://127.0.0.1:%d/#overview', { waitUntil: 'load', timeout: 60000 }); await p.evaluate(() => localStorage.removeItem('brando_lang'));
     for (const h of ['overview','compare','charts','opps','positions','analytics','health','trades','phase13','help']) {
       await p.goto('http://127.0.0.1:%d/#' + h, { waitUntil: 'load', timeout: 60000 }); await p.waitForTimeout(h === 'charts' ? 2500 : 1200);
-      const txt = await p.evaluate(() => document.body.innerText); out[name + ':' + h] = { len: txt.length, fail: txt.includes('页面加载失败'), ok: txt.includes('Brando') };
-      if (h === 'overview' || h === 'charts') await p.screenshot({ path: process.argv[2] + '/' + name + '_' + h + '.png', fullPage: name === 'iphone' ? false : false });
+      const txt = await p.evaluate(() => document.body.innerText); const raw = RAW.filter(r => r.test(txt)).map(String);
+      out[name + ':' + h] = { len: txt.length, fail: txt.includes('页面加载失败') || txt.includes('failed to load'), ok: txt.includes('Brando'), raw, lang: await p.evaluate(() => document.documentElement.lang),
+        zh: ['买入信号','等待买入条件','继续持有','减少仓位','卖出退出','买入机会','投资总览','使用说明'].filter(k => txt.includes(k)), sw: await p.evaluate(() => document.documentElement.scrollWidth) };
+      if (h === 'overview' || h === 'charts' || h === 'opps') await p.screenshot({ path: process.argv[2] + '/' + name + '_' + h + '.png' });
     }
-    out[name + ':scrollWidth'] = await p.evaluate(() => document.documentElement.scrollWidth); out[name + ':viewport'] = (await p.viewportSize()).width; out[name + ':errors'] = errors; await ctx.close(); }
-  await b.close(); console.log(JSON.stringify(out)); })().catch(e => { console.error(e); process.exit(1); });""" % port)
+    out[name + ':scrollWidth'] = await p.evaluate(() => document.documentElement.scrollWidth); out[name + ':viewport'] = (await p.viewportSize()).width;
+    // 英文切换：只影响展示层
+    await p.goto('http://127.0.0.1:%d/#overview', { waitUntil: 'load', timeout: 60000 }); await p.waitForTimeout(800); await p.selectOption('#langsel', 'en'); await p.waitForTimeout(1200);
+    const en = await p.evaluate(() => document.body.innerText); out[name + ':en'] = { overview: en.includes('Overview'), help: en.includes('Help'), zh_leak: en.includes('投资总览'), stored: await p.evaluate(() => localStorage.getItem('brando_lang')), sw: await p.evaluate(() => document.documentElement.scrollWidth) };
+    await p.goto('http://127.0.0.1:%d/#opps', { waitUntil: 'load', timeout: 60000 }); await p.waitForTimeout(1200); const enOpps = await p.evaluate(() => document.body.innerText); out[name + ':en_opps'] = { ok: enOpps.includes('Buy Opportunity Monitor') && (enOpps.includes('Waiting for buy conditions') || enOpps.includes('Keep holding') || enOpps.includes('Buy signal') || enOpps.includes('No signal yet')), sw: await p.evaluate(() => document.documentElement.scrollWidth) };
+    await p.selectOption('#langsel', 'zh'); await p.waitForTimeout(800); out[name + ':back_zh'] = (await p.evaluate(() => document.body.innerText)).includes('买入机会监控');
+    out[name + ':errors'] = errors; await ctx.close(); }
+  await b.close(); console.log(JSON.stringify(out)); })().catch(e => { console.error(e); process.exit(1); });""" % (port, port, port, port))
         r = subprocess.run(["node", str(js), str(tmp_path)], capture_output=True, text=True, timeout=600); assert r.returncode == 0, r.stderr[-800:]
         res = json.loads(r.stdout.strip().splitlines()[-1])
-        for k, v in res.items():
-            if ":" in k and isinstance(v, dict):
-                assert v["ok"] and not v["fail"], (k, v)
-        assert res["iphone:scrollWidth"] <= res["iphone:viewport"] + 2, "iPhone 布局出现横向溢出"
-        assert res["desktop:errors"] == [] and res["iphone:errors"] == []
+        for dev in ("desktop", "iphone"):
+            vw = res[dev + ":viewport"]
+            for h in ("overview", "compare", "charts", "opps", "positions", "analytics", "health", "trades", "phase13", "help"):
+                v = res[dev + ":" + h]; assert v["ok"] and not v["fail"], (dev, h, v)
+                assert v["lang"] == "zh-CN" and v["raw"] == [], ("中文模式下出现原始状态编码", dev, h, v["raw"])          # WAIT/HOLD/NORMAL/filled_late… 不得直接露出
+                assert v["sw"] <= vw + 2, ("横向溢出", dev, h, v["sw"], vw)
+            assert set(res[dev + ":overview"]["zh"]) >= {"投资总览", "使用说明"} and "买入机会" in res[dev + ":overview"]["zh"], res[dev + ":overview"]["zh"]
+            assert any(k in res[dev + ":opps"]["zh"] for k in ("买入信号", "等待买入条件", "继续持有", "减少仓位", "卖出退出")), res[dev + ":opps"]["zh"]   # 状态已映射为中文
+            en = res[dev + ":en"]; assert en["overview"] and en["help"] and not en["zh_leak"] and en["stored"] == "en" and en["sw"] <= vw + 2, en
+            assert res[dev + ":en_opps"]["ok"] and res[dev + ":en_opps"]["sw"] <= vw + 2 and res[dev + ":back_zh"], res[dev + ":en_opps"]
+            assert res[dev + ":scrollWidth"] <= vw + 2 and res[dev + ":errors"] == [], (dev, res[dev + ":errors"])
     finally:
         proc.terminate(); proc.wait(timeout=10)
