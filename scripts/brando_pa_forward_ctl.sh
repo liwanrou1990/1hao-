@@ -11,9 +11,9 @@ case "${1:-status}" in
   status)  launchctl print "gui/$(id -u)/$LABEL" 2>/dev/null | grep -E "state|pid|last exit" | head -5 || echo "launchd 任务未加载"; "$PY" -m brando_pa.cli forward-status | head -c 1500; echo ;;
   health)  "$PY" -m brando_pa.cli forward-health ;;
   logs)    tail -n "${2:-50}" "$D/service.log"; echo "--- alerts"; tail -n 10 "$D/alerts.jsonl" 2>/dev/null || true; echo "--- launchd"; tail -n 10 "$D/launchd.err.log" 2>/dev/null || true ;;
-  report)  "$PY" -m brando_pa.cli forward-leaderboard; echo; "$PY" -m brando_pa.cli forward-daily-report ${2:+--date "$2"} > /dev/null && cat "$D/daily/$(ls "$D/daily" | grep '\.md$' | tail -1)"; echo; echo "完整 JSON：$D/leaderboard.json、$D/daily/*.json" ;;
-  acceptance) "$PY" -m brando_pa.cli forward-acceptance ${2:+--local-start "$2"} ;;
-  audit)   "$PY" -m brando_pa.cli forward-ledger-audit ${2:+--local-start "$2"} ;;   # 只读：费用/净值一致性/信号/验收/进程审计，结果写 reports_out/brando_pa/forward_audit/
+  report)  "$PY" -m brando_pa.cli forward-leaderboard; echo; { if [ -n "${2:-}" ]; then "$PY" -m brando_pa.cli forward-daily-report --date "$2"; else "$PY" -m brando_pa.cli forward-daily-report; fi; } > /dev/null && cat "$D/daily/$(ls "$D/daily" | grep '\.md$' | tail -1)"; echo; echo "完整 JSON：$D/leaderboard.json、$D/daily/*.json" ;;
+  acceptance) if [ -n "${2:-}" ]; then "$PY" -m brando_pa.cli forward-acceptance --local-start "$2"; else "$PY" -m brando_pa.cli forward-acceptance; fi ;;
+  audit)   if [ -n "${2:-}" ]; then "$PY" -m brando_pa.cli forward-ledger-audit --local-start "$2"; else "$PY" -m brando_pa.cli forward-ledger-audit; fi ;;   # 只读：费用/净值一致性/信号/验收/进程审计，结果写 reports_out/brando_pa/forward_audit/
   backup)  "$PY" - <<'PYB'
 import sys; sys.path.insert(0, "src")
 from pathlib import Path

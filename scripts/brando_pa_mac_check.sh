@@ -74,7 +74,10 @@ if [ -n "${REMOTE_SHA}" ] && [ "$(has f2141f8)" = "no" ]; then
   WT="${REPO}/.mac_check_worktree"; git worktree remove --force "${WT}" 2>/dev/null || true; rm -rf "${WT}"
   if git worktree add --detach -q "${WT}" "origin/${BRANCH}" 2>/dev/null; then AUDIT_SRC="${WT}/src"; echo "[check] local code lacks the audit tool -> using origin/${BRANCH} code from temporary worktree (read-only)"; fi
 fi
-set +e; PYTHONPATH="${AUDIT_SRC}" "${PY}" -m brando_pa.cli forward-ledger-audit --log-dir "${D}" --out "${OUT}" ${LS_ARG:+--local-start "${LS_ARG}"}; ARC=$?; set -e
+set +e
+if [ -n "${LS_ARG}" ]; then PYTHONPATH="${AUDIT_SRC}" "${PY}" -m brando_pa.cli forward-ledger-audit --log-dir "${D}" --out "${OUT}" --local-start "${LS_ARG}"
+else PYTHONPATH="${AUDIT_SRC}" "${PY}" -m brando_pa.cli forward-ledger-audit --log-dir "${D}" --out "${OUT}"; fi
+ARC=$?; set -e
 echo "[check] exit=${ARC} (ledger audit; 0 = no issues)"; [ "${ARC}" -eq 0 ] || FAIL=1
 [ -d "${REPO}/.mac_check_worktree" ] && { git worktree remove --force "${REPO}/.mac_check_worktree" 2>/dev/null || rm -rf "${REPO}/.mac_check_worktree"; }
 

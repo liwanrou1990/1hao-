@@ -41,7 +41,7 @@ def acceptance_status(log_dir: Path, interval_s: int = 600, required_hours: floa
     起点 = local_start（显式给定）或本地段第一条记录的时间；all = 全部。判定只看 local 段。"""
     log_dir = Path(log_dir); now = now or pd.Timestamp.now(tz="UTC")
     re_ = _jsonl(log_dir / "runner_events.jsonl"); al = _jsonl(log_dir / "alerts.jsonl")
-    out = {"checked_at_utc": str(now), "required_hours": required_hours, "interval_s": interval_s, "category": "真实时间前瞻运行（非模拟）", "segments": {}, "status": "未开始", "verdict_segment": "local"}
+    out = {"checked_at_utc": str(now), "required_hours": required_hours, "interval_s": interval_s, "category": "真实时间前瞻运行（非模拟）", "segments": {}, "status": "未开始", "verdict_segment": "local", "local_start": local_start}
     checks = re_[(re_["kind"] == "data_check") & (re_.get("mode", pd.Series(["forward"] * len(re_))) != "replay")].copy() if len(re_) else pd.DataFrame()
     if checks.empty:
         if write:

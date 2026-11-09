@@ -114,12 +114,17 @@ PYC
 POST_ACC=$?
 if [ "${BRANDO_SKIP_POSTCHECK:-}" = "1" ]; then echo "[post] BRANDO_SKIP_POSTCHECK=1 -> service/report checks skipped (tests)"; HRC=0; else
   if [ "${IS_MAC}" -eq 1 ]; then launchctl print "gui/$(id -u)/${LABEL}" 2>/dev/null | grep -E "state|pid" | head -3 || echo "[post] launchd job not loaded"; fi
-  HRC=1; for i in 1 2 3 4 5 6 7 8 9; do if bash scripts/brando_pa_forward_ctl.sh health >/dev/null 2>&1; then HRC=0; break; fi; echo "[post] waiting for healthy heartbeat (${i}/9)..."; sleep 10; done
+  HRC=1; WAIT_S="${BRANDO_HEALTH_WAIT_S:-90}"; i=0
+  while :; do if bash scripts/brando_pa_forward_ctl.sh health >/dev/null 2>&1; then HRC=0; break; fi; [ "${i}" -ge "${WAIT_S}" ] && break; echo "[post] waiting for healthy heartbeat (${i}/${WAIT_S}s)..."; sleep 10; i=$((i + 10)); done
   echo "[post] health exit=${HRC}"; bash scripts/brando_pa_forward_ctl.sh health | head -40
   bash scripts/brando_pa_forward_ctl.sh status | head -20
   bash scripts/brando_pa_forward_ctl.sh report
-  if [ -n "${LS}" ]; then bash scripts/brando_pa_forward_ctl.sh acceptance "${LS}"; bash scripts/brando_pa_forward_ctl.sh audit "${LS}" | tail -25; else bash scripts/brando_pa_forward_ctl.sh acceptance; bash scripts/brando_pa_forward_ctl.sh audit | tail -25; fi
-  [ -f scripts/brando_pa_mac_check.sh ] && BRANDO_REPO="${REPO}" BRANDO_PY="${PY}" ${LS:+BRANDO_LOCAL_START="${LS}"} bash scripts/brando_pa_mac_check.sh "${BRANCH}" | tail -3
+  if [ -n "${LS}" ]; then bash scripts/brando_pa_forward_ctl.sh acceptance "${LS}"; bash scripts/brando_pa_forward_ctl.sh audit "${LS}" | tail -25
+  else bash scripts/brando_pa_forward_ctl.sh acceptance; bash scripts/brando_pa_forward_ctl.sh audit | tail -25; fi
+  # NOTE: never build an env assignment from a parameter expansion (${X:+VAR="${X}"}): the shell does not treat an expanded word as an
+  # assignment, so with a value containing a space it became the command "BRANDO_LOCAL_START=2026-11-08 12:23:00" -> command not found.
+  # Pass the variable unconditionally (empty = unset for the callee).
+  if [ -f scripts/brando_pa_mac_check.sh ]; then BRANDO_REPO="${REPO}" BRANDO_PY="${PY}" BRANDO_LOCAL_START="${LS}" bash scripts/brando_pa_mac_check.sh "${BRANCH}" | tail -3; fi
 fi
 echo; echo "===== SUMMARY"
 echo "upgraded=${UPGRADED} HEAD ${HEAD0:0:7} -> $(git rev-parse --short HEAD) (origin ${REMOTE:0:7})  accounts_identical=$([ "${POST_ACC}" -eq 0 ] && echo YES || echo NO)  health=$([ "${HRC}" -eq 0 ] && echo ok || echo NOT_OK)  log=${LOG}"

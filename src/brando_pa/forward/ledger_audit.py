@@ -215,7 +215,7 @@ def ledger_audit(log_dir: Path, out_dir: Path | None = None, interval_s: int = 6
         a = audit_ledger_account(d, mark_prices); rep["accounts"][d.name] = a; rep["ok"] &= a["ok"]
     try:
         acc = acceptance_status(log_dir, interval_s, local_start=local_start, now=now, write=False)
-        rep["acceptance"] = {"status": acc["status"], "segments": {k: {kk: vv for kk, vv in v.items() if kk != "per_day"} for k, v in acc["segments"].items()}}
+        rep["acceptance"] = {"status": acc["status"], "local_start": acc.get("local_start"), "segments": {k: {kk: vv for kk, vv in v.items() if kk != "per_day"} for k, v in acc["segments"].items()}}
     except Exception as e_:  # noqa: BLE001
         rep["acceptance"] = {"error": f"{type(e_).__name__}: {e_}"}
     rep["service"] = service_status(log_dir); rep["runner_chain"] = verify_chain(log_dir / "runner_events.jsonl")

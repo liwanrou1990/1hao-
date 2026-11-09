@@ -78,6 +78,8 @@ BRANDO_REPO="$HOME/1hao-" BRANDO_LOCAL_START="2026-11-08 12:23:00" bash scripts/
 ```
 预检（未推送提交 / 待应用提交触碰 config、accounts、ledger、trend/risk、allocator、engine、账户目录 → 拒绝）→ dry-run 并读取 upgrade_report：备份 verified、可 ff、无本地修改非数据文件、账户 diffs=[]、新版本审计通过 → 正式升级并读取报告：merged、restored_ok、verify_after diffs=[]、服务已启动 → 三账户资金 / 持仓 / 手续费 / 已实现与升级前逐项比对 → health / status / report / acceptance / audit / 一键检查。日志 `reports_out/brando_pa/mac_check/upgrade_verified_<UTC>.log`。每次升级约损失 1–2 轮验收轮询。
 
+（修复记录 2026-11-09：Mac 正式升级成功后，第 4 步最后一行报 `BRANDO_LOCAL_START=2026-11-08 12:23:00: command not found`。根因：`${LS:+BRANDO_LOCAL_START="${LS}"}` 由参数展开生成的“赋值”不是赋值，shell 只在展开前识别 `VAR=value` 前缀，展开出的含空格整词被当成命令名。修复：改为无条件前缀 `BRANDO_LOCAL_START="${LS}"`（空值 = 未设置）；一键检查脚本与 ctl 的 `${2:+--flag "$2"}` 一并改成显式 if/else；新增静态扫描禁止 `${X:+VAR=...}`，并用含空格路径 + 含空格时间真实运行 ctl / 一键检查 / 门控脚本第 4 步做回归。升级本身（HEAD、账户、服务）当时已完成且正确，无需重做。）
+
 ## Mac 一键只读检查（2026-11-08 新增）
 ```bash
 BRANDO_REPO="$HOME/1hao-" BRANDO_LOCAL_START="2026-11-08 12:23:00" bash scripts/brando_pa_mac_check.sh   # 或从 /tmp 运行 origin 上的副本
