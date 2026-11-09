@@ -398,6 +398,25 @@ def cmd_forward_timeline_audit(a):
     raise SystemExit(0 if r["ok"] else 1)
 
 
+def cmd_phase10_data(a):
+    from .holding.data import build_dataset
+    _p(build_dataset(cross_check=not a.no_cross_check))
+
+
+def cmd_phase10(a):
+    from .holding.phase10 import run_phase10
+    from pathlib import Path as _P
+    r = run_phase10(out_dir=_P(a.out) if a.out else None, dry_run=a.dry_run, costs=[int(x) for x in a.costs.split(",")] if a.costs else None)
+    from .holding.phase10 import render_summary
+    print(render_summary(r))
+
+
+def cmd_phase10_dashboard(a):
+    import subprocess
+    app = Path(__file__).resolve().parent / "holding" / "dashboard.py"
+    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app), "--server.port", str(a.port), "--server.headless", "true"], check=False)
+
+
 def cmd_forward_ledger_audit(a):
     from .forward.ledger_audit import ledger_audit
     from .config import cfg as _cfg, report_dir as _rd
@@ -464,6 +483,9 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("phase10-data", help="第十阶段：构建 BTC/ETH 日线独立副本（2017-08 起，已收盘），验证缺口/OHLC，OKX 抽样交叉比对，写 data_manifest.json"); p.add_argument("--no-cross-check", dest="no_cross_check", action="store_true"); p.set_defaults(f=cmd_phase10_data)
+    p = sub.add_parser("phase10", help="第十阶段：中长期现货持仓历史回测（预登记策略 × 成本 × 窗口；--dry-run 短窗口验证流程）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.add_argument("--costs", help="逗号分隔单侧 bps，默认 0,10,15,25"); p.set_defaults(f=cmd_phase10)
+    p = sub.add_parser("phase10-dashboard", help="第十阶段只读回测仪表盘（Streamlit）"); p.add_argument("--port", type=int, default=8520); p.set_defaults(f=cmd_phase10_dashboard)
     p = sub.add_parser("forward-ledger-audit", help="只读：费用公式逐笔复核、事件链重放 vs state/nav、净值恒等式、费用明细、日线信号重复/错过/因果、72h 验收、服务进程（不改任何账户文件）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--out", help="审计结果输出目录（默认 reports_out/brando_pa/forward_audit）"); p.add_argument("--local-start", dest="local_start"); p.add_argument("--json", action="store_true"); p.add_argument("--no-write", dest="no_write", action="store_true"); p.set_defaults(f=cmd_forward_ledger_audit)
     p = sub.add_parser("forward-leaderboard", help="三账户 USDT 利润排行榜（含成本清仓净利润降序）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--json", action="store_true"); p.set_defaults(f=cmd_forward_leaderboard)
     p = sub.add_parser("forward-timeline-audit", help="前瞻事件时间顺序审计（--repair：作废决策前执行时隙的挂单并写纠错日志，不改原始事件）"); p.add_argument("--repair", action="store_true"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_timeline_audit)

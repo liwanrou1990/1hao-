@@ -1,0 +1,65 @@
+{
+ "built_at_utc": "2026-11-09 00:32:43.542505+00:00",
+ "symbols": {
+  "BTCUSDT": {
+   "validation": {
+    "n": 3370,
+    "first": "2017-08-17",
+    "last": "2026-11-07",
+    "gaps_after": [],
+    "n_gaps": 0,
+    "duplicates": 0,
+    "bad_ohlc_rows": 0,
+    "non_positive_rows": 0,
+    "daily_moves_gt_35pct": [
+     "2020-03-12"
+    ],
+    "sources": {
+     "binance_spot_via_static_klines": 3369,
+     "okx_spot": 1
+    },
+    "ok": true
+   },
+   "gap_filled_days_from_okx": [],
+   "cross_check_okx": {
+    "n_overlap": 401,
+    "rel_close_diff_median": 5.308901788490345e-05,
+    "rel_close_diff_max": 0.0008106734138702929,
+    "worst_day": "2026-10-30",
+    "note": "Binance 镜像 vs OKX 现货日收盘；交易所差异只记录不修正"
+   },
+   "file": "/home/user/1hao-/data_store/brando_pa/phase10_holding/BTCUSDT_1d.parquet"
+  },
+  "ETHUSDT": {
+   "validation": {
+    "n": 3370,
+    "first": "2017-08-17",
+    "last": "2026-11-07",
+    "gaps_after": [],
+    "n_gaps": 0,
+    "duplicates": 0,
+    "bad_ohlc_rows": 0,
+    "non_positive_rows": 0,
+    "daily_moves_gt_35pct": [
+     "2020-03-12"
+    ],
+    "sources": {
+     "binance_spot_via_static_klines": 3369,
+     "okx_spot": 1
+    },
+    "ok": true
+   },
+   "gap_filled_days_from_okx": [],
+   "cross_check_okx": {
+    "n_overlap": 401,
+    "rel_close_diff_median": 5.4122621564432805e-05,
+    "rel_close_diff_max": 0.0018914372568666024,
+    "worst_day": "2025-10-10",
+    "note": "Binance 镜像 vs OKX 现货日收盘；交易所差异只记录不修正"
+   },
+   "file": "/home/user/1hao-/data_store/brando_pa/phase10_holding/ETHUSDT_1d.parquet"
+  }
+ },
+ "rule": "closed daily bars only (ts + 1d <= now, UTC day boundary); decisions use close(t), execution open(t+1)",
+ "latest_complete_day": "2026-11-07"
+}
