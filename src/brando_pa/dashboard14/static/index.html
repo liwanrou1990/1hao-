@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Brando Investment Intelligence Dashboard</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">Brando Investment Intelligence Dashboard <small>只读 · Phase 14</small></div>
+  <div id="ticker" class="tick muted">加载行情…</div>
+  <span id="trendpill" class="pill">趋势 —</span>
+  <span id="srcpill" class="pill">来源 —</span>
+  <span id="svcpill" class="pill">服务 —</span>
+  <span id="rtpill" class="pill ok">真实交易 禁用</span>
+</header>
+<nav class="side" id="sidenav"></nav>
+<nav class="bottom" id="bottomnav"></nav>
+<main id="main"><p class="muted">加载中…</p></main>
+<div class="modal" id="modal"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h2 id="modal-title" style="margin:0">详情</h2><button onclick="closeModal()">关闭</button></div><div id="modal-body"></div></div></div>
+<script src="/static/vendor/lightweight-charts.standalone.production.js"></script>
+<script src="/vendor/plotly.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
