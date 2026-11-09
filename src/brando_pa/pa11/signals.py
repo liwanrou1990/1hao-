@@ -61,8 +61,8 @@ class EntryRiskRewardEvaluator:
 class PullbackConfirmation:
     """策略 A：上涨趋势回调到支撑区并被确认。"""
 
-    def __init__(self, max_depth: float = 0.618):
-        self.max_depth = max_depth
+    def __init__(self, max_depth: float = 0.618, vol_rel_min: float = 0.8):
+        self.max_depth = max_depth; self.vol_rel_min = vol_rel_min
 
     def check(self, d: DailyStructureDetector, zones_obj: SupportResistanceZones, i: int, zones: list[Zone]) -> dict:
         st = structure_state(d.sw, i); close = d.close[i]; a = d.atr[i]
@@ -86,7 +86,7 @@ class PullbackConfirmation:
         if not VolumeAndOrderFlowConfirmation.selling_pressure_weakening(d, hi_idx + 1, i - 1):
             return {"signal": False, "reason": "回调期间未见卖压减弱（缩量下跌日）"}
         b = VolumeAndOrderFlowConfirmation.bar(d, i); prev_high = float(d.d["high"].iloc[i - 1])
-        conf = close > z.high and close > prev_high and b["close_pos"] >= 0.6 and (np.isfinite(b["vol_rel20"]) and b["vol_rel20"] >= 0.8)
+        conf = close > z.high and close > prev_high and b["close_pos"] >= 0.6 and (np.isfinite(b["vol_rel20"]) and b["vol_rel20"] >= self.vol_rel_min)
         if not conf:
             return {"signal": False, "reason": f"等待确认：收盘>区域上沿={close > z.high}，收盘>昨高={close > prev_high}，收盘位置={b['close_pos']:.2f}，量比={b['vol_rel20']:.2f}"}
         inval = max(z.low - 0.5 * a, st["last_low"] - 0.25 * a)

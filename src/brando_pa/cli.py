@@ -398,6 +398,24 @@ def cmd_forward_timeline_audit(a):
     raise SystemExit(0 if r["ok"] else 1)
 
 
+def cmd_phase12_audit(a):
+    from .pa12.reject_audit import reject_audit
+    from pathlib import Path as _P
+    d = _P(a.out) if a.out else _P("reports_out/brando_pa/phase12_core_pa"); reject_audit(d); print((d / "phase11_reject_audit.md").read_text())
+
+
+def cmd_phase12(a):
+    from .pa12.phase12 import run_phase12, render_summary
+    from pathlib import Path as _P
+    r = run_phase12(out=_P(a.out) if a.out else None, dry_run=a.dry_run); print(render_summary(r))
+
+
+def cmd_phase12_dashboard(a):
+    from .pa12.dashboard12 import build_dashboard12
+    from pathlib import Path as _P
+    print(build_dashboard12(_P(a.results_dir) if a.results_dir else None, _P(a.out) if a.out else None, embed=not a.cdn))
+
+
 def cmd_phase11_audit(a):
     from .pa11.audit_phase10 import audit_phase10
     from pathlib import Path as _P
@@ -501,6 +519,9 @@ def main(argv=None):
     p = sub.add_parser("forward-health", help="健康检查（退出码 0/1）"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_health)
     p = sub.add_parser("forward-daily-report"); p.add_argument("--date"); p.add_argument("--log-dir", dest="log_dir"); p.set_defaults(f=cmd_forward_daily_report)
     p = sub.add_parser("forward-acceptance", help="72 小时真实时间验收状态（云端历史段 / 本地段 / 全部；本地段不足 72h 固定为进行中）"); p.add_argument("--log-dir", dest="log_dir"); p.add_argument("--local-start", dest="local_start", help="本地（Mac）首次启动时刻 UTC；缺省自动按主机名/云段结束时刻划分"); p.set_defaults(f=cmd_forward_acceptance)
+    p = sub.add_parser("phase12-audit", help="第十二阶段：Phase 11 入场拒绝原因完整归因（只读）"); p.add_argument("--out"); p.set_defaults(f=cmd_phase12_audit)
+    p = sub.add_parser("phase12", help="第十二阶段：趋势核心 + PA 择时增强隔离实验（A–G × core_frac × risk × 成本 × 窗口 + 扰动；--dry-run）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.set_defaults(f=cmd_phase12)
+    p = sub.add_parser("phase12-dashboard", help="第十二阶段只读研究页面（沿用 Phase 11 页面并增加核心/机会仓位等）"); p.add_argument("--results-dir", dest="results_dir"); p.add_argument("--out"); p.add_argument("--cdn", action="store_true"); p.set_defaults(f=cmd_phase12_dashboard)
     p = sub.add_parser("phase11-audit", help="第十一阶段：Phase 10 结果独立复核（只读）"); p.add_argument("--out"); p.set_defaults(f=cmd_phase11_audit)
     p = sub.add_parser("phase11", help="第十一阶段：价格行为中长期系统统一比较回测（V0–V5 + 实验组 C；--dry-run 短窗口）"); p.add_argument("--dry-run", dest="dry_run", action="store_true"); p.add_argument("--out"); p.set_defaults(f=cmd_phase11)
     p = sub.add_parser("phase11-dashboard", help="第十一阶段只读静态 HTML 研究页面（Plotly）"); p.add_argument("--results-dir", dest="results_dir"); p.add_argument("--out"); p.add_argument("--cdn", action="store_true", help="用 CDN 加载 plotly.js（文件更小，需联网）"); p.set_defaults(f=cmd_phase11_dashboard)

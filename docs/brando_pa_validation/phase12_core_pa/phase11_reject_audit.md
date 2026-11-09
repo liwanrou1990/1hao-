@@ -1,0 +1,38 @@
+# Phase 11 入场拒绝原因归因（开发性分析）· 2026-11-09 01:49:36 UTC · 窗口 2018-01-01 → 2026-11-07
+
+## 天数统计
+- 周线 UP 且 SMA200 过滤通过的天数：{'BTCUSDT': 750, 'ETHUSDT': 689}；核心（close > SMA200）持仓天数：{'BTCUSDT': 1676, 'ETHUSDT': 1628}；核心持仓但 PA 前置不通过的天数：{'BTCUSDT': 926, 'ETHUSDT': 939}
+- 周线趋势分布：{'DOWN': {'BTCUSDT': 532, 'ETHUSDT': 700}, 'RANGE': {'BTCUSDT': 1904, 'ETHUSDT': 1757}, 'UP': {'BTCUSDT': 797, 'ETHUSDT': 776}}
+
+## 候选与拒绝
+
+- triggered_total: 223
+- by_strategy: {'A': 55, 'B': 168}
+- accepted_by_phase11_rule: 19
+- rejected_no_resistance_above_at_all: 122
+- rejected_resistance_exists_but_below_1_5R: 82
+- rejected_rr_below_threshold_with_T1: 0
+- at_400d_high_share: 0.07174887892376682
+- within_2atr_of_400d_high_share: 0.8026905829596412
+- median_dist_to_400d_high_atr: 0.7264883076195359
+- no_resistance_cases_within_2atr_of_400d_high_share: 0.9754098360655737
+- at_all_time_high_share: 0.08968609865470852
+- core_already_holding_share: 1.0
+- median_risk_pct_of_price: 0.13493951659836964
+- near_miss_waiting_confirmation: 209
+- near_miss_top_reasons: {'等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.40，': 7, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.52，': 6, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.53，': 6, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.30，': 6, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.47，': 4, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.86，': 4, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.55，': 4, '等待确认：收盘>区域上沿=True，收盘>昨高=False，收盘位置=0.65，': 4}
+
+## 反事实接受数
+- phase11_rule(T1 from confirmed resistance >=1.5R and net RR>=1.5): 19
+- drop_T1_structure_requirement(any trigger accepted): 223
+- require_only_any_resistance_above(no 1.5R): 101
+- require_resistance>=1.0R: 4
+- require_resistance>=1.5R: 0
+
+## 结论
+- 触发 223 个候选（A 55 / B 168），Phase 11 规则接受 19。
+- 被拒主因：上方完全没有已确认阻力 122 个；有阻力但 < 1.5R 82 个；有 ≥1.5R 阻力但扣费后净盈亏比不足 0 个。
+- 候选中 80% 距 400 日最高价 ≤ 2 ATR（中位 0.7 ATR），9% 处于历史新高 2% 以内；“上方无阻力”的候选中 98% 距 400 日高点 ≤ 2 ATR → 价格已在最高阻力带内部或之上，“目标必须来自已知阻力”对新高 / 阻力带内行情存在系统性排斥。
+- 候选日 100% 的时间核心策略（SMA200/B2）本来就已持仓：Phase 11 把 PA 当作唯一入场条件，等于放弃了核心持仓；Phase 12 改为 PA 只做加仓 / 退出增强。
+- 量比 / 收盘位置 / 缩量条件只在“等待确认”层面起作用（near-miss），不与 T1 规则重叠；真正起决定作用的单一过滤器是 T1 结构要求。
+- 失效价中位距离 13.5%：1% 风险预算 ÷ 该距离 ≈ 10% 仓位，与“最终 USDT 最大化”目标耦合过紧（Phase 12 以 core_frac / opp_frac 预算为主、风险预算为上限）。
