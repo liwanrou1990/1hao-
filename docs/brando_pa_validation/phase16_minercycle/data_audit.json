@@ -1,0 +1,137 @@
+{
+ "checked_at_utc": "2026-11-10 06:01:16.807112+00:00",
+ "price_segments": {
+  "coinbase_btc_usd": {
+   "start": "2015-07-20",
+   "end": "2017-08-16",
+   "n": 759,
+   "missing_days": 0,
+   "ohlcv": true,
+   "bad_ohlc_rows": 0
+  },
+  "coinmetrics_close_only": {
+   "start": "2012-01-01",
+   "end": "2015-07-19",
+   "n": 1296,
+   "missing_days": 0,
+   "ohlcv": false,
+   "bad_ohlc_rows": 0
+  },
+  "phase10(binance/okx)": {
+   "start": "2017-08-17",
+   "end": "2026-11-07",
+   "n": 3370,
+   "missing_days": 0,
+   "ohlcv": true,
+   "bad_ohlc_rows": 0
+  }
+ },
+ "overlaps": {
+  "coinbase_vs_phase10_close": {
+   "n": 3370,
+   "median_abs_rel": 0.0005609051645757979,
+   "p99_abs_rel": 0.028803407736391354,
+   "note": "USD vs USDT 与交易所差异；拼接点 2017-08-17 之后统一用第十阶段数据"
+  },
+  "coinbase_vs_coinmetrics_2015_2017": {
+   "n": 759,
+   "median_abs_rel": 0.0016378086720900686,
+   "p99_abs_rel": 0.017722200687613106
+  }
+ },
+ "unavailable": {
+  "miner_disclosed_cash_cost": "矿企季报（SEC 10-Q/10-K）中的每 BTC 现金成本：需人工从文件提取，本阶段未获得；不使用任何凭记忆的数字",
+  "cbeci": "剑桥 CBECI 网络功耗 / 铸币成本：网站拒绝自动访问（返回 400/404），未绕过；因此成本模型没有外部真实校准",
+  "miner_onchain_flows": "矿工钱包流出 / 矿工持币：CoinMetrics 社区层无该指标；付费数据未接入",
+  "lth_sth_cost": "长期 / 短期持有者链上成本：付费数据，未接入",
+  "ohlcv_2014_2015": "2014-01-01 → 2015-07-19 只有收盘价（CoinMetrics 参考价），无开高低与成交量 → C 实验在该段不可验证",
+  "usdt_pre_2017": "2017-08 之前用 USD 报价代替 USDT（当时 USDT 市场很小）"
+ },
+ "lags": {
+  "price": "第 t 日收盘后可用",
+  "hashrate/issuance/fees/mvrv": "滞后 1 日",
+  "hardware_specs": "发布日 + 90 天",
+  "halvings": "协议事实，不滞后",
+  "walcl": "周三数据 + 2 日（只作背景）",
+  "m2": "月末 + 28 日（只作背景，修订风险）"
+ },
+ "hardware_table": [
+  {
+   "release": "2013-01-30",
+   "model": "Avalon Gen1",
+   "j_per_th": 9400.0
+  },
+  {
+   "release": "2013-11-01",
+   "model": "Antminer S1",
+   "j_per_th": 2000.0
+  },
+  {
+   "release": "2014-07-01",
+   "model": "Antminer S3",
+   "j_per_th": 770.0
+  },
+  {
+   "release": "2014-12-01",
+   "model": "Antminer S5",
+   "j_per_th": 510.0
+  },
+  {
+   "release": "2015-09-01",
+   "model": "Antminer S7",
+   "j_per_th": 273.0
+  },
+  {
+   "release": "2016-06-01",
+   "model": "Antminer S9",
+   "j_per_th": 98.0
+  },
+  {
+   "release": "2018-11-01",
+   "model": "Antminer S15",
+   "j_per_th": 57.0
+  },
+  {
+   "release": "2019-04-01",
+   "model": "Antminer S17 Pro",
+   "j_per_th": 40.0
+  },
+  {
+   "release": "2020-05-01",
+   "model": "Antminer S19",
+   "j_per_th": 34.0
+  },
+  {
+   "release": "2022-07-01",
+   "model": "Antminer S19 XP",
+   "j_per_th": 21.5
+  },
+  {
+   "release": "2024-01-01",
+   "model": "Antminer S21",
+   "j_per_th": 17.5
+  },
+  {
+   "release": "2024-11-01",
+   "model": "Antminer S21 XP",
+   "j_per_th": 13.5
+  }
+ ],
+ "cost_model": {
+  "pue": 1.1,
+  "electricity_usd_kwh": {
+   "low": 0.04,
+   "mid": 0.06,
+   "high": 0.08
+  },
+  "efficiency_multiplier": {
+   "low": 0.85,
+   "mid": 1.0,
+   "high": 1.3
+  },
+  "obsolete_ratio": 10.0,
+  "max_age_days": 1825,
+  "allin_cash_share": 0.6,
+  "uses_price": false
+ }
+}

@@ -119,3 +119,28 @@ def test_run_writes_only_to_output_dir(tmp_path):
     assert (tmp_path / "phase16_results.json").exists() and r["verifiable"] and r["real_trading"].startswith("disabled")
     assert {x["name"] for x in r["rows"]} == {"BH_BTC", "B1_BTC_SMA200", "B2_modelB_state_machine", "A_X3"}
     assert [h(x) for x in watch] == before
+
+
+def test_current_readings_are_research_only_and_label_invalidation():
+    from brando_pa.pa16 import current16
+    r = current16.readings(online=False)
+    assert "研究性观察" in r["label"] and r["forward_signal"].startswith("无")
+    inv = r["invalidation"]
+    if inv["last_confirmed_daily_swing_low"] is not None and inv["last_confirmed_daily_swing_low"] >= r["price_used"]:
+        assert inv["applicable"] is False and all(v is None for v in r["reward_risk_to_first_cost_exit"].values())   # 失效位高于现价 → 不适用，不算盈亏比
+    assert r["cost_band"]["low"] < r["cost_band"]["mid"] < r["cost_band"]["high"]
+
+
+def test_forward_observation_log_is_hash_chained(tmp_path):
+    from brando_pa.pa16 import current16
+    p = tmp_path / "obs.jsonl"; a = current16.append_observation(online=False, path=p); b = current16.append_observation(online=False, path=p)
+    assert a["prev_hash"] == "0" * 64 and b["prev_hash"] == a["hash"] and len(p.read_text().splitlines()) == 2
+
+
+def test_dashboard_page_has_no_executable_signal(tmp_path):
+    if not (phase16.OUT_DIR / "phase16_results.json").exists():
+        pytest.skip("run phase16 first")
+    from brando_pa.pa16 import dashboard16
+    page = dashboard16.build(online=False, out=tmp_path).read_text(encoding="utf-8")
+    assert "BTC矿工成本与长期投资周期" in page and "前瞻信号：无" in page and "研究性观察" in page and "历史结果（回测）" in page and "当前研究估计" in page
+    assert "可执行买入信号：" not in page and "立即买入" not in page

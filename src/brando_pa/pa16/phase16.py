@@ -85,7 +85,7 @@ def campaign_quality(res, f: pd.DataFrame, eps10: list[dict]) -> list[dict]:
         if not c["first_buy"]:
             continue
         t0 = pd.Timestamp(c["first_buy"], tz="UTC"); nxt = [s for s in starts if s > pd.Timestamp(c["end"], tz="UTC")]; t1 = nxt[0] if nxt else close.index[-1]
-        ep = [e for e in eps10 if pd.Timestamp(e["first_date"], tz="UTC") <= t0 <= pd.Timestamp(e["first_date"], tz="UTC") + pd.Timedelta(days=730)]
+        ep = [e for e in eps10 if pd.Timestamp(e["first_date"], tz="UTC") <= t0 <= pd.Timestamp(e["first_date"], tz="UTC") + pd.Timedelta(days=730)][-1:]      # 只取最近一次成本区事件
         low = min(e["min_close_730d"] for e in ep) if ep else float(close[(close.index >= t0 - pd.Timedelta(days=365)) & (close.index <= t0 + pd.Timedelta(days=365))].min())
         peak = float(close[(close.index >= t0) & (close.index <= t1)].max())
         out.append({"campaign": int(c["campaign"]), "first_buy": c["first_buy"], "avg_entry": float(c["avg_entry"]), "cycle_low_close": low, "entry_over_low": float(c["avg_entry"]) / low,
@@ -149,7 +149,7 @@ def run_phase16(c: dict | None = None, out_dir: Path | None = None, windows: dic
                 res = CampaignBacktester(d, f, e, x, fee, slip, a, b, c_confirm=cconf).run(); n = f"{e}_{x}"
                 rows.append(_row(res, n, "minercost", w, cost, btc_close))
                 if cost == 10:
-                    quality[f"{w}|{n}"] = campaign_quality(res, f, eps[1.0])
+                    quality[f"{w}|{n}"] = campaign_quality(res, f, eps[1.1] if e == "D" else eps[1.0])
                     if w == "full":
                         curves[f"{w}|{n}"] = res.nav[["ts", "equity", "liquidation", "drawdown"]].assign(ts=lambda x_: x_["ts"].astype(str)).to_dict("list")
                         fl = res.fills.copy(); fl.insert(0, "strategy", n); fills_out.append(fl)
