@@ -36,9 +36,12 @@ def _fig(fig, first):
     fig.update_layout(**LAYOUT); return fig.to_html(full_html=False, include_plotlyjs=("inline" if first else False), config={"responsive": True, "displaylogo": False, "displayModeBar": False})
 
 
-def build(online: bool = True, out: Path | None = None) -> Path:
-    out = Path(out or OUT_DIR); res = json.loads((OUT_DIR / "phase19_results.json").read_text(encoding="utf-8")); curves = json.loads((OUT_DIR / "phase19_curves_15bps.json").read_text(encoding="utf-8"))
-    v7 = json.loads((OUT_DIR / "b2_v7_results.json").read_text(encoding="utf-8")) if (OUT_DIR / "b2_v7_results.json").exists() else None
+def build(online: bool = True, out: Path | None = None, res_dir: Path | None = None, initial: float = 10000.0, hook=None) -> Path:
+    """res_dir：第十九阶段结果目录（默认 10,000 USDT 版本）；initial：本页回测曲线的初始本金；hook(bt, kind)：运行前替换账本（第二十阶段用于加入流动性冲击）。"""
+    rd = Path(res_dir or OUT_DIR); out = Path(out or rd); res = json.loads((rd / "phase19_results.json").read_text(encoding="utf-8")); curves = json.loads((rd / "phase19_curves_15bps.json").read_text(encoding="utf-8"))
+    v7 = json.loads((rd / "b2_v7_results.json").read_text(encoding="utf-8")) if (rd / "b2_v7_results.json").exists() else None
+    _h = (lambda bt, kind: (hook(bt, kind) if hook else None, bt)[1]); cap = f"{initial:,.0f} USDT"
+    banner = "" if initial == 10000.0 else f'<div class="note"><b>研究账户 {cap}</b>（独立研究，非 Mac 运行账户；Mac 三个模拟账户仍为 10,000 USDT，账本与运行服务未改动）。本页曲线与表格均按 {cap} 真实重算（含数量精度、最小订单与平方根流动性冲击），不是把 10,000 USDT 结果乘以倍数。</div>'
     R = readings(online=online); d = S.load_daily(); cand, f, w = S.candidates(d); c = cfg(); figs = []
     # 1 价格、40 周均线与历史候选
     g = go.Figure(); g.add_trace(go.Scatter(x=f["ts"], y=f["close"], name="BTC 日收盘", line=dict(color="#4c9aff", width=1.2)))
@@ -52,14 +55,14 @@ def build(online: bool = True, out: Path | None = None) -> Path:
     for n in ("BH_BTC", "B1_BTC_SMA200", "A_X4", "ABC_X2", "A_X2"):
         if n in curves:
             g.add_trace(go.Scatter(x=curves[n]["ts"], y=curves[n]["liquidation"], name=n, line=dict(width=1.3)))
-    g.update_layout(title="净值对比 2014 → 最新<br><sup>历史回测；清仓口径；10,000 USDT 起；单边 15 bps</sup>", yaxis_type="log", height=420); figs.append(g)
+    g.update_layout(title="净值对比 2014 → 最新<br><sup>历史回测；清仓口径；{cap} 起；单边 15 bps</sup>", yaxis_type="log", height=420); figs.append(g)
     # 3 2017 → 含 B2 与 V7
     bars = phase18.load_bars(); bb = {k: v for k, v in bars.items() if not k.startswith("_")}; a0 = "2017-01-01"; rp = c.get("trendsys", {}).get("risk", {}); g = go.Figure()
-    series = {"BTC 买入持有": HoldingBacktester({"BTCUSDT": bb["BTCUSDT"]}, {"name": "BH", "assets": ["BTCUSDT"], "mode": "buyhold"}, 10.0, 5.0, a0, None).run(),
-              "BTC SMA200": HoldingBacktester({"BTCUSDT": bb["BTCUSDT"]}, {"name": "B1", "assets": ["BTCUSDT"], "mode": "trend", "risk_exit_dd": None}, 10.0, 5.0, a0, None, sma=200).run(),
-              "原 B2": phase18.run_variant(bars, "V0_original", 15, a0, None, c)[1],
-              "B2 + V7（研究变体）": V7Backtester(bb, {"name": "V7", "assets": ["BTCUSDT", "ETHUSDT"], "mode": "trend", "risk_exit_dd": None}, 10.0, 5.0, a0, None, risk_params=rp).run(),
-              "第十九阶段 A_X4": LongTermBacktester(f, cand, "A", "X4", 10.0, 5.0, a0, None).run()}
+    series = {"BTC 买入持有": _h(HoldingBacktester({"BTCUSDT": bb["BTCUSDT"]}, {"name": "BH", "assets": ["BTCUSDT"], "mode": "buyhold"}, 10.0, 5.0, a0, None, initial=initial), "btc").run(),
+              "BTC SMA200": _h(HoldingBacktester({"BTCUSDT": bb["BTCUSDT"]}, {"name": "B1", "assets": ["BTCUSDT"], "mode": "trend", "risk_exit_dd": None}, 10.0, 5.0, a0, None, initial=initial, sma=200), "btc").run(),
+              "原 B2": phase18.run_variant(bars, "V0_original", 15, a0, None, c, initial=initial, hook=(lambda bt: _h(bt, "b2")))[1],
+              "B2 + V7（研究变体）": _h(V7Backtester(bb, {"name": "V7", "assets": ["BTCUSDT", "ETHUSDT"], "mode": "trend", "risk_exit_dd": None}, 10.0, 5.0, a0, None, risk_params=rp, initial=initial), "b2").run(),
+              "第十九阶段 A_X4": _h(LongTermBacktester(f, cand, "A", "X4", 10.0, 5.0, a0, None, initial=initial), "btc").run()}
     for n, r in series.items():
         g.add_trace(go.Scatter(x=r.nav["ts"], y=r.nav["liquidation"], name=n, line=dict(width=1.3)))
     g.update_layout(title="净值对比 2017 → 最新（含原 B2）<br><sup>历史回测；B2 含 ETH；其余只做 BTC；单边 15 bps</sup>", yaxis_type="log", height=420); figs.append(g)
@@ -108,7 +111,7 @@ main{{max-width:1280px;margin:0 auto;padding:16px}}h1{{font-size:20px;margin:6px
 .foot{{color:var(--muted);font-size:12px;margin-top:20px;border-top:1px solid var(--line);padding-top:8px}}@media (max-width:900px){{.grid{{grid-template-columns:repeat(2,1fr)}}}}@media (max-width:600px){{main{{padding:10px}}.card .v{{font-size:15px}}h1{{font-size:17px}}}}</style></head><body><main>
 <h1>Brando长期投资决策中心 {TAG["obs"]}</h1>
 <div class="note">第十九阶段独立研究页面（不是第十四阶段生产看板）。标签：{TAG["obs"]} 当前价格结构与候选区域；{TAG["hist"]} 已看过的历史数据上的结果；{TAG["fwd"]} 2026-11-10 起只追加的观察日志；{TAG["sig"]}。16 个候选长期方案全部未通过预登记判定，因此本页不提供任何买入建议；没有合适机会时显示 WAIT。生成于 {pd.Timestamp.now(tz="UTC"):%Y-%m-%d %H:%M} UTC；日线截至 {R["data_as_of"]}，周线截至 {R["weekly_as_of"]}。</div>
-<h2>当前读数</h2><div class="grid">{cards}</div>{v7txt}
+{banner}<h2>当前读数</h2><div class="grid">{cards}</div>{v7txt}
 <h2>历史分析</h2>{plots}{ev_tbl}{tb}
 <div class="foot">数据：BTC 日线 2014-01 → 2015-07-19 只有收盘价（需要 OHLCV 的规则此前不可验证）、2015-07-20 起 Coinbase、2017-08-17 起第十阶段数据集；B2 的 ETH 2016-05 起 Coinbase、2017-08-17 起第十阶段数据集。成交量为交易所报告量，{S.ORDERFLOW_NOTE}。2014–2026 全部为已看过的研究数据，非盲测。独立前瞻观察日志：data_store/brando_pa/phase19_longterm/forward_observations.jsonl。真实交易禁用。</div>
 </main></body></html>"""

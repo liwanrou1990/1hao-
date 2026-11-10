@@ -36,8 +36,8 @@ class V7Breaker(RecoveryBreaker):
 
 
 class V7Backtester(RecoveryBacktester):
-    def __init__(self, bars, spec, fee_bps, slip_bps, start, end, risk_params=None):
-        super().__init__(bars, spec, fee_bps, slip_bps, start, end, variant="V4_weekly_structure", risk_params=risk_params)
+    def __init__(self, bars, spec, fee_bps, slip_bps, start, end, risk_params=None, initial: float = 10000.0):
+        super().__init__(bars, spec, fee_bps, slip_bps, start, end, variant="V4_weekly_structure", initial=initial, risk_params=risk_params)
         self.variant_name = "V7_weekly40_structure"
         self.risk = V7Breaker((risk_params or {}).get("state_machine", {}), {"early": "weekly40"}, context40(bars, self.assets, self.idx))
 

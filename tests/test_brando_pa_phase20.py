@@ -73,3 +73,11 @@ def test_run_writes_only_to_new_dir(tmp_path):
     r = P.run_phase20(cfg(), out_dir=tmp_path, names=["ALLOC_50_Y", "BH_BTC"], windows={"recheck_2022_2026": ("2022-01-01", None)}, rolling=False)
     assert (tmp_path / "phase20_results.json").exists() and r["research_initial_usdt"] == 100_000.0 and r["mac_accounts_initial_usdt_unchanged"] == 10_000.0
     assert [h(x) for x in watch] == before
+
+
+def test_dashboards_default_100k_and_label_mac_accounts(ctx, tmp_path):
+    from brando_pa.pa20 import dashboard20
+    import shutil
+    shutil.copy(P.OUT_DIR / "phase20_results.json", tmp_path / "phase20_results.json") if (P.OUT_DIR / "phase20_results.json").exists() else pytest.skip("phase20 results not generated")
+    html = dashboard20.build(res_dir=tmp_path, out=tmp_path, ctx=ctx).read_text(encoding="utf-8")
+    assert "研究账户 · 100,000 USDT" in html and "Mac 运行账户 · 10,000 USDT × 3" in html and "立即买入" not in html

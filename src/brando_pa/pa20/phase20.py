@@ -61,7 +61,7 @@ def all_names() -> list[str]:
 
 
 def rolling_starts(ctx: Ctx, names: list[str], years: int = 4, cost: int = 15) -> dict:
-    last = pd.Timestamp(ctx.latest, tz="UTC"); starts = [t for t in pd.date_range("2014-01-01", last - pd.DateOffset(years=years), freq="QS", tz="UTC")]; out = {n: [] for n in names}
+    last = pd.Timestamp(ctx.latest, tz="UTC"); starts = list(pd.date_range(pd.Timestamp("2014-01-01", tz="UTC"), last - pd.DateOffset(years=years), freq="QS")); out = {n: [] for n in names}
     for t in starts:
         a, b = str(t.date()), str((t + pd.DateOffset(years=years) - pd.Timedelta(days=1)).date())
         for n in names:
