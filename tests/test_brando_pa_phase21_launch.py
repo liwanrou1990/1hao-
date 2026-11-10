@@ -92,3 +92,21 @@ def test_ctl_script_syntax_and_refuses_production_dir():
     sh = ROOT / "scripts" / "brando_pa21_ctl.sh"; assert subprocess.run(["bash", "-n", str(sh)]).returncode == 0
     r = subprocess.run(["bash", str(sh), "status"], env={"PATH": "/usr/bin:/bin", "HOME": "/tmp", "BRANDO_PROD_ROOT": str(ROOT)}, capture_output=True, text=True); assert r.returncode == 3 and "REFUSED" in r.stdout
     r = subprocess.run(["bash", str(sh), "nonsense"], env={"PATH": "/usr/bin:/bin", "HOME": "/tmp", "BRANDO_PROD_ROOT": "/nonexistent"}, capture_output=True, text=True); assert r.returncode == 2
+
+
+def test_real_acceptance_requires_mac_ticks_and_accounts_guard(tmp_path):
+    st = _store(tmp_path / "bars"); out = tmp_path / "out"
+    for k in range(3):
+        service21.tick(now=T("2026-11-14 01:00") + pd.Timedelta(hours=k), store=st, out_dir=out, fetch=False, dashboard=k == 2)
+    r = acceptance21.accept72("2026-11-14 00:30", out, now=T("2026-11-14 04:00"), hours=3, baseline=macguard21.snapshot(sim72._fake_prod(tmp_path / "prod")), prod_root=tmp_path / "prod")
+    import sys
+    assert r["criteria"]["local_mac"]["ok"] is (sys.platform == "darwin")                                            # 云端（Linux）运行不能当作真实验收
+    assert acceptance21.accept72("2026-11-14 00:30", out, now=T("2026-11-14 04:00"), hours=3, require_platform=None)["criteria"]["local_mac"]["ok"]
+    p = acceptance21.progress("2026-11-14 00:30", out, now=T("2026-11-14 04:00")); assert p["n_ticks"] == 3 and p["hours_remaining"] > 60 and p["status"].startswith("进行中") and p["forward_start_day"] == "2026-11-11"
+    v = service21.verify(out, now=T("2026-11-14 03:10")); assert v["checks"]["freeze"]["ok"] and v["checks"]["hash_chains"]["ok"] and v["checks"]["ledger"]["ok"] and v["checks"]["heartbeat"]["ok"]
+    from brando_pa.trendsys.paper import _append
+    prod = tmp_path / "prod"; a = prod / "reports_out/brando_pa/phase8_forward/A_BTC_SMA200"; a.mkdir(parents=True)
+    (a / "state.json").write_text(json.dumps({"initial_usdt": 10000.0, "forward_start_utc": "2026-11-08 12:00", "ledgers": {"cost": {"cash": 9000.0}}})); _append(a / "events.jsonl", {"kind": "x"})
+    acc = macguard21.accounts(prod)["accounts"]; assert acc["A_BTC_SMA200"]["initial_usdt"] == 10000.0 and acc["A_BTC_SMA200"]["events_chain"]["ok"] and acc["B_modelB_state_machine"] == {"found": False}
+    base = macguard21.snapshot(prod); assert macguard21.compare(base, prod)["ok"]
+    (a / "state.json").write_text(json.dumps({"initial_usdt": 100000.0, "forward_start_utc": "2026-11-08 12:00", "ledgers": {}})); assert any("初始本金或前瞻起点" in x for x in macguard21.compare(base, prod)["problems"])

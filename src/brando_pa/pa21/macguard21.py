@@ -59,6 +59,37 @@ def _capital(root: Path) -> list:
         return [["error", str(e)[:100]]]
 
 
+MAC_ACCOUNTS = ("A_BTC_SMA200", "B_modelB_state_machine", "REF_ETH_SMA200")
+
+
+def accounts(prod_root: Path) -> dict:
+    """只读：Mac 三个模拟账户的初始本金、前瞻起点、最近运行、现金与事件链校验，以及服务心跳。不导入、不运行生产代码。"""
+    import pandas as pd
+    from ..trendsys.paper import verify_chain
+    d = Path(prod_root).expanduser() / "reports_out" / "brando_pa" / "phase8_forward"; out = {}
+    for n in MAC_ACCOUNTS:
+        sp = d / n / "state.json"
+        if not sp.exists():
+            out[n] = {"found": False}; continue
+        try:
+            st = json.loads(sp.read_text(encoding="utf-8")); led = st.get("ledgers", {}); ch = verify_chain(d / n / "events.jsonl")
+        except Exception as e:  # noqa: BLE001
+            out[n] = {"found": True, "read_error": f"{type(e).__name__}: {str(e)[:80]}（可能正在写入，稍后重试）"}; continue
+        out[n] = {"found": True, "initial_usdt": st.get("initial_usdt"), "forward_start_utc": st.get("forward_start_utc"), "last_run_at": st.get("last_run_at"), "n_runs": st.get("n_runs"),
+                  "cash_usdt": {k: round(float(v.get("cash", 0.0)), 2) for k, v in led.items()}, "events_chain": ch}
+    h = d / "health.json"; hb = None
+    try:
+        hj = json.loads(h.read_text(encoding="utf-8")) if h.exists() else {}; hb = hj.get("heartbeat_utc")
+        age = (pd.Timestamp.now(tz="UTC") - pd.Timestamp(hb)).total_seconds() / 60 if hb else None
+    except Exception:  # noqa: BLE001
+        age = None
+    try:
+        rc = verify_chain(d / "runner_events.jsonl") if (d / "runner_events.jsonl").exists() else None
+    except Exception as e:  # noqa: BLE001
+        rc = {"ok": None, "read_error": str(e)[:80]}
+    return {"accounts": out, "heartbeat_utc": hb, "heartbeat_age_min": None if age is None else round(age, 1), "runner_chain": rc}
+
+
 def snapshot(prod_root: Path) -> dict:
     prod_root = Path(prod_root).expanduser(); files = {}
     for w in WATCH:
@@ -68,7 +99,8 @@ def snapshot(prod_root: Path) -> dict:
                 st = p.stat(); rel = str(p.relative_to(prod_root))
                 files[rel] = {"size": st.st_size, "prefix_sha256": _prefix_sha(p, st.st_size) if p.suffix == ".jsonl" else None}
     return {"prod_root": str(prod_root), "head": _git(prod_root, "rev-parse", "HEAD"), "branch": _git(prod_root, "rev-parse", "--abbrev-ref", "HEAD"), "status_porcelain": _git(prod_root, "status", "--porcelain", "--untracked-files=no"),
-            "initial_cash_usdt": _capital(prod_root), "launchd": {lb: _launchd(lb) for lb in LABELS}, "files": files, "forbidden_present": [f for f in FORBIDDEN if (prod_root / f).exists()]}
+            "initial_cash_usdt": _capital(prod_root), "launchd": {lb: _launchd(lb) for lb in LABELS}, "files": files, "forbidden_present": [f for f in FORBIDDEN if (prod_root / f).exists()],
+            "mac_accounts": {n: {k: v.get(k) for k in ("found", "initial_usdt", "forward_start_utc")} for n, v in accounts(prod_root)["accounts"].items()}}
 
 
 def compare(base: dict, prod_root: Path | None = None) -> dict:
@@ -88,6 +120,10 @@ def compare(base: dict, prod_root: Path | None = None) -> dict:
     for lb, s in base["launchd"].items():
         if cur["launchd"].get(lb) != s:
             bad.append(f"launchd {lb}：{s} → {cur['launchd'].get(lb)}")
+    for n, b0 in (base.get("mac_accounts") or {}).items():
+        c0 = cur.get("mac_accounts", {}).get(n, {})
+        if b0.get("found") and (c0.get("initial_usdt") != b0.get("initial_usdt") or c0.get("forward_start_utc") != b0.get("forward_start_utc")):
+            bad.append(f"Mac 账户 {n} 的初始本金或前瞻起点变化：{b0} → {c0}")
     if cur["forbidden_present"]:
         bad.append(f"生产目录中出现第二十一阶段目录：{cur['forbidden_present']}")
     grown = sum(1 for rel, b in base["files"].items() if (root / rel).exists() and (root / rel).stat().st_size > b["size"])
@@ -96,6 +132,10 @@ def compare(base: dict, prod_root: Path | None = None) -> dict:
 
 if __name__ == "__main__":
     import sys
+    if sys.argv[1] == "accounts":
+        r = accounts(Path(sys.argv[2])); print(json.dumps(r, ensure_ascii=False, indent=1, default=str))
+        acc = r["accounts"]; bad = [n for n, v in acc.items() if not v.get("found") or v.get("read_error") or v.get("initial_usdt") != 10000 or not (v.get("events_chain") or {}).get("ok")]
+        print("MAC_ACCOUNTS_OK" if not bad else f"MAC_ACCOUNTS_PROBLEM {bad}"); sys.exit(0 if not bad else 1)
     if sys.argv[1] == "snapshot":
         s = snapshot(Path(sys.argv[2])); Path(sys.argv[3]).parent.mkdir(parents=True, exist_ok=True); Path(sys.argv[3]).write_text(json.dumps(s, ensure_ascii=False, indent=1), encoding="utf-8")
         print(json.dumps({k: s[k] for k in ("prod_root", "head", "branch", "launchd", "initial_cash_usdt", "forbidden_present")} | {"n_files": len(s["files"])}, ensure_ascii=False))

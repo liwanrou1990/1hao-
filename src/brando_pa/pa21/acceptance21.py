@@ -29,7 +29,8 @@ def static_no_order_api(src_dir: Path | None = None) -> dict:
     return {"ok": not hits, "hits": hits}
 
 
-def accept72(since, out_dir: Path | None = None, now: pd.Timestamp | None = None, baseline: dict | None = None, prod_root: Path | None = None, hours: int = 72) -> dict:
+def accept72(since, out_dir: Path | None = None, now: pd.Timestamp | None = None, baseline: dict | None = None, prod_root: Path | None = None, hours: int = 72, require_platform: str | None = "darwin") -> dict:
+    """require_platform：真实验收要求窗口内所有运行都来自同一台 Mac（sys.platform == darwin）；加速模拟传 None，结果注明不可作为真实验收。"""
     out = Path(out_dir or OUT_DIR); now = now or utcnow(); a = pd.Timestamp(since); a = a.tz_localize("UTC") if a.tzinfo is None else a; z = a + pd.Timedelta(hours=hours); C = {}
     runs = [r for r in _read(out / "runs.jsonl") if r.get("kind") == "tick"]
     for r in runs:
@@ -54,9 +55,30 @@ def accept72(since, out_dir: Path | None = None, now: pd.Timestamp | None = None
         C["mac_unchanged"] = {"ok": False, "detail": "未提供部署前基线（Mac 上运行时必须提供 --baseline）"}
     else:
         g = macguard21.compare(baseline, prod_root); C["mac_unchanged"] = {"ok": g["ok"], "detail": g}
+    hosts = sorted({str(r.get("host")) for r in win}); plats = sorted({str(r.get("platform")) for r in win})
+    if require_platform is None:
+        C["local_mac"] = {"ok": True, "detail": f"加速模拟：未检查运行平台（{plats}），不能作为真实验收"}
+    else:
+        C["local_mac"] = {"ok": bool(win) and plats == [require_platform] and len(hosts) == 1, "detail": f"窗口内运行平台 {plats}，主机 {hosts}（需全部为同一台 {require_platform} 主机）"}
     so = static_no_order_api(); C["no_order_api"] = {"ok": so["ok"], "detail": "源码中没有下单 / 密钥接口" if so["ok"] else so["hits"]}
     passed = all(v["ok"] for v in C.values())
     return {"window": [str(a), str(z)], "checked_at": str(now), "passed": passed, "verdict": "通过" if passed else "未通过", "criteria": C, "n_ticks_in_window": len(win)}
+
+
+def progress(since, out_dir: Path | None = None, now: pd.Timestamp | None = None, baseline: dict | None = None, prod_root: Path | None = None) -> dict:
+    """验收进行中的读数：已过小时、运行次数、观察起点与已记录天数、当前问题清单（不含“未满 72 小时”及尚无法判断的项）。"""
+    from . import FORWARD_START
+    out = Path(out_dir or OUT_DIR); now = now or utcnow(); r = accept72(since, out, now=now, baseline=baseline, prod_root=prod_root)
+    a = pd.Timestamp(r["window"][0]); el = (now - a).total_seconds() / 3600; rows = [x for x in _read(out / "daily_ledger.jsonl") if x.get("kind") == "daily"]; obs = _read(out / "observations.jsonl")
+    pend = {"elapsed"} | ({"coverage"} if el < 72 else set()) | ({"daily_records_realtime"} if "窗口内收盘日 0 个" in str(r["criteria"]["daily_records_realtime"]["detail"]) else set())
+    if el < 72:
+        hrs = max(int(el), 0); seen = r["criteria"]["coverage"]["detail"]
+        r["criteria"]["coverage"]["detail"] = f"{seen}；已过 {hrs} 小时"
+    issues = [f"{k}：{v['detail'] if isinstance(v['detail'], str) else json.dumps(v['detail'], ensure_ascii=False, default=str)[:300]}" for k, v in r["criteria"].items() if not v["ok"] and k not in pend]
+    cats = pd.Series([o["category"] for o in obs]).value_counts().to_dict() if obs else {}
+    return {"acceptance_start_utc": str(a), "acceptance_end_utc": r["window"][1], "hours_elapsed": round(el, 2), "hours_remaining": round(max(0.0, 72 - el), 2), "n_ticks": r["n_ticks_in_window"],
+            "forward_start_day": FORWARD_START, "first_record_day": rows[0]["date"] if rows else None, "last_record_day": rows[-1]["date"] if rows else None, "n_days_recorded": len(rows), "observation_categories": cats,
+            "status": ("已完成：" + r["verdict"]) if el >= 72 else ("进行中，当前无问题" if not issues else "进行中，有问题"), "issues": issues, "criteria": {k: v["ok"] for k, v in r["criteria"].items()}}
 
 
 def _metrics(rows: list[dict]) -> dict:
@@ -97,6 +119,9 @@ if __name__ == "__main__":
         b = json.loads(Path(x.baseline).read_text(encoding="utf-8")) if x.baseline else None; r = accept72(x.since, o, baseline=b, prod_root=Path(x.prod_root).expanduser() if x.prod_root else None)
         (Path(o or OUT_DIR) / "acceptance72.json").write_text(json.dumps(r, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         print(json.dumps({"verdict": r["verdict"], **{k: ("通过" if v["ok"] else "未通过") + " · " + (v["detail"] if isinstance(v["detail"], str) else "") for k, v in r["criteria"].items()}}, ensure_ascii=False, indent=1)); raise SystemExit(0 if r["passed"] else 1)
+    if x.cmd == "progress":
+        b = json.loads(Path(x.baseline).read_text(encoding="utf-8")) if x.baseline else None; r = progress(x.since, o, baseline=b, prod_root=Path(x.prod_root).expanduser() if x.prod_root else None)
+        print(json.dumps(r, ensure_ascii=False, indent=1, default=str)); raise SystemExit(0)
     if x.cmd == "evaluate":
         r = evaluate(o); (Path(o or OUT_DIR) / "evaluation.json").write_text(json.dumps(r, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         print(json.dumps([{k: w.get(k) for k in ("horizon", "due_date", "status", "detail")} for w in r["windows"]], ensure_ascii=False, indent=1))

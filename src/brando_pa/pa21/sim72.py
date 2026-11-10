@@ -77,7 +77,7 @@ def run(base: Path, since: str = "2026-11-12 00:00", hours: int = 72, faults: bo
             if faults and k == 50:
                 p = prod / "reports_out/brando_pa/phase8_forward/events.jsonl"; p.write_text(p.read_text(encoding="utf-8").replace('{"n": 0}', '{"n": -1}'), encoding="utf-8")   # 模拟历史被改写
             log.append(service21.tick(now=now, store=store, out_dir=out, feed_dir=feed, sources=[ex], dashboard=dashboard_last and k == hours - 1))
-    res = acceptance21.accept72(a, out, now=a + pd.Timedelta(hours=hours, minutes=10), baseline=baseline, prod_root=prod, hours=hours)
+    res = acceptance21.accept72(a, out, now=a + pd.Timedelta(hours=hours, minutes=10), baseline=baseline, prod_root=prod, hours=hours, require_platform=None)
     res["simulation"] = {"faults_injected": ["第 2 天 00:05–05:05 行情中断（6 次，跨越日线收盘）", "第 31 次运行崩溃", "第 41 次运行遇到锁", "第 51 次运行前 Mac 账本历史被改写", "第 56–60 小时电脑睡眠"] if faults else [], "statuses": pd.Series([r["status"] for r in log]).value_counts().to_dict(),
                          "note": "加速模拟：虚拟时钟与合成行情，只检验服务与验收逻辑，不是前瞻观察，不能替代 Mac 上的真实 72 小时验收"}
     return res
