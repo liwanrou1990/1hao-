@@ -28,9 +28,21 @@ print(f"== polls since local start {ls}: {len(loc)} data_check cycles · first {
 src = loc.get("source", pd.Series(dtype=object)); print("data sources:", src.value_counts(dropna=False).to_dict() if len(src) else "n/a", "· ok share:", round(float(loc["ok"].astype(bool).mean()), 4) if len(loc) else None)
 gaps = loc.t.diff().dt.total_seconds() / 60; g = pd.DataFrame({"end": loc.t, "gap_min": gaps.round(1)}); g["start"] = g["end"] - pd.to_timedelta(g["gap_min"], unit="m")
 big = g[g.gap_min > 15]; print(f"== gaps > 15 min (count {len(big)}, total lost ≈ {((big.gap_min - 10) / 10).sum():.1f} cycles):"); print(big[["start", "end", "gap_min"]].to_string(index=False) if len(big) else "  none")
+# 周期统计：实际相邻轮询间隔（验收口径假设 600 s；主循环 = 处理耗时 + sleep(600)，所以实际周期 > 600 s，零中断覆盖率上限 = 600 / 中位周期）
+normal = gaps[(gaps > 0) & (gaps <= 15)] * 60
+if len(normal):
+    med = float(normal.median()); print(f"== cycle period (gaps ≤ 15 min): median {med:.0f} s · p10 {normal.quantile(.1):.0f} s · p90 {normal.quantile(.9):.0f} s · n {len(normal)} → zero-downtime coverage ceiling = 600/{med:.0f} = {600/med:.1%}")
+try:
+    import re, subprocess
+    el = [float(x) for x in re.findall(r'"elapsed_s": ([0-9.]+)', open(f"{D}/service.log", errors="ignore").read())]
+    if el: el_s = pd.Series(el); print(f"== cycle processing time (service.log elapsed_s, n={len(el)}): median {el_s.median():.1f} s · p90 {el_s.quantile(.9):.1f} s · max {el_s.max():.1f} s · last {el_s.iloc[-1]:.1f} s")
+except Exception as e_: print("service.log elapsed_s not readable:", e_)
 E = (now - ls).total_seconds() / 3600; exp = max(int(E * 6), 1); obs = len(loc); lost = exp - obs; tail = (now - loc.t.max()).total_seconds() / 3600 if len(loc) else E
 print(f"== coverage now: {obs}/{exp} = {obs/exp:.1%} · elapsed {E:.2f} h · longest gap {max(gaps.max()/60 if len(gaps.dropna()) else 0, tail):.2f} h (incl. tail {tail:.2f} h)")
 print(f"== 72h budget: lost {lost} cycles; max final coverage if zero downtime from now = {(432 - max(lost,0))/432:.2%} → {'can still reach 95%' if (432 - max(lost,0))/432 >= 0.95 else 'CANNOT reach 95% under the original criterion'}")
+if len(normal):
+    med = float(normal.median()); big_loss = float(((big.gap_min - 10) / 10).sum()) if len(big) else 0.0
+    print(f"== loss attribution: gaps>15min ≈ {big_loss:.1f} cycles · period>600s (structural, {E:.1f} h × (6/h − 3600/{med:.0f}/h)) ≈ {E*6 - E*3600/med:.1f} cycles · start lag + rounding ≈ {lost - big_loss - (E*6 - E*3600/med):.1f} cycles")
 for a in ("A_BTC_SMA200", "B_modelB_state_machine", "REF_ETH_SMA200"):
     ev = pd.read_json(f"{D}/{a}/events.jsonl", lines=True); k = ev["kind"].value_counts().to_dict(); st = json.load(open(f"{D}/{a}/state.json"))
     print(f"== {a}: events {len(ev)} · signal {k.get('signal',0)} missed {k.get('missed_signal',0)} order {k.get('order',0)} fill {k.get('fill',0)} expired {k.get('order_expired',0)} cancelled {k.get('order_cancelled',0)} · pending {len(st.get('pending',[]))} · last_daily {st.get('last_daily_ts')} · cash(cost) {st['ledgers']['cost']['cash']:.2f}")
