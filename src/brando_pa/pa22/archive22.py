@@ -30,7 +30,7 @@ def parse_trades(raw: bytes) -> pd.DataFrame:
     bad = ~df["side"].isin(["buy", "sell"])
     if bad.any():
         raise ValueError(f"未知的主动方向取值：{df.loc[bad, 'side'].unique()[:5].tolist()}")
-    return df.sort_values("trade_id", kind="stable").reset_index(drop=True)
+    return df.sort_values("trade_id", kind="stable").drop_duplicates("trade_id", keep="first").reset_index(drop=True)      # 归档中有完全重复的行：每笔成交只计一次
 
 
 def hourly(df: pd.DataFrame, sym: str) -> pd.DataFrame:
@@ -98,6 +98,40 @@ def _flush(out_dir: Path, parts: dict) -> None:
         new.sort_values(["hour", "first_tid"]).to_parquet(p, index=False)
 
 
+def repair(out_dir: Path, sym: str) -> dict:
+    """事后数据清洗（不改任何条件参数）：首轮清单中含重复编号的文件，以及与相邻文件编号区间重叠的文件对，
+    重新下载、合并后按成交编号去重，再替换这些文件覆盖的小时。清单追加 repair 记录，可追溯。"""
+    import httpx
+    out_dir = Path(out_dir); man = out_dir / "manifest.jsonl"; m = [x for x in map(json.loads, man.read_text().splitlines()) if x["symbol"] == sym and x["status"] == "ok"]
+    first = {}
+    for x in m:
+        first.setdefault(x["file_day"], x)
+    days = sorted(first); fix = {d for d in days if first[d].get("duplicate_ids", 0) > 0}
+    for a, b in zip(days[:-1], days[1:]):
+        if first[b]["first_tid"] <= first[a]["last_tid"]:
+            fix |= {a, b}
+    groups, cur = [], []
+    for d in sorted(fix):
+        if cur and (pd.Timestamp(d) - pd.Timestamp(cur[-1])).days > 1:
+            groups.append(cur); cur = []
+        cur.append(d)
+    if cur:
+        groups.append(cur)
+    h = pd.read_parquet(out_dir / f"{sym}_hourly.parquet"); log = []
+    for g in groups:
+        dfs = []
+        for d in g:
+            r = httpx.get(url(sym, pd.Timestamp(d)), timeout=120); r.raise_for_status(); z = zipfile.ZipFile(io.BytesIO(r.content)); dfs.append(pd.read_csv(io.BytesIO(z.read(z.namelist()[0])), usecols=["trade_id", "side", "price", "size", "created_time"]))
+        raw = pd.concat(dfs, ignore_index=True); n0 = len(raw); df = parse_trades(raw.to_csv(index=False).encode()); hh = hourly(df, sym)
+        lo, hi = pd.Timestamp(g[0], tz="UTC") - pd.Timedelta(hours=8), pd.Timestamp(g[-1], tz="UTC") + pd.Timedelta(hours=16)       # 文件 D 覆盖 UTC [D−1 16:00, D 16:00)
+        lo = min(lo, hh["hour"].min()); hi = max(hi, hh["hour"].max() + pd.Timedelta(hours=1))
+        h = pd.concat([h[(h["hour"] < lo) | (h["hour"] >= hi)], hh], ignore_index=True)
+        rec = {"symbol": sym, "file_day": g[0], "status": "repair", "files": g, "rows_before_dedup": n0, "rows_after_dedup": int(len(df)), "hours_replaced": [str(lo), str(hi)]}; log.append(rec)
+        with open(man, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    h.sort_values(["hour", "first_tid"]).to_parquet(out_dir / f"{sym}_hourly.parquet", index=False); return {"groups": len(groups), "log": log}
+
+
 def load_hourly(out_dir: Path, sym: str) -> pd.DataFrame:
     """合并同一小时的多段（相邻归档文件在 UTC 16:00 交界，不会重叠；此处仍按小时再聚合一次以防万一）。"""
     h = pd.read_parquet(Path(out_dir) / f"{sym}_hourly.parquet").sort_values(["hour", "first_tid"])
@@ -119,7 +153,7 @@ def daily(hourly_df: pd.DataFrame) -> pd.DataFrame:
 
 def continuity(man_path: Path, sym: str) -> dict:
     """跨文件成交编号连续性：相邻归档文件的首末编号是否衔接；文件缺失；文件内部缺口。"""
-    m = [x for x in map(json.loads, Path(man_path).read_text().splitlines()) if x["symbol"] == sym]
+    m = [x for x in map(json.loads, Path(man_path).read_text().splitlines()) if x["symbol"] == sym and x["status"] != "repair"]
     ok = sorted([x for x in m if x["status"] == "ok"], key=lambda x: x["file_day"]); cross = []
     for a, b in zip(ok[:-1], ok[1:]):
         if b["first_tid"] != a["last_tid"] + 1:

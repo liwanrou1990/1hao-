@@ -27,13 +27,15 @@ def live_daily(data_dir: Path, ex: str, sym: str) -> pd.DataFrame:
     return archive22.daily(h) if not h.empty else pd.DataFrame()
 
 
-def rubik_check(daily: pd.DataFrame, ccy: str) -> dict:
-    """与 OKX 官方日主动买卖量统计（rubik，最近 180 天，现货该币种全部交易对汇总）比对失衡度方向；只作为方向口径的旁证。"""
+def rubik_check(hourly: pd.DataFrame, ccy: str) -> dict:
+    """与 OKX 官方日主动买卖量统计（rubik，最近 180 天，现货该币种全部交易对汇总）比对失衡度方向；只作为方向口径的旁证。
+    rubik 的日按北京时间（UTC+8）切分，且时间戳标在该北京日结束时（实测：对齐到前一北京日时相关系数约 0.99）；这里把本模块的小时数据也按北京日汇总后比较。"""
     try:
         import httpx
         d = httpx.get("https://www.okx.com/api/v5/rubik/stat/taker-volume", params={"ccy": ccy, "instType": "SPOT", "period": "1D"}, timeout=20).json()["data"]
-        r = pd.DataFrame(d, columns=["ts", "sell", "buy"]).astype(float); r["ts"] = pd.to_datetime(r["ts"], unit="ms", utc=True); r["imb_rubik"] = (r["buy"] - r["sell"]) / (r["buy"] + r["sell"])
-        m = daily[["ts", "imb"]].merge(r[["ts", "imb_rubik"]], on="ts")
+        r = pd.DataFrame(d, columns=["ts", "sell", "buy"]).astype(float); r["day"] = (pd.to_datetime(r["ts"], unit="ms", utc=True) + pd.Timedelta(hours=8)).dt.floor("D") - pd.Timedelta(days=1); r["imb_rubik"] = (r["buy"] - r["sell"]) / (r["buy"] + r["sell"])
+        h = hourly.copy(); h["day"] = (h["hour"] + pd.Timedelta(hours=8)).dt.floor("D"); g = h.groupby("day")[["tb", "ts"]].sum(); g["imb"] = (g["tb"] - g["ts"]) / (g["tb"] + g["ts"]); g["hours"] = h.groupby("day")["hour"].count()
+        m = g[g["hours"] == 24].reset_index()[["day", "imb"]].merge(r[["day", "imb_rubik"]], on="day")
         return {"days": int(len(m)), "corr": float(m["imb"].corr(m["imb_rubik"])), "same_sign_share": float((np.sign(m["imb"]) == np.sign(m["imb_rubik"])).mean())}
     except Exception as e:  # noqa: BLE001
         return {"error": str(e)[:160]}
@@ -55,7 +57,7 @@ def run(data_dir: Path | None = None, out_dir: Path | None = None, check_rubik: 
         cur[s] = {k: (v.isoformat() if isinstance(v, pd.Timestamp) else v) for k, v in last.items()} | {"forward_level": level, "coinbase_imb3": cb3, "cross_exchange_agree": agree, "data_through_utc": str(h["hour"].max() + pd.Timedelta(hours=1)), "last_source": d["source"].iloc[-1]}
         cont[s] = archive22.continuity(dd / "okx_archive" / "manifest.jsonl", s) if (dd / "okx_archive" / "manifest.jsonl").exists() else {}
         if check_rubik:
-            rub[s] = rubik_check(d, s.split("-")[0])
+            rub[s] = rubik_check(h, s.split("-")[0])
         d.to_csv(out / f"daily_{s}.csv", index=False); st.to_csv(out / f"states_{s}.csv", index=False)
     S = validate22.study(daily, states); V = validate22.verdict(S["results"])
     fe = out / "forward_events.jsonl"; have = {(e["symbol"], e["day"]) for e in map(json.loads, fe.read_text().splitlines())} if fe.exists() else set()

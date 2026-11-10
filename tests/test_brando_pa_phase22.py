@@ -50,6 +50,7 @@ class FakeNet:
             def __init__(s, j): s._j = j; s.headers = {}; s.content = b"x"
             def json(s): return s._j
         if url.endswith("/market/trades"):
+            self.limits = getattr(self, "limits", []) + [params["limit"]]
             return R({"data": [{"instId": "BTC-USDT", "tradeId": str(t), "ts": str(1000 + t), "px": "100", "sz": "1", "side": "buy"} for t in sorted(self.okx_batches.pop(0), reverse=True)]})
         if url.endswith("/market/history-trades"):
             after = int(params["after"]); got = sorted([t for t in self.okx_hist if t < after], reverse=True)[:100]
@@ -60,6 +61,7 @@ class FakeNet:
 def test_gap_backfill_and_unresolved_gap():
     s = collector22.Stream("okx", "BTC-USDT"); net = FakeNet([range(100, 105), range(110, 115)], okx_hist=range(105, 110))
     s.poll(net); new = s.poll(net); assert [x["tid"] for x in new] == list(range(105, 115)) and s.gaps_backfilled == 1 and s.gaps_unresolved == 0 and s.missing_ids == 0
+    assert net.limits == [500, 30]                                                                  # 第二次只请求预计的新成交数量
     s2 = collector22.Stream("okx", "BTC-USDT"); net2 = FakeNet([range(100, 105), range(110, 115)], okx_hist=range(107, 110))
     s2.poll(net2); s2.poll(net2); assert s2.gaps_unresolved == 1 and s2.missing_ids == 2
 

@@ -48,7 +48,7 @@ def build(out_dir: Path | None = None, data_dir: Path | None = None) -> Path:
         c = R["current"][s]; lvl = c.get("forward_level", "证据不足")
         chk = f'位置 L {_ck(c.get("L"))} · 近 6 天卖压吸收 A {_ck(c.get("recentA"))} · 主动买入增强 B {_ck(c.get("B"))} · 放量企稳 V {_ck(c.get("V"))} · 突破回踩 R {_ck(c.get("R"))} · 数据质量 Q {_ck(c.get("Q"))}'
         cards += _card(f'{s} 证据等级（截至 {str(c.get("ts"))[:10]} UTC 收盘）', lvl, chk + (f'<br>{html.escape(c["why"])}' if c.get("why") else ""), TAG["trade"], LV.get(lvl, ""))
-        cards += _card(f"{s} 订单流读数", f'5 天净主动 {_p(c.get("net5_share"))}', f'3 天失衡 {_p(c.get("imb3"))}（前 10 天 {_p(c.get("imb_prior10"))}）· 当日成交额 / 20 天中位 {c.get("tot_vs_med20") or 0:.2f} 倍 · 收盘位置 {c.get("close_pos") or 0:.2f}<br>区域 {c.get("zone") or "无"} · Coinbase 3 天失衡 {_p(c.get("coinbase_imb3"))} · 跨交易所同号 {c.get("cross_exchange_agree")}', TAG["trade"])
+        cards += _card(f"{s} 订单流读数", f'5 天净主动 {_p(c.get("net5_share"))}', f'3 天失衡 {_p(c.get("imb3"))}（前 10 天 {_p(c.get("imb_prior10"))}）· 当日成交额 / 20 天中位 {c.get("tot_vs_med20") or 0:.2f} 倍 · 收盘位置 {c.get("close_pos") or 0:.2f}<br>区域 {c.get("zone") or "无"} · Coinbase 3 天失衡 {_p(c.get("coinbase_imb3"))} · 跨交易所同号 {({True: "是", False: "否"}).get(c.get("cross_exchange_agree"), "尚无数据（需要至少 3 天 Coinbase 实时数据）")}', TAG["trade"])
     sections.append(f'<h2>当前证据等级</h2><div class="grid">{cards}</div><div class="small">只有真实订单流与价格结构同时满足预先固定的条件才显示“买盘确认”；实时（前瞻）还要求 OKX 与 Coinbase 方向一致。区域强度不参与判断。</div>')
     # 2 最新数据时间与质量
     rows = ""

@@ -49,16 +49,18 @@ def cb_norm(t: dict, sym: str, recv_ms: float) -> dict:
 
 class Stream:
     def __init__(self, ex: str, sym: str):
-        self.ex, self.sym = ex, sym; self.last_tid = None; self.buf: list[dict] = []; self.n_today = 0; self.gaps_backfilled = 0; self.gaps_unresolved = 0; self.missing_ids = 0; self.last_trade_ms = None; self.lat = []; self.recent: list[dict] = []
+        self.ex, self.sym = ex, sym; self.last_tid = None; self.buf: list[dict] = []; self.n_today = 0; self.gaps_backfilled = 0; self.gaps_unresolved = 0; self.missing_ids = 0; self.last_trade_ms = None; self.lat = []; self.recent: list[dict] = []; self.last_new = 500
 
     def poll(self, net: Net, max_pages: int = 200) -> list[dict]:
         recv = time.time() * 1000
-        if self.ex == "okx":
-            batch = [okx_norm(t, recv) for t in net.get(f"{OKX}/api/v5/market/trades", {"instId": self.sym, "limit": 500}).json()["data"]]
-        else:
-            r = net.get(f"{CB}/products/{CB_PRODUCT[self.sym]}/trades", {"limit": 1000}); batch = [cb_norm(t, self.sym, recv) for t in r.json()]; cursor = r.headers.get("cb-after")
+        if self.ex == "okx":                                                              # 只取预计的新成交数量（实测 OKX 的 before 参数返回最新的 N 笔，不能直接用）
+            lim = 500 if self.last_tid is None else int(min(500, max(30, 1.5 * self.last_new + 20)))
+            batch = [okx_norm(t, recv) for t in net.get(f"{OKX}/api/v5/market/trades", {"instId": self.sym, "limit": lim}).json()["data"]]
+        else:                                                                             # Coinbase：before = 上次最后一笔，只返回更新的成交（实测）
+            prm = {"limit": 1000} | ({"before": self.last_tid} if self.last_tid is not None else {})
+            r = net.get(f"{CB}/products/{CB_PRODUCT[self.sym]}/trades", prm); batch = [cb_norm(t, self.sym, recv) for t in r.json()]; cursor = r.headers.get("cb-after")
         if not batch:
-            return []
+            self.last_new = 0; return []
         if self.last_tid is not None:
             pages = 0
             while min(x["tid"] for x in batch) > self.last_tid + 1 and pages < max_pages:             # 回补：向更早翻页直到衔接
@@ -80,6 +82,7 @@ class Stream:
         tids = np.array([x["tid"] for x in new]) if new else np.array([])
         if len(tids) > 1:
             self.missing_ids += int((np.diff(tids) - 1).clip(min=0).sum())
+        self.last_new = len(new)
         if new:
             self.last_tid = new[-1]["tid"]; self.last_trade_ms = new[-1]["ts_ms"]; self.buf += new; self.n_today += len(new); self.lat += [x["recv_ms"] - x["ts_ms"] for x in new[-200:]]
             cut = new[-1]["ts_ms"] - 30 * 60 * 1000; self.recent = [x for x in self.recent if x["ts_ms"] >= cut] + new; self.lat = self.lat[-5000:]
