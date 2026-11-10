@@ -1,0 +1,79 @@
+{
+ "params": {
+  "forward_start": "2026-11-11",
+  "initial_usdt": 100000.0,
+  "accounts": [
+   "FIX25_Y",
+   "B2_original",
+   "SMA200",
+   "BH_BTC"
+  ],
+  "fee_bps": 10.0,
+  "base_slippage_bps": 5.0,
+  "impact": {
+   "Y": 1.0,
+   "cap_bps": 100.0,
+   "sigma_days": 20,
+   "fallback_bps": 25.0
+  },
+  "btc_step": 1e-05,
+  "min_notional_usdt": 5.0,
+  "sma": 200,
+  "b2_risk_state_machine": {
+   "reduce_dd": 0.1,
+   "reduce_cap": 0.5,
+   "recover_dd": 0.05,
+   "halt_dd": 0.2,
+   "cooldown_days_per_halt": 30,
+   "cooldown_max_multiplier": 3,
+   "recovery_days": 60,
+   "recovery_retrigger_dd": 0.1,
+   "halt_count_reset_days": 180,
+   "crash_exit_daily_drop": 0.15
+  },
+  "warn_thresholds": [
+   0.35,
+   0.4,
+   0.45,
+   0.5
+  ],
+  "drawdown_budget": 0.5,
+  "rules": {
+   "FIX25_Y": {
+    "text": "25% BTC + 75% USDT；起点收盘决策、次日开盘建仓；每年 1 月第一个交易日开盘再平衡回 25%；差额 < 5 USDT 不交易；不止损、不择时、回撤警报不交易",
+    "weight": 0.25,
+    "mode": "Y",
+    "engine": "pa20.alloc20.AllocBacktester"
+   },
+   "B2_original": {
+    "text": "BTC/ETH 各自收盘 > SMA200 持有、等权；原风险状态机（config trendsys.risk.state_machine）",
+    "engine": "pa18.phase18.run_variant('V0_original')",
+    "note": "日线研究引擎，次日开盘成交；与 Mac B 账户（实时报价成交）执行方式不同"
+   },
+   "SMA200": {
+    "text": "BTC 收盘 > SMA200 持有，否则 USDT",
+    "engine": "holding.engine.HoldingBacktester(mode=trend, sma=200)"
+   },
+   "BH_BTC": {
+    "text": "起点买入 BTC 后持有",
+    "engine": "holding.engine.HoldingBacktester(mode=buyhold)"
+   }
+  }
+ },
+ "params_sha256": "d1269596ccc56316fe6a708f0a058877187c52363ea44988faf826e9ac90d493",
+ "files": {
+  "src/brando_pa/pa20/alloc20.py": "d46bdc92de4682fa9d9567775af4006ef4ca3fcbec73259943479607283883dc",
+  "src/brando_pa/pa20/execution20.py": "805548028e124600a1a5d62ab6ecd11d726b467eb0ccf61e83ba76ac57bb582e",
+  "src/brando_pa/spot/ledger.py": "6100edfe4487008145f717d646674b9b7e6065e0c2ffa087e1f3764d777e25e3",
+  "src/brando_pa/holding/engine.py": "212a77854125cbf98b12b31cb8cef15025b42d2dc3fe492e1d63eab7f589f246",
+  "src/brando_pa/pa18/variants18.py": "d0f05f76d9e04ecb88c5e22db56489f096060d4154d58ad2298837e354b8b972",
+  "src/brando_pa/pa18/phase18.py": "2df56d6f1fb19c8a07ab6ebed18105d6aa99f704576e616ddbe2bd12dc07ead1",
+  "src/brando_pa/trendsys/risk_layer.py": "9e71914078778740fef34ad6863b4cce069771c60b84450ac226544a27390fc9",
+  "src/brando_pa/trendsys/trend_layer.py": "848a7b6866ed5a991eab8a62c8890bff8f04371d99c7da326de857fc2e54e129",
+  "src/brando_pa/usdt/engine.py": "9a6a9371218dcc0b258c6afb14f77dcb58bf07820875c0bc76815ee183a078e5",
+  "src/brando_pa/pa21/forward21.py": "59d39e3ece496b05de59fe23ea50ee90f6cafce66a693921d498f1a6fd8de045"
+ },
+ "frozen_at_utc": "2026-11-10 14:55:22.546937+00:00",
+ "preregistration_commit": "061df4f",
+ "preregistration": "docs/brando_pa_validation/phase21_forward/preregistration.md"
+}
