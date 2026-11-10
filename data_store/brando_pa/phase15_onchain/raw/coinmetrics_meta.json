@@ -1,0 +1,5 @@
+{
+ "fetched_at_utc": "2026-11-10 04:06:57.054166+00:00",
+ "source": "community-api.coinmetrics.io v4 (community tier, 1d)",
+ "note": "CapRealUSD 不在社区层；实现价格 = PriceUSD / CapMVRVCur 推导。所有日值视为次日 ~04:00 UTC 后可得（max_time 2026-11-09 于 2026-11-10 04:05 UTC 观察到）→ 回测使用 1 日滞后。"
+}
