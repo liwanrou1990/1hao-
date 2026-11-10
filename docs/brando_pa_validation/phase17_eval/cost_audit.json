@@ -1,0 +1,166 @@
+{
+ "n_grid_combos": 2430,
+ "grid": {
+  "deploy": [
+   "newest",
+   "geomean_newest_prev"
+  ],
+  "lag_days": [
+   60,
+   90,
+   180
+  ],
+  "max_age_years": [
+   4,
+   5,
+   6
+  ],
+  "obsolete_ratio": [
+   5.0,
+   10.0,
+   20.0
+  ],
+  "pue": [
+   1.05,
+   1.1,
+   1.2
+  ],
+  "elec": [
+   0.04,
+   0.05,
+   0.06,
+   0.07,
+   0.08
+  ],
+  "spec_err": [
+   0.85,
+   1.0,
+   1.15
+  ]
+ },
+ "key_dates": {
+  "2015-01-14": {
+   "price": 175.637640561075,
+   "grid_min": 84.7689092603037,
+   "grid_p10": 129.9821795658715,
+   "grid_median": 229.3746956455277,
+   "grid_p90": 507.49037928173027,
+   "grid_max": 986.6685064063374,
+   "max_over_min": 11.639509284902205,
+   "p90_over_p10": 3.9043073517977724,
+   "main_model_mid": 198.0809297862212,
+   "share_of_grid_price_le_cost": 0.7135802469135802,
+   "price_over_cost_range": [
+    0.178010790271178,
+    2.0719582461741557
+   ]
+  },
+  "2018-12-15": {
+   "price": 3211.72,
+   "grid_min": 2058.6413498983293,
+   "grid_p10": 2904.5872491422647,
+   "grid_median": 4843.861999760774,
+   "grid_p90": 8084.628111582814,
+   "grid_max": 10625.511232365983,
+   "max_over_min": 5.161419318081194,
+   "p90_over_p10": 2.7833999870274977,
+   "main_model_mid": 3805.891571240608,
+   "share_of_grid_price_le_cost": 0.8333333333333334,
+   "price_over_cost_range": [
+    0.3022649856335285,
+    1.5601163360284287
+   ]
+  },
+  "2020-03-12": {
+   "price": 4800.0,
+   "grid_min": 2627.957132704498,
+   "grid_p10": 3853.601005520462,
+   "grid_median": 6081.520952709794,
+   "grid_p90": 9256.048441230663,
+   "grid_max": 13869.595546093438,
+   "max_over_min": 5.277709964705506,
+   "p90_over_p10": 2.4019218460787575,
+   "main_model_mid": 5090.775809924582,
+   "share_of_grid_price_le_cost": 0.737037037037037,
+   "price_over_cost_range": [
+    0.3460807479243319,
+    1.8265138119129811
+   ]
+  },
+  "2022-11-21": {
+   "price": 15781.29,
+   "grid_min": 7564.752098987925,
+   "grid_p10": 10167.76977552531,
+   "grid_median": 15255.410878932445,
+   "grid_p90": 21368.197278637665,
+   "grid_max": 27908.647748880718,
+   "max_over_min": 3.68930103507484,
+   "p90_over_p10": 2.10156187152002,
+   "main_model_mid": 14425.129118790544,
+   "share_of_grid_price_le_cost": 0.45555555555555555,
+   "price_over_cost_range": [
+    0.5654623664320287,
+    2.0861608937735516
+   ]
+  },
+  "2026-11-07": {
+   "price": 75868.0,
+   "grid_min": 25665.27567967243,
+   "grid_p10": 33593.55516544593,
+   "grid_median": 51276.92139932353,
+   "grid_p90": 69824.62309306375,
+   "grid_max": 90517.02880990737,
+   "max_over_min": 3.526828620103201,
+   "p90_over_p10": 2.078512463154981,
+   "main_model_mid": 47448.40881956248,
+   "share_of_grid_price_le_cost": 0.06666666666666667,
+   "price_over_cost_range": [
+    0.8381627302342034,
+    2.956056305293827
+   ]
+  }
+ },
+ "criteria": {
+  "a_spread_ge_2_on_ge_2_dates": {
+   "met": true,
+   "n_dates": 5
+  },
+  "b_classification_flips_on_ge_2_dates": {
+   "met": true,
+   "n_dates": 3
+  },
+  "c_cross_model_band_outside_0.67_1.5": {
+   "met": false
+  },
+  "d_observable_inconsistent": {
+   "met": false
+  }
+ },
+ "dispersion_all_days": {
+  "max_over_min_median": 4.440715276606486,
+  "p90_over_p10_median": 2.248476210085281,
+  "share_days_max_over_min_ge_2": 1.0
+ },
+ "cross_model": {
+  "median_v16_over_v15": 0.900723652576044,
+  "p5": 0.6966184741451955,
+  "p95": 1.3698454844283017,
+  "min": 0.541444383407263,
+  "max": 2.344196893977023,
+  "n_days": 3235,
+  "days_le_cost_v16": 37,
+  "days_le_cost_v15": 114,
+  "days_both": 2,
+  "jaccard_le_cost_days": 0.013422818791946308
+ },
+ "observable_consistency": {
+  "n_days_r_le_1": 38,
+  "median_60d_hashrate_growth_r_le_1": 0.07167654689296932,
+  "median_r_1_to_1_5": 0.07505931687665535,
+  "median_60d_hashrate_growth_r_ge_1_5": 0.13968232885918508,
+  "spearman_r_vs_next60d_growth": 0.4613855568626655,
+  "note": "价格只用于检验，不进入成本；r ≤ 1 的日子极少（集中在 2015-01、2018-12、2020-03），统计力很弱"
+ },
+ "severe_error": true,
+ "verdict": "严重误差：不可作为阈值型策略基础；第十六阶段成本类研究冻结，成本区间只作带不确定性说明的背景"
+}

@@ -1,0 +1,470 @@
+{
+ "cloud_copy_forward": {
+  "checked_at_utc": "2026-11-10 11:15:54.603575+00:00",
+  "log_dir": "reports_out/brando_pa/phase8_forward",
+  "standard": "docs/brando_pa_validation/phase17_eval/preregistration.md §3",
+  "score_thresholds": {
+   "mdd_vs_bh": 0.6,
+   "up_capture_min": 0.5,
+   "btc_up_for_capture": 0.2,
+   "net_vs_bh_dd_allowance": 0.5,
+   "long_flat_days": 180,
+   "long_flat_btc_up": 0.3,
+   "whipsaw_window": 90,
+   "whipsaw_round_trips": 4,
+   "whipsaw_cost_share": 0.01
+  },
+  "accounts": {
+   "A_BTC_SMA200": {
+    "start": "2026-11-07",
+    "end": "2026-11-08",
+    "days": 1,
+    "net_liquidation_usdt": 9985.133402075842,
+    "net_profit_usdt": -14.866597924157759,
+    "max_drawdown": -0.001486659792415801,
+    "bh_btc": {
+     "net_profit_usdt": -11.866561479841039,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0
+    },
+    "gap_vs_bh_btc_usdt": -3.00003644431672,
+    "bh_eth": {
+     "net_profit_usdt": -14.34815166360022,
+     "max_drawdown": 0.0
+    },
+    "bh_5050": {
+     "net_profit_usdt": -13.10735657171972,
+     "max_drawdown": 0.0
+    },
+    "up_capture_vs_btc": -0.8194196509613575,
+    "down_capture_vs_btc": null,
+    "time_in_market": 0.5,
+    "holding_runs_days": {
+     "n": 1,
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "longest_flat_days": 1,
+    "current_flat": null,
+    "alerts": [],
+    "scorecard": {
+     "status": "证据不足：仅 1 天（< 365 天只描述，不评级、不宣称跑赢或跑输）"
+    },
+    "horizons": {
+     "30d": "未到期",
+     "90d": "未到期",
+     "180d": "未到期",
+     "365d": "未到期"
+    }
+   },
+   "B_modelB_state_machine": {
+    "start": "2026-11-07",
+    "end": "2026-11-08",
+    "days": 1,
+    "net_liquidation_usdt": 9986.203021760555,
+    "net_profit_usdt": -13.796978239444798,
+    "max_drawdown": -0.0013796978239444257,
+    "bh_btc": {
+     "net_profit_usdt": -11.866561479841039,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0
+    },
+    "gap_vs_bh_btc_usdt": -1.9304167596037587,
+    "bh_eth": {
+     "net_profit_usdt": -14.34815166360022,
+     "max_drawdown": 0.0
+    },
+    "bh_5050": {
+     "net_profit_usdt": -13.10735657171972,
+     "max_drawdown": 0.0
+    },
+    "up_capture_vs_btc": -0.7604641728364469,
+    "down_capture_vs_btc": null,
+    "time_in_market": 0.5,
+    "holding_runs_days": {
+     "n": 1,
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "longest_flat_days": 1,
+    "current_flat": null,
+    "alerts": [],
+    "scorecard": {
+     "status": "证据不足：仅 1 天（< 365 天只描述，不评级、不宣称跑赢或跑输）"
+    },
+    "horizons": {
+     "30d": "未到期",
+     "90d": "未到期",
+     "180d": "未到期",
+     "365d": "未到期"
+    }
+   },
+   "REF_ETH_SMA200": {
+    "start": "2026-11-07",
+    "end": "2026-11-08",
+    "days": 1,
+    "net_liquidation_usdt": 9987.272641445268,
+    "net_profit_usdt": -12.727358554731836,
+    "max_drawdown": -0.0012727358554731616,
+    "bh_btc": {
+     "net_profit_usdt": -11.866561479841039,
+     "max_drawdown": 0.0,
+     "max_drawdown_usdt": 0.0
+    },
+    "gap_vs_bh_btc_usdt": -0.8607970748907974,
+    "bh_eth": {
+     "net_profit_usdt": -14.34815166360022,
+     "max_drawdown": 0.0
+    },
+    "bh_5050": {
+     "net_profit_usdt": -13.10735657171972,
+     "max_drawdown": 0.0
+    },
+    "up_capture_vs_btc": -0.7015086947115974,
+    "down_capture_vs_btc": null,
+    "time_in_market": 0.5,
+    "holding_runs_days": {
+     "n": 1,
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "longest_flat_days": 1,
+    "current_flat": null,
+    "alerts": [],
+    "scorecard": {
+     "status": "证据不足：仅 1 天（< 365 天只描述，不评级、不宣称跑赢或跑输）"
+    },
+    "horizons": {
+     "30d": "未到期",
+     "90d": "未到期",
+     "180d": "未到期",
+     "365d": "未到期"
+    }
+   }
+  },
+  "note": "只读评估；任何结论都不自动修改策略"
+ },
+ "historical_reference_calendar_years": {
+  "B1": [
+   {
+    "year": 2019,
+    "days": 365,
+    "net": 5681,
+    "mdd": -0.416,
+    "bh_net": 8907,
+    "bh_mdd": -0.494,
+    "up_cap": 0.64,
+    "tim": 0.52,
+    "longest_flat": 92,
+    "protect": false,
+    "particip": true,
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2020,
+    "days": 366,
+    "net": 17663,
+    "mdd": -0.265,
+    "bh_net": 30612,
+    "bh_mdd": -0.536,
+    "up_cap": 0.67,
+    "tim": 0.77,
+    "longest_flat": 52,
+    "protect": true,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2021,
+    "days": 365,
+    "net": -2262,
+    "mdd": -0.643,
+    "bh_net": 6221,
+    "bh_mdd": -0.531,
+    "up_cap": 0.63,
+    "tim": 0.71,
+    "longest_flat": 80,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2022,
+    "days": 365,
+    "net": 0,
+    "mdd": 0.0,
+    "bh_net": -6528,
+    "bh_mdd": -0.669,
+    "up_cap": 0.0,
+    "tim": 0.0,
+    "longest_flat": 366,
+    "protect": true,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续"
+   },
+   {
+    "year": 2023,
+    "days": 365,
+    "net": 10202,
+    "mdd": -0.189,
+    "bh_net": 16508,
+    "bh_mdd": -0.2,
+    "up_cap": 0.84,
+    "tim": 0.8,
+    "longest_flat": 47,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2024,
+    "days": 366,
+    "net": 7484,
+    "mdd": -0.259,
+    "bh_net": 11347,
+    "bh_mdd": -0.262,
+    "up_cap": 0.78,
+    "tim": 0.8,
+    "longest_flat": 29,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2025,
+    "days": 365,
+    "net": -1847,
+    "mdd": -0.319,
+    "bh_net": -636,
+    "bh_mdd": -0.32,
+    "up_cap": 0.65,
+    "tim": 0.73,
+    "longest_flat": 59,
+    "protect": false,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   }
+  ],
+  "B2": [
+   {
+    "year": 2019,
+    "days": 365,
+    "net": 5032,
+    "mdd": -0.229,
+    "bh_net": 8907,
+    "bh_mdd": -0.494,
+    "up_cap": 0.35,
+    "tim": 0.39,
+    "longest_flat": 99,
+    "protect": true,
+    "particip": false,
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2020,
+    "days": 366,
+    "net": 10866,
+    "mdd": -0.231,
+    "bh_net": 30612,
+    "bh_mdd": -0.536,
+    "up_cap": 0.4,
+    "tim": 0.68,
+    "longest_flat": 91,
+    "protect": true,
+    "particip": false,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2021,
+    "days": 365,
+    "net": 2041,
+    "mdd": -0.179,
+    "bh_net": 6221,
+    "bh_mdd": -0.531,
+    "up_cap": 0.16,
+    "tim": 0.25,
+    "longest_flat": 91,
+    "protect": true,
+    "particip": false,
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2022,
+    "days": 365,
+    "net": -749,
+    "mdd": -0.083,
+    "bh_net": -6528,
+    "bh_mdd": -0.669,
+    "up_cap": -0.0,
+    "tim": 0.02,
+    "longest_flat": 359,
+    "protect": true,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续"
+   },
+   {
+    "year": 2023,
+    "days": 365,
+    "net": 6619,
+    "mdd": -0.145,
+    "bh_net": 16508,
+    "bh_mdd": -0.2,
+    "up_cap": 0.61,
+    "tim": 0.81,
+    "longest_flat": 47,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2024,
+    "days": 366,
+    "net": 2733,
+    "mdd": -0.174,
+    "bh_net": 11347,
+    "bh_mdd": -0.262,
+    "up_cap": 0.42,
+    "tim": 0.8,
+    "longest_flat": 29,
+    "protect": false,
+    "particip": false,
+    "net_ok": false,
+    "result": "全部不达标（若连续两个评估年 → 停止评审）"
+   },
+   {
+    "year": 2025,
+    "days": 365,
+    "net": 986,
+    "mdd": -0.212,
+    "bh_net": -636,
+    "bh_mdd": -0.32,
+    "up_cap": 0.49,
+    "tim": 0.73,
+    "longest_flat": 56,
+    "protect": false,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   }
+  ],
+  "B3": [
+   {
+    "year": 2019,
+    "days": 365,
+    "net": 686,
+    "mdd": -0.484,
+    "bh_net": 8907,
+    "bh_mdd": -0.494,
+    "up_cap": 0.42,
+    "tim": 0.39,
+    "longest_flat": 100,
+    "protect": false,
+    "particip": false,
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2020,
+    "days": 366,
+    "net": 10178,
+    "mdd": -0.67,
+    "bh_net": 30612,
+    "bh_mdd": -0.536,
+    "up_cap": 0.85,
+    "tim": 0.82,
+    "longest_flat": 30,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2021,
+    "days": 365,
+    "net": 32782,
+    "mdd": -0.577,
+    "bh_net": 6221,
+    "bh_mdd": -0.531,
+    "up_cap": 1.13,
+    "tim": 0.97,
+    "longest_flat": 10,
+    "protect": false,
+    "particip": true,
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2022,
+    "days": 365,
+    "net": -1806,
+    "mdd": -0.194,
+    "bh_net": -6528,
+    "bh_mdd": -0.669,
+    "up_cap": -0.0,
+    "tim": 0.02,
+    "longest_flat": 271,
+    "protect": true,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续"
+   },
+   {
+    "year": 2023,
+    "days": 365,
+    "net": 5366,
+    "mdd": -0.221,
+    "bh_net": 16508,
+    "bh_mdd": -0.2,
+    "up_cap": 0.74,
+    "tim": 0.78,
+    "longest_flat": 68,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2024,
+    "days": 366,
+    "net": 4495,
+    "mdd": -0.291,
+    "bh_net": 11347,
+    "bh_mdd": -0.262,
+    "up_cap": 0.63,
+    "tim": 0.71,
+    "longest_flat": 99,
+    "protect": false,
+    "particip": true,
+    "net_ok": false,
+    "result": "继续观察（说明不达标原因）"
+   },
+   {
+    "year": 2025,
+    "days": 365,
+    "net": -364,
+    "mdd": -0.384,
+    "bh_net": -636,
+    "bh_mdd": -0.32,
+    "up_cap": 0.65,
+    "tim": 0.45,
+    "longest_flat": 127,
+    "protect": false,
+    "particip": "不适用（同期 BTC 涨幅 < 20%）",
+    "net_ok": true,
+    "result": "继续观察（说明不达标原因）"
+   }
+  ]
+ }
+}
