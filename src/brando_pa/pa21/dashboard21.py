@@ -11,7 +11,8 @@ import plotly.graph_objects as go
 
 from ..pa19.dashboard19 import LAYOUT, _f, _fig
 from . import ACCOUNTS, FORWARD_START, LABELS, MAC_ACCOUNTS_INITIAL_USDT, OUT_DIR, RESEARCH_INITIAL_USDT, WARN
-from . import freeze21
+from . import acceptance21, freeze21, monitor21
+from ..config import PROJECT_ROOT
 
 COL = {"FIX25_Y": "#27c281", "B2_original": "#f0556a", "SMA200": "#9b7bff", "BH_BTC": "#4c9aff"}
 TAG = {"fwd": '<span class="tag fwd">前瞻观察</span>', "hist": '<span class="tag hist">历史回测</span>', "stress": '<span class="tag stress">压力情景</span>', "res": '<span class="tag res">研究本金 100,000 USDT · 虚拟</span>'}
@@ -82,9 +83,53 @@ def build(out_dir: Path | None = None, out: Path | None = None) -> Path:
         for w in WARN:
             g2.add_hline(y=-w * 100, line=dict(color="#f0556a" if w == 0.5 else "#f5b942", dash="dot", width=1))
         g.update_layout(title="前瞻清仓净值（USDT，虚拟研究本金）<br><sup>前瞻观察；2026-11-11 起；统一行情、成本与清仓口径</sup>", height=380); g2.update_layout(title="前瞻动态回撤与 35/40/45/50% 线<br><sup>警报只记录，不交易</sup>", yaxis_title="%", height=340); figs = [g, g2]
+        g3 = go.Figure(); g3.add_trace(go.Scatter(x=xs, y=[r["accounts"]["FIX25_Y"]["btc_weight"] * 100 for r in rows], name="FIX25_Y BTC 实际仓位", line=dict(color=COL["FIX25_Y"], width=1.6)))
+        for lv, cc in ((0.25, "#8b98b5"), (0.50, "#f5b942"), (0.70, "#f08a3c"), (0.85, "#f0556a")):
+            g3.add_hline(y=lv * 100, line=dict(color=cc, dash="dot", width=1))
+        g3.update_layout(title="FIX25_Y BTC 实际仓位漂移（目标 25%；50 / 70 / 85% 只记录）<br><sup>前瞻观察；不交易、不增加交易限制</sup>", yaxis_title="%", height=320)
+        g4 = go.Figure()
+        for a in ("FIX25_Y", "B2_original", "SMA200"):
+            g4.add_trace(go.Scatter(x=xs, y=[r["relative_return"][a]["vs_BH_BTC"] * 100 for r in rows], name=LABELS[a], line=dict(color=COL[a], width=1.4)))
+        g4.add_hline(y=0, line=dict(color="#8b98b5", width=1)); g4.update_layout(title="与 BTC 买入持有的收益差（百分点）<br><sup>前瞻观察；正值 = 高于买入持有</sup>", yaxis_title="百分点", height=320); figs += [g3, g4]
     plots = "".join(f'<div class="plot">{_fig(x, i == 0)}</div>' for i, x in enumerate(figs)) or '<div class="note">前瞻观察尚未产生两个以上已收盘日，暂不绘制曲线。不会用历史数据填充前瞻图表。</div>'
+    # 仓位漂移、参与度、收益差、风险记录、评估计划、服务健康（上线验收补充）
+    obs = _read(d / "observations.jsonl"); cat = {o["date"]: o["category"] for o in obs}; drift = _read(d / "drift.jsonl"); runs = [r for r in _read(d / "runs.jsonl") if r.get("kind") == "tick"]
+    hp = d / "health.json"; hh = json.loads(hp.read_text(encoding="utf-8")) if hp.exists() else {}
+    cw = last["accounts"]["FIX25_Y"]["btc_weight"] if last else 0.0; cdd = last["accounts"]["FIX25_Y"]["drawdown"] if last else 0.0
+    rt = "".join(f'<tr><td>{x["btc_weight"]:.0%}{" · 当前约 " + format(cw, ".0%") if abs(x["btc_weight"] - cw) < 0.125 else ""}</td>' + "".join(f'<td class="{"bad" if t == 0.5 and x[k] is not None and x[k] < 0.6 else ""}">{"BTC 归零也到不了" if x[k] is None else "再跌 " + format(x[k], ".0%")}</td>' for t, k in zip(WARN, [f"btc_drop_to_{int(t * 100)}pct" for t in WARN])) + "</tr>" for x in monitor21.drift_risk_table(cdd))
+    dh = d / "drift_history.json"; DH = json.loads(dh.read_text(encoding="utf-8")) if dh.exists() else None
+    dh_html = "" if not DH else ('<h3>历史上（2014–2026，已看过的数据）FIX25_Y 规则的仓位漂移 ' + TAG["hist"] + '</h3><div class="tbl"><table><tr><th>档位</th><th>天数</th><th>首次日期 · 当时仓位 · 此后 365 天组合最大回撤（相对此前高点）</th></tr>'
+               + "".join(f'<tr><td>≥ {L["level"]:.0%}</td><td>{L["days"]}</td><td>{"；".join(e["first_date"] + " · " + format(e["btc_weight"], ".0%") + " · " + format(e["max_dd_next_365d_from_prior_peak"], ".1%") for e in L["episodes"][:4]) or "—"}</td></tr>' for L in DH["levels"]) + f'</table></div><div class="small">历史最高 {DH["max_weight"]:.0%}（{DH["max_weight_date"]}）。</div>')
+    dv = "".join(f'<tr><td>{e["date"]}</td><td>≥ {e["level"]:.0%}</td><td>{e["btc_weight"]:.1%}</td><td>{_p(e["drawdown"])}</td><td>{"BTC 归零也到不了" if e["btc_drop_to"]["50%"] is None else "再跌 " + format(e["btc_drop_to"]["50%"], ".0%")}</td><td>只记录</td></tr>' for e in drift[-20:])
+    drift_html = (f'<div class="grid">{_card("FIX25_Y 当前 BTC 仓位", _p(cw), "目标 25%；只在每年 1 月第一个交易日再平衡", TAG["fwd"])}{_card("前瞻期最高仓位", _p(max([r["accounts"]["FIX25_Y"]["btc_weight"] for r in rows], default=0.0)), "50 / 70 / 85% 只记录，不交易", TAG["fwd"])}{_card("下一次再平衡", nxt, "规则不变；不因漂移提前交易")}{_card("漂移事件", f"{len(drift)} 条", "首次升破档位各一条；回落后重新计数", TAG["fwd"])}</div>'
+                  + f'<h3>不同仓位下，BTC 再一次性下跌多少会使组合回撤触及各线（按当前回撤 {_p(cdd)} 计算；静态算术，不是预测）</h3><div class="tbl"><table><tr><th>BTC 仓位</th>' + "".join(f"<th>触及 {int(t * 100)}%</th>" for t in WARN) + f"</tr>{rt}</table></div>"
+                  + (f'<h3>前瞻漂移事件 {TAG["fwd"]}</h3><div class="tbl"><table><tr><th>日期</th><th>档位</th><th>仓位</th><th>当时回撤</th><th>突破 50% 还需 BTC</th><th>动作</th></tr>{dv}</table></div>' if dv else '<div class="small">前瞻期内尚无仓位漂移事件。</div>') + dh_html)
+    if n >= 2:
+        M = acceptance21._metrics(rows)
+        part_html = (f'<div class="tbl"><table><tr><th>账户</th><th>清仓净值</th><th>起点以来</th><th>最大回撤</th><th>平均 BTC 仓位</th><th>时间在市</th><th>上涨捕获</th><th>最高 BTC 仓位</th><th>年化成本</th><th>相对 BH</th><th>相对 B2</th></tr>'
+                     + "".join(f'<tr><td>{LABELS[a]}</td><td>{_f(M[a]["final"])}</td><td>{_p(M[a]["return"], 2)}</td><td>{_p(M[a]["max_drawdown"])}</td><td>{_p(M[a]["avg_btc_weight"], 0)}</td><td>{_p(M[a]["time_in_market"], 0)}</td><td>{"—" if M[a]["up_capture"] is None else format(M[a]["up_capture"], ".2f")}</td><td>{_p(M[a]["max_btc_weight"], 0)}</td><td>{_p(M[a]["cost_per_year_pct"], 3)}</td><td>{_p(M[a]["return_gap_vs_BH"], 2)}</td><td>{_p(M[a]["return_gap_vs_B2"], 2)}</td></tr>' for a in ACCOUNTS) + "</table></div>")
+    else:
+        part_html = '<div class="small">少于两个观察日，暂不计算参与度与收益差。</div>'
+    r20p = PROJECT_ROOT / "docs/brando_pa_validation/phase20_capital100k/phase20_results.json"; R20 = json.loads(r20p.read_text(encoding="utf-8")) if r20p.exists() else None
+    if R20:
+        m25 = R20["results"]["ALLOC_25_Y|full_2014|15"]; rr = R20["rolling"]["runs"]["ALLOC_25_Y"]; sw = min(v["ALLOC_25_Y"]["max_drawdown"] for k, v in R20["stress"].items() if "ALLOC_25_Y" in v)
+        hist_card = _card("正常历史最大回撤（FIX25_Y 规则）", _p(m25["max_drawdown"]), f'2014–2026 全样本；36 个滚动 4 年起点最差 {_p(min(x["max_drawdown"] for x in rr))}；5 个历史压力区间最差 {_p(sw)}；只触及过 35% 预警', TAG["hist"])
+    else:
+        hist_card = ""
+    nbr = len(S["exceeds_budget_scenarios"]) if S else 0
+    risk_html = (f'<div class="grid">{hist_card}{_card("压力情景下的预算突破", f"{nbr} 个情景", "仓位漂移后暴跌、连续熊市、USDT 脱锚叠加、极端流动性、再平衡延迟 30 天（见下方压力测试）", TAG["stress"])}'
+                 f'{_card("50% 的含义", "风险预算，不是止损", "不能保证实际最大损失；日内波动、交易所或 USDT 事件可使损失更大")}{_card("前瞻最大回撤（FIX25_Y）", _p(last["accounts"]["FIX25_Y"]["max_drawdown"]) if last else "—", "前瞻期内", TAG["fwd"])}</div>')
+    EV = acceptance21.evaluate(d); eh = "".join(f'<tr><td>{w["horizon"]}</td><td>{w["due_date"]}</td><td>{w["status"]}</td><td>{html.escape(w.get("detail") or w.get("profit_verdict", ""))}</td></tr>' for w in EV["windows"])
+    eval_html = f'<div class="tbl"><table><tr><th>窗口</th><th>到期日</th><th>状态</th><th>说明</th></tr>{eh}</table></div><div class="small">{html.escape(EV["rule"])}。</div>'
+    last72 = [r for r in runs if pd.Timestamp(r["tick_at"]) >= pd.Timestamp.now(tz="UTC") - pd.Timedelta(hours=72)]
+    cards += _card("本地服务", html.escape(str(hh.get("last_status", "未运行"))), (f'最近心跳 {str(hh.get("heartbeat_utc", ""))[:16]} UTC · 近 72 小时运行 {len(last72)} 次' if hh else "尚未在 Mac 启动独立服务"))
+    cards += _card("观察记录分类", " / ".join(f"{k} {v}" for k, v in pd.Series(list(cat.values())).value_counts().items()) if cat else "0 天", "实时观察 = 收盘后 6 小时内入库并记录；补记不计入实时天数", TAG["fwd"])
+    ap = d / "audit21.json"; AU = json.loads(ap.read_text(encoding="utf-8")) if ap.exists() else None
+    if AU:
+        b2r = AU.get("path_sensitivity", {}).get("final_usdt_range", {}).get("原 B2（2017 起）")
+        cards += _card("上线前审计", AU["verdict"], f'未来数据泄漏、历史覆盖、本金一致性均已检查' + (f'；原 B2 历史结果对 ±1 bps 成本敏感：{_f(b2r["min"])}–{_f(b2r["max"])}' if b2r else ""))
     # 每日记录
-    dl = "".join(f'<tr><td>{r["date"]}{" · 补记" if r.get("catch_up") else ""}</td><td>{_f(r["btc_close"], 1)}</td>' + "".join(f'<td>{_f(r["accounts"][a]["liquidation"])}<br><span class="dd">{_p(r["accounts"][a]["drawdown"])}</span></td>' for a in ACCOUNTS) + f'<td>{html.escape(str(r.get("data_source")))}</td></tr>' for r in rows[::-1][:30])
+    dl = "".join(f'<tr><td>{r["date"]} · {cat.get(r["date"], "补记" if r.get("catch_up") else "待分类")}</td><td>{_f(r["btc_close"], 1)}</td>' + "".join(f'<td>{_f(r["accounts"][a]["liquidation"])}<br><span class="dd">{_p(r["accounts"][a]["drawdown"])}</span></td>' for a in ACCOUNTS) + f'<td>{html.escape(str(r.get("data_source")))}</td></tr>' for r in rows[::-1][:30])
     dl_html = f'<div class="tbl"><table><tr><th>日期</th><th>BTC 收盘</th>' + "".join(f"<th>{LABELS[a]}<br>清仓净值 / 回撤</th>" for a in ACCOUNTS) + f"<th>来源</th></tr>{dl}</table></div>" if dl else '<div class="small">尚无记录。</div>'
     # 压力情景
     sh = ""
@@ -139,9 +184,13 @@ main{{max-width:1280px;margin:0 auto;padding:16px}}h1{{font-size:20px;margin:6px
 <h2>观察状态</h2><div class="grid">{cards}</div>
 <h2>四个观察账户</h2>{acct}
 <h2>50% 回撤预算监测</h2><div class="mons">{mon}</div><div class="small">刻度线：35 / 40 / 45 / 50%。回撤 = 清仓净值相对前瞻期最高清仓净值。警报只记录，不交易；50% 是研究预算，不是止损。</div><h3>研究性风险警报</h3>{al_html}
-<h2>前瞻净值与回撤</h2>{plots}
+<h2>两类风险记录</h2>{risk_html}
+<h2>前瞻净值、回撤、仓位漂移与收益差</h2>{plots}
+<h2>BTC 参与度与收益差</h2>{part_html}
+<h2>仓位漂移监测（FIX25_Y）</h2>{drift_html}
 <h2>每日记录（最近 30 天）</h2>{dl_html}
 <h2>压力测试</h2>{sh or '<div class="small">尚未生成。</div>'}
+<h2>前瞻评估计划</h2>{eval_html}
 <h2>需要在前瞻期验证的指标</h2><div class="small">只评已到期窗口：{sched}，之后每年。</div><div class="tbl"><table><tr><th>指标</th><th>说明</th></tr>{ct}</table></div>
 <h3>运行事件（最近 10 条）</h3><ul class="small">{ev_html or "<li>无</li>"}</ul>
 <div class="foot">预登记：docs/brando_pa_validation/phase21_forward/preregistration.md；冻结清单：src/brando_pa/pa21/frozen_manifest.json；记录：reports_out/brando_pa/phase21_forward/（daily_ledger.jsonl / alerts.jsonl / events.jsonl，只追加哈希链）。手动单次更新：PYTHONPATH=src python3 -m brando_pa.pa21.forward21；本页：PYTHONPATH=src python3 -m brando_pa.pa21.dashboard21。没有常驻服务、没有自动部署；真实交易禁用。</div>
