@@ -95,8 +95,9 @@ PLISTEOF
     launchctl bootstrap "gui/${UIDN}" "${PLIST}"; sleep 2; launchctl list "${LABEL}" >/dev/null 2>&1 || { echo "FAIL  ${LABEL} did not load"; exit 1; }
     mkdir -p "${D}"; date -u +"%Y-%m-%d %H:%M:%S" >> "${STARTED}"; echo "STARTED ${LABEL} (RunAtLoad runs one tick now, then every 3600 s). Start time appended to ${STARTED}" ;;
   verify)
-    echo "== [verify] $(date -u +%Y-%m-%dT%H:%M:%SZ)"; launchctl list "${LABEL}" >/dev/null 2>&1 && echo "PASS  launchd ${LABEL} loaded" || echo "FAIL  launchd ${LABEL} not loaded"
-    "${PY}" -m brando_pa.pa21.service21 verify ;;
+    echo "== [verify] $(date -u +%Y-%m-%dT%H:%M:%SZ)"; LD=0
+    if launchctl list "${LABEL}" >/dev/null 2>&1; then echo "PASS  launchd ${LABEL} loaded"; else echo "FAIL  launchd ${LABEL} not loaded"; [ "$(uname -s)" = "Darwin" ] && LD=1; fi
+    "${PY}" -m brando_pa.pa21.service21 verify; RC=$?; [ "${RC}" -eq 0 ] && [ "${LD}" -eq 0 ] ;;
   restart-test)
     set -e; echo "== [verify] restart recovery test for ${LABEL} ONLY (existing services untouched)"
     launchctl list "${LABEL}" >/dev/null 2>&1 || { echo "FAIL  service not loaded; run start first"; exit 1; }

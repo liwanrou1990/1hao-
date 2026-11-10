@@ -3,6 +3,7 @@
 > 用途：在 Mac 上用**独立目录**运行四个 100,000 USDT 虚拟研究账户的每日观察。只记录，不下单，真实交易禁用。
 > 不修改：`~/1hao-`（Mac 三账户生产目录）、`com.brando-pa.forward`、`com.brando-pa.shadow13`、第十四阶段看板、B2 / SMA200 参数。
 > 全部命令由你手动执行；脚本：`scripts/brando_pa21_ctl.sh`（macOS bash 3.2 兼容）。
+> **逐条可复制的终端命令见 `mac_terminal_commands.md`**；本清单在其后增加的命令有 `dryrun`、`prodcheck`、`verify`、`restart-test`、`accept-begin`、`report`（72 小时验收的起点以 `accept-begin` 为准）。
 
 ## 0. 部署前检查（只读）
 
