@@ -63,11 +63,11 @@ def event_study(cand: pd.DataFrame, f: pd.DataFrame, cost: float = 0.0015) -> di
     return out
 
 
-def _metrics(res, f, bars_btc) -> dict:
+def _metrics(res, f, bars_btc, bars_all: dict | None = None) -> dict:
     s = summarize(res); nav = res.nav.copy(); nav["ts"] = pd.to_datetime(nav["ts"], utc=True); liq = nav.set_index("ts")["liquidation"]; expo = nav.set_index("ts")["exposure"]
     px = bars_btc.set_index(pd.to_datetime(bars_btc["ts"], utc=True))["close"].astype(float).reindex(liq.index); br = px.pct_change(); sr = liq.pct_change(); up, dn = br > 0, br < 0
     lab = regime_labels(px).reindex(liq.index, method="ffill"); dd = drawdown_stats(liq)
-    eps = missed17.flat_episodes(res, {"BTCUSDT": bars_btc}) if len(res.fills) else []
+    eps = missed17.flat_episodes(res, bars_all or {"BTCUSDT": bars_btc}) if len(res.fills) else []
     opp = {k: float(sum(e["missed_usdt_if_positive"] for e in eps if e["class"] == k)) for k in ("不必要的长期空仓", "短期来回", "合理避险", "保护有效但回补更贵")}
     rg = {}
     m = liq.resample("1ME").last(); pnl = m.diff(); pnl.iloc[0] = m.iloc[0] - liq.iloc[0]; ml = regime_labels(px).reindex(m.index, method="nearest")
@@ -98,7 +98,7 @@ def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dic
             for n_, res in base.items():
                 if res is None:
                     continue
-                R[(n_, wn, cost)] = _metrics(res, f, bars_btc) | {"kind": "baseline"}
+                R[(n_, wn, cost)] = _metrics(res, f, bars_btc, {k: v for k, v in b2bars.items() if not k.startswith("_")} if n_ == "B2_original" else None) | {"kind": "baseline"}
                 if cost == 15 and wn == "full_2014":
                     curves[n_] = res.nav[["ts", "liquidation"]].assign(ts=lambda x: x["ts"].astype(str)).to_dict("list")
             for e, x in strategies:

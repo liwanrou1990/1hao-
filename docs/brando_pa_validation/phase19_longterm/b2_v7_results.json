@@ -1,0 +1,1804 @@
+{
+ "early_2017|15": {
+  "V7": {
+   "liquidation_net_profit_usdt": 24127.647526178633,
+   "final_liquidation_usdt": 34127.64752617863,
+   "max_drawdown": -0.24719539037061777,
+   "longest_drawdown_days": 183,
+   "up_capture_vs_5050": 0.3281037570801638,
+   "down_capture_vs_5050": 0.3386465598930574,
+   "avg_exposure_bull_months": 0.31902065883156455,
+   "avg_exposure_bear_months": null,
+   "time_in_market": 0.5041095890410959,
+   "unnecessary_long_flat": {
+    "n": 7,
+    "days": 246,
+    "missed_usdt": 18136.364881498386
+   },
+   "n_halts": 6,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.4799397588652361,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-04-24",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.7218136236053321,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-07-03",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.025606206979971624,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-07-10",
+     "reentry": "2017-08-14",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.04942756351664124,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-10-09",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.7157689611945814,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 5,
+   "fees_usdt": 148.83457311923797,
+   "slippage_usdt": 74.423374285978,
+   "n_fills": 27,
+   "state_share": {
+    "COOLDOWN": 0.4795,
+    "RECOVERY": 0.4356,
+    "NORMAL": 0.0548,
+    "EMERGENCY_HALT": 0.0164,
+    "RISK_REDUCED": 0.0137
+   },
+   "yearly_return": {
+    "2017": 2.4127647526178633
+   },
+   "cost_one_side_bps": 15
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 6167.35676105655,
+   "final_liquidation_usdt": 16167.35676105655,
+   "max_drawdown": -0.24719539037061777,
+   "longest_drawdown_days": 201,
+   "up_capture_vs_5050": 0.17578842352613178,
+   "down_capture_vs_5050": 0.21650036862013627,
+   "avg_exposure_bull_months": 0.0817111433527243,
+   "avg_exposure_bear_months": null,
+   "time_in_market": 0.2219178082191781,
+   "unnecessary_long_flat": {
+    "n": 6,
+    "days": 372,
+    "missed_usdt": 24783.52732963056
+   },
+   "n_halts": 5,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.4799397588652361,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-05-19",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": 0.0976503173987906,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-08-27",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.057167847131578076,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.3333333333333333,
+   "rehalts_within_90d": 3,
+   "fees_usdt": 98.62300203629351,
+   "slippage_usdt": 49.3130798413514,
+   "n_fills": 23,
+   "state_share": {
+    "COOLDOWN": 0.7644,
+    "RECOVERY": 0.1945,
+    "NORMAL": 0.0137,
+    "RISK_REDUCED": 0.0137,
+    "EMERGENCY_HALT": 0.0137
+   },
+   "yearly_return": {
+    "2017": 0.616735676105655
+   },
+   "cost_one_side_bps": 15
+  },
+  "early_recoveries": [
+   {
+    "ts": "2017-04-23 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 1252 > 40 周均线 838 且周低点高于熔断以来最低 0"
+   },
+   {
+    "ts": "2017-07-02 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 2517 > 40 周均线 1240 且周低点高于熔断以来最低 1913"
+   },
+   {
+    "ts": "2017-08-13 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4060 > 40 周均线 1571 且周低点高于熔断以来最低 1758"
+   },
+   {
+    "ts": "2017-10-08 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4640 > 40 周均线 2247 且周低点高于熔断以来最低 2817"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "early_2017|25": {
+  "V7": {
+   "liquidation_net_profit_usdt": 23785.604805806535,
+   "final_liquidation_usdt": 33785.604805806535,
+   "max_drawdown": -0.2494610659564621,
+   "longest_drawdown_days": 183,
+   "up_capture_vs_5050": 0.32740238964662466,
+   "down_capture_vs_5050": 0.3394950788687731,
+   "avg_exposure_bull_months": 0.3188936094376541,
+   "avg_exposure_bear_months": null,
+   "time_in_market": 0.5041095890410959,
+   "unnecessary_long_flat": {
+    "n": 7,
+    "days": 246,
+    "missed_usdt": 18026.81977400175
+   },
+   "n_halts": 6,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.47945797669084644,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-04-24",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.7210957749691862,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-07-03",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.024567342129464542,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-07-10",
+     "reentry": "2017-08-14",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.04833111263141254,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-10-09",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.7150497626078076,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 5,
+   "fees_usdt": 295.7593302797674,
+   "slippage_usdt": 73.9458713974344,
+   "n_fills": 27,
+   "state_share": {
+    "COOLDOWN": 0.4795,
+    "RECOVERY": 0.4356,
+    "NORMAL": 0.0548,
+    "EMERGENCY_HALT": 0.0164,
+    "RISK_REDUCED": 0.0137
+   },
+   "yearly_return": {
+    "2017": 2.3785604805806537
+   },
+   "cost_one_side_bps": 25
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 6029.551144861742,
+   "final_liquidation_usdt": 16029.551144861742,
+   "max_drawdown": -0.2494610659564621,
+   "longest_drawdown_days": 201,
+   "up_capture_vs_5050": 0.17518606954076274,
+   "down_capture_vs_5050": 0.21721429379346135,
+   "avg_exposure_bull_months": 0.08167536508518909,
+   "avg_exposure_bear_months": null,
+   "time_in_market": 0.2219178082191781,
+   "unnecessary_long_flat": {
+    "n": 6,
+    "days": 372,
+    "missed_usdt": 24650.68917490466
+   },
+   "n_halts": 5,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.47945797669084644,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-05-19",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": 0.09756019015497386,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-08-27",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.05711119845228474,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.3333333333333333,
+   "rehalts_within_90d": 3,
+   "fees_usdt": 196.24187953507095,
+   "slippage_usdt": 49.06203859752743,
+   "n_fills": 23,
+   "state_share": {
+    "COOLDOWN": 0.7644,
+    "RECOVERY": 0.1945,
+    "NORMAL": 0.0137,
+    "RISK_REDUCED": 0.0137,
+    "EMERGENCY_HALT": 0.0137
+   },
+   "yearly_return": {
+    "2017": 0.6029551144861742
+   },
+   "cost_one_side_bps": 25
+  },
+  "early_recoveries": [
+   {
+    "ts": "2017-04-23 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 1252 > 40 周均线 838 且周低点高于熔断以来最低 0"
+   },
+   {
+    "ts": "2017-07-02 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 2517 > 40 周均线 1240 且周低点高于熔断以来最低 1913"
+   },
+   {
+    "ts": "2017-08-13 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4060 > 40 周均线 1571 且周低点高于熔断以来最低 1758"
+   },
+   {
+    "ts": "2017-10-08 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4640 > 40 周均线 2247 且周低点高于熔断以来最低 2817"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "dev_2018_2021|15": {
+  "V7": {
+   "liquidation_net_profit_usdt": 37021.211026354234,
+   "final_liquidation_usdt": 47021.211026354234,
+   "max_drawdown": -0.2718751227156875,
+   "longest_drawdown_days": 488,
+   "up_capture_vs_5050": 0.29624154088972227,
+   "down_capture_vs_5050": 0.2546958509407816,
+   "avg_exposure_bull_months": 0.439657267012759,
+   "avg_exposure_bear_months": 0.07001148447356367,
+   "time_in_market": 0.4620123203285421,
+   "unnecessary_long_flat": {
+    "n": 8,
+    "days": 266,
+    "missed_usdt": 32125.16254124867
+   },
+   "n_halts": 12,
+   "reentries": [
+    {
+     "halt": "2018-01-16",
+     "reentry": "2018-02-17",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.1131705274119531,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-08",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 47,
+     "liq_change_60d": -0.05928539838475788,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.7254278526255511,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09033018972579054,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2019-11-04",
+     "days_halt_to_reentry": 41,
+     "liq_change_60d": -0.03328115857831593,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-04-20",
+     "days_halt_to_reentry": 43,
+     "liq_change_60d": 0.12053195518909599,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-02-22",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.0015386582844985064,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-02-25",
+     "reentry": "2021-03-29",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.14962674557630073,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-06-21",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.25711601816512863,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-06-21",
+     "reentry": "2021-07-26",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.18552710392953053,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-10-25",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": -0.0623378598225619,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.45454545454545453,
+   "rehalts_within_90d": 7,
+   "fees_usdt": 728.0696361944498,
+   "slippage_usdt": 364.0443464284385,
+   "n_fills": 91,
+   "state_share": {
+    "NORMAL": 0.334,
+    "COOLDOWN": 0.3101,
+    "RECOVERY": 0.2916,
+    "RISK_REDUCED": 0.0561,
+    "EMERGENCY_HALT": 0.0082
+   },
+   "yearly_return": {
+    "2018": 0.029677661910629594,
+    "2019": 0.46650144430416307,
+    "2020": 1.3583891312818541,
+    "2021": 0.3203666892342567
+   },
+   "cost_one_side_bps": 15
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 20101.984205141423,
+   "final_liquidation_usdt": 30101.984205141423,
+   "max_drawdown": -0.325415614616574,
+   "longest_drawdown_days": 527,
+   "up_capture_vs_5050": 0.2186597989343858,
+   "down_capture_vs_5050": 0.19015988199699793,
+   "avg_exposure_bull_months": 0.3441757199444873,
+   "avg_exposure_bear_months": 0.025825430354051725,
+   "time_in_market": 0.36344969199178645,
+   "unnecessary_long_flat": {
+    "n": 4,
+    "days": 365,
+    "missed_usdt": 17129.92510958822
+   },
+   "n_halts": 8,
+   "reentries": [
+    {
+     "halt": "2018-01-16",
+     "reentry": "2018-02-17",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.1131705274119531,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-08",
+     "reentry": "2018-05-09",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": -0.09295914495502067,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09033018972579065,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2020-01-29",
+     "days_halt_to_reentry": 127,
+     "liq_change_60d": 0.08064568069079558,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-06-08",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.18159747141125715,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-04-23",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.05894565700796761,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-08-17",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.0034634952181599177,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.5714285714285714,
+   "rehalts_within_90d": 5,
+   "fees_usdt": 401.86913466917866,
+   "slippage_usdt": 200.93604236562047,
+   "n_fills": 76,
+   "state_share": {
+    "COOLDOWN": 0.3696,
+    "NORMAL": 0.3347,
+    "RECOVERY": 0.2142,
+    "RISK_REDUCED": 0.076,
+    "EMERGENCY_HALT": 0.0055
+   },
+   "yearly_return": {
+    "2018": -0.047409546475269626,
+    "2019": 0.27282995304301116,
+    "2020": 1.0824548828995324,
+    "2021": 0.19306349258593958
+   },
+   "cost_one_side_bps": 15
+  },
+  "early_recoveries": [
+   {
+    "ts": "2018-04-15 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 8355 > 40 周均线 7938 且周低点高于熔断以来最低 6430"
+   },
+   {
+    "ts": "2019-11-03 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 9195 > 40 周均线 7700 且周低点高于熔断以来最低 7300"
+   },
+   {
+    "ts": "2020-04-19 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 180 > 40 周均线 178 且周低点高于熔断以来最低 86"
+   },
+   {
+    "ts": "2021-02-21 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 57409 > 40 周均线 18181 且周低点高于熔断以来最低 28850"
+   },
+   {
+    "ts": "2021-03-28 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 55778 > 40 周均线 23722 且周低点高于熔断以来最低 43000"
+   },
+   {
+    "ts": "2021-06-20 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 35600 > 40 周均线 34726 且周低点高于熔断以来最低 30000"
+   },
+   {
+    "ts": "2021-07-25 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 2190 > 40 周均线 1676 且周低点高于熔断以来最低 1700"
+   },
+   {
+    "ts": "2021-10-24 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 60852 > 40 周均线 46429 且周低点高于熔断以来最低 39600"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "dev_2018_2021|25": {
+  "V7": {
+   "liquidation_net_profit_usdt": 35750.52061842109,
+   "final_liquidation_usdt": 45750.52061842109,
+   "max_drawdown": -0.27437639713105644,
+   "longest_drawdown_days": 488,
+   "up_capture_vs_5050": 0.29554736951914984,
+   "down_capture_vs_5050": 0.25521243958790574,
+   "avg_exposure_bull_months": 0.4396450360531487,
+   "avg_exposure_bear_months": 0.06999787101039963,
+   "time_in_market": 0.4620123203285421,
+   "unnecessary_long_flat": {
+    "n": 8,
+    "days": 266,
+    "missed_usdt": 31490.42007385018
+   },
+   "n_halts": 12,
+   "reentries": [
+    {
+     "halt": "2018-01-16",
+     "reentry": "2018-02-17",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.1130604917907908,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-08",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 47,
+     "liq_change_60d": -0.060168299383447255,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.7254271225864508,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09212822958185585,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2019-11-04",
+     "days_halt_to_reentry": 41,
+     "liq_change_60d": -0.033248179627326846,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-04-20",
+     "days_halt_to_reentry": 43,
+     "liq_change_60d": 0.11874814474058604,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-02-22",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.0005449907603185533,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-02-25",
+     "reentry": "2021-03-29",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.14948089911206885,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-06-21",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.2524269285609433,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-06-21",
+     "reentry": "2021-07-26",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.17996416460982978,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-10-25",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": -0.062276505615085576,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.45454545454545453,
+   "rehalts_within_90d": 7,
+   "fees_usdt": 1429.6236944954392,
+   "slippage_usdt": 357.4153080137271,
+   "n_fills": 91,
+   "state_share": {
+    "NORMAL": 0.3306,
+    "COOLDOWN": 0.3101,
+    "RECOVERY": 0.2916,
+    "RISK_REDUCED": 0.0595,
+    "EMERGENCY_HALT": 0.0082
+   },
+   "yearly_return": {
+    "2018": 0.024663372819659246,
+    "2019": 0.4578083241287456,
+    "2020": 1.3437641589310791,
+    "2021": 0.306774026030727
+   },
+   "cost_one_side_bps": 25
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 19436.276358558818,
+   "final_liquidation_usdt": 29436.276358558818,
+   "max_drawdown": -0.32864675397952625,
+   "longest_drawdown_days": 528,
+   "up_capture_vs_5050": 0.2181027135561156,
+   "down_capture_vs_5050": 0.1905934844274512,
+   "avg_exposure_bull_months": 0.3441688653156614,
+   "avg_exposure_bear_months": 0.025824722482580796,
+   "time_in_market": 0.36344969199178645,
+   "unnecessary_long_flat": {
+    "n": 4,
+    "days": 365,
+    "missed_usdt": 16865.458490866342
+   },
+   "n_halts": 8,
+   "reentries": [
+    {
+     "halt": "2018-01-16",
+     "reentry": "2018-02-17",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.1130604917907908,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-08",
+     "reentry": "2018-05-09",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": -0.09377462178183693,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09212822958185596,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2020-01-29",
+     "days_halt_to_reentry": 127,
+     "liq_change_60d": 0.0783231022859161,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-06-08",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.18141610238212214,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-04-23",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.058886272132824935,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-08-17",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.006461929331789018,
+     "rehalt_within_90d": true
+    }
+   ],
+   "reentry_loss_rate_60d": 0.5714285714285714,
+   "rehalts_within_90d": 5,
+   "fees_usdt": 792.5865222918926,
+   "slippage_usdt": 198.14811988906672,
+   "n_fills": 76,
+   "state_share": {
+    "COOLDOWN": 0.3696,
+    "NORMAL": 0.3299,
+    "RECOVERY": 0.2142,
+    "RISK_REDUCED": 0.0808,
+    "EMERGENCY_HALT": 0.0055
+   },
+   "yearly_return": {
+    "2018": -0.051972567180935236,
+    "2019": 0.2665303693006471,
+    "2020": 1.0724704370990619,
+    "2021": 0.1843839547127084
+   },
+   "cost_one_side_bps": 25
+  },
+  "early_recoveries": [
+   {
+    "ts": "2018-04-15 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 8355 > 40 周均线 7938 且周低点高于熔断以来最低 6430"
+   },
+   {
+    "ts": "2019-11-03 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 9195 > 40 周均线 7700 且周低点高于熔断以来最低 7300"
+   },
+   {
+    "ts": "2020-04-19 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 180 > 40 周均线 178 且周低点高于熔断以来最低 86"
+   },
+   {
+    "ts": "2021-02-21 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 57409 > 40 周均线 18181 且周低点高于熔断以来最低 28850"
+   },
+   {
+    "ts": "2021-03-28 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 55778 > 40 周均线 23722 且周低点高于熔断以来最低 43000"
+   },
+   {
+    "ts": "2021-06-20 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 35600 > 40 周均线 34726 且周低点高于熔断以来最低 30000"
+   },
+   {
+    "ts": "2021-07-25 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 2190 > 40 周均线 1676 且周低点高于熔断以来最低 1700"
+   },
+   {
+    "ts": "2021-10-24 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 60852 > 40 周均线 46429 且周低点高于熔断以来最低 39600"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "repeat_2022_2026|15": {
+  "V7": {
+   "liquidation_net_profit_usdt": 10800.37108553353,
+   "final_liquidation_usdt": 20800.37108553353,
+   "max_drawdown": -0.21159424215312084,
+   "longest_drawdown_days": 452,
+   "up_capture_vs_5050": 0.3123742781952789,
+   "down_capture_vs_5050": 0.27860596631647333,
+   "avg_exposure_bull_months": 0.6537127967026388,
+   "avg_exposure_bear_months": 0.04027479162790716,
+   "time_in_market": 0.5327313769751693,
+   "unnecessary_long_flat": {
+    "n": 3,
+    "days": 152,
+    "missed_usdt": 1365.9051417385792
+   },
+   "n_halts": 2,
+   "reentries": [
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.047809837363104624,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-06",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 287,
+     "liq_change_60d": 0.07888467413925104,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 0,
+   "fees_usdt": 461.9929297468251,
+   "slippage_usdt": 230.99682365243729,
+   "n_fills": 91,
+   "state_share": {
+    "RISK_REDUCED": 0.4825,
+    "NORMAL": 0.3979,
+    "RECOVERY": 0.0677,
+    "COOLDOWN": 0.0508,
+    "EMERGENCY_HALT": 0.0011
+   },
+   "yearly_return": {
+    "2022": -0.14096825361620902,
+    "2023": 0.5517076441679312,
+    "2024": 0.31399422200153615,
+    "2025": 0.10303202118392085,
+    "2026": 0.0774215525596984
+   },
+   "cost_one_side_bps": 15
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 10800.37108553353,
+   "final_liquidation_usdt": 20800.37108553353,
+   "max_drawdown": -0.21159424215312084,
+   "longest_drawdown_days": 452,
+   "up_capture_vs_5050": 0.3123742781952789,
+   "down_capture_vs_5050": 0.27860596631647333,
+   "avg_exposure_bull_months": 0.6537127967026388,
+   "avg_exposure_bear_months": 0.04027479162790716,
+   "time_in_market": 0.5327313769751693,
+   "unnecessary_long_flat": {
+    "n": 3,
+    "days": 152,
+    "missed_usdt": 1365.9051417385792
+   },
+   "n_halts": 2,
+   "reentries": [
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.047809837363104624,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-06",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 287,
+     "liq_change_60d": 0.07888467413925104,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 0,
+   "fees_usdt": 461.9929297468251,
+   "slippage_usdt": 230.99682365243729,
+   "n_fills": 91,
+   "state_share": {
+    "RISK_REDUCED": 0.4825,
+    "NORMAL": 0.3979,
+    "RECOVERY": 0.0677,
+    "COOLDOWN": 0.0508,
+    "EMERGENCY_HALT": 0.0011
+   },
+   "yearly_return": {
+    "2022": -0.14096825361620902,
+    "2023": 0.5517076441679312,
+    "2024": 0.31399422200153615,
+    "2025": 0.10303202118392085,
+    "2026": 0.0774215525596984
+   },
+   "cost_one_side_bps": 15
+  },
+  "early_recoveries": [],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "repeat_2022_2026|25": {
+  "V7": {
+   "liquidation_net_profit_usdt": 10535.120680323034,
+   "final_liquidation_usdt": 20535.120680323034,
+   "max_drawdown": -0.20539711391547688,
+   "longest_drawdown_days": 456,
+   "up_capture_vs_5050": 0.3109718789260201,
+   "down_capture_vs_5050": 0.27787838080653693,
+   "avg_exposure_bull_months": 0.6537598733069212,
+   "avg_exposure_bear_months": 0.04027477340574121,
+   "time_in_market": 0.5321670428893905,
+   "unnecessary_long_flat": {
+    "n": 3,
+    "days": 152,
+    "missed_usdt": 1344.7592589605629
+   },
+   "n_halts": 2,
+   "reentries": [
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.04668007450738254,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-04",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 289,
+     "liq_change_60d": 0.07888459820526239,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 0,
+   "fees_usdt": 871.126251118335,
+   "slippage_usdt": 217.7819862929634,
+   "n_fills": 89,
+   "state_share": {
+    "RISK_REDUCED": 0.487,
+    "NORMAL": 0.3933,
+    "RECOVERY": 0.0677,
+    "COOLDOWN": 0.0508,
+    "EMERGENCY_HALT": 0.0011
+   },
+   "yearly_return": {
+    "2022": -0.1435236473335597,
+    "2023": 0.5429510168347709,
+    "2024": 0.3034082020036346,
+    "2025": 0.10955055301344019,
+    "2026": 0.07579124526021608
+   },
+   "cost_one_side_bps": 25
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 10535.120680323034,
+   "final_liquidation_usdt": 20535.120680323034,
+   "max_drawdown": -0.20539711391547688,
+   "longest_drawdown_days": 456,
+   "up_capture_vs_5050": 0.3109718789260201,
+   "down_capture_vs_5050": 0.27787838080653693,
+   "avg_exposure_bull_months": 0.6537598733069212,
+   "avg_exposure_bear_months": 0.04027477340574121,
+   "time_in_market": 0.5321670428893905,
+   "unnecessary_long_flat": {
+    "n": 3,
+    "days": 152,
+    "missed_usdt": 1344.7592589605629
+   },
+   "n_halts": 2,
+   "reentries": [
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.04668007450738254,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-04",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 289,
+     "liq_change_60d": 0.07888459820526239,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.0,
+   "rehalts_within_90d": 0,
+   "fees_usdt": 871.126251118335,
+   "slippage_usdt": 217.7819862929634,
+   "n_fills": 89,
+   "state_share": {
+    "RISK_REDUCED": 0.487,
+    "NORMAL": 0.3933,
+    "RECOVERY": 0.0677,
+    "COOLDOWN": 0.0508,
+    "EMERGENCY_HALT": 0.0011
+   },
+   "yearly_return": {
+    "2022": -0.1435236473335597,
+    "2023": 0.5429510168347709,
+    "2024": 0.3034082020036346,
+    "2025": 0.10955055301344019,
+    "2026": 0.07579124526021608
+   },
+   "cost_one_side_bps": 25
+  },
+  "early_recoveries": [],
+  "net_ok": true,
+  "mdd_ok": true,
+  "reentry_ok": true
+ },
+ "full|15": {
+  "V7": {
+   "liquidation_net_profit_usdt": 305140.61135839496,
+   "final_liquidation_usdt": 315140.61135839496,
+   "max_drawdown": -0.3494480724005665,
+   "longest_drawdown_days": 526,
+   "up_capture_vs_5050": 0.3031632063750431,
+   "down_capture_vs_5050": 0.26997441933253985,
+   "avg_exposure_bull_months": 0.47644608037436076,
+   "avg_exposure_bear_months": 0.05141322237965909,
+   "time_in_market": 0.4944413563090606,
+   "unnecessary_long_flat": {
+    "n": 18,
+    "days": 664,
+    "missed_usdt": 129785.34487066344
+   },
+   "n_halts": 20,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.4799397588652361,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-04-24",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.7218136236053321,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-07-03",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.025606206979971624,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-07-10",
+     "reentry": "2017-08-14",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.04942756351664124,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-10-09",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.7157689611945814,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-12-22",
+     "reentry": "2018-01-22",
+     "days_halt_to_reentry": 31,
+     "liq_change_60d": -0.13414534037052683,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-02-01",
+     "reentry": "2018-03-05",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.04692189851434536,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-10",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 45,
+     "liq_change_60d": -0.05928539838475788,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.7254278526255509,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09033018972579088,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2019-11-04",
+     "days_halt_to_reentry": 41,
+     "liq_change_60d": -0.03328115857831593,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-04-20",
+     "days_halt_to_reentry": 43,
+     "liq_change_60d": 0.12053195518909576,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-02-22",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.0015386582844982843,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-02-25",
+     "reentry": "2021-03-29",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.1496267455763005,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-06-21",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.2571160181651282,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-06-21",
+     "reentry": "2021-07-26",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.1855271039295303,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-10-25",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": -0.0623378598225619,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-12-04",
+     "reentry": "2022-04-04",
+     "days_halt_to_reentry": 121,
+     "liq_change_60d": -0.015952962855928843,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.0478098373631044,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-06",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 287,
+     "liq_change_60d": 0.07888467413925127,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.35,
+   "rehalts_within_90d": 13,
+   "fees_usdt": 9157.044910632963,
+   "slippage_usdt": 4578.564076957435,
+   "n_fills": 205,
+   "state_share": {
+    "NORMAL": 0.4211,
+    "COOLDOWN": 0.2221,
+    "RECOVERY": 0.2118,
+    "RISK_REDUCED": 0.1395,
+    "EMERGENCY_HALT": 0.0056
+   },
+   "yearly_return": {
+    "2017": 2.4127647526178633,
+    "2018": -0.17749790618710104,
+    "2019": 0.4665014443041622,
+    "2020": 1.3583891312818532,
+    "2021": 0.32036668923425604,
+    "2022": -0.01776110712507528,
+    "2023": 0.6039816418546664,
+    "2024": 0.3139942220015357,
+    "2025": 0.10303202118392085,
+    "2026": 0.0774215525596984
+   },
+   "cost_one_side_bps": 15
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 128650.61111365652,
+   "final_liquidation_usdt": 138650.61111365652,
+   "max_drawdown": -0.24719539037061777,
+   "longest_drawdown_days": 702,
+   "up_capture_vs_5050": 0.25053482917297387,
+   "down_capture_vs_5050": 0.22819739852581308,
+   "avg_exposure_bull_months": 0.3965151994184757,
+   "avg_exposure_bear_months": 0.0323770921457813,
+   "time_in_market": 0.4252362423568649,
+   "unnecessary_long_flat": {
+    "n": 13,
+    "days": 889,
+    "missed_usdt": 69049.21551233088
+   },
+   "n_halts": 15,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.4799397588652361,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-05-19",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": 0.0976503173987906,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-08-27",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.057167847131578076,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-12-05",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.13358004909906174,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-12-22",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 123,
+     "liq_change_60d": -0.05928539838475799,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.7254278526255507,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09033018972579077,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2020-01-29",
+     "days_halt_to_reentry": 127,
+     "liq_change_60d": 0.08064568069079536,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-06-08",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.18159747141125693,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-04-23",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.05894565700796761,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-08-17",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.0034634952181600287,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-12-21",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.09865189109243422,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2022-01-07",
+     "reentry": "2023-01-13",
+     "days_halt_to_reentry": 371,
+     "liq_change_60d": 0.1365757529805356,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.047809837363104624,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-06",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 287,
+     "liq_change_60d": 0.07888467413925149,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.3333333333333333,
+   "rehalts_within_90d": 10,
+   "fees_usdt": 3888.297550438796,
+   "slippage_usdt": 1944.1656344867304,
+   "n_fills": 177,
+   "state_share": {
+    "NORMAL": 0.3883,
+    "COOLDOWN": 0.3002,
+    "RECOVERY": 0.1681,
+    "RISK_REDUCED": 0.1392,
+    "EMERGENCY_HALT": 0.0042
+   },
+   "yearly_return": {
+    "2017": 0.616735676105655,
+    "2018": -0.01922540651429938,
+    "2019": 0.5031969841009751,
+    "2020": 1.082454882899531,
+    "2021": 0.19306349258593913,
+    "2022": -0.06457894101686623,
+    "2023": 0.6039816418546664,
+    "2024": 0.31399422200153526,
+    "2025": 0.10303202118392152,
+    "2026": 0.0774215525596984
+   },
+   "cost_one_side_bps": 15
+  },
+  "early_recoveries": [
+   {
+    "ts": "2017-04-23 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 1252 > 40 周均线 838 且周低点高于熔断以来最低 0"
+   },
+   {
+    "ts": "2017-07-02 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 2517 > 40 周均线 1240 且周低点高于熔断以来最低 1913"
+   },
+   {
+    "ts": "2017-08-13 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4060 > 40 周均线 1571 且周低点高于熔断以来最低 1758"
+   },
+   {
+    "ts": "2017-10-08 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4640 > 40 周均线 2247 且周低点高于熔断以来最低 2817"
+   },
+   {
+    "ts": "2018-01-21 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 1049 > 40 周均线 370 且周低点高于熔断以来最低 505"
+   },
+   {
+    "ts": "2018-03-04 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 11515 > 40 周均线 7118 且周低点高于熔断以来最低 6000"
+   },
+   {
+    "ts": "2018-04-15 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 8355 > 40 周均线 7938 且周低点高于熔断以来最低 6430"
+   },
+   {
+    "ts": "2019-11-03 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 9195 > 40 周均线 7700 且周低点高于熔断以来最低 7300"
+   },
+   {
+    "ts": "2020-04-19 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 180 > 40 周均线 178 且周低点高于熔断以来最低 86"
+   },
+   {
+    "ts": "2021-02-21 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 57409 > 40 周均线 18181 且周低点高于熔断以来最低 28850"
+   },
+   {
+    "ts": "2021-03-28 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 55778 > 40 周均线 23722 且周低点高于熔断以来最低 43000"
+   },
+   {
+    "ts": "2021-06-20 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 35600 > 40 周均线 34726 且周低点高于熔断以来最低 30000"
+   },
+   {
+    "ts": "2021-07-25 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 2190 > 40 周均线 1676 且周低点高于熔断以来最低 1700"
+   },
+   {
+    "ts": "2021-10-24 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 60852 > 40 周均线 46429 且周低点高于熔断以来最低 39600"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": false,
+  "reentry_ok": true
+ },
+ "full|25": {
+  "V7": {
+   "liquidation_net_profit_usdt": 289871.7036906154,
+   "final_liquidation_usdt": 299871.7036906154,
+   "max_drawdown": -0.3522000069714474,
+   "longest_drawdown_days": 526,
+   "up_capture_vs_5050": 0.3022936915154805,
+   "down_capture_vs_5050": 0.27009122174040623,
+   "avg_exposure_bull_months": 0.4764467725452073,
+   "avg_exposure_bear_months": 0.051405388376148185,
+   "time_in_market": 0.49416342412451364,
+   "unnecessary_long_flat": {
+    "n": 18,
+    "days": 664,
+    "missed_usdt": 125990.08057322756
+   },
+   "n_halts": 20,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.47945797669084644,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-04-24",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.7210957749691862,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-07-03",
+     "days_halt_to_reentry": 37,
+     "liq_change_60d": 0.024567342129464542,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-07-10",
+     "reentry": "2017-08-14",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.04833111263141254,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-10-09",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.7150497626078076,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-12-22",
+     "reentry": "2018-01-22",
+     "days_halt_to_reentry": 31,
+     "liq_change_60d": -0.13487822470636235,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-02-01",
+     "reentry": "2018-03-05",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.0487683703655889,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-03-10",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 45,
+     "liq_change_60d": -0.060168299383447144,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.725427122586451,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09212822958185585,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2019-11-04",
+     "days_halt_to_reentry": 41,
+     "liq_change_60d": -0.033248179627326846,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-04-20",
+     "days_halt_to_reentry": 43,
+     "liq_change_60d": 0.11874814474058648,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-02-22",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.0005449907603185533,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-02-25",
+     "reentry": "2021-03-29",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.14948089911206885,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-06-21",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.2524269285609433,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-06-21",
+     "reentry": "2021-07-26",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": 0.17996416460982956,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-10-25",
+     "days_halt_to_reentry": 35,
+     "liq_change_60d": -0.062276505615085354,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-12-04",
+     "reentry": "2022-04-04",
+     "days_halt_to_reentry": 121,
+     "liq_change_60d": -0.015936980523683086,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.04668007450738232,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-04",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 289,
+     "liq_change_60d": 0.07888459820526239,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.35,
+   "rehalts_within_90d": 13,
+   "fees_usdt": 16923.87183249092,
+   "slippage_usdt": 4231.009463233189,
+   "n_fills": 203,
+   "state_share": {
+    "NORMAL": 0.4175,
+    "COOLDOWN": 0.2221,
+    "RECOVERY": 0.2118,
+    "RISK_REDUCED": 0.1431,
+    "EMERGENCY_HALT": 0.0056
+   },
+   "yearly_return": {
+    "2017": 2.3785604805806537,
+    "2018": -0.1806118726360324,
+    "2019": 0.45780832412874584,
+    "2020": 1.34376415893108,
+    "2021": 0.30677402603072745,
+    "2022": -0.018724623321660916,
+    "2023": 0.5910310280455977,
+    "2024": 0.30340820200363483,
+    "2025": 0.10955055301343997,
+    "2026": 0.0757912452602163
+   },
+   "cost_one_side_bps": 25
+  },
+  "V0": {
+   "liquidation_net_profit_usdt": 123163.7185713831,
+   "final_liquidation_usdt": 133163.7185713831,
+   "max_drawdown": -0.2494610659564621,
+   "longest_drawdown_days": 702,
+   "up_capture_vs_5050": 0.24978317953865128,
+   "down_capture_vs_5050": 0.22824206600790062,
+   "avg_exposure_bull_months": 0.3965329306770235,
+   "avg_exposure_bear_months": 0.03237481809844008,
+   "time_in_market": 0.42495831017231794,
+   "unnecessary_long_flat": {
+    "n": 13,
+    "days": 889,
+    "missed_usdt": 67777.94564090541
+   },
+   "n_halts": 15,
+   "reentries": [
+    {
+     "halt": "2017-01-11",
+     "reentry": "2017-02-12",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": 0.47945797669084644,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-03-18",
+     "reentry": "2017-05-19",
+     "days_halt_to_reentry": 62,
+     "liq_change_60d": 0.09756019015497386,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-05-27",
+     "reentry": "2017-08-27",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.05711119845228474,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-09-04",
+     "reentry": "2017-12-05",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.1334456077252788,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2017-12-22",
+     "reentry": "2018-04-24",
+     "days_halt_to_reentry": 123,
+     "liq_change_60d": -0.06016829938344681,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2018-05-17",
+     "reentry": "2019-04-03",
+     "days_halt_to_reentry": 321,
+     "liq_change_60d": 0.725427122586451,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2019-07-14",
+     "reentry": "2019-08-15",
+     "days_halt_to_reentry": 32,
+     "liq_change_60d": -0.09212822958185585,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2019-09-24",
+     "reentry": "2020-01-29",
+     "days_halt_to_reentry": 127,
+     "liq_change_60d": 0.07832310228591588,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2020-03-08",
+     "reentry": "2020-06-08",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.1814161023821217,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2021-01-21",
+     "reentry": "2021-04-23",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": 0.05888627213282471,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-05-17",
+     "reentry": "2021-08-17",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.00646192933178924,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2021-09-20",
+     "reentry": "2021-12-21",
+     "days_halt_to_reentry": 92,
+     "liq_change_60d": -0.09952155246238592,
+     "rehalt_within_90d": true
+    },
+    {
+     "halt": "2022-01-07",
+     "reentry": "2023-01-13",
+     "days_halt_to_reentry": 371,
+     "liq_change_60d": 0.1354255787972889,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-03-16",
+     "reentry": "2025-04-23",
+     "days_halt_to_reentry": 38,
+     "liq_change_60d": 0.04668007450738232,
+     "rehalt_within_90d": false
+    },
+    {
+     "halt": "2025-11-04",
+     "reentry": "2026-08-20",
+     "days_halt_to_reentry": 289,
+     "liq_change_60d": 0.07888459820526239,
+     "rehalt_within_90d": false
+    }
+   ],
+   "reentry_loss_rate_60d": 0.3333333333333333,
+   "rehalts_within_90d": 10,
+   "fees_usdt": 7236.282580148032,
+   "slippage_usdt": 1809.0875991270489,
+   "n_fills": 175,
+   "state_share": {
+    "NORMAL": 0.3847,
+    "COOLDOWN": 0.3002,
+    "RECOVERY": 0.1681,
+    "RISK_REDUCED": 0.1429,
+    "EMERGENCY_HALT": 0.0042
+   },
+   "yearly_return": {
+    "2017": 0.6029551144861742,
+    "2018": -0.0211647651998087,
+    "2019": 0.49574320229423563,
+    "2020": 1.0724704370990614,
+    "2021": 0.1843839547127082,
+    "2022": -0.06500633525830812,
+    "2023": 0.5910310280455979,
+    "2024": 0.30340820200363483,
+    "2025": 0.10955055301343997,
+    "2026": 0.07579124526021608
+   },
+   "cost_one_side_bps": 25
+  },
+  "early_recoveries": [
+   {
+    "ts": "2017-04-23 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 1252 > 40 周均线 838 且周低点高于熔断以来最低 0"
+   },
+   {
+    "ts": "2017-07-02 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 2517 > 40 周均线 1240 且周低点高于熔断以来最低 1913"
+   },
+   {
+    "ts": "2017-08-13 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4060 > 40 周均线 1571 且周低点高于熔断以来最低 1758"
+   },
+   {
+    "ts": "2017-10-08 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 4640 > 40 周均线 2247 且周低点高于熔断以来最低 2817"
+   },
+   {
+    "ts": "2018-01-21 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 1049 > 40 周均线 370 且周低点高于熔断以来最低 505"
+   },
+   {
+    "ts": "2018-03-04 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 11515 > 40 周均线 7118 且周低点高于熔断以来最低 6000"
+   },
+   {
+    "ts": "2018-04-15 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 8355 > 40 周均线 7938 且周低点高于熔断以来最低 6430"
+   },
+   {
+    "ts": "2019-11-03 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 9195 > 40 周均线 7700 且周低点高于熔断以来最低 7300"
+   },
+   {
+    "ts": "2020-04-19 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 180 > 40 周均线 178 且周低点高于熔断以来最低 86"
+   },
+   {
+    "ts": "2021-02-21 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 57409 > 40 周均线 18181 且周低点高于熔断以来最低 28850"
+   },
+   {
+    "ts": "2021-03-28 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 55778 > 40 周均线 23722 且周低点高于熔断以来最低 43000"
+   },
+   {
+    "ts": "2021-06-20 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 35600 > 40 周均线 34726 且周低点高于熔断以来最低 30000"
+   },
+   {
+    "ts": "2021-07-25 00:00:00+00:00",
+    "why": "early_V7: ETHUSDT 周收盘 2190 > 40 周均线 1676 且周低点高于熔断以来最低 1700"
+   },
+   {
+    "ts": "2021-10-24 00:00:00+00:00",
+    "why": "early_V7: BTCUSDT 周收盘 60852 > 40 周均线 46429 且周低点高于熔断以来最低 39600"
+   }
+  ],
+  "net_ok": true,
+  "mdd_ok": false,
+  "reentry_ok": true
+ },
+ "verdict": {
+  "advantage": true,
+  "years_better": 4,
+  "years_differ": 6,
+  "text": "具有增量优势 → 可进入独立影子观察（原 B2 不变）"
+ }
+}
