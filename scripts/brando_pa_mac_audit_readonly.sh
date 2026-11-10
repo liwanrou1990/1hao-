@@ -2,11 +2,18 @@
 # brando_pa Mac READ-ONLY audit helper (phase 14 audit, 2026-11-10). macOS bash 3.2 compatible.
 # Prints: launchd state, service pid vs lock, heartbeat age, poll gaps > 15 min with timestamps, 72h coverage budget math,
 # sleep/wake log around gaps, signal/missed/expired counts, ledger audit (--no-write). Writes NOTHING into the production dir.
-# Usage: bash scripts/brando_pa_mac_audit_readonly.sh [LOCAL_START_UTC="2026-11-08 12:23:00"]
+# Usage: bash ~/1hao-dash14/scripts/brando_pa_mac_audit_readonly.sh ["2026-11-08 12:23:00"]   (run from anywhere; reads ~/1hao- production data)
+#        BRANDO_PROD_ROOT=/other/checkout BRANDO_PY=/other/.venv/bin/python bash scripts/brando_pa_mac_audit_readonly.sh
 set -u
-cd "$(dirname "${0}")/.."; LS="${1:-2026-11-08 12:23:00}"; D="reports_out/brando_pa/phase8_forward"; LABEL="com.brando-pa.forward"
-PY="${BRANDO_PY:-${PWD}/.venv/bin/python}"; [ -x "${PY}" ] || PY=python3
-echo "== host $(hostname) · $(date -u +%Y-%m-%dT%H:%M:%SZ) · HEAD $(git rev-parse --short HEAD 2>/dev/null) · branch $(git rev-parse --abbrev-ref HEAD 2>/dev/null) · READ-ONLY"
+# Data/venv come from the PRODUCTION checkout (default ~/1hao-, override BRANDO_PROD_ROOT); code comes from this script's own checkout
+# (may be the dashboard worktree). Nothing is written anywhere.
+cd "$(dirname "${0}")/.."; HERE="${PWD}"; LS="${1:-2026-11-08 12:23:00}"; LABEL="com.brando-pa.forward"
+PROD="${BRANDO_PROD_ROOT:-${HOME}/1hao-}"; D="${PROD}/reports_out/brando_pa/phase8_forward"
+PY="${BRANDO_PY:-${PROD}/.venv/bin/python}"; [ -x "${PY}" ] || PY=python3
+echo "== host $(hostname) · $(date -u +%Y-%m-%dT%H:%M:%SZ) · script repo ${HERE} @ $(git rev-parse --short HEAD 2>/dev/null) · READ-ONLY"
+echo "== production root ${PROD} @ $(git -C "${PROD}" rev-parse --short HEAD 2>/dev/null) ($(git -C "${PROD}" rev-parse --abbrev-ref HEAD 2>/dev/null)) · data dir ${D} · python ${PY}"
+[ -f "${D}/health.json" ] || { echo "ERROR: ${D}/health.json not found. Set BRANDO_PROD_ROOT=/path/to/production/checkout and re-run."; exit 2; }
+"${PY}" -c "import pandas, pyarrow" 2>/dev/null || { echo "ERROR: ${PY} lacks pandas/pyarrow. Set BRANDO_PY=/path/to/.venv/bin/python (the production venv) and re-run."; exit 2; }
 echo "== launchd"; launchctl print "gui/$(id -u)/${LABEL}" 2>/dev/null | grep -E "state|pid|last exit|runs" | head -6 || echo "launchd job not loaded (or not macOS)"
 echo "== process / lock / heartbeat"
 pgrep -fl "brando_pa.cli forward-service" || echo "no forward-service process found"
@@ -29,5 +36,5 @@ for a in ("A_BTC_SMA200", "B_modelB_state_machine", "REF_ETH_SMA200"):
     print(f"== {a}: events {len(ev)} · signal {k.get('signal',0)} missed {k.get('missed_signal',0)} order {k.get('order',0)} fill {k.get('fill',0)} expired {k.get('order_expired',0)} cancelled {k.get('order_cancelled',0)} · pending {len(st.get('pending',[]))} · last_daily {st.get('last_daily_ts')} · cash(cost) {st['ledgers']['cost']['cash']:.2f}")
 PYEOF
 echo "== sleep / wake log (last 3 days; shows whether gaps coincide with Mac sleep)"; (pmset -g log 2>/dev/null | grep -E "Sleep|Wake|DarkWake" | tail -40) || echo "pmset not available (not macOS)"
-echo "== ledger audit (read-only, --no-write)"; PYTHONPATH=src "${PY}" -m brando_pa.cli forward-ledger-audit --log-dir "${D}" --local-start "${LS}" --no-write 2>/dev/null | tail -40
+echo "== ledger audit (read-only, --no-write; run with the PRODUCTION checkout code+venv; errors shown)"; (cd "${PROD}" && PYTHONPATH=src "${PY}" -m brando_pa.cli forward-ledger-audit --log-dir "${D}" --local-start "${LS}" --no-write 2>&1 | tail -45)
 echo "== done (nothing written)"
