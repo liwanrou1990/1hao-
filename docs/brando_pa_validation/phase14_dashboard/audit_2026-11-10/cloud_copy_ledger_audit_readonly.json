@@ -1,0 +1,730 @@
+{
+  "checked_at_utc": "2026-11-10 03:29:29.422422+00:00",
+  "log_dir": "reports_out/brando_pa/phase8_forward",
+  "read_only": true,
+  "category": "forward（真正前瞻；含成本 = 10 bps 手续费 + 5 bps 滑点）",
+  "accounts": {
+    "A_BTC_SMA200": {
+      "account": "A_BTC_SMA200",
+      "initial_usdt": 10000.0,
+      "fee_bps": 10.0,
+      "slippage_bps": 5.0,
+      "mark_prices": {
+        "BTCUSDT": 75980.2,
+        "ETHUSDT": 2239.38
+      },
+      "mark_source": "latest nav event",
+      "as_of_nav_utc": "2026-11-08 13:02:01.087065+00:00",
+      "ledgers": {
+        "cost": {
+          "n_fills": 1,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 10.000000000001819,
+          "holdings": {
+            "BTCUSDT": 0.1314831176725664,
+            "ETHUSDT": 0.0
+          },
+          "avg_cost": {
+            "BTCUSDT": 75903.43274999999
+          },
+          "equity_usdt": 10000.113577385131,
+          "liquidation_usdt": 9985.133402075842,
+          "liquidation_net_profit_usdt": -14.866597924157759,
+          "equity_profit_usdt": 0.11357738513106597,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 10.093597365149904,
+          "fees_paid_usdt": 9.980019980019978,
+          "exit_cost_if_liquidated_usdt": 14.980175309288825,
+          "identity": {
+            "equity_minus_initial": 0.11357738513106597,
+            "realized_plus_unrealized_minus_buy_fee": 0.11357738512992555,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10000.113577385131,
+              10000.113577385131
+            ],
+            "liquidation_recomputed_vs_nav": [
+              9985.133402075842,
+              9985.133402075842
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 9.980019980019978,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 4.987516231893079,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 14.967536211913057
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 9990.11357738513,
+              "sell_slippage_usdt": 4.9950567886925645,
+              "sell_fee_usdt": 9.985118520596437,
+              "total_usdt": 14.980175309289002,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        },
+        "ideal": {
+          "n_fills": 1,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 10.0,
+          "holdings": {
+            "BTCUSDT": 0.13168040809063408,
+            "ETHUSDT": 0.0
+          },
+          "avg_cost": {
+            "BTCUSDT": 75865.5
+          },
+          "equity_usdt": 10015.103742807994,
+          "liquidation_usdt": 10015.103742807994,
+          "liquidation_net_profit_usdt": 15.103742807994422,
+          "equity_profit_usdt": 15.103742807994422,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 15.103742807995346,
+          "fees_paid_usdt": 0.0,
+          "exit_cost_if_liquidated_usdt": 0.0,
+          "identity": {
+            "equity_minus_initial": 15.103742807994422,
+            "realized_plus_unrealized_minus_buy_fee": 15.103742807995346,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10015.103742807994,
+              10015.103742807994
+            ],
+            "liquidation_recomputed_vs_nav": [
+              10015.103742807994,
+              10015.103742807994
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 0.0,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 0.0,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 0.0
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 10005.103742807994,
+              "sell_slippage_usdt": 0.0,
+              "sell_fee_usdt": 0.0,
+              "total_usdt": 0.0,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        }
+      },
+      "issues": [],
+      "signals": {
+        "event_kinds": {
+          "nav": 9,
+          "order": 4,
+          "market": 3,
+          "risk": 3,
+          "signal": 3,
+          "order_cancelled": 2,
+          "fill": 2,
+          "warmup": 1
+        },
+        "n_daily_decisions": 3,
+        "duplicate_signal_ts": {
+          "2026-11-08 00:00:00+00:00": [
+            "signal",
+            "signal",
+            "signal"
+          ]
+        },
+        "n_missed_signal": 0,
+        "n_order_expired": 0,
+        "n_fill_paused": 0,
+        "n_order_cancelled": 2,
+        "n_invalidated_corrections": 2,
+        "duplicate_fills_per_order": {},
+        "pending_now": 0,
+        "processed_orders": 4,
+        "last_daily_ts": "2026-11-07 00:00:00+00:00",
+        "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+        "duplicate_executed_decisions": {},
+        "duplicate_undocumented": {},
+        "requeued_after_correction": {
+          "at": "2026-11-08 03:52:18.968523+00:00",
+          "orders": [
+            "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0",
+            "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0"
+          ],
+          "note": "同一已收盘日线按修正后的执行时隙规则重新决策；若超过宽限期则记为 missed_signal",
+          "second_requeue": {
+            "at": "2026-11-08 03:53:17.100671+00:00",
+            "note": "03:52 的重新决策因订单号与已作废订单相同被去重（未下单）；修正订单号规则后再次对同一已收盘日线决策"
+          }
+        },
+        "duplicate_note": "同一日线多次决策但只有一次产生成交，且已在 state.requeued_after_correction 登记（原订单因 T3 作废、未成交）→ 已纠错的重决策，不是重复执行",
+        "causality_violations": [],
+        "legacy_fills_without_price_kind": [
+          "A_BTC_SMA200:ideal:BTCUSDT:20261108:BUY:0:d035318",
+          "A_BTC_SMA200:cost:BTCUSDT:20261108:BUY:0:d035318"
+        ],
+        "legacy_note": "price_kind 缺失 = 报价模块上线前的成交：参考价为处理时刻最新已收盘 1h 收盘价（非 Bid/Ask），事件中 price_time 已记录",
+        "timeline_audit_ok": true,
+        "timeline_open_violations": [],
+        "chain": {
+          "ok": true,
+          "n": 27
+        },
+        "corrections_chain": {
+          "ok": true,
+          "n": 2
+        }
+      },
+      "ok": true
+    },
+    "B_modelB_state_machine": {
+      "account": "B_modelB_state_machine",
+      "initial_usdt": 10000.0,
+      "fee_bps": 10.0,
+      "slippage_bps": 5.0,
+      "mark_prices": {
+        "BTCUSDT": 75980.2,
+        "ETHUSDT": 2239.38
+      },
+      "mark_source": "latest nav event",
+      "as_of_nav_utc": "2026-11-08 13:02:01.087065+00:00",
+      "ledgers": {
+        "cost": {
+          "n_fills": 2,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 10.0,
+          "holdings": {
+            "BTCUSDT": 0.0657415588362832,
+            "ETHUSDT": 2.231031810001272
+          },
+          "avg_cost": {
+            "BTCUSDT": 75903.43274999999,
+            "ETHUSDT": 2236.63776
+          },
+          "equity_usdt": 10001.184803373213,
+          "liquidation_usdt": 9986.203021760555,
+          "liquidation_net_profit_usdt": -13.796978239444798,
+          "equity_profit_usdt": 1.1848033732130716,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 11.164823353232926,
+          "fees_paid_usdt": 9.98001998001998,
+          "exit_cost_if_liquidated_usdt": 14.98178161265787,
+          "identity": {
+            "equity_minus_initial": 1.1848033732130716,
+            "realized_plus_unrealized_minus_buy_fee": 1.1848033732129455,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10001.184803373213,
+              10001.184803373213
+            ],
+            "liquidation_recomputed_vs_nav": [
+              9986.203021760555,
+              9986.203021760555
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 9.98001998001998,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 4.9875162318937605,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 14.96753621191374
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 9991.184803373213,
+              "sell_slippage_usdt": 4.995592401686606,
+              "sell_fee_usdt": 9.986189210971526,
+              "total_usdt": 14.981781612658132,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        },
+        "ideal": {
+          "n_fills": 2,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 10.00000000000091,
+          "holdings": {
+            "BTCUSDT": 0.06584020404531704,
+            "ETHUSDT": 2.2343794732321784
+          },
+          "avg_cost": {
+            "BTCUSDT": 75865.5,
+            "ETHUSDT": 2235.52
+          },
+          "equity_usdt": 10016.176576170674,
+          "liquidation_usdt": 10016.176576170674,
+          "liquidation_net_profit_usdt": 16.176576170673798,
+          "equity_profit_usdt": 16.176576170673798,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 16.176576170674167,
+          "fees_paid_usdt": 0.0,
+          "exit_cost_if_liquidated_usdt": 0.0,
+          "identity": {
+            "equity_minus_initial": 16.176576170673798,
+            "realized_plus_unrealized_minus_buy_fee": 16.176576170674167,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10016.176576170674,
+              10016.176576170674
+            ],
+            "liquidation_recomputed_vs_nav": [
+              10016.176576170674,
+              10016.176576170674
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 0.0,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 0.0,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 0.0
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 10006.176576170674,
+              "sell_slippage_usdt": 0.0,
+              "sell_fee_usdt": 0.0,
+              "total_usdt": 0.0,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        }
+      },
+      "issues": [],
+      "signals": {
+        "event_kinds": {
+          "nav": 9,
+          "order": 8,
+          "order_cancelled": 4,
+          "fill": 4,
+          "market": 3,
+          "risk": 3,
+          "signal": 3,
+          "warmup": 1
+        },
+        "n_daily_decisions": 3,
+        "duplicate_signal_ts": {
+          "2026-11-08 00:00:00+00:00": [
+            "signal",
+            "signal",
+            "signal"
+          ]
+        },
+        "n_missed_signal": 0,
+        "n_order_expired": 0,
+        "n_fill_paused": 0,
+        "n_order_cancelled": 4,
+        "n_invalidated_corrections": 4,
+        "duplicate_fills_per_order": {},
+        "pending_now": 0,
+        "processed_orders": 8,
+        "last_daily_ts": "2026-11-07 00:00:00+00:00",
+        "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+        "duplicate_executed_decisions": {},
+        "duplicate_undocumented": {},
+        "requeued_after_correction": {
+          "at": "2026-11-08 03:52:18.970208+00:00",
+          "orders": [
+            "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0",
+            "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1",
+            "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0",
+            "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1"
+          ],
+          "note": "同一已收盘日线按修正后的执行时隙规则重新决策；若超过宽限期则记为 missed_signal",
+          "second_requeue": {
+            "at": "2026-11-08 03:53:17.101314+00:00",
+            "note": "03:52 的重新决策因订单号与已作废订单相同被去重（未下单）；修正订单号规则后再次对同一已收盘日线决策"
+          }
+        },
+        "duplicate_note": "同一日线多次决策但只有一次产生成交，且已在 state.requeued_after_correction 登记（原订单因 T3 作废、未成交）→ 已纠错的重决策，不是重复执行",
+        "causality_violations": [],
+        "legacy_fills_without_price_kind": [
+          "B_modelB_state_machine:ideal:BTCUSDT:20261108:BUY:0:d035318",
+          "B_modelB_state_machine:ideal:ETHUSDT:20261108:BUY:1:d035318",
+          "B_modelB_state_machine:cost:BTCUSDT:20261108:BUY:0:d035318",
+          "B_modelB_state_machine:cost:ETHUSDT:20261108:BUY:1:d035318"
+        ],
+        "legacy_note": "price_kind 缺失 = 报价模块上线前的成交：参考价为处理时刻最新已收盘 1h 收盘价（非 Bid/Ask），事件中 price_time 已记录",
+        "timeline_audit_ok": true,
+        "timeline_open_violations": [],
+        "chain": {
+          "ok": true,
+          "n": 35
+        },
+        "corrections_chain": {
+          "ok": true,
+          "n": 4
+        }
+      },
+      "ok": true
+    },
+    "REF_ETH_SMA200": {
+      "account": "REF_ETH_SMA200",
+      "initial_usdt": 10000.0,
+      "fee_bps": 10.0,
+      "slippage_bps": 5.0,
+      "mark_prices": {
+        "BTCUSDT": 75980.2,
+        "ETHUSDT": 2239.38
+      },
+      "mark_source": "latest nav event",
+      "as_of_nav_utc": "2026-11-08 13:02:01.087065+00:00",
+      "ledgers": {
+        "cost": {
+          "n_fills": 1,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 9.999999999998181,
+          "holdings": {
+            "BTCUSDT": 0.0,
+            "ETHUSDT": 4.462063620002544
+          },
+          "avg_cost": {
+            "ETHUSDT": 2236.63776
+          },
+          "equity_usdt": 10002.256029361295,
+          "liquidation_usdt": 9987.272641445268,
+          "liquidation_net_profit_usdt": -12.727358554731836,
+          "equity_profit_usdt": 2.2560293612950773,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 12.236049341315946,
+          "fees_paid_usdt": 9.980019980019982,
+          "exit_cost_if_liquidated_usdt": 14.983387916026913,
+          "identity": {
+            "equity_minus_initial": 2.2560293612950773,
+            "realized_plus_unrealized_minus_buy_fee": 2.2560293612959637,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10002.256029361295,
+              10002.256029361295
+            ],
+            "liquidation_recomputed_vs_nav": [
+              9987.272641445268,
+              9987.272641445268
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 9.980019980019982,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 4.987516231894443,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 14.967536211914425
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 9992.256029361297,
+              "sell_slippage_usdt": 4.996128014680648,
+              "sell_fee_usdt": 9.987259901346617,
+              "total_usdt": 14.983387916027265,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        },
+        "ideal": {
+          "n_fills": 1,
+          "arithmetic_issues": [],
+          "state_mismatch": {},
+          "nav_mismatch": {},
+          "cash_usdt": 10.000000000001819,
+          "holdings": {
+            "BTCUSDT": 0.0,
+            "ETHUSDT": 4.468758946464357
+          },
+          "avg_cost": {
+            "ETHUSDT": 2235.52
+          },
+          "equity_usdt": 10017.249409533353,
+          "liquidation_usdt": 10017.249409533353,
+          "liquidation_net_profit_usdt": 17.249409533353173,
+          "equity_profit_usdt": 17.249409533353173,
+          "realized_usdt": 0.0,
+          "unrealized_usdt": 17.249409533352985,
+          "fees_paid_usdt": 0.0,
+          "exit_cost_if_liquidated_usdt": 0.0,
+          "identity": {
+            "equity_minus_initial": 17.249409533353173,
+            "realized_plus_unrealized_minus_buy_fee": 17.249409533352985,
+            "ok": true,
+            "equity_recomputed_vs_nav": [
+              10017.249409533353,
+              10017.249409533353
+            ],
+            "liquidation_recomputed_vs_nav": [
+              10017.249409533353,
+              10017.249409533353
+            ]
+          },
+          "fees": {
+            "incurred": {
+              "buy_fee_usdt": 0.0,
+              "sell_fee_usdt": 0,
+              "buy_slippage_usdt": 0.0,
+              "sell_slippage_usdt": 0,
+              "half_spread_usdt_on_live_quotes": 0.0,
+              "n_fills_with_live_quote": 0,
+              "total_incurred_usdt": 0.0
+            },
+            "hypothetical_liquidation": {
+              "gross_holdings_usdt": 10007.249409533351,
+              "sell_slippage_usdt": 0.0,
+              "sell_fee_usdt": 0.0,
+              "total_usdt": 0.0,
+              "note": "假设此刻按标记价全部卖出才会发生；尚未发生，不在权益中扣除"
+            }
+          },
+          "notes": [
+            "unrealized 以成交价（含滑点）为成本，不含买入手续费；买入手续费已从现金扣除",
+            "liquidation = cash + Σ qty × mark × (1 − slippage) × (1 − fee)：卖出成本只在假设清仓时计一次，买入成本已在成交时扣除，无重复"
+          ]
+        }
+      },
+      "issues": [],
+      "signals": {
+        "event_kinds": {
+          "nav": 9,
+          "order": 4,
+          "market": 3,
+          "risk": 3,
+          "signal": 3,
+          "order_cancelled": 2,
+          "fill": 2,
+          "warmup": 1
+        },
+        "n_daily_decisions": 3,
+        "duplicate_signal_ts": {
+          "2026-11-08 00:00:00+00:00": [
+            "signal",
+            "signal",
+            "signal"
+          ]
+        },
+        "n_missed_signal": 0,
+        "n_order_expired": 0,
+        "n_fill_paused": 0,
+        "n_order_cancelled": 2,
+        "n_invalidated_corrections": 2,
+        "duplicate_fills_per_order": {},
+        "pending_now": 0,
+        "processed_orders": 4,
+        "last_daily_ts": "2026-11-07 00:00:00+00:00",
+        "forward_start_utc": "2026-11-07 17:38:03.379343+00:00",
+        "duplicate_executed_decisions": {},
+        "duplicate_undocumented": {},
+        "requeued_after_correction": {
+          "at": "2026-11-08 03:52:18.972017+00:00",
+          "orders": [
+            "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0",
+            "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0"
+          ],
+          "note": "同一已收盘日线按修正后的执行时隙规则重新决策；若超过宽限期则记为 missed_signal",
+          "second_requeue": {
+            "at": "2026-11-08 03:53:17.101648+00:00",
+            "note": "03:52 的重新决策因订单号与已作废订单相同被去重（未下单）；修正订单号规则后再次对同一已收盘日线决策"
+          }
+        },
+        "duplicate_note": "同一日线多次决策但只有一次产生成交，且已在 state.requeued_after_correction 登记（原订单因 T3 作废、未成交）→ 已纠错的重决策，不是重复执行",
+        "causality_violations": [],
+        "legacy_fills_without_price_kind": [
+          "REF_ETH_SMA200:ideal:ETHUSDT:20261108:BUY:0:d035318",
+          "REF_ETH_SMA200:cost:ETHUSDT:20261108:BUY:0:d035318"
+        ],
+        "legacy_note": "price_kind 缺失 = 报价模块上线前的成交：参考价为处理时刻最新已收盘 1h 收盘价（非 Bid/Ask），事件中 price_time 已记录",
+        "timeline_audit_ok": true,
+        "timeline_open_violations": [],
+        "chain": {
+          "ok": true,
+          "n": 27
+        },
+        "corrections_chain": {
+          "ok": true,
+          "n": 2
+        }
+      },
+      "ok": true
+    }
+  },
+  "ok": true,
+  "acceptance": {
+    "status": "进行中",
+    "local_start": "2026-11-08 12:23:00",
+    "segments": {
+      "cloud_legacy": {
+        "start_utc": "2026-11-07 17:38:03.379343+00:00",
+        "end_utc": "2026-11-08 06:02:53.803842+00:00",
+        "elapsed_hours": 12.41,
+        "cycles_observed": 8,
+        "cycles_expected": 74,
+        "coverage": 0.108,
+        "cycle_gaps_gt_3x": 4,
+        "longest_gap_hours": 9.16,
+        "data_ok_share": 1.0,
+        "n_data_issues": 0,
+        "n_anomalies": 0,
+        "alerts_by_kind": {},
+        "missed_signals": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "expired_orders": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "fills": {
+          "A_BTC_SMA200": 2,
+          "B_modelB_state_machine": 4,
+          "REF_ETH_SMA200": 2
+        },
+        "fill_paused": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "hosts": [],
+        "note": "云容器内的单轮/手动运行，不构成连续运行；原样保留"
+      },
+      "local": {
+        "start_utc": "2026-11-08 12:23:00+00:00",
+        "end_utc": "2026-11-10 03:29:29.422422+00:00",
+        "elapsed_hours": 39.11,
+        "cycles_observed": 1,
+        "cycles_expected": 234,
+        "coverage": 0.004,
+        "cycle_gaps_gt_3x": 0,
+        "longest_gap_hours": 38.46,
+        "data_ok_share": 1.0,
+        "n_data_issues": 0,
+        "n_anomalies": 0,
+        "alerts_by_kind": {},
+        "missed_signals": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "expired_orders": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "fills": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "fill_paused": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "hosts": [
+          "vm"
+        ],
+        "status": "进行中",
+        "verdict_note": "elapsed < 72h → 不得宣称验收成功"
+      },
+      "all": {
+        "start_utc": "2026-11-07 17:38:03.379343+00:00",
+        "end_utc": "2026-11-10 03:29:29.422422+00:00",
+        "elapsed_hours": 57.86,
+        "cycles_observed": 9,
+        "cycles_expected": 347,
+        "coverage": 0.026,
+        "cycle_gaps_gt_3x": 5,
+        "longest_gap_hours": 38.46,
+        "data_ok_share": 1.0,
+        "n_data_issues": 0,
+        "n_anomalies": 0,
+        "alerts_by_kind": {},
+        "missed_signals": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "expired_orders": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "fills": {
+          "A_BTC_SMA200": 2,
+          "B_modelB_state_machine": 4,
+          "REF_ETH_SMA200": 2
+        },
+        "fill_paused": {
+          "A_BTC_SMA200": 0,
+          "B_modelB_state_machine": 0,
+          "REF_ETH_SMA200": 0
+        },
+        "hosts": [
+          "vm"
+        ],
+        "note": "云端 + 本地全部记录；历史缺口原样保留"
+      }
+    }
+  },
+  "service": {
+    "lock_file": "reports_out/brando_pa/phase8_forward/service.lock",
+    "lock_held_by_running_service": false,
+    "service_pids": [],
+    "health": {
+      "heartbeat_utc": "2026-11-08 13:02:03.406334+00:00",
+      "consecutive_failures": 0,
+      "pid": 480
+    },
+    "heartbeat_age_s": 138446.208259
+  },
+  "runner_chain": {
+    "ok": true,
+    "n": 9
+  },
+  "formulas": {
+    "buy": "fill = ref × (1 + slip_bps/1e4); fee = fill × qty × fee_bps/1e4; cash −= fill × qty + fee（ref：实时 Ask，否则最新已收盘 1h 收盘价=estimated）",
+    "sell": "fill = ref × (1 − slip_bps/1e4); fee = fill × qty × fee_bps/1e4; cash += fill × qty − fee; realized += (fill − lot_cost) × qty − fee（ref：实时 Bid，否则估算）",
+    "equity": "cash + Σ qty × mark（mark = 最新已收盘 1h 收盘价）",
+    "unrealized": "Σ (mark − lot_fill_price) × qty（lot_fill_price 含买入滑点，不含买入手续费）",
+    "liquidation": "cash + Σ qty × mark × (1 − slip) × (1 − fee)；= equity − 15 bps × 持仓市值（假设卖出成本，未发生）",
+    "identity": "equity − initial = realized + unrealized − buy_fees"
+  }
+}
