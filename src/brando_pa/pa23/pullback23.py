@@ -86,8 +86,9 @@ def control_events(f: pd.DataFrame, start: str, side_bps: float = 15.0) -> pd.Da
     return events(f, sig, side_bps)
 
 
-def strategy(f: pd.DataFrame, sig: pd.DataFrame, sym: str, bucket: str, exit_: str, start: str, fee: float = 10.0, slip: float = 5.0, impact: bool = True, initial: float = 100_000.0):
-    """完整交易：满仓或空仓；持仓期间忽略新信号；成本 = 手续费 + 基础滑点（+ 平方根冲击）。"""
+def strategy(f: pd.DataFrame, sig: pd.DataFrame, sym: str, bucket: str, exit_: str, start: str, fee: float = 10.0, slip: float = 5.0, impact: bool = True, initial: float = 100_000.0, weight: float = 1.0, return_nav: bool = False):
+    """完整交易：满仓或空仓；持仓期间忽略新信号；成本 = 手续费 + 基础滑点（+ 平方根冲击）。
+    weight（第二十四阶段，默认 1.0 = 第二十三阶段原样）：买入时只投入当时净值的该比例，其余持有 USDT。return_nav：同时返回逐日净值。"""
     liq = {sym: liquidity_table(f[["ts", "open", "high", "low", "close", "volume"]])} if impact else {sym: liquidity_table(f[["ts", "open", "high", "low", "close", "volume"]]).assign(quote_vol=1e30, sigma=0.0)}
     L = make_ledger(initial, fee, slip, liq); op = f["open"].to_numpy(float); cl = f["close"].to_numpy(float); ts = f["ts"]; n = len(f)
     sigs = set(sig[(sig["signal"]) & (sig["bucket"] == bucket)]["i"].astype(int)); i0 = int(pd.DatetimeIndex(ts).searchsorted(pd.Timestamp(start, tz="UTC")))
@@ -98,7 +99,7 @@ def strategy(f: pd.DataFrame, sig: pd.DataFrame, sym: str, bucket: str, exit_: s
             trades.append(pos["t"] | {"exit_day": str(ts.iloc[i].date()), "exit_price": float(rec["price"]), "exit_reason": pos["reason"], "hold_days": i - pos["entry_i"], "proceeds": float(rec["qty"] * rec["price"] - rec["fee"])})
             trades[-1]["pnl_usdt"] = trades[-1]["proceeds"] - trades[-1]["cost_usdt"]; trades[-1]["ret"] = trades[-1]["proceeds"] / trades[-1]["cost_usdt"] - 1; pos = None
         if pos is None and (i - 1) in sigs and i - 1 >= i0:
-            s = sig[sig["i"] == i - 1].iloc[0]; cash0 = L.cash; q = cash0 * 0.999 / (op[i] * (1 + (slip + 100) / 1e4) * (1 + fee / 1e4))
+            s = sig[sig["i"] == i - 1].iloc[0]; cash0 = L.cash; q = weight * cash0 * 0.999 / (op[i] * (1 + (slip + 100) / 1e4) * (1 + fee / 1e4))
             lot = L.buy(sym, q, op[i], ts.iloc[i], bucket, 0.0, 0.0, 0.0); fee_paid = L.trade_log[-1]["fee"]; cost = cash0 - L.cash
             fills.append({"ts": ts.iloc[i], "side": "BUY", "qty": lot.qty, "ref_price": op[i], "fill_price": lot.price, "fee": fee_paid, "slippage": (lot.price - op[i]) * lot.qty})
             if exit_ in HOLD:
@@ -115,7 +116,7 @@ def strategy(f: pd.DataFrame, sig: pd.DataFrame, sym: str, bucket: str, exit_: s
     closed = [t for t in trades if t.get("exit_day")]
     m |= {"n_trades": len(trades), "win_rate_trades": float(np.mean([t["ret"] > 0 for t in closed])) if closed else None, "avg_hold_days": float(np.mean([t["hold_days"] for t in trades])) if trades else None,
           "time_in_market": float((navdf["exposure"] > 0.01).mean())}
-    return m, trades
+    return (m, trades, navdf) if return_nav else (m, trades)
 
 
 def zigzag_phases(f: pd.DataFrame, thr: float = 0.5) -> tuple[pd.Series, list]:
