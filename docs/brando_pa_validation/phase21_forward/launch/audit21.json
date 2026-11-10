@@ -1,0 +1,269 @@
+{
+ "generated_at_utc": "2026-11-10 15:50:14.355424+00:00",
+ "git_head": "a2cc1d1",
+ "freeze": {
+  "ok": true,
+  "changed_files": [],
+  "params_changed": false,
+  "frozen_at_utc": "2026-11-10 14:55:22.546937+00:00",
+  "params_sha256": "d1269596ccc56316fe6a708f0a058877187c52363ea44988faf826e9ac90d493"
+ },
+ "no_order_api": {
+  "ok": true,
+  "hits": []
+ },
+ "leak_truncation": {
+  "ok": true,
+  "start": "2025-06-01",
+  "cuts": [
+   {
+    "cut": "2025-09-15",
+    "days_compared": 107,
+    "values_compared": 5671,
+    "max_abs_diff": 0.0
+   },
+   {
+    "cut": "2025-12-31",
+    "days_compared": 214,
+    "values_compared": 11342,
+    "max_abs_diff": 0.0
+   },
+   {
+    "cut": "2026-01-01",
+    "days_compared": 215,
+    "values_compared": 11395,
+    "max_abs_diff": 0.0
+   },
+   {
+    "cut": "2026-01-02",
+    "days_compared": 216,
+    "values_compared": 11448,
+    "max_abs_diff": 0.0
+   },
+   {
+    "cut": "2026-04-20",
+    "days_compared": 324,
+    "values_compared": 17172,
+    "max_abs_diff": 0.0
+   },
+   {
+    "cut": "2026-10-01",
+    "days_compared": 488,
+    "values_compared": 25864,
+    "max_abs_diff": 0.0
+   }
+  ],
+  "note": "历史日线只用于审计，不是前瞻记录"
+ },
+ "impact_volume_timing": {
+  "finding": "成交冲击按成交当日完整成交额估计（轻微的成本估计前视；不影响决策）",
+  "rows": [
+   {
+    "model": "当日成交额（冻结模型）",
+    "FIX25_Y_final": 1526469.0958519443,
+    "SMA200_final": 9470554.239014966,
+    "B2_since2017_final": 1418086.2851215375
+   },
+   {
+    "model": "前一日成交额（审计替代）",
+    "FIX25_Y_final": 1527449.4620735242,
+    "SMA200_final": 9561993.074986497,
+    "B2_since2017_final": 3050100.138610564
+   }
+  ],
+  "relative_change_if_prior_day": {
+   "FIX25_Y_final": 0.0006422443954117174,
+   "SMA200_final": 0.009655067028161657,
+   "B2_since2017_final": 1.1508565244668132
+  },
+  "blocking": false,
+  "decision": "冻结规则不改；四个账户口径一致；在报告中披露。若要改用前一日成交额，须另行预登记新的观察。"
+ },
+ "path_sensitivity": {
+  "grid": {
+   "fee_bps": [
+    9.0,
+    10.0,
+    11.0,
+    12.0
+   ],
+   "volume_multiplier": [
+    0.9,
+    1.0,
+    1.1
+   ],
+   "base_slippage_bps": 5.0
+  },
+  "final_usdt_range": {
+   "FIX25_Y（2014 起）": {
+    "min": 1525367.9801474859,
+    "median": 1526246.8633165671,
+    "max": 1527125.7084522587,
+    "max_over_min": 1.0011523306688284,
+    "n": 12
+   },
+   "SMA200（2014 起）": {
+    "min": 9247395.037212001,
+    "median": 9426760.361139271,
+    "max": 9610137.01545789,
+    "max_over_min": 1.0392263958429586,
+    "n": 12
+   },
+   "原 B2（2017 起）": {
+    "min": 1405420.9066990968,
+    "median": 2211799.978792783,
+    "max": 3045624.5489167925,
+    "max_over_min": 2.1670551038478796,
+    "n": 12
+   }
+  },
+  "blocking": false,
+  "finding": "原 B2 历史最终净资产对极小的成本差异高度敏感（阈值路径依赖）；FIX25_Y 与 SMA200 稳定。B2 的单一历史数字不可作为稳健结论。",
+  "decision": "不修改 B2；前瞻评估时对 B2 另报同样微调下的结果范围（描述性，事后加入，不影响任何规则）"
+ },
+ "ledger_integrity": {
+  "ok": true,
+  "n_days": 0,
+  "chains": {
+   "daily_ledger": {
+    "ok": true,
+    "n": 0
+   },
+   "alerts": {
+    "ok": true,
+    "n": 0
+   },
+   "events": {
+    "ok": true,
+    "n": 0
+   },
+   "runs": {
+    "ok": true,
+    "n": 0
+   },
+   "observations": {
+    "ok": true,
+    "n": 0
+   },
+   "drift": {
+    "ok": true,
+    "n": 0
+   }
+  },
+  "note": "云端当前 0 天（观察起点日线尚未收盘）；追加、去重、不改写与篡改检测由测试在合成数据上验证"
+ },
+ "capital_consistency": {
+  "ok": true,
+  "research_initial_usdt": 100000.0,
+  "phase20_results_checked": 166,
+  "mismatches": [],
+  "mac_config_initial_cash_now": [
+   [
+    "spot.initial_cash_usdt",
+    10000
+   ],
+   [
+    "trend.initial_cash_usdt",
+    10000
+   ],
+   [
+    "trendsys.initial_cash_usdt",
+    10000
+   ],
+   [
+    "usdt.initial_cash_usdt",
+    10000
+   ]
+  ],
+  "mac_config_initial_cash_at_mac_branch": [
+   [
+    "spot.initial_cash_usdt",
+    10000
+   ],
+   [
+    "trend.initial_cash_usdt",
+    10000
+   ],
+   [
+    "trendsys.initial_cash_usdt",
+    10000
+   ],
+   [
+    "usdt.initial_cash_usdt",
+    10000
+   ]
+  ]
+ },
+ "mac_isolation": {
+  "ok": true,
+  "config_sections_equal_to_mac_branch": {
+   "forward": true,
+   "usdt": true,
+   "trendsys": true
+  },
+  "pa21_references_to_mac_dirs": [],
+  "deploy": "独立克隆目录 + 独立 launchd 标签 + 独立虚拟环境；Mac 运行分支 5a19020 不变"
+ },
+ "evidence_history": {
+  "ok": true,
+  "n_files": 486,
+  "n_modified_after_first_commit": 14,
+  "modified_dirs": [
+   "phase9_forward"
+  ],
+  "phase19_21_modified": [],
+  "note": "第十九至二十一阶段证据文件提交后均未再修改；更早阶段（第九阶段前瞻日志副本等）按当时说明多次更新快照"
+ },
+ "docs_consistency": {
+  "ok": true,
+  "checks": [
+   {
+    "what": "ALLOC_25_Y|full_2014|15",
+    "final": "1,526,469",
+    "mdd": "−39.7%",
+    "ok": true
+   },
+   {
+    "what": "BH_BTC|full_2014|15",
+    "final": "9,974,359",
+    "mdd": "−83.2%",
+    "ok": true
+   },
+   {
+    "what": "ALLOC_50_Y|full_2014|15",
+    "final": "5,416,554",
+    "mdd": "−55.6%",
+    "ok": true
+   },
+   {
+    "what": "B2_original|since_2017|15",
+    "final": "1,418,086",
+    "mdd": "−24.1%",
+    "ok": true
+   },
+   {
+    "what": "rally (8, 0.7)",
+    "value": "−50.9%",
+    "ok": true
+   },
+   {
+    "what": "rally (13, 0.8)",
+    "value": "−65.0%",
+    "ok": true
+   },
+   {
+    "what": "历史最高漂移",
+    "value": "87%",
+    "ok": true
+   }
+  ]
+ },
+ "phase21_test_report": {
+  "ok": true,
+  "tracked_in_git": true,
+  "line": "225 passed, 0 failed = 原有 219 + 第二十一阶段 6（冻结校验与篡改检测、统一起点与只追加记录、警报只记录不交易与重放不改写、冻结违规拒绝运行与只写独立目录、压力公式、只读页面标注）；研究页面 Playwright 检查：桌面与 iPhone 无横向溢出、无页面错误、无交易控件。未删除或弱化任何测试。",
+  "last_commit": "f913acf brando_pa 第二十一阶段测试报告：全套 225 通过（原有 219 + 第二十一阶段 6）"
+ },
+ "blocking_failures": [],
+ "verdict": "无阻断项"
+}

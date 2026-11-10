@@ -1,0 +1,55 @@
+{
+ "category": "历史回测（已看过的数据，非前瞻）",
+ "max_weight": 0.8674921558654164,
+ "max_weight_date": "2017-12-16",
+ "levels": [
+  {
+   "level": 0.5,
+   "days": 189,
+   "episodes": [
+    {
+     "first_date": "2017-06-10",
+     "btc_weight": 0.5011329655561344,
+     "max_dd_next_365d_from_prior_peak": -0.34416621600877617
+    },
+    {
+     "first_date": "2017-08-05",
+     "btc_weight": 0.5264220998212362,
+     "max_dd_next_365d_from_prior_peak": -0.3544547385032031
+    },
+    {
+     "first_date": "2019-06-25",
+     "btc_weight": 0.5154643468004656,
+     "max_dd_next_365d_from_prior_peak": -0.3064991349844628
+    },
+    {
+     "first_date": "2020-12-17",
+     "btc_weight": 0.5137543012787411,
+     "max_dd_next_365d_from_prior_peak": -0.2246269823163538
+    }
+   ]
+  },
+  {
+   "level": 0.7,
+   "days": 55,
+   "episodes": [
+    {
+     "first_date": "2017-11-02",
+     "btc_weight": 0.7063863216335552,
+     "max_dd_next_365d_from_prior_peak": -0.3544547385032031
+    }
+   ]
+  },
+  {
+   "level": 0.85,
+   "days": 7,
+   "episodes": [
+    {
+     "first_date": "2017-12-07",
+     "btc_weight": 0.850493828817669,
+     "max_dd_next_365d_from_prior_peak": -0.3881862970534211
+    }
+   ]
+  }
+ ]
+}

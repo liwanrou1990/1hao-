@@ -1,0 +1,193 @@
+{
+ "clean": {
+  "window": [
+   "2026-11-12 00:00:00+00:00",
+   "2026-11-15 00:00:00+00:00"
+  ],
+  "checked_at": "2026-11-15 00:10:00+00:00",
+  "passed": true,
+  "verdict": "通过",
+  "criteria": {
+   "elapsed": {
+    "ok": true,
+    "detail": "窗口 2026-11-12 00:00:00+00:00 → 2026-11-15 00:00:00+00:00；当前 2026-11-15 00:10:00+00:00"
+   },
+   "coverage": {
+    "ok": true,
+    "detail": "有成功运行的小时 72/72（需 ≥ 69）"
+   },
+   "max_gap": {
+    "ok": true,
+    "detail": "最大间隔 1.00 小时（需 ≤ 3）"
+   },
+   "errors": {
+    "ok": true,
+    "detail": "未处理异常 0 次"
+   },
+   "data_unavailable": {
+    "ok": true,
+    "detail": "行情不可用 0/72 次（需 ≤ 10%，均有记录）"
+   },
+   "daily_records_realtime": {
+    "ok": true,
+    "detail": "窗口内收盘日 3 个；缺记录 无；非实时 无"
+   },
+   "hash_chains": {
+    "ok": true,
+    "detail": {
+     "daily_ledger": {
+      "ok": true,
+      "n": 3
+     },
+     "alerts": {
+      "ok": true,
+      "n": 0
+     },
+     "events": {
+      "ok": true,
+      "n": 0
+     },
+     "runs": {
+      "ok": true,
+      "n": 72
+     },
+     "observations": {
+      "ok": true,
+      "n": 3
+     },
+     "drift": {
+      "ok": true,
+      "n": 0
+     }
+    }
+   },
+   "freeze_and_replay": {
+    "ok": true,
+    "detail": "冻结校验失败 0 次；重放不一致 / 冻结违规事件 0 条"
+   },
+   "mac_unchanged": {
+    "ok": true,
+    "detail": {
+     "ok": true,
+     "problems": [],
+     "n_files_baseline": 2,
+     "n_files_grown_normally": 1,
+     "checked_at_head": null
+    }
+   },
+   "no_order_api": {
+    "ok": true,
+    "detail": "源码中没有下单 / 密钥接口"
+   }
+  },
+  "n_ticks_in_window": 72,
+  "simulation": {
+   "faults_injected": [],
+   "statuses": {
+    "ok": 72
+   },
+   "note": "加速模拟：虚拟时钟与合成行情，只检验服务与验收逻辑，不是前瞻观察，不能替代 Mac 上的真实 72 小时验收"
+  }
+ },
+ "faults": {
+  "window": [
+   "2026-11-12 00:00:00+00:00",
+   "2026-11-15 00:00:00+00:00"
+  ],
+  "checked_at": "2026-11-15 00:10:00+00:00",
+  "passed": false,
+  "verdict": "未通过",
+  "criteria": {
+   "elapsed": {
+    "ok": true,
+    "detail": "窗口 2026-11-12 00:00:00+00:00 → 2026-11-15 00:00:00+00:00；当前 2026-11-15 00:10:00+00:00"
+   },
+   "coverage": {
+    "ok": false,
+    "detail": "有成功运行的小时 65/72（需 ≥ 69）"
+   },
+   "max_gap": {
+    "ok": false,
+    "detail": "最大间隔 6.00 小时（需 ≤ 3）"
+   },
+   "errors": {
+    "ok": false,
+    "detail": "未处理异常 1 次：RuntimeError: simulated crash"
+   },
+   "data_unavailable": {
+    "ok": true,
+    "detail": "行情不可用 6/67 次（需 ≤ 10%，均有记录）"
+   },
+   "daily_records_realtime": {
+    "ok": false,
+    "detail": "窗口内收盘日 3 个；缺记录 无；非实时 ['2026-11-12']"
+   },
+   "hash_chains": {
+    "ok": true,
+    "detail": {
+     "daily_ledger": {
+      "ok": true,
+      "n": 3
+     },
+     "alerts": {
+      "ok": true,
+      "n": 0
+     },
+     "events": {
+      "ok": true,
+      "n": 6
+     },
+     "runs": {
+      "ok": true,
+      "n": 67
+     },
+     "observations": {
+      "ok": true,
+      "n": 3
+     },
+     "drift": {
+      "ok": true,
+      "n": 0
+     }
+    }
+   },
+   "freeze_and_replay": {
+    "ok": true,
+    "detail": "冻结校验失败 0 次；重放不一致 / 冻结违规事件 0 条"
+   },
+   "mac_unchanged": {
+    "ok": false,
+    "detail": {
+     "ok": false,
+     "problems": [
+      "只追加文件的历史内容被改写：reports_out/brando_pa/phase8_forward/events.jsonl"
+     ],
+     "n_files_baseline": 2,
+     "n_files_grown_normally": 1,
+     "checked_at_head": null
+    }
+   },
+   "no_order_api": {
+    "ok": true,
+    "detail": "源码中没有下单 / 密钥接口"
+   }
+  },
+  "n_ticks_in_window": 67,
+  "simulation": {
+   "faults_injected": [
+    "第 2 天 00:05–05:05 行情中断（6 次，跨越日线收盘）",
+    "第 31 次运行崩溃",
+    "第 41 次运行遇到锁",
+    "第 51 次运行前 Mac 账本历史被改写",
+    "第 56–60 小时电脑睡眠"
+   ],
+   "statuses": {
+    "ok": 59,
+    "data_unavailable": 6,
+    "error": 1,
+    "skipped_locked": 1
+   },
+   "note": "加速模拟：虚拟时钟与合成行情，只检验服务与验收逻辑，不是前瞻观察，不能替代 Mac 上的真实 72 小时验收"
+  }
+ }
+}

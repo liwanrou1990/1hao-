@@ -2,11 +2,12 @@
 # Phase 21 independent forward-observation service (research only; 100,000 USDT VIRTUAL research capital; NO orders, real trading disabled).
 # Runs ONLY from its own clone (default ~/brando_pa21_observer), own venv (.venv-pa21), own launchd label. Never writes into the production
 # checkout (~/1hao-), never touches com.brando-pa.forward / com.brando-pa.shadow13 / the phase 14 dashboard. macOS bash 3.2 compatible.
+# Env: BRANDO_PROD_ROOT (default ~/1hao-, read-only), BRANDO_PY3 (python >= 3.12 used to create .venv-pa21).
 # Usage: bash scripts/brando_pa21_ctl.sh {preflight|install|once|start|stop|status|health|accept72 [since]|evaluate|guard|dashboard|logs [n]|rollback}
 set -u
 cd "$(dirname "${0}")/.."; HERE="$(pwd -P)"; LABEL="com.brando-pa.phase21-observer"; PLIST="${HOME}/Library/LaunchAgents/${LABEL}.plist"
 PROD="${BRANDO_PROD_ROOT:-${HOME}/1hao-}"; VENV="${HERE}/.venv-pa21"; PY="${VENV}/bin/python"; D="${HERE}/reports_out/brando_pa/phase21_forward"
-BASE="${D}/mac_baseline.json"; STARTED="${D}/service_started_at.txt"; export PYTHONPATH="${HERE}/src"
+PY3="${BRANDO_PY3:-python3}"; BASE="${D}/mac_baseline.json"; STARTED="${D}/service_started_at.txt"; export PYTHONPATH="${HERE}/src"
 ok()   { echo "PASS  $*"; }
 bad()  { echo "FAIL  $*"; FAILS=$((FAILS+1)); }
 note() { echo "INFO  $*"; }
@@ -21,7 +22,7 @@ case "${1:-status}" in
     [ "$(uname -s)" = "Darwin" ] && ok "macOS $(sw_vers -productVersion 2>/dev/null)" || note "not macOS ($(uname -s)) - launchd steps unavailable"
     BR="$(git -C "${HERE}" rev-parse --abbrev-ref HEAD 2>/dev/null)"; case "${BR}" in claude/brando-pa-phase21-*) ok "branch ${BR} @ $(git -C "${HERE}" rev-parse --short HEAD)";; *) bad "unexpected branch ${BR}";; esac
     [ -z "$(git -C "${HERE}" status --porcelain --untracked-files=no)" ] && ok "clone clean" || bad "clone has local modifications"
-    PV="$(python3 -c 'import sys;print("%d.%d"%sys.version_info[:2])' 2>/dev/null)"; python3 -c 'import sys;sys.exit(0 if sys.version_info>=(3,10) else 1)' 2>/dev/null && ok "python3 ${PV}" || bad "python3 >= 3.10 required (found ${PV:-none})"
+    PV="$("${PY3}" -c 'import sys;print("%d.%d"%sys.version_info[:2])' 2>/dev/null)"; "${PY3}" -c 'import sys;sys.exit(0 if sys.version_info>=(3,12) else 1)' 2>/dev/null && ok "${PY3} ${PV}" || bad "Python >= 3.12 required (found ${PV:-none}); set BRANDO_PY3=/path/to/python3.12+ (e.g. Homebrew)"
     curl -sS -m 10 https://www.okx.com/api/v5/public/time >/dev/null 2>&1 && ok "OKX public API reachable" || bad "OKX public API not reachable (Coinbase is the fallback; check network)"
     curl -sS -m 10 https://api.exchange.coinbase.com/time >/dev/null 2>&1 && ok "Coinbase public API reachable" || note "Coinbase public API not reachable"
     if [ -d "${PROD}" ]; then ok "production checkout found ${PROD} @ $(git -C "${PROD}" rev-parse --short HEAD 2>/dev/null) ($(git -C "${PROD}" rev-parse --abbrev-ref HEAD 2>/dev/null))"; else note "production checkout ${PROD} not found (set BRANDO_PROD_ROOT)"; fi
@@ -34,7 +35,7 @@ case "${1:-status}" in
     echo "== preflight: ${FAILS} failure(s)"; [ "${FAILS}" -eq 0 ] ;;
   install)
     set -e; echo "== install into ${HERE} (own venv, own data dirs). Nothing is loaded into launchd."
-    [ -x "${PY}" ] || python3 -m venv "${VENV}"
+    [ -x "${PY}" ] || "${PY3}" -m venv "${VENV}"
     "${PY}" -m pip install -q --upgrade pip; "${PY}" -m pip install -q -r scripts/brando_pa21/requirements-pa21.txt
     "${PY}" -m pytest tests/test_brando_pa_phase21.py tests/test_brando_pa_phase21_launch.py -q -p no:cacheprovider
     "${PY}" -c "from brando_pa.pa21 import freeze21; v=freeze21.verify(); print('freeze', v); assert v['ok']"
