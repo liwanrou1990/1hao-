@@ -1,0 +1,8 @@
+{
+ "fetched_at_utc": "2026-11-10 05:47:08.582805+00:00",
+ "source": "api.exchange.coinbase.com /products/BTC-USD/candles granularity=86400 (UTC 日界)",
+ "unit": "USD; volume in BTC (Coinbase 单一交易所成交量)",
+ "n": 4132,
+ "start": "2015-07-20",
+ "end": "2026-11-10"
+}
