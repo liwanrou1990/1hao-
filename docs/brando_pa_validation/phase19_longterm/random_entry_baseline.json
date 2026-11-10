@@ -1,0 +1,42 @@
+{
+ "30": {
+  "random_day_win_mean_over_offsets": 0.573,
+  "range": [
+   0.53,
+   0.617
+  ],
+  "n_per_offset": 132,
+  "all_days_overlapping": 0.573,
+  "uptrend_days_overlapping": 0.598
+ },
+ "90": {
+  "random_day_win_mean_over_offsets": 0.593,
+  "range": [
+   0.535,
+   0.682
+  ],
+  "n_per_offset": 43,
+  "all_days_overlapping": 0.593,
+  "uptrend_days_overlapping": 0.7
+ },
+ "180": {
+  "random_day_win_mean_over_offsets": 0.647,
+  "range": [
+   0.571,
+   0.818
+  ],
+  "n_per_offset": 21,
+  "all_days_overlapping": 0.648,
+  "uptrend_days_overlapping": 0.706
+ },
+ "365": {
+  "random_day_win_mean_over_offsets": 0.699,
+  "range": [
+   0.6,
+   0.889
+  ],
+  "n_per_offset": 9,
+  "all_days_overlapping": 0.699,
+  "uptrend_days_overlapping": 0.687
+ }
+}
