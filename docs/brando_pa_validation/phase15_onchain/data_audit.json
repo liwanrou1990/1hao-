@@ -1,0 +1,309 @@
+{
+ "checked_at_utc": "2026-11-10 04:18:22.731606+00:00",
+ "raw_dir": "/home/user/1hao-/data_store/brando_pa/phase15_onchain/raw",
+ "fetch_meta": {
+  "fetched_at_utc": "2026-11-10 04:06:57.054166+00:00",
+  "source": "community-api.coinmetrics.io v4 (community tier, 1d)",
+  "note": "CapRealUSD 不在社区层；实现价格 = PriceUSD / CapMVRVCur 推导。所有日值视为次日 ~04:00 UTC 后可得（max_time 2026-11-09 于 2026-11-10 04:05 UTC 观察到）→ 回测使用 1 日滞后。"
+ },
+ "sources": {
+  "coinmetrics_btc_AdrActCnt": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6520,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_CapMVRVCur": {
+   "start": "2010-07-18",
+   "end": "2026-11-09",
+   "n": 5959,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_btc_FeeTotNtv": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6520,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_FlowInExNtv": {
+   "start": "2011-04-24",
+   "end": "2026-11-09",
+   "n": 5679,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_btc_FlowOutExNtv": {
+   "start": "2011-04-24",
+   "end": "2026-11-09",
+   "n": 5679,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_btc_HashRate": {
+   "start": "2009-01-09",
+   "end": "2026-11-09",
+   "n": 6514,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_IssTotNtv": {
+   "start": "2009-01-09",
+   "end": "2026-11-09",
+   "n": 6514,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_IssTotUSD": {
+   "start": "2010-07-18",
+   "end": "2026-11-09",
+   "n": 5959,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_PriceBTC": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6520,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_PriceUSD": {
+   "start": "2010-07-18",
+   "end": "2026-11-09",
+   "n": 5959,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_SplyCur": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6520,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_btc_SplyExNtv": {
+   "start": "2011-04-24",
+   "end": "2026-11-09",
+   "n": 5679,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_eth_AdrActCnt": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_CapMVRVCur": {
+   "start": "2015-08-08",
+   "end": "2026-11-09",
+   "n": 4112,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_eth_FeeTotNtv": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_FlowInExNtv": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_eth_FlowOutExNtv": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "coinmetrics_eth_IssTotNtv": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_IssTotUSD": {
+   "start": "2015-08-08",
+   "end": "2026-11-09",
+   "n": 4112,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_PriceBTC": {
+   "start": "2015-08-08",
+   "end": "2026-11-09",
+   "n": 4112,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_PriceUSD": {
+   "start": "2015-08-08",
+   "end": "2026-11-09",
+   "n": 4112,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_SplyCur": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "coinmetrics_eth_SplyExNtv": {
+   "start": "2015-07-30",
+   "end": "2026-11-09",
+   "n": 4121,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "交易所标签 / 实现市值可能被追溯修订（无历史快照可查）"
+  },
+  "blockchain_info_hash-rate": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6517,
+   "internal_gaps": 1,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "算力为区块时间戳估计，日值噪声大（用 30/60 日均）"
+  },
+  "blockchain_info_difficulty": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6517,
+   "internal_gaps": 1,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "blockchain_info_miners-revenue": {
+   "start": "2009-01-17",
+   "end": "2026-11-09",
+   "n": 6506,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "blockchain_info_market-price": {
+   "start": "2009-01-03",
+   "end": "2026-11-09",
+   "n": 6520,
+   "internal_gaps": 0,
+   "future_timestamps": 0,
+   "publication_lag_assumed_days": 1,
+   "revision_risk": "低"
+  },
+  "mempool_difficulty_adjustments": {
+   "start": "2009-01-03",
+   "end": "2026-10-29",
+   "n": 469,
+   "publication_lag_assumed_days": 0,
+   "note": "调整时刻链上精确可知"
+  },
+  "ultrasound_eth_supply": {
+   "start": "2021-08-06",
+   "end": "2026-11-10",
+   "n": 1920,
+   "internal_gaps": 3,
+   "publication_lag_assumed_days": 1,
+   "note": "2021-08-06 之前净发行 = CoinMetrics IssTotNtv（无销毁）"
+  },
+  "halvings": {
+   "dates": [
+    "2012-11-28",
+    "2016-07-09",
+    "2020-05-11",
+    "2024-04-20"
+   ],
+   "publication_lag_assumed_days": 0
+  }
+ },
+ "cross_checks": {
+  "hashrate_cm_over_bci": {
+   "median_ratio": 1.0000000000000047,
+   "p5": 0.999999995294116,
+   "p95": 1.0000000062284964,
+   "n": 3232,
+   "note": "两者同为 TH/s 的日均估计；比值接近 1 说明单位与口径一致"
+  },
+  "price_BTCUSDT_cm_vs_close": {
+   "median_abs_rel_diff": 0.0012437462649285136,
+   "p99_abs_rel_diff": 0.023696453764746318,
+   "n": 3233,
+   "note": "CoinMetrics PriceUSD 为多所加权日均价，日线收盘为单一所收盘价；差异只反映口径，不用于回测定价"
+  },
+  "price_ETHUSDT_cm_vs_close": {
+   "median_abs_rel_diff": 0.0014956812353478233,
+   "p99_abs_rel_diff": 0.02459714357486455,
+   "n": 3233,
+   "note": "CoinMetrics PriceUSD 为多所加权日均价，日线收盘为单一所收盘价；差异只反映口径，不用于回测定价"
+  }
+ },
+ "unavailable": {
+  "spot_etf_flows": "现货 ETF 持仓与资金流：Farside 页面为 Cloudflare 人机验证，自动抓取被拒（HTTP 403 / 'Just a moment'）；未接入",
+  "staking_queue": "质押与退出队列：beaconcha.in API 需要 API key（HTTP 401）；未接入",
+  "lth_sth_cost_basis": "长期 / 短期持有者链上成本（LTH/STH realized price、SOPR）：CoinMetrics 社区层无此指标，Glassnode 为付费；未接入",
+  "miner_wallet_flows": "矿工钱包流出 / 矿工持币：CoinMetrics 社区层无 FlowOutMiner / SplyMiner 指标；未接入",
+  "balance_cohort_cost": "按余额分层钱包的估计成本：无数据；也不以大钱包推断机构",
+  "institutional_disclosed_cost": "机构公开披露成本（SEC 文件等）：非自动化数据，本阶段未接入；任何‘机构成本’都不进入回测",
+  "miner_financial_reports": "矿业公司季报（现金成本、算力、售币）：发布滞后数周且非结构化；未接入"
+ },
+ "decision_lag_rule": "链上 / 矿工 / 供应日指标：第 t 日收盘决策只用 ≤ t−1 日的值（shift 1 日）；难度调整与减半日期为链上事实，不滞后；日线价格第 t 日收盘后可用"
+}
