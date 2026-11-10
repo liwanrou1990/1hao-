@@ -1,0 +1,3 @@
+"""第二十阶段：研究本金统一 100,000 USDT 与 BTC/USDT 长期资金配置（独立研究；Mac 三账户仍为 10,000 USDT，不改动）。"""
+RESEARCH_INITIAL_USDT = 100_000.0
+MAC_ACCOUNTS_INITIAL_USDT = 10_000.0

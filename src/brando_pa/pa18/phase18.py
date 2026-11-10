@@ -35,9 +35,12 @@ def load_bars() -> dict:
     return {"BTCUSDT": btc[btc["ts"] <= last].reset_index(drop=True), "ETHUSDT": eth[eth["ts"] <= last].reset_index(drop=True), "_eth_ffilled_days": [str(x.date()) for x in filled.loc[filled["ffilled"], "ts"]]}
 
 
-def run_variant(bars, name, cost, a, b, c):
+def run_variant(bars, name, cost, a, b, c, initial: float = 10000.0, hook=None):
+    """hook(bt)：可选，在 run() 之前替换账本等（第二十阶段 100,000 USDT 执行模型用）；默认行为不变。"""
     fee, slip = COSTS18[cost]
-    bt = RecoveryBacktester({k: v for k, v in bars.items() if not k.startswith("_")}, {"name": name, "assets": ["BTCUSDT", "ETHUSDT"], "mode": "trend", "risk_exit_dd": None}, fee, slip, a, b, variant=name, risk_params=c.get("trendsys", {}).get("risk", {}))
+    bt = RecoveryBacktester({k: v for k, v in bars.items() if not k.startswith("_")}, {"name": name, "assets": ["BTCUSDT", "ETHUSDT"], "mode": "trend", "risk_exit_dd": None}, fee, slip, a, b, variant=name, initial=initial, risk_params=c.get("trendsys", {}).get("risk", {}))
+    if hook is not None:
+        hook(bt)
     return bt, bt.run()
 
 

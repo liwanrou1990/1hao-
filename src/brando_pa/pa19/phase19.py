@@ -82,7 +82,9 @@ def _metrics(res, f, bars_btc, bars_all: dict | None = None) -> dict:
             "win_rate_round_trips": float((t["net_pnl"] > 0).mean()) if len(t) else None}
 
 
-def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dict | None = None, costs: list[int] | None = None, strategies: list[tuple] | None = None, write: bool = True) -> dict:
+def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dict | None = None, costs: list[int] | None = None, strategies: list[tuple] | None = None, write: bool = True, initial: float = 10000.0, hook=None) -> dict:
+    """initial / hook：第二十阶段 100,000 USDT 与执行模型（默认行为不变）。hook(bt, kind) 在每个回测 run() 之前调用。"""
+    _h = (lambda bt, kind: (hook(bt, kind) if hook else None, bt)[1])
     c = c or cfg(); out = Path(out_dir or OUT_DIR); out.mkdir(parents=True, exist_ok=True)
     d = S.load_daily(); cand, f, w = S.candidates(d); latest = str(d["ts"].iloc[-1].date()); bars_btc = d[["ts", "open", "high", "low", "close", "volume"]]
     b2bars = phase18.load_bars(); windows = windows or WINDOWS19; costs = costs or list(COSTS19); strategies = strategies or [(e, x) for e in ENTRY_SETS for x in EXITS]
@@ -91,10 +93,10 @@ def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dic
         b = b or latest
         for cost in costs:
             fee, slip = COSTS19[cost]
-            base = {"BH_BTC": HoldingBacktester({"BTCUSDT": bars_btc}, {"name": "BH_BTC", "assets": ["BTCUSDT"], "mode": "buyhold"}, fee, slip, a, b).run(),
-                    "B1_BTC_SMA200": HoldingBacktester({"BTCUSDT": bars_btc}, {"name": "B1", "assets": ["BTCUSDT"], "mode": "trend", "risk_exit_dd": None}, fee, slip, a, b, sma=200).run()}
+            base = {"BH_BTC": _h(HoldingBacktester({"BTCUSDT": bars_btc}, {"name": "BH_BTC", "assets": ["BTCUSDT"], "mode": "buyhold"}, fee, slip, a, b, initial=initial), "btc").run(),
+                    "B1_BTC_SMA200": _h(HoldingBacktester({"BTCUSDT": bars_btc}, {"name": "B1", "assets": ["BTCUSDT"], "mode": "trend", "risk_exit_dd": None}, fee, slip, a, b, initial=initial, sma=200), "btc").run()}
             if pd.Timestamp(a) >= pd.Timestamp("2017-01-01"):
-                base["B2_original"] = phase18.run_variant(b2bars, "V0_original", cost, a, b, c)[1] if cost in phase18.COSTS18 else None
+                base["B2_original"] = phase18.run_variant(b2bars, "V0_original", cost, a, b, c, initial=initial, hook=(lambda bt: _h(bt, "b2")) if hook else None)[1] if cost in phase18.COSTS18 else None
             for n_, res in base.items():
                 if res is None:
                     continue
@@ -102,7 +104,7 @@ def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dic
                 if cost == 15 and wn == "full_2014":
                     curves[n_] = res.nav[["ts", "liquidation"]].assign(ts=lambda x: x["ts"].astype(str)).to_dict("list")
             for e, x in strategies:
-                res = LongTermBacktester(f, cand, e, x, fee, slip, a, b).run(); nm = f"{e}_{x}"
+                res = _h(LongTermBacktester(f, cand, e, x, fee, slip, a, b, initial=initial), "btc").run(); nm = f"{e}_{x}"
                 R[(nm, wn, cost)] = _metrics(res, f, bars_btc) | {"kind": "phase19"}
                 if cost == 15 and wn == "full_2014":
                     curves[nm] = res.nav[["ts", "liquidation"]].assign(ts=lambda x_: x_["ts"].astype(str)).to_dict("list")
@@ -110,7 +112,7 @@ def run_phase19(c: dict | None = None, out_dir: Path | None = None, windows: dic
                         t = res.trades.copy(); t.insert(0, "strategy", nm); trades_out.append(t)
     J = judge(R) if all((n_, wn, cc) in R for n_ in ("BH_BTC", "B1_BTC_SMA200") for wn in WINDOWS19 for cc in (15, 25)) else {}
     ev = event_study(cand, f)
-    resd = {"generated_at_utc": str(pd.Timestamp.now(tz="UTC")), "category": "backtest（历史回测；全部为已看过的研究数据，非盲测）", "latest_complete_day": latest, "windows": {k: (a, b or latest) for k, (a, b) in windows.items()}, "window_labels": WINDOW_LABEL,
+    resd = {"initial_usdt": initial, "generated_at_utc": str(pd.Timestamp.now(tz="UTC")), "category": "backtest（历史回测；全部为已看过的研究数据，非盲测）", "latest_complete_day": latest, "windows": {k: (a, b or latest) for k, (a, b) in windows.items()}, "window_labels": WINDOW_LABEL,
             "costs_one_side_bps": costs, "preregistration": "docs/brando_pa_validation/phase19_longterm/preregistration.md", "candidates": cand.drop(columns=["i"]).assign(ts=lambda x: x["ts"].astype(str)).to_dict("records") if len(cand) else [],
             "weekly_state_share_since_2014": w[w["week_end"] >= "2014-01-01"]["state"].value_counts(normalize=True).to_dict(), "event_study": {k: v["stats"] for k, v in ev.items()}, "event_rows": {k: v["events"] for k, v in ev.items() if k != "ALL"},
             "results": {f"{n_}|{wn}|{cc}": m for (n_, wn, cc), m in R.items()}, "verdicts": J, "orderflow_note": S.ORDERFLOW_NOTE, "real_trading": "disabled (no implementation)"}
