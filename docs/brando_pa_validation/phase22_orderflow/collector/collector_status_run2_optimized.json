@@ -1,0 +1,58 @@
+{
+ "updated_utc": "2026-11-10 19:39:28.612354+00:00",
+ "started_utc": "2026-11-10 19:19:28.422194+00:00",
+ "streams": {
+  "okx:BTC-USDT": {
+   "last_tid": 1081221444,
+   "last_trade_utc": "2026-11-10 19:39:11.626000+00:00",
+   "trades_collected": 2459,
+   "gaps_backfilled": 6,
+   "gaps_unresolved": 0,
+   "missing_ids": 0,
+   "latency_p50_ms": 8576.883056640625,
+   "latency_p95_ms": 14754.5400390625
+  },
+  "okx:ETH-USDT": {
+   "last_tid": 892950009,
+   "last_trade_utc": "2026-11-10 19:39:10.405000+00:00",
+   "trades_collected": 2428,
+   "gaps_backfilled": 3,
+   "gaps_unresolved": 0,
+   "missing_ids": 0,
+   "latency_p50_ms": 9205.0966796875,
+   "latency_p95_ms": 15551.66943359375
+  },
+  "coinbase:BTC-USDT": {
+   "last_tid": 1118375550,
+   "last_trade_utc": "2026-11-10 19:39:14.140000+00:00",
+   "trades_collected": 7679,
+   "gaps_backfilled": 0,
+   "gaps_unresolved": 0,
+   "missing_ids": 0,
+   "latency_p50_ms": 7612.548583984375,
+   "latency_p95_ms": 14010.05078125
+  },
+  "coinbase:ETH-USDT": {
+   "last_tid": 853839816,
+   "last_trade_utc": "2026-11-10 19:39:11.509000+00:00",
+   "trades_collected": 3380,
+   "gaps_backfilled": 0,
+   "gaps_unresolved": 0,
+   "missing_ids": 0,
+   "latency_p50_ms": 6981.16796875,
+   "latency_p95_ms": 14220.68408203125
+  }
+ },
+ "resources": {
+  "elapsed_s": 1200,
+  "cpu_s": 2.0,
+  "cpu_share_one_core": 0.0017,
+  "max_rss_mb": 162.9,
+  "download_mb": 7.97,
+  "download_mb_per_day": 573.6,
+  "requests": 341,
+  "http_errors": 0
+ },
+ "auto_trading": false,
+ "real_trading": "disabled (no implementation)"
+}
