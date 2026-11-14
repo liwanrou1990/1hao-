@@ -110,3 +110,10 @@ def test_real_acceptance_requires_mac_ticks_and_accounts_guard(tmp_path):
     acc = macguard21.accounts(prod)["accounts"]; assert acc["A_BTC_SMA200"]["initial_usdt"] == 10000.0 and acc["A_BTC_SMA200"]["events_chain"]["ok"] and acc["B_modelB_state_machine"] == {"found": False}
     base = macguard21.snapshot(prod); assert macguard21.compare(base, prod)["ok"]
     (a / "state.json").write_text(json.dumps({"initial_usdt": 100000.0, "forward_start_utc": "2026-11-08 12:00", "ledgers": {}})); assert any("初始本金或前瞻起点" in x for x in macguard21.compare(base, prod)["problems"])
+
+
+def test_progress_no_false_alarm_before_first_tick(tmp_path):
+    """真实情况：服务已在验收开始前运行过；验收刚开始、窗口内还没有新运行时，不应报“运行平台”问题（修复首轮误报）。"""
+    st = _store(tmp_path / "bars"); out = tmp_path / "out"; service21.tick(now=T("2026-11-14 00:05"), store=st, out_dir=out, fetch=False, dashboard=False)
+    prod = sim72._fake_prod(tmp_path / "prod"); p = acceptance21.progress("2026-11-14 00:30", out, now=T("2026-11-14 00:31"), baseline=macguard21.snapshot(prod), prod_root=prod)
+    assert p["n_ticks"] == 0 and not any(x.startswith("local_mac") for x in p["issues"]) and p["status"] == "进行中，当前无问题", p["issues"]

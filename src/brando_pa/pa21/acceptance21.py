@@ -70,7 +70,8 @@ def progress(since, out_dir: Path | None = None, now: pd.Timestamp | None = None
     from . import FORWARD_START
     out = Path(out_dir or OUT_DIR); now = now or utcnow(); r = accept72(since, out, now=now, baseline=baseline, prod_root=prod_root)
     a = pd.Timestamp(r["window"][0]); el = (now - a).total_seconds() / 3600; rows = [x for x in _read(out / "daily_ledger.jsonl") if x.get("kind") == "daily"]; obs = _read(out / "observations.jsonl")
-    pend = {"elapsed"} | ({"coverage"} if el < 72 else set()) | ({"daily_records_realtime"} if "窗口内收盘日 0 个" in str(r["criteria"]["daily_records_realtime"]["detail"]) else set())
+    pend = {"elapsed"} | ({"coverage"} if el < 72 else set()) | ({"daily_records_realtime"} if "窗口内收盘日 0 个" in str(r["criteria"]["daily_records_realtime"]["detail"]) else set()) \
+        | ({"local_mac"} if r["n_ticks_in_window"] == 0 else set())                                   # 验收刚开始、窗口内尚无运行时不判断（修复首轮误报）
     if el < 72:
         hrs = max(int(el), 0); seen = r["criteria"]["coverage"]["detail"]
         r["criteria"]["coverage"]["detail"] = f"{seen}；已过 {hrs} 小时"
