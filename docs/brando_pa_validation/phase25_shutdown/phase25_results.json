@@ -1,0 +1,704 @@
+{
+ "calibration": {
+  "as_of": "2026-11-15",
+  "app_implied_btc_per_th_day": 4.6795995198730896e-07,
+  "ours_btc_per_th_day": 4.675396543189788e-07,
+  "diff": -0.0008981487978730884,
+  "within_10pct": true
+ },
+ "specs": {
+  "满12个月|0.05美元/度": {
+   "start": "2014-11-01",
+   "events": [
+    {
+     "touch_day": "2015-01-15",
+     "machine": "Antminer S1",
+     "shutdown_price": 173.61854444855325,
+     "touch_price": 172.0,
+     "episode_last_touch": "2015-01-15",
+     "touch_days_in_episode": 1,
+     "entry_day": "2015-01-16",
+     "entry_price": 210.21,
+     "ret_365": 0.725228982557276,
+     "mae_365": -0.051087989109528165,
+     "next_halving": "2016-07-09",
+     "ret_halving": 2.1445410733621273,
+     "days_to_breakeven": 3
+    },
+    {
+     "touch_day": "2020-03-13",
+     "machine": "Antminer S9",
+     "shutdown_price": 7495.0781399373445,
+     "touch_price": 4830.21,
+     "episode_last_touch": "2020-03-31",
+     "touch_days_in_episode": 19,
+     "entry_day": "2020-03-14",
+     "entry_price": 5609.03,
+     "ret_365": 9.888732822147126,
+     "mae_365": -0.1052246525069438,
+     "next_halving": "2020-05-11",
+     "ret_halving": 0.5561043453263577,
+     "days_to_breakeven": 6
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 20,
+    "n_matured_365": 20,
+    "win_365": 1.0,
+    "median_ret_365": 8.264378350321216
+   },
+   "base": {
+    "start": "2014-11-01",
+    "n_365": 4033,
+    "win_365": 0.7205554178031243,
+    "n_halving": 3458,
+    "win_halving": 0.8941584731058415
+   },
+   "judgement": {
+    "matured_365": 2,
+    "win_365": 2,
+    "wilson_365": [
+     0.34237195288961925,
+     1.0
+    ],
+    "matured_halving": 2,
+    "win_halving": 2,
+    "wilson_halving": [
+     0.34237195288961925,
+     1.0
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": true,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 34649.46737747202,
+    "price": 64119.34
+   }
+  },
+  "满12个月|0.03美元/度": {
+   "start": "2014-11-01",
+   "events": [],
+   "touch_days": {
+    "n_touch_days": 0,
+    "n_matured_365": 0,
+    "win_365": null,
+    "median_ret_365": null
+   },
+   "base": {
+    "start": "2014-11-01",
+    "n_365": 4033,
+    "win_365": 0.7205554178031243,
+    "n_halving": 3458,
+    "win_halving": 0.8941584731058415
+   },
+   "judgement": {
+    "matured_365": 0,
+    "win_365": 0,
+    "wilson_365": [
+     null,
+     null
+    ],
+    "matured_halving": 0,
+    "win_halving": 0,
+    "wilson_halving": [
+     null,
+     null
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": false,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 20789.68042648321,
+    "price": 64119.34
+   }
+  },
+  "满12个月|0.07美元/度": {
+   "start": "2014-11-01",
+   "events": [
+    {
+     "touch_day": "2015-01-14",
+     "machine": "Antminer S1",
+     "shutdown_price": 236.24442136519596,
+     "touch_price": 222.0,
+     "episode_last_touch": "2015-06-30",
+     "touch_days_in_episode": 142,
+     "entry_day": "2015-01-15",
+     "entry_price": 172.0,
+     "ret_365": 1.489902791162094,
+     "mae_365": -0.0014977533699451762,
+     "next_halving": "2016-07-09",
+     "ret_halving": 2.8431045292526322,
+     "days_to_breakeven": 1
+    },
+    {
+     "touch_day": "2016-07-16",
+     "machine": "Antminer S5",
+     "shutdown_price": 696.3545052177525,
+     "touch_price": 663.19,
+     "episode_last_touch": "2016-08-31",
+     "touch_days_in_episode": 47,
+     "entry_day": "2016-07-17",
+     "entry_price": 661.32,
+     "ret_365": 1.8809588496345788,
+     "mae_365": -0.19865559430164625,
+     "next_halving": "2020-05-11",
+     "ret_halving": 12.19820352638042,
+     "days_to_breakeven": 1
+    },
+    {
+     "touch_day": "2018-11-23",
+     "machine": "Antminer S9",
+     "shutdown_price": 4348.213317941306,
+     "touch_price": 4312.31,
+     "episode_last_touch": "2019-03-27",
+     "touch_days_in_episode": 76,
+     "entry_day": "2018-11-24",
+     "entry_price": 4352.98,
+     "ret_365": 0.677492388839793,
+     "mae_365": -0.25865283187468335,
+     "next_halving": "2020-05-11",
+     "ret_halving": 1.0051174037247819,
+     "days_to_breakeven": 130
+    },
+    {
+     "touch_day": "2019-10-05",
+     "machine": "Antminer S9",
+     "shutdown_price": 8187.460678468078,
+     "touch_price": 8155.48,
+     "episode_last_touch": "2020-10-04",
+     "touch_days_in_episode": 155,
+     "entry_day": "2019-10-06",
+     "entry_price": 8147.69,
+     "ret_365": 0.30607418527607844,
+     "mae_365": -0.4080560825589882,
+     "next_halving": "2020-05-11",
+     "ret_halving": 0.0712528282330207,
+     "days_to_breakeven": 2
+    },
+    {
+     "touch_day": "2022-11-10",
+     "machine": "Antminer S19",
+     "shutdown_price": 16654.11503370639,
+     "touch_price": 15856.95,
+     "episode_last_touch": "2022-11-29",
+     "touch_days_in_episode": 6,
+     "entry_day": "2022-11-11",
+     "entry_price": 17550.23,
+     "ret_365": 1.1201917436911755,
+     "mae_365": -0.10337323265772136,
+     "next_halving": "2024-04-20",
+     "ret_halving": 2.62572833095699,
+     "days_to_breakeven": 33
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 426,
+    "n_matured_365": 426,
+    "win_365": 1.0,
+    "median_ret_365": 1.5443516305977847
+   },
+   "base": {
+    "start": "2014-11-01",
+    "n_365": 4033,
+    "win_365": 0.7205554178031243,
+    "n_halving": 3458,
+    "win_halving": 0.8941584731058415
+   },
+   "judgement": {
+    "matured_365": 5,
+    "win_365": 5,
+    "wilson_365": [
+     0.5655085052479191,
+     1.0000000000000002
+    ],
+    "matured_halving": 5,
+    "win_halving": 5,
+    "wilson_halving": [
+     0.5655085052479191,
+     1.0000000000000002
+    ],
+    "c1_events_ge3": true,
+    "c2_two_thirds": true,
+    "c3_beats_base": true,
+    "verdict": "支持，但样本很少、证据有限"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 48509.254328460825,
+    "price": 64119.34
+   }
+  },
+  "满6个月|0.05美元/度": {
+   "start": "2014-05-01",
+   "events": [],
+   "touch_days": {
+    "n_touch_days": 0,
+    "n_matured_365": 0,
+    "win_365": null,
+    "median_ret_365": null
+   },
+   "base": {
+    "start": "2014-05-01",
+    "n_365": 4217,
+    "win_365": 0.6891154849419018,
+    "n_halving": 3642,
+    "win_halving": 0.8986820428336079
+   },
+   "judgement": {
+    "matured_365": 0,
+    "win_365": 0,
+    "wilson_365": [
+     null,
+     null
+    ],
+    "matured_halving": 0,
+    "win_halving": 0,
+    "wilson_halving": [
+     null,
+     null
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": false,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 34649.46737747202,
+    "price": 64119.34
+   }
+  },
+  "满6个月|0.03美元/度": {
+   "start": "2014-05-01",
+   "events": [],
+   "touch_days": {
+    "n_touch_days": 0,
+    "n_matured_365": 0,
+    "win_365": null,
+    "median_ret_365": null
+   },
+   "base": {
+    "start": "2014-05-01",
+    "n_365": 4217,
+    "win_365": 0.6891154849419018,
+    "n_halving": 3642,
+    "win_halving": 0.8986820428336079
+   },
+   "judgement": {
+    "matured_365": 0,
+    "win_365": 0,
+    "wilson_365": [
+     null,
+     null
+    ],
+    "matured_halving": 0,
+    "win_halving": 0,
+    "wilson_halving": [
+     null,
+     null
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": false,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 20789.68042648321,
+    "price": 64119.34
+   }
+  },
+  "满6个月|0.07美元/度": {
+   "start": "2014-05-01",
+   "events": [
+    {
+     "touch_day": "2018-11-23",
+     "machine": "Antminer S9",
+     "shutdown_price": 4348.213317941306,
+     "touch_price": 4312.31,
+     "episode_last_touch": "2019-03-27",
+     "touch_days_in_episode": 76,
+     "entry_day": "2018-11-24",
+     "entry_price": 4352.98,
+     "ret_365": 0.677492388839793,
+     "mae_365": -0.25865283187468335,
+     "next_halving": "2020-05-11",
+     "ret_halving": 1.0051174037247819,
+     "days_to_breakeven": 130
+    },
+    {
+     "touch_day": "2020-06-28",
+     "machine": "Antminer S17",
+     "shutdown_price": 9120.139981962262,
+     "touch_price": 9004.23,
+     "episode_last_touch": "2020-10-04",
+     "touch_days_in_episode": 15,
+     "entry_day": "2020-06-29",
+     "entry_price": 9127.47,
+     "ret_365": 2.763743382643912,
+     "mae_365": -0.007519964199121709,
+     "next_halving": "2024-04-20",
+     "ret_halving": 5.971522900191541,
+     "days_to_breakeven": 1
+    },
+    {
+     "touch_day": "2022-11-10",
+     "machine": "Antminer S19",
+     "shutdown_price": 16654.11503370639,
+     "touch_price": 15856.95,
+     "episode_last_touch": "2022-11-29",
+     "touch_days_in_episode": 6,
+     "entry_day": "2022-11-11",
+     "entry_price": 17550.23,
+     "ret_365": 1.1201917436911755,
+     "mae_365": -0.10337323265772136,
+     "next_halving": "2024-04-20",
+     "ret_halving": 2.62572833095699,
+     "days_to_breakeven": 33
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 97,
+    "n_matured_365": 97,
+    "win_365": 1.0,
+    "median_ret_365": 1.3449370121018562
+   },
+   "base": {
+    "start": "2014-05-01",
+    "n_365": 4217,
+    "win_365": 0.6891154849419018,
+    "n_halving": 3642,
+    "win_halving": 0.8986820428336079
+   },
+   "judgement": {
+    "matured_365": 3,
+    "win_365": 3,
+    "wilson_365": [
+     0.43849391955098227,
+     1.0
+    ],
+    "matured_halving": 3,
+    "win_halving": 3,
+    "wilson_halving": [
+     0.43849391955098227,
+     1.0
+    ],
+    "c1_events_ge3": true,
+    "c2_two_thirds": true,
+    "c3_beats_base": true,
+    "verdict": "支持，但样本很少、证据有限"
+   },
+   "now": {
+    "machine": "Antminer S21 XP",
+    "jt": 13.5,
+    "shutdown": 48509.254328460825,
+    "price": 64119.34
+   }
+  },
+  "满24个月|0.05美元/度": {
+   "start": "2015-11-01",
+   "events": [
+    {
+     "touch_day": "2016-01-03",
+     "machine": "Antminer S1",
+     "shutdown_price": 436.89577228158885,
+     "touch_price": 432.76,
+     "episode_last_touch": "2017-03-30",
+     "touch_days_in_episode": 324,
+     "entry_day": "2016-01-04",
+     "entry_price": 430.78,
+     "ret_365": 1.345476330283812,
+     "mae_365": -0.1568661678543979,
+     "next_halving": "2016-07-09",
+     "ret_halving": 0.5344583755779118,
+     "days_to_breakeven": 1
+    },
+    {
+     "touch_day": "2020-03-13",
+     "machine": "Antminer S9",
+     "shutdown_price": 7495.0781399373445,
+     "touch_price": 4830.21,
+     "episode_last_touch": "2020-11-03",
+     "touch_days_in_episode": 192,
+     "entry_day": "2020-03-14",
+     "entry_price": 5609.03,
+     "ret_365": 9.888732822147126,
+     "mae_365": -0.1052246525069438,
+     "next_halving": "2020-05-11",
+     "ret_halving": 0.5561043453263577,
+     "days_to_breakeven": 6
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 516,
+    "n_matured_365": 516,
+    "win_365": 1.0,
+    "median_ret_365": 3.0844528864422216
+   },
+   "base": {
+    "start": "2015-11-01",
+    "n_365": 3668,
+    "win_365": 0.6995637949836423,
+    "n_halving": 3093,
+    "win_halving": 0.8816682832201745
+   },
+   "judgement": {
+    "matured_365": 2,
+    "win_365": 2,
+    "wilson_365": [
+     0.34237195288961925,
+     1.0
+    ],
+    "matured_halving": 2,
+    "win_halving": 2,
+    "wilson_halving": [
+     0.34237195288961925,
+     1.0
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": true,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21",
+    "jt": 17.5,
+    "shutdown": 44915.976230056316,
+    "price": 64119.34
+   }
+  },
+  "满24个月|0.03美元/度": {
+   "start": "2015-11-01",
+   "events": [
+    {
+     "touch_day": "2016-02-24",
+     "machine": "Antminer S1",
+     "shutdown_price": 438.53553947529656,
+     "touch_price": 419.25,
+     "episode_last_touch": "2016-06-01",
+     "touch_days_in_episode": 99,
+     "entry_day": "2016-02-25",
+     "entry_price": 423.79,
+     "ret_365": 1.793489948658503,
+     "mae_365": -0.05950555278010572,
+     "next_halving": "2016-07-09",
+     "ret_halving": 0.5597677600496773,
+     "days_to_breakeven": 2
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 99,
+    "n_matured_365": 99,
+    "win_365": 1.0,
+    "median_ret_365": 1.8671787683893055
+   },
+   "base": {
+    "start": "2015-11-01",
+    "n_365": 3668,
+    "win_365": 0.6995637949836423,
+    "n_halving": 3093,
+    "win_halving": 0.8816682832201745
+   },
+   "judgement": {
+    "matured_365": 1,
+    "win_365": 1,
+    "wilson_365": [
+     0.20654329147389294,
+     1.0
+    ],
+    "matured_halving": 1,
+    "win_halving": 1,
+    "wilson_halving": [
+     0.20654329147389294,
+     1.0
+    ],
+    "c1_events_ge3": false,
+    "c2_two_thirds": false,
+    "c3_beats_base": true,
+    "verdict": "证据不足（已到期独立事件少于 3 次）"
+   },
+   "now": {
+    "machine": "Antminer S21",
+    "jt": 17.5,
+    "shutdown": 26949.585738033787,
+    "price": 64119.34
+   }
+  },
+  "满24个月|0.07美元/度": {
+   "start": "2015-11-01",
+   "events": [
+    {
+     "touch_day": "2015-11-01",
+     "machine": "Antminer S1",
+     "shutdown_price": 364.2951771659762,
+     "touch_price": 310.18,
+     "episode_last_touch": "2017-07-20",
+     "touch_days_in_episode": 534,
+     "entry_day": "2015-11-02",
+     "entry_price": 325.79,
+     "ret_365": 1.133036931296937,
+     "mae_365": -0.053018127739481447,
+     "next_halving": "2016-07-09",
+     "ret_halving": 1.028957239422489,
+     "days_to_breakeven": 1
+    },
+    {
+     "touch_day": "2018-05-26",
+     "machine": "Antminer S7",
+     "shutdown_price": 7577.5493301135975,
+     "touch_price": 7465.12,
+     "episode_last_touch": "2019-03-27",
+     "touch_days_in_episode": 82,
+     "entry_day": "2018-05-27",
+     "entry_price": 7334.71,
+     "ret_365": 0.1886258667286873,
+     "mae_365": -0.5600276771806738,
+     "next_halving": "2020-05-11",
+     "ret_halving": 0.18999060031901727,
+     "days_to_breakeven": 3
+    },
+    {
+     "touch_day": "2019-10-05",
+     "machine": "Antminer S9",
+     "shutdown_price": 8187.460678468078,
+     "touch_price": 8155.48,
+     "episode_last_touch": "2020-12-17",
+     "touch_days_in_episode": 400,
+     "entry_day": "2019-10-06",
+     "entry_price": 8147.69,
+     "ret_365": 0.30607418527607844,
+     "mae_365": -0.4080560825589882,
+     "next_halving": "2020-05-11",
+     "ret_halving": 0.0712528282330207,
+     "days_to_breakeven": 2
+    },
+    {
+     "touch_day": "2022-11-10",
+     "machine": "Antminer S19",
+     "shutdown_price": 16654.11503370639,
+     "touch_price": 15856.95,
+     "episode_last_touch": "2022-11-29",
+     "touch_days_in_episode": 6,
+     "entry_day": "2022-11-11",
+     "entry_price": 17550.23,
+     "ret_365": 1.1201917436911755,
+     "mae_365": -0.10337323265772136,
+     "next_halving": "2024-04-20",
+     "ret_halving": 2.62572833095699,
+     "days_to_breakeven": 33
+    },
+    {
+     "touch_day": "2024-04-30",
+     "machine": "Antminer S19",
+     "shutdown_price": 66689.51473709116,
+     "touch_price": 63832.72,
+     "episode_last_touch": "2024-06-30",
+     "touch_days_in_episode": 52,
+     "entry_day": "2024-05-01",
+     "entry_price": 60603.04,
+     "ret_365": 0.5498267754209054,
+     "mae_365": -0.11108562161971303,
+     "next_halving": "约 2028-04-15（未到期）",
+     "ret_halving": null,
+     "days_to_breakeven": 3
+    },
+    {
+     "touch_day": "2025-11-23",
+     "machine": "Antminer S19 XP",
+     "shutdown_price": 85040.82985604569,
+     "touch_price": 84677.63,
+     "episode_last_touch": "2026-06-11",
+     "touch_days_in_episode": 5,
+     "entry_day": "2025-11-24",
+     "entry_price": 86786.92,
+     "ret_365": null,
+     "mae_365_so_far": -0.3265504746006347,
+     "next_halving": "约 2028-04-15（未到期）",
+     "ret_halving": null,
+     "days_to_breakeven": 1
+    }
+   ],
+   "touch_days": {
+    "n_touch_days": 1079,
+    "n_matured_365": 1074,
+    "win_365": 1.0,
+    "median_ret_365": 2.920086689854377
+   },
+   "base": {
+    "start": "2015-11-01",
+    "n_365": 3668,
+    "win_365": 0.6995637949836423,
+    "n_halving": 3093,
+    "win_halving": 0.8816682832201745
+   },
+   "judgement": {
+    "matured_365": 5,
+    "win_365": 5,
+    "wilson_365": [
+     0.5655085052479191,
+     1.0000000000000002
+    ],
+    "matured_halving": 4,
+    "win_halving": 4,
+    "wilson_halving": [
+     0.5100999795960008,
+     1.0
+    ],
+    "c1_events_ge3": true,
+    "c2_two_thirds": true,
+    "c3_beats_base": true,
+    "verdict": "支持，但样本很少、证据有限"
+   },
+   "now": {
+    "machine": "Antminer S21",
+    "jt": 17.5,
+    "shutdown": 62882.36672207885,
+    "price": 64119.34
+   }
+  }
+ },
+ "data_last_day": "2026-11-15",
+ "now_by_efficiency": {
+  "9.5 W/T": {
+   "0.05美元/度": 24382.958524887716,
+   "0.03美元/度": 14629.775114932629,
+   "0.07美元/度": 34136.1419348428
+  },
+  "13.5 W/T": {
+   "0.05美元/度": 34649.46737747202,
+   "0.03美元/度": 20789.68042648321,
+   "0.07美元/度": 48509.254328460825
+  },
+  "17.5 W/T": {
+   "0.05美元/度": 44915.976230056316,
+   "0.03美元/度": 26949.585738033787,
+   "0.07美元/度": 62882.36672207885
+  },
+  "21.5 W/T": {
+   "0.05美元/度": 55182.485082640625,
+   "0.03美元/度": 33109.49104958437,
+   "0.07美元/度": 77255.47911569687
+  },
+  "34.5 W/T": {
+   "0.05美元/度": 88548.6388535396,
+   "0.03美元/度": 53129.18331212375,
+   "0.07美元/度": 123968.09439495545
+  }
+ },
+ "main_spec": "满12个月|0.05美元/度",
+ "verdict": "证据不足（已到期独立事件少于 3 次）",
+ "generated_at_utc": "2026-11-16 03:40:01.541906+00:00",
+ "category": "历史研究（价格历史已反复研究过，非盲测）",
+ "real_trading": "disabled (no implementation)"
+}
