@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.18, pytest-8.3.5, pluggy-1.7.0
+rootdir: /home/user/1hao-
+configfile: pyproject.toml
+collected 140 items
+
+tests/test_ingest.py ........                                            [  5%]
+tests/test_models.py ..................                                  [ 18%]
+tests/test_patterns.py ................................................. [ 53%]
+.................................                                        [ 77%]
+tests/test_seal.py .....                                                 [ 80%]
+tests/test_stats.py ......                                               [ 85%]
+tests/test_ui.py ...............                                         [ 95%]
+tests/test_zodiac.py ......                                              [100%]
+
+============================= 140 passed in 10.50s =============================

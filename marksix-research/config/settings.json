@@ -1,0 +1,22 @@
+{
+  "_说明": "研究配置。修改后会改变配置哈希并记入实验记录。",
+  "regime_49": {
+    "start_date": null,
+    "_说明": "49号码制度起始日期。null 表示尚未经官方资料核验：系统将以数据中首次出现48或49号的开奖日作为保守推断起点，并在所有页面标注“数据推断，未经官方核验”。核验后请填入 YYYY-MM-DD 并在 source 写明出处。",
+    "source": null
+  },
+  "zodiac": {
+    "switch_rule": "chinese_new_year",
+    "_说明": "生肖年切换口径：农历正月初一（含当日）。立春口径未提供日期表，不可选。"
+  },
+  "split": {"test_fraction": 0.20},
+  "dev_backtest": {"burn_in_fraction": 0.40},
+  "small_sample": {"tiny": 30, "small": 100, "min_expected": 5},
+  "simulation": {"n_sims": 1000, "seed": 20261118},
+  "models": {
+    "M1": {"window": [50, 100, 200, 500], "alpha": [1.0, 5.0, 20.0]},
+    "M2": {"kappa": [5.0, 20.0, 100.0, 500.0]},
+    "M2b": {"kappa": [100.0, 500.0, 2000.0]},
+    "M3": {"enabled": true, "C": [0.001, 0.01], "refit_every": 200}
+  }
+}

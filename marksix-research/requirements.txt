@@ -1,0 +1,8 @@
+# 直接依赖（锁定版本）。完整传递依赖见 requirements-lock.txt。支持 Python 3.10–3.13。
+numpy==2.2.6
+pandas==2.2.3
+scipy==1.15.3
+scikit-learn==1.6.1
+streamlit==1.45.1
+requests==2.34.2
+pytest==8.3.5
