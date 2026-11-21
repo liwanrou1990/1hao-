@@ -39,3 +39,4 @@ data_store/brando_pa/phase21_feed/
 .venv-pa21/
 data_store/brando_pa/phase22_orderflow/
 data_store/brando_pa/phase25_shutdown/
+data_store/brando_pa/cb_watch/
