@@ -97,7 +97,7 @@ def summarize(state: dict) -> dict:
         state["prev_net24"] = n24
     msg = {"confirm": f"Coinbase BTC 买盘确认进入：近24小时净主动买入 +{n24:,.0f} BTC（近6小时 {n6:+,.0f}）",
            "early": f"Coinbase BTC 初步买盘：近6小时净主动买入 +{n6:,.0f} BTC（近24小时 {n24:+,.0f}）",
-           "none": f"Coinbase BTC 未转为买盘：近1小时 {n1:+,.0f}，近6小时 {n6:+,.0f}，近24小时 {n24:+,.0f} BTC" + ("" if c24 else "（24小时数据未满）")}[alert]
+           "none": f"Coinbase BTC {'买盘延续（24小时已为正）' if c24 and n24 > 0 else '未转为买盘'}：近1小时 {n1:+,.0f}，近6小时 {n6:+,.0f}，近24小时 {n24:+,.0f} BTC" + ("" if c24 else "（24小时数据未满）")}[alert]
     return {"alert": alert, "message": msg, "net_1h": round(n1, 1), "net_6h": round(n6, 1), "net_24h": round(n24, 1), "complete_6h": c6, "complete_24h": c24,
             "new_trades": state.get("new_trades"), "as_of_utc": str(cur)}
 
