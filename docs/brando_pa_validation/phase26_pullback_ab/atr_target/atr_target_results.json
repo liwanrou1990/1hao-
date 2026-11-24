@@ -1,0 +1,560 @@
+{
+ "atr_mult": 3.0,
+ "windows": {
+  "主区间": [
+   "2018-07-30",
+   "2026-11-23"
+  ],
+  "样本内": [
+   "2018-07-30",
+   "2023-12-31"
+  ],
+  "2024年以后": [
+   "2024-01-01",
+   "2026-11-23"
+  ]
+ },
+ "split9": [
+  {
+   "symbol": "BTCUSDT",
+   "reclassified_date": "2020-08-17",
+   "rejected_day": "2020-08-17",
+   "entry_close": 12279.3,
+   "invalidation": 11038.518551879375,
+   "risk_pct": 0.1010465945225399,
+   "risk_atr": 2.706114097830287,
+   "atr14": 458.51039655551114,
+   "need_1_5R_at": 14140.472172180936,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 1.1086007062323593
+  },
+  {
+   "symbol": "BTCUSDT",
+   "reclassified_date": "2020-10-21",
+   "rejected_day": "2020-11-05",
+   "entry_close": 15532.3,
+   "invalidation": 12791.989338326432,
+   "risk_pct": 0.17642658599650843,
+   "risk_atr": 4.483496717703333,
+   "atr14": 611.1994352205725,
+   "need_1_5R_at": 19642.76599251035,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 0.6691205969114096
+  },
+  {
+   "symbol": "BTCUSDT",
+   "reclassified_date": "2021-04-13",
+   "rejected_day": "2021-04-13",
+   "entry_close": 63573.3,
+   "invalidation": 54796.98439608173,
+   "risk_pct": 0.13805033880447093,
+   "risk_atr": 3.1209533454888114,
+   "atr14": 2812.062415673088,
+   "need_1_5R_at": 76737.77340587741,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 0.96124474412165
+  },
+  {
+   "symbol": "BTCUSDT",
+   "reclassified_date": "2025-09-10",
+   "rejected_day": "2025-09-16",
+   "entry_close": 116797.7,
+   "invalidation": 112778.48327359684,
+   "risk_pct": 0.0344117797388404,
+   "risk_atr": 1.6503540721598715,
+   "atr14": 2435.3663218118286,
+   "need_1_5R_at": 122826.52508960474,
+   "n_resistances_above": 4,
+   "resistances_above": [
+    {
+     "low": 116811.15841954705,
+     "high": 118028.84158045295,
+     "strength": 1,
+     "R": 0.0033485179982062217
+    },
+    {
+     "low": 119219.15841954705,
+     "high": 120858.14158045295,
+     "strength": 2,
+     "R": 0.6024702284999799
+    },
+    {
+     "low": 122617.15841954705,
+     "high": 123834.84158045295,
+     "strength": 3,
+     "R": 1.4479085890834626
+    },
+    {
+     "low": 123891.15841954705,
+     "high": 125108.84158045295,
+     "strength": 3,
+     "R": 1.7648857731280057
+    }
+   ],
+   "category": "有 ≥1.5R 阻力但扣成本后净盈亏比 < 1.5",
+   "engine_reason": "净盈亏比 1.41 < 1.5 → WAIT",
+   "seen_in_prior_audit": true,
+   "if_3ATR_target_R": 1.8177917397287984
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2020-07-21",
+   "rejected_day": "2020-08-05",
+   "entry_close": 400.69,
+   "invalidation": 351.14505356379146,
+   "risk_pct": 0.12364907144228339,
+   "risk_atr": 2.1318711668444448,
+   "atr14": 23.240122201917117,
+   "need_1_5R_at": 475.0074196543128,
+   "n_resistances_above": 1,
+   "resistances_above": [
+    {
+     "low": 409.98996944952074,
+     "high": 421.6100305504793,
+     "strength": 1,
+     "R": 0.18770773042402814
+    }
+   ],
+   "category": "有阻力但不足 1.5R",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 1.407214491502572
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2020-08-13",
+   "rejected_day": "2020-08-13",
+   "entry_close": 424.52,
+   "invalidation": 356.70876780343906,
+   "risk_pct": 0.15973624846075785,
+   "risk_atr": 2.747070197518665,
+   "atr14": 24.684928786243795,
+   "need_1_5R_at": 526.2368482948414,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 1.092072566150584
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2020-11-20",
+   "rejected_day": "2020-11-20",
+   "entry_close": 509.54,
+   "invalidation": 429.7282292940893,
+   "risk_pct": 0.15663494663011873,
+   "risk_atr": 3.131459620473867,
+   "atr14": 25.487082823642865,
+   "need_1_5R_at": 629.2576560588661,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 0.9580196980301556
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2021-10-14",
+   "rejected_day": "2021-10-20",
+   "entry_close": 4161.31,
+   "invalidation": 3504.1248989167702,
+   "risk_pct": 0.15792745579714804,
+   "risk_atr": 2.947383589094806,
+   "atr14": 222.97236895624548,
+   "need_1_5R_at": 5147.087651624845,
+   "n_resistances_above": 1,
+   "resistances_above": [
+    {
+     "low": 4316.216907760939,
+     "high": 4427.703092239061,
+     "strength": 3,
+     "R": 0.2357127504954193
+    }
+   ],
+   "category": "有阻力但不足 1.5R",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 1.0178519046858618
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2021-10-20",
+   "rejected_day": "2021-10-20",
+   "entry_close": 4161.31,
+   "invalidation": 3504.1248989167702,
+   "risk_pct": 0.15792745579714804,
+   "risk_atr": 2.947383589094806,
+   "atr14": 222.97236895624548,
+   "need_1_5R_at": 5147.087651624845,
+   "n_resistances_above": 1,
+   "resistances_above": [
+    {
+     "low": 4316.216907760939,
+     "high": 4427.703092239061,
+     "strength": 3,
+     "R": 0.2357127504954193
+    }
+   ],
+   "category": "有阻力但不足 1.5R",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": false,
+   "if_3ATR_target_R": 1.0178519046858618
+  },
+  {
+   "symbol": "ETHUSDT",
+   "reclassified_date": "2024-03-11",
+   "rejected_day": "2024-03-11",
+   "entry_close": 4065.14,
+   "invalidation": 3394.1319217042173,
+   "risk_pct": 0.1650639530977488,
+   "risk_atr": 3.457442044880753,
+   "atr14": 194.0764500418186,
+   "need_1_5R_at": 5071.652117443674,
+   "n_resistances_above": 0,
+   "resistances_above": [],
+   "category": "无已确认阻力",
+   "engine_reason": "上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+   "seen_in_prior_audit": true,
+   "if_3ATR_target_R": 0.8676935031902957
+  }
+ ],
+ "results": [
+  {
+   "variant": "A",
+   "scope": "BTC",
+   "window": "主区间",
+   "net_usdt": -940.2376483816624,
+   "max_drawdown": -0.04647498659970162,
+   "n_entries": 5,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC",
+   "window": "主区间",
+   "net_usdt": -940.2376483816624,
+   "max_drawdown": -0.04647498659970162,
+   "n_entries": 5,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -940.2376483816624,
+   "n_new_vs_A": 0,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "ETH",
+   "window": "主区间",
+   "net_usdt": 1838.847285107986,
+   "max_drawdown": -0.025789019813240444,
+   "n_entries": 5,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "ETH",
+   "window": "主区间",
+   "net_usdt": -781.5944789243804,
+   "max_drawdown": -0.025789019813240444,
+   "n_entries": 7,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -781.5944789243804,
+   "n_new_vs_A": 2,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "BTC+ETH",
+   "window": "主区间",
+   "net_usdt": 882.0154963812965,
+   "max_drawdown": -0.05427065105994644,
+   "n_entries": 10,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC+ETH",
+   "window": "主区间",
+   "net_usdt": -1135.6182288361888,
+   "max_drawdown": -0.05546354306586199,
+   "n_entries": 12,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -1135.6182288361888,
+   "n_new_vs_A": 2,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "BTC",
+   "window": "样本内",
+   "net_usdt": 172.82297554252727,
+   "max_drawdown": -0.03576143161716583,
+   "n_entries": 4,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC",
+   "window": "样本内",
+   "net_usdt": 172.82297554252727,
+   "max_drawdown": -0.03576143161716583,
+   "n_entries": 4,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": 172.82297554252727,
+   "n_new_vs_A": 0,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "ETH",
+   "window": "样本内",
+   "net_usdt": 2949.9768172224576,
+   "max_drawdown": -0.025789019813240444,
+   "n_entries": 4,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "ETH",
+   "window": "样本内",
+   "net_usdt": 300.944291326392,
+   "max_drawdown": -0.025789019813240444,
+   "n_entries": 6,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": 300.944291326392,
+   "n_new_vs_A": 2,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "BTC+ETH",
+   "window": "样本内",
+   "net_usdt": 3128.6089106930594,
+   "max_drawdown": -0.05427065105994644,
+   "n_entries": 8,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC+ETH",
+   "window": "样本内",
+   "net_usdt": 1066.0434638276492,
+   "max_drawdown": -0.05427065105994644,
+   "n_entries": 10,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": 1066.0434638276492,
+   "n_new_vs_A": 2,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "BTC",
+   "window": "2024年以后",
+   "net_usdt": -1111.1403181638889,
+   "max_drawdown": -0.013384293456944585,
+   "n_entries": 1,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC",
+   "window": "2024年以后",
+   "net_usdt": -1111.1403181638889,
+   "max_drawdown": -0.013384293456944585,
+   "n_entries": 1,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -1111.1403181638889,
+   "n_new_vs_A": 0,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "ETH",
+   "window": "2024年以后",
+   "net_usdt": -1079.2907064827887,
+   "max_drawdown": -0.011214381105700055,
+   "n_entries": 1,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "ETH",
+   "window": "2024年以后",
+   "net_usdt": -1079.2907064827887,
+   "max_drawdown": -0.011214381105700055,
+   "n_entries": 1,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -1079.2907064827887,
+   "n_new_vs_A": 0,
+   "n_A_entries_lost": 0
+  },
+  {
+   "variant": "A",
+   "scope": "BTC+ETH",
+   "window": "2024年以后",
+   "net_usdt": -2178.4385904567607,
+   "max_drawdown": -0.022201176777441045,
+   "n_entries": 2,
+   "identity_ok": true
+  },
+  {
+   "variant": "C",
+   "scope": "BTC+ETH",
+   "window": "2024年以后",
+   "net_usdt": -2178.4385904567607,
+   "max_drawdown": -0.022201176777441045,
+   "n_entries": 2,
+   "identity_ok": true,
+   "net_usdt_ex_top_new_trade": -2178.4385904567607,
+   "n_new_vs_A": 0,
+   "n_A_entries_lost": 0
+  }
+ ],
+ "new_entries": [
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-03 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 439.74976499999997,
+   "exit_ts": "2020-09-04 00:00:00+00:00",
+   "net_pnl": -1385.6694994249365,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 525.8450801067604,
+   "invalidation": 395.70367300619824,
+   "signal_day": "2020-09-02",
+   "scope": "ETH",
+   "window": "主区间"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2021-11-11 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 4631.3144999999995,
+   "exit_ts": "2021-11-17 00:00:00+00:00",
+   "net_pnl": -1239.828424376838,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 5323.781255025623,
+   "invalidation": 4266.641562081198,
+   "signal_day": "2021-11-10",
+   "scope": "ETH",
+   "window": "主区间"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-03 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 439.74976499999997,
+   "exit_ts": "2020-09-04 00:00:00+00:00",
+   "net_pnl": -1391.771959653663,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 525.8450801067604,
+   "invalidation": 395.70367300619824,
+   "signal_day": "2020-09-02",
+   "scope": "BTC+ETH",
+   "window": "主区间"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2021-11-11 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 4631.3144999999995,
+   "exit_ts": "2021-11-17 00:00:00+00:00",
+   "net_pnl": -658.0110762502469,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 5323.781255025623,
+   "invalidation": 4266.641562081198,
+   "signal_day": "2021-11-10",
+   "scope": "BTC+ETH",
+   "window": "主区间"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-03 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 439.74976499999997,
+   "exit_ts": "2020-09-04 00:00:00+00:00",
+   "net_pnl": -1385.6694994249365,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 525.8450801067604,
+   "invalidation": 395.70367300619824,
+   "signal_day": "2020-09-02",
+   "scope": "ETH",
+   "window": "样本内"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2021-11-11 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 4631.3144999999995,
+   "exit_ts": "2021-11-17 00:00:00+00:00",
+   "net_pnl": -1239.828424376838,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 5323.781255025623,
+   "invalidation": 4266.641562081198,
+   "signal_day": "2021-11-10",
+   "scope": "ETH",
+   "window": "样本内"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-03 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 439.74976499999997,
+   "exit_ts": "2020-09-04 00:00:00+00:00",
+   "net_pnl": -1391.771959653663,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 525.8450801067604,
+   "invalidation": 395.70367300619824,
+   "signal_day": "2020-09-02",
+   "scope": "BTC+ETH",
+   "window": "样本内"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2021-11-11 00:00:00+00:00",
+   "strategy": "B",
+   "entry_price": 4631.3144999999995,
+   "exit_ts": "2021-11-17 00:00:00+00:00",
+   "net_pnl": -658.0110762502469,
+   "reasons": "EXIT_invalidation",
+   "t1_basis": "上方无已确认阻力：入场 + 3 ATR",
+   "target_1": 5323.781255025623,
+   "invalidation": 4266.641562081198,
+   "signal_day": "2021-11-10",
+   "scope": "BTC+ETH",
+   "window": "样本内"
+  }
+ ],
+ "A_entries_lost_in_C": [],
+ "judgement": {
+  "c1_main_net_higher": false,
+  "c2_main_dd_not_worse_2pp": true,
+  "c3_still_higher_ex_top": false,
+  "c4_new_entries_ge_5": false,
+  "n_new_entries_main_combo": 2,
+  "verdict": "证据不足：保留 A"
+ },
+ "generated_at_utc": "2026-11-24 18:10:48.820698+00:00",
+ "category": "历史诊断（全部已看过，非盲测）",
+ "real_trading": "disabled (no implementation)"
+}

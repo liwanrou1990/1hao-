@@ -80,3 +80,18 @@ def test_handoff_subset_and_only_when_above_confirmed_high(btc):
             assert st["last_high"] == pytest.approx(rb["H"]) and det.close[st["last_high_idx"] + 1:i + 1].max() > rb["H"]
             assert all(c <= i for c in det.sw[det.sw.idx == st["last_high_idx"]].confirmed_at)          # 只用当时已确认的前高
     assert n_h > 0
+
+
+def test_atr_target_only_when_no_resistance_above():
+    from brando_pa.pa11.signals import EntryRiskRewardEvaluator
+    from brando_pa.pa11.zones import Zone
+    from brando_pa.pa26 import atrtarget26 as T
+    ev = T.ATRTargetEvaluator(1.5); ev.atr_now = 10.0; base = EntryRiskRewardEvaluator(1.5); st = {"last_high": None, "prev_low": None}
+    p = ev.plan(100.0, 95.0, [], st, 0.0025, (94, 96), "x")
+    assert p["target_1"] == pytest.approx(130.0) and p["t1_basis"].startswith("上方无已确认阻力") and p["ok"] == (p["expected_net_reward_risk"] >= 1.5)
+    zs = [Zone(103.0, 104.0, 1, "resistance", 0)]                                          # 有阻力但不足 1.5R → 与 A 相同，仍拒绝
+    p2 = ev.plan(100.0, 95.0, zs, st, 0.0025, (94, 96), "x"); b2 = base.plan(100.0, 95.0, zs, st, 0.0025, (94, 96), "x")
+    assert p2["ok"] is False and b2["ok"] is False and p2["reason"] == b2["reason"]
+    zs3 = [Zone(110.0, 111.0, 2, "resistance", 0)]
+    p3 = ev.plan(100.0, 95.0, zs3, st, 0.0025, (94, 96), "x"); b3 = base.plan(100.0, 95.0, zs3, st, 0.0025, (94, 96), "x")
+    assert p3["target_1"] == b3["target_1"] == 110.0 and p3["ok"] == b3["ok"]
