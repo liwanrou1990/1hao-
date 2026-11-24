@@ -65,3 +65,18 @@ def test_judge_rules():
 
 def test_no_order_api_and_freeze_untouched():
     assert acceptance21.static_no_order_api(Path(M.__file__).parent)["ok"] and freeze21.verify()["ok"]
+
+
+def test_handoff_subset_and_only_when_above_confirmed_high(btc):
+    from brando_pa.pa11.structure import structure_state
+    from brando_pa.pa26 import handoff26 as H
+    d, det, z = btc; A = PullbackConfirmation(); B = H.PullbackWithHandoff(); n_h = 0
+    for i in range(250, len(d)):
+        zs = z.zones_at(i, det.close[i]); ra = A.check(det, z, i, zs); rb = B.check(det, z, i, zs)
+        if rb["signal"]:
+            assert ra["signal"] and rb["invalidation"] == pytest.approx(ra["invalidation"])
+        if rb.get("handoff"):
+            st = structure_state(det.sw, i); n_h += 1
+            assert st["last_high"] == pytest.approx(rb["H"]) and det.close[st["last_high_idx"] + 1:i + 1].max() > rb["H"]
+            assert all(c <= i for c in det.sw[det.sw.idx == st["last_high_idx"]].confirmed_at)          # 只用当时已确认的前高
+    assert n_h > 0

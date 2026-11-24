@@ -1,0 +1,16 @@
+symbol,date,seen,risk%,close_rule,days,intraday
+BTCUSDT,2019-05-26,False,14.9,先到 +1.5R,27,先到 +1.5R
+BTCUSDT,2020-08-17,False,10.7,先失效,17,先失效
+BTCUSDT,2020-10-21,False,13.4,先到 +1.5R,15,先到 +1.5R
+BTCUSDT,2021-04-13,False,14.0,先失效,8,先失效
+BTCUSDT,2025-07-09,True,6.3,先到 +1.5R,5,先到 +1.5R
+BTCUSDT,2025-09-10,True,6.7,先到 +1.5R,25,先到 +1.5R
+ETHUSDT,2019-06-21,False,19.1,先失效,23,先失效
+ETHUSDT,2020-07-06,False,10.6,先到 +1.5R,18,先到 +1.5R
+ETHUSDT,2020-07-21,False,7.4,先到 +1.5R,2,先到 +1.5R
+ETHUSDT,2020-08-13,False,16.2,先失效,23,先失效
+ETHUSDT,2020-10-22,False,14.3,先到 +1.5R,29,先到 +1.5R
+ETHUSDT,2020-11-20,False,15.9,先到 +1.5R,11,先到 +1.5R
+ETHUSDT,2021-10-14,False,12.8,先到 +1.5R,19,先到 +1.5R
+ETHUSDT,2021-10-20,False,16.0,先失效,78,先失效
+ETHUSDT,2024-03-11,True,23.2,先失效,33,先失效
