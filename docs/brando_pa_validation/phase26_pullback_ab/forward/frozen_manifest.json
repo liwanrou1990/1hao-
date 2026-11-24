@@ -1,0 +1,44 @@
+{
+ "files": {
+  "src/brando_pa/pa11/signals.py": "f20c26160cf9c87467c7fb9153fbacbe95df3023f70ffb093b805e8920e1ab6a",
+  "src/brando_pa/pa11/engine11.py": "46fcf7172657d2730a2d07ac27d390037876c566d9922717b270d2c8f3e42cdd",
+  "src/brando_pa/pa11/structure.py": "369d82dc6cb28bd396c92d4642f3db662d672de1e5109b931d375b84cdfe4e68",
+  "src/brando_pa/pa11/zones.py": "b847c002ba19dfd4bc5179599cadcbe9a9843dd6ea496f3f67401f4469dd0572",
+  "src/brando_pa/pa11/macro.py": "f6a8cf4a0a194dc7ee593bf4c7ca8511fc2901c1c6ff05ea64ccd0e73b13fa81",
+  "src/brando_pa/pa26/ab26.py": "0990960568c6617a5ad51c4adfa151682195bd350bc84b978d8b26bca61d0b80"
+ },
+ "spec": {
+  "rule": "A = 第十一阶段 V4 主配置（趋势回调 + 突破回踩，退出 B），B/C 已停用",
+  "config": {
+   "strategies": [
+    "A",
+    "B"
+   ],
+   "exit_mode": "B",
+   "risk_pct": 0.01,
+   "max_alloc": 0.7,
+   "dd_limit": 0.3,
+   "macro_mode": "none"
+  },
+  "fee_bps": 20.0,
+  "slip_bps": 5.0,
+  "initial_usdt": 100000.0,
+  "forward_start": "2026-11-24",
+  "data": "OKX 现货 history-candles 1Dutc（只用已收盘日）",
+  "fill": "信号日收盘决策，下一根日线开盘成交",
+  "scopes": {
+   "BTC": [
+    "BTCUSDT"
+   ],
+   "ETH": [
+    "ETHUSDT"
+   ],
+   "BTC+ETH": [
+    "BTCUSDT",
+    "ETHUSDT"
+   ]
+  }
+ },
+ "spec_sha256": "d84d2d92b4e03c913d2066e09a2553953dedd83f13f30f5e172d70fe315ef98e",
+ "frozen_at_utc": "2026-11-24 18:39:13.152709+00:00"
+}

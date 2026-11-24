@@ -95,3 +95,11 @@ def test_atr_target_only_when_no_resistance_above():
     zs3 = [Zone(110.0, 111.0, 2, "resistance", 0)]
     p3 = ev.plan(100.0, 95.0, zs3, st, 0.0025, (94, 96), "x"); b3 = base.plan(100.0, 95.0, zs3, st, 0.0025, (94, 96), "x")
     assert p3["target_1"] == b3["target_1"] == 110.0 and p3["ok"] == b3["ok"]
+
+
+def test_forward_freeze_and_waiting(tmp_path, monkeypatch):
+    from brando_pa.pa26 import forward26 as F
+    F.freeze(tmp_path); assert F.verify_freeze(tmp_path)["ok"]
+    s = F.run(now=T(F.FORWARD_START) + pd.Timedelta(hours=12), fwd_dir=tmp_path); assert s["status"].startswith("等待首根新日线")      # 冻结后第一根日线尚未收盘：不取数、不记录
+    monkeypatch.setattr(F, "FORWARD_START", "2026-01-01"); assert not F.verify_freeze(tmp_path)["ok"]                          # 改任何冻结参数 → 校验失败
+    s2 = F.run(now=T("2026-12-01"), fwd_dir=tmp_path); assert s2["status"].startswith("冻结规则被改动") and (tmp_path / "events.jsonl").exists()

@@ -1,0 +1,1446 @@
+{
+ "rejections": [
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-05-19",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 6.558533936089733,
+   "rr_net_3atr": 0.438840823739151,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-05-20",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.309727612590599,
+   "rr_net_3atr": 1.2209954538873904,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-22",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.041041534137659,
+   "rr_net_3atr": 0.6973827063611446,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-23",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.220464540909464,
+   "rr_net_3atr": 0.6696925005868786,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-24",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.508061735121087,
+   "rr_net_3atr": 0.6274106920653724,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-25",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.759905926306921,
+   "rr_net_3atr": 0.4927491555640585,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-26",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 6.706702982142252,
+   "rr_net_3atr": 0.426420790585702,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-27",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.371651609318578,
+   "rr_net_3atr": 0.8522307024308655,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2019-06-28",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.436760313508327,
+   "rr_net_3atr": 0.6498831413380812,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-07-30",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 7.340469781094869,
+   "rr_net_3atr": 0.38729801083776794,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-07-31",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 7.88952062647121,
+   "rr_net_3atr": 0.3606323921111073,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-01",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 4.078454155064766,
+   "rr_net_3atr": 0.6719222397151623,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-08-01",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 9.119855868552383,
+   "rr_net_3atr": 0.3132099493285253,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-05",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.947765130550019,
+   "rr_net_3atr": 0.93865277978357,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-08-05",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.1318711668444448,
+   "rr_net_3atr": 1.313657092894276,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-06",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.0584842809050397,
+   "rr_net_3atr": 0.9041837991836228,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-07",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.662350832503897,
+   "rr_net_3atr": 1.0355123853665673,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-10",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.858941592418211,
+   "rr_net_3atr": 0.9620838598878488,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-12",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.57230663437514,
+   "rr_net_3atr": 1.071655692123606,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-08-13",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 2.747070197518665,
+   "rr_net_3atr": 1.0285749271762161,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-17",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 2.806539630957053,
+   "rr_net_3atr": 0.9747153240369192,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-18",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.9575362780956955,
+   "rr_net_3atr": 1.3767926496912157,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-19",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.6421874741912492,
+   "rr_net_3atr": 1.6245185226803547,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-08-19",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.9323145345071906,
+   "rr_net_3atr": 1.4479276936367917,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-08-21",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.2043506508216548,
+   "rr_net_3atr": 2.1494344447257814,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-09-01",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.01660815418362,
+   "rr_net_3atr": 0.9355945704077432,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-09-02",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.5258663275858912,
+   "rr_net_3atr": 1.8246031586828306,
+   "pass3": true
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-10-21",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 4.367777534951599,
+   "rr_net_3atr": 0.6252859179772595,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-05",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.483496717703333,
+   "rr_net_3atr": 0.6231207069905483,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-07",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.0401584622835176,
+   "rr_net_3atr": 0.9174120416873518,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-08",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.899911838548411,
+   "rr_net_3atr": 0.7199897288716177,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-09",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.58233957969798,
+   "rr_net_3atr": 0.7840779233331092,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-10",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.5300727872979105,
+   "rr_net_3atr": 0.7941055800698402,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-12",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.900056070324089,
+   "rr_net_3atr": 0.5755192892569819,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-13",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.918142463729913,
+   "rr_net_3atr": 0.5730895651062378,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-14",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.592243525047986,
+   "rr_net_3atr": 0.6131389251257688,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-15",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.520297163427748,
+   "rr_net_3atr": 0.6217149438776145,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-16",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.8055804476520265,
+   "rr_net_3atr": 1.4976563227903679,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-18",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.912174192972382,
+   "rr_net_3atr": 0.9553630558620122,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-20",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 3.131459620473867,
+   "rr_net_3atr": 0.8974505037175284,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-21",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.023020831701784,
+   "rr_net_3atr": 0.6976223550329224,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-21",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 4.434227075196939,
+   "rr_net_3atr": 0.6392274058593416,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-22",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.719278522145058,
+   "rr_net_3atr": 0.7545597202751281,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-22",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 4.312384657787132,
+   "rr_net_3atr": 0.6602087583314608,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-23",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.6740554633598865,
+   "rr_net_3atr": 0.7634498207255038,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-23",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 5.511277784136487,
+   "rr_net_3atr": 0.5186778827591404,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-24",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.4452339271297445,
+   "rr_net_3atr": 0.6344535428644462,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-24",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.219960109085164,
+   "rr_net_3atr": 0.6743143746595865,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-25",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.8558304674922135,
+   "rr_net_3atr": 0.7307305727706748,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-25",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.002352377725955,
+   "rr_net_3atr": 0.9452420911332642,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-26",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.9113029709425877,
+   "rr_net_3atr": 1.461234051462105,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-26",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.0002653284590712,
+   "rr_net_3atr": 1.4178708808957963,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-27",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.9128034447524265,
+   "rr_net_3atr": 1.4600787746269284,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-27",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.9733006909285677,
+   "rr_net_3atr": 1.4365123012079675,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-28",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.466498871453224,
+   "rr_net_3atr": 1.1551275114952004,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-29",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.6775873115737445,
+   "rr_net_3atr": 1.0634563549052027,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-11-30",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.629939743923243,
+   "rr_net_3atr": 0.7805958770398465,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-11-30",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.6755415413207406,
+   "rr_net_3atr": 0.7783937415559424,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-12-01",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.62149135964526,
+   "rr_net_3atr": 1.077391453099914,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-12-01",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.717633321606895,
+   "rr_net_3atr": 1.0513445863692545,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-12-02",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.0322837019520845,
+   "rr_net_3atr": 0.9338550063847525,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-12-02",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.0546991148864224,
+   "rr_net_3atr": 0.9361308939320923,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-12-04",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.603946167324284,
+   "rr_net_3atr": 1.0823470870517282,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-12-04",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.30071082368703,
+   "rr_net_3atr": 1.238129099879941,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-12-06",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.453767129896935,
+   "rr_net_3atr": 0.8180109831024891,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2020-12-07",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.3737561733212997,
+   "rr_net_3atr": 0.8355816605020694,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2020-12-09",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.543233026951348,
+   "rr_net_3atr": 1.1197356993212475,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-03-17",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.2996059724796045,
+   "rr_net_3atr": 1.2337303257661196,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-03",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.189232629657485,
+   "rr_net_3atr": 1.27717473434983,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-12",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.8492465762908432,
+   "rr_net_3atr": 1.475212691564357,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-13",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 3.1209533454888114,
+   "rr_net_3atr": 0.892693884315495,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-14",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.8552950298816917,
+   "rr_net_3atr": 0.9746743044748171,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-15",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.994335442343387,
+   "rr_net_3atr": 0.9288612936238054,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-16",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.307107596768287,
+   "rr_net_3atr": 1.1974333343343493,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-04-17",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.8259043299277466,
+   "rr_net_3atr": 1.4990571342294503,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-05-08",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.033413128714314,
+   "rr_net_3atr": 1.3727127000563077,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-14",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.175159308867479,
+   "rr_net_3atr": 1.2881072619533638,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-15",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.565758839917974,
+   "rr_net_3atr": 1.09599240418176,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-20",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.9534568780870396,
+   "rr_net_3atr": 0.9540215474651745,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-21",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.8609340942882486,
+   "rr_net_3atr": 0.9796908380222791,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-21",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.379007285108494,
+   "rr_net_3atr": 1.1813110312205763,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-22",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.3508458894351043,
+   "rr_net_3atr": 1.1869597054241399,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-22",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.010433773157192,
+   "rr_net_3atr": 1.3921902981317185,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-24",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.4989913778656057,
+   "rr_net_3atr": 1.1149576929606309,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-26",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.295894889649336,
+   "rr_net_3atr": 1.2113475809447356,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-27",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.587808773038568,
+   "rr_net_3atr": 1.0830203584849625,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-27",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.759167552944516,
+   "rr_net_3atr": 1.586370594736836,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-10-28",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.224257485080385,
+   "rr_net_3atr": 1.2565971331275514,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-28",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.1376260250563663,
+   "rr_net_3atr": 0.9049412855455568,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-29",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.5042019226490777,
+   "rr_net_3atr": 1.1230076602143506,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-10-31",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.881049262815198,
+   "rr_net_3atr": 1.4797590999105528,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2021-11-01",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.8537463947777773,
+   "rr_net_3atr": 1.4875577041817833,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-01",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.0141807556335474,
+   "rr_net_3atr": 1.3851321611494374,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-02",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.0636546308377013,
+   "rr_net_3atr": 0.9216783990768197,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-03",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.14733577157365,
+   "rr_net_3atr": 0.89714725382013,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-08",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.2209473507318975,
+   "rr_net_3atr": 0.8693444094776133,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-09",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.1230170630189242,
+   "rr_net_3atr": 1.2955899994729263,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-10",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.564629595132523,
+   "rr_net_3atr": 1.7422315573929803,
+   "pass3": true
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2021-11-12",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 1.70542748860612,
+   "rr_net_3atr": 1.6071295494423878,
+   "pass3": true
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-15",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.8957697122092503,
+   "rr_net_3atr": 0.937304561665449,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-16",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.638286165550727,
+   "rr_net_3atr": 1.026664705642042,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-18",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.3685841942262664,
+   "rr_net_3atr": 1.1358269223797637,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-19",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.953115876850365,
+   "rr_net_3atr": 0.9215164801436999,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-20",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.526815689838644,
+   "rr_net_3atr": 0.7787897984040956,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-21",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.00101067359873,
+   "rr_net_3atr": 0.912942343555532,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-22",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.9949056311384057,
+   "rr_net_3atr": 0.91581618719479,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-23",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.5841874967546357,
+   "rr_net_3atr": 1.054352384503529,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-25",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.26957301878209,
+   "rr_net_3atr": 0.6484049512196721,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-26",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 4.7059234711246285,
+   "rr_net_3atr": 0.5905391990773465,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-27",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.259347919780863,
+   "rr_net_3atr": 0.5294214513866344,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-28",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.801245287384656,
+   "rr_net_3atr": 0.48378190297069235,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-02-29",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.23156545378939,
+   "rr_net_3atr": 0.5374648137474581,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-01",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.9801888876419,
+   "rr_net_3atr": 0.4703072976045608,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-04",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 7.306121297405583,
+   "rr_net_3atr": 0.385504107107014,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-05",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 5.4577133362379,
+   "rr_net_3atr": 0.5210764908480362,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-06",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 6.428831940457069,
+   "rr_net_3atr": 0.44402707827548726,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-08",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 3.9605152507086254,
+   "rr_net_3atr": 0.7132190389801172,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-11",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 4.815520442119981,
+   "rr_net_3atr": 0.5884394368567536,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2024-03-12",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.9573293928652964,
+   "rr_net_3atr": 0.9485615398333886,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-04",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.3330943123521948,
+   "rr_net_3atr": 1.1517520593420512,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-05",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.6009329092153675,
+   "rr_net_3atr": 1.6794452994449867,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-06",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.221954370907068,
+   "rr_net_3atr": 1.2330337089810313,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-09",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.661695539545523,
+   "rr_net_3atr": 1.6233871281442591,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-10",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.5047049029153614,
+   "rr_net_3atr": 1.781534951332215,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-11",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.511429069546752,
+   "rr_net_3atr": 1.0974842193996828,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-12",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.6551610977635949,
+   "rr_net_3atr": 1.6267137588084475,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-13",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.033586001701083,
+   "rr_net_3atr": 1.3352270823992056,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-16",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.596283456365342,
+   "rr_net_3atr": 1.0520013375061166,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-17",
+   "strategy": "B",
+   "no_res": true,
+   "risk_atr": 2.649268742947539,
+   "rr_net_3atr": 1.0301934754593944,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-18",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.7438314136351325,
+   "rr_net_3atr": 1.5445591269114105,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2024-12-19",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 1.0411717843931507,
+   "rr_net_3atr": 2.5059590719982374,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-07-09",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 2.693197987492867,
+   "rr_net_3atr": 0.9533764514552565,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-07-10",
+   "strategy": "A",
+   "no_res": true,
+   "risk_atr": 4.098430447243507,
+   "rr_net_3atr": 0.6496702234610364,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-07-22",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 1.6560988589709864,
+   "rr_net_3atr": 1.5092750146907306,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-09-10",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 2.664986379809875,
+   "rr_net_3atr": 0.9737745113908561,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-09-11",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 3.267798697015629,
+   "rr_net_3atr": 0.8013133896279404,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-09-12",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 3.5402007550926875,
+   "rr_net_3atr": 0.7405247758527927,
+   "pass3": false
+  },
+  {
+   "symbol": "BTCUSDT",
+   "date": "2025-09-16",
+   "strategy": "A",
+   "no_res": false,
+   "risk_atr": 4.170436902854447,
+   "rr_net_3atr": 0.625863939217421,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2025-10-06",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 3.4432797262227153,
+   "rr_net_3atr": 0.8014952450933458,
+   "pass3": false
+  },
+  {
+   "symbol": "ETHUSDT",
+   "date": "2025-10-08",
+   "strategy": "B",
+   "no_res": false,
+   "risk_atr": 2.4537788538363365,
+   "rr_net_3atr": 1.116291079820991,
+   "pass3": false
+  }
+ ],
+ "reconcile": [
+  {
+   "symbol": "BTCUSDT",
+   "entry_ts": "2019-05-22 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "7908.5523",
+   "exit_ts_A": "2019-06-22 00:00:00+00:00",
+   "net_pnl_A": "1165.6814147217465",
+   "reasons_A": "REDUCE_target_1_half + EXIT_target_2",
+   "strategy_C": "B",
+   "entry_price_C": "7908.5523",
+   "exit_ts_C": "2019-06-22 00:00:00+00:00",
+   "net_pnl_C": "1165.6814147217465",
+   "reasons_C": "REDUCE_target_1_half + EXIT_target_2",
+   "diff": "0.0"
+  },
+  {
+   "symbol": "BTCUSDT",
+   "entry_ts": "2019-07-02 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "10630.01235",
+   "exit_ts_A": "2019-07-15 00:00:00+00:00",
+   "net_pnl_A": "-730.4226681266891",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "10630.01235",
+   "exit_ts_C": "2019-07-15 00:00:00+00:00",
+   "net_pnl_C": "-730.4226681266891",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "0.0"
+  },
+  {
+   "symbol": "BTCUSDT",
+   "entry_ts": "2021-11-06 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "60975.2724",
+   "exit_ts_A": "2021-11-17 00:00:00+00:00",
+   "net_pnl_A": "849.3290634896896",
+   "reasons_A": "REDUCE_target_1_half + EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "60975.2724",
+   "exit_ts_C": "2021-11-17 00:00:00+00:00",
+   "net_pnl_C": "837.7032425151586",
+   "reasons_C": "REDUCE_target_1_half + EXIT_invalidation",
+   "diff": "-11.625820974530939"
+  },
+  {
+   "symbol": "BTCUSDT",
+   "entry_ts": "2023-03-21 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "27730.358249999997",
+   "exit_ts_A": "2023-06-06 00:00:00+00:00",
+   "net_pnl_A": "-1124.0865692966745",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "27730.358249999997",
+   "exit_ts_C": "2023-06-06 00:00:00+00:00",
+   "net_pnl_C": "-1101.6049112814433",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "22.481658015231233"
+  },
+  {
+   "symbol": "BTCUSDT",
+   "entry_ts": "2024-12-21 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "97858.00455",
+   "exit_ts_A": "2024-12-31 00:00:00+00:00",
+   "net_pnl_A": "-1133.535922613669",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "97858.00455",
+   "exit_ts_C": "2024-12-31 00:00:00+00:00",
+   "net_pnl_C": "-1110.8652781488697",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "22.670644464799352"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2019-05-24 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "244.832355",
+   "exit_ts_A": "2019-10-24 00:00:00+00:00",
+   "net_pnl_A": "-1041.2936155933692",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "244.832355",
+   "exit_ts_C": "2019-10-24 00:00:00+00:00",
+   "net_pnl_C": "-1041.2936155933692",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "0.0"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-07-07 00:00:00+00:00",
+   "strategy_A": "A",
+   "entry_price_A": "241.85086499999997",
+   "exit_ts_A": "2020-07-26 00:00:00+00:00",
+   "net_pnl_A": "2282.4994966090862",
+   "reasons_A": "REDUCE_target_1_half + EXIT_target_2",
+   "strategy_C": "A",
+   "entry_price_C": "241.85086499999997",
+   "exit_ts_C": "2020-07-26 00:00:00+00:00",
+   "net_pnl_C": "2282.4994966090862",
+   "reasons_C": "REDUCE_target_1_half + EXIT_target_2",
+   "diff": "0.0"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-03 00:00:00+00:00",
+   "strategy_A": NaN,
+   "entry_price_A": NaN,
+   "exit_ts_A": NaN,
+   "net_pnl_A": NaN,
+   "reasons_A": NaN,
+   "strategy_C": "B",
+   "entry_price_C": "439.74976499999997",
+   "exit_ts_C": "2020-09-04 00:00:00+00:00",
+   "net_pnl_C": "-1391.771959653663",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "-1391.771959653663"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-09-18 00:00:00+00:00",
+   "strategy_A": "A",
+   "entry_price_A": "389.55468",
+   "exit_ts_A": "2020-09-24 00:00:00+00:00",
+   "net_pnl_A": "-712.6737403196885",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "A",
+   "entry_price_C": "389.55468",
+   "exit_ts_C": "2020-09-24 00:00:00+00:00",
+   "net_pnl_C": "-702.9184903531285",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "9.755249966559973"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2020-10-22 00:00:00+00:00",
+   "strategy_A": "A",
+   "entry_price_A": "391.05543",
+   "exit_ts_A": "2020-11-19 00:00:00+00:00",
+   "net_pnl_A": "2439.5755292089425",
+   "reasons_A": "REDUCE_target_1_half + EXIT_target_2",
+   "strategy_C": "A",
+   "entry_price_C": "391.05543",
+   "exit_ts_C": "2020-11-19 00:00:00+00:00",
+   "net_pnl_C": "2406.1820312402074",
+   "reasons_C": "REDUCE_target_1_half + EXIT_target_2",
+   "diff": "-33.39349796873512"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2021-11-11 00:00:00+00:00",
+   "strategy_A": NaN,
+   "entry_price_A": NaN,
+   "exit_ts_A": NaN,
+   "net_pnl_A": NaN,
+   "reasons_A": NaN,
+   "strategy_C": "B",
+   "entry_price_C": "4631.3144999999995",
+   "exit_ts_C": "2021-11-17 00:00:00+00:00",
+   "net_pnl_C": "-658.0110762502469",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "-658.0110762502469"
+  },
+  {
+   "symbol": "ETHUSDT",
+   "entry_ts": "2024-07-20 00:00:00+00:00",
+   "strategy_A": "B",
+   "entry_price_A": "3505.9520999999995",
+   "exit_ts_A": "2024-07-26 00:00:00+00:00",
+   "net_pnl_A": "-1113.0574916980952",
+   "reasons_A": "EXIT_invalidation",
+   "strategy_C": "B",
+   "entry_price_C": "3505.9520999999995",
+   "exit_ts_C": "2024-07-26 00:00:00+00:00",
+   "net_pnl_C": "-1090.7964145149515",
+   "reasons_C": "EXIT_invalidation",
+   "diff": "22.261077183143698"
+  }
+ ]
+}
