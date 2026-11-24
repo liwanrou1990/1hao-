@@ -1,0 +1,522 @@
+{
+ "data": {
+  "source": "OKX 现货 history-candles 1Dutc（已收盘）",
+  "range": [
+   "2018-01-11",
+   "2026-11-23"
+  ],
+  "manifest": {
+   "BTCUSDT": {
+    "rows": 3239,
+    "first": "2018-01-11 00:00:00+00:00",
+    "last": "2026-11-23 00:00:00+00:00",
+    "sha256": "e24b6e9cfe995503473d4b6fc8068a826f48c2cbd177376dc49b2d39789c042d"
+   },
+   "ETHUSDT": {
+    "rows": 3239,
+    "first": "2018-01-11 00:00:00+00:00",
+    "last": "2026-11-23 00:00:00+00:00",
+    "sha256": "e0fac4f9f94a0cb71cb2f763d2021b41cfa97c28c0ed532771107732915d19f4"
+   }
+  },
+  "cross_check_vs_old_cache": {
+   "BTCUSDT": {
+    "overlap_days": 3223,
+    "median_abs_diff": 9.072587907321683e-05,
+    "p99_abs_diff": 0.003535154410537411,
+    "max_abs_diff": 0.0625615042099068,
+    "max_day": "2018-02-08"
+   },
+   "ETHUSDT": {
+    "overlap_days": 3223,
+    "median_abs_diff": 0.00010470046940702638,
+    "p99_abs_diff": 0.0035212875075868425,
+    "max_abs_diff": 0.041053655041834114,
+    "max_day": "2018-02-08"
+   }
+  }
+ },
+ "windows": {
+  "样本内": [
+   "2018-07-30",
+   "2023-12-31"
+  ],
+  "样本外": [
+   "2024-01-01",
+   "2026-11-23"
+  ]
+ },
+ "cost_bps_one_side": 25.0,
+ "initial_usdt": 100000.0,
+ "config": {
+  "strategies": [
+   "A",
+   "B"
+  ],
+  "exit_mode": "B",
+  "risk_pct": 0.01,
+  "max_alloc": 0.7,
+  "dd_limit": 0.3,
+  "macro_mode": "none"
+ },
+ "episodes": {
+  "样本内": {
+   "n_A": 17,
+   "n_B": 19,
+   "n_common": 17,
+   "n_B_only": 2,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 17,
+    "values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "fail10_A": [
+    0.17647058823529413,
+    17
+   ],
+   "fail10_B": [
+    0.2631578947368421,
+    19
+   ],
+   "fail10_B_only": [
+    1.0,
+    2
+   ],
+   "fail10_common_B": [
+    0.17647058823529413,
+    17
+   ]
+  },
+  "样本外": {
+   "n_A": 4,
+   "n_B": 4,
+   "n_common": 4,
+   "n_B_only": 0,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 4,
+    "values": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "fail10_A": [
+    0.25,
+    4
+   ],
+   "fail10_B": [
+    0.25,
+    4
+   ],
+   "fail10_B_only": [
+    null,
+    0
+   ],
+   "fail10_common_B": [
+    0.25,
+    4
+   ]
+  }
+ },
+ "episodes_by_symbol": {
+  "BTCUSDT|样本内": {
+   "n_A": 7,
+   "n_B": 8,
+   "n_common": 7,
+   "n_B_only": 1,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 7,
+    "values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "fail10_A": [
+    0.2857142857142857,
+    7
+   ],
+   "fail10_B": [
+    0.375,
+    8
+   ],
+   "fail10_B_only": [
+    1.0,
+    1
+   ],
+   "fail10_common_B": [
+    0.2857142857142857,
+    7
+   ]
+  },
+  "BTCUSDT|样本外": {
+   "n_A": 3,
+   "n_B": 3,
+   "n_common": 3,
+   "n_B_only": 0,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 3,
+    "values": [
+     0,
+     0,
+     0
+    ]
+   },
+   "fail10_A": [
+    0.3333333333333333,
+    3
+   ],
+   "fail10_B": [
+    0.3333333333333333,
+    3
+   ],
+   "fail10_B_only": [
+    null,
+    0
+   ],
+   "fail10_common_B": [
+    0.3333333333333333,
+    3
+   ]
+  },
+  "ETHUSDT|样本内": {
+   "n_A": 10,
+   "n_B": 11,
+   "n_common": 10,
+   "n_B_only": 1,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 10,
+    "values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "fail10_A": [
+    0.1,
+    10
+   ],
+   "fail10_B": [
+    0.18181818181818182,
+    11
+   ],
+   "fail10_B_only": [
+    1.0,
+    1
+   ],
+   "fail10_common_B": [
+    0.1,
+    10
+   ]
+  },
+  "ETHUSDT|样本外": {
+   "n_A": 1,
+   "n_B": 1,
+   "n_common": 1,
+   "n_B_only": 0,
+   "n_A_only": 0,
+   "lead_days": {
+    "mean": 0.0,
+    "median": 0.0,
+    "max": 0.0,
+    "n_earlier": 0,
+    "n_same_day": 1,
+    "values": [
+     0
+    ]
+   },
+   "fail10_A": [
+    0.0,
+    1
+   ],
+   "fail10_B": [
+    0.0,
+    1
+   ],
+   "fail10_B_only": [
+    null,
+    0
+   ],
+   "fail10_common_B": [
+    0.0,
+    1
+   ]
+  }
+ },
+ "results": [
+  {
+   "variant": "A",
+   "scope": "BTC",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 100172.82297554253,
+   "net_usdt": 172.82297554252727,
+   "max_drawdown": -0.03576143161716583,
+   "n_buys": 4,
+   "n_round_trips": 4,
+   "win_rate": 0.25,
+   "fees_usdt": 240.58126139918542,
+   "open_positions_at_end": 0,
+   "avg_exposure": 8.035186609701998e-08,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "A",
+   "scope": "ETH",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 102949.97681722246,
+   "net_usdt": 2949.9768172224576,
+   "max_drawdown": -0.025789019813240444,
+   "n_buys": 4,
+   "n_round_trips": 4,
+   "win_rate": 0.5,
+   "fees_usdt": 116.24489218110794,
+   "open_positions_at_end": 0,
+   "avg_exposure": 4.691618270767545e-08,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "A",
+   "scope": "BTC+ETH",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 103128.60891069306,
+   "net_usdt": 3128.6089106930594,
+   "max_drawdown": -0.05427065105994644,
+   "n_buys": 8,
+   "n_round_trips": 8,
+   "win_rate": 0.375,
+   "fees_usdt": 362.46560316219734,
+   "open_positions_at_end": 0,
+   "avg_exposure": 1.2557220047426022e-07,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "B",
+   "scope": "BTC",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 100172.82297554253,
+   "net_usdt": 172.82297554252727,
+   "max_drawdown": -0.03576143161716583,
+   "n_buys": 4,
+   "n_round_trips": 4,
+   "win_rate": 0.25,
+   "fees_usdt": 240.58126139918542,
+   "open_positions_at_end": 0,
+   "avg_exposure": 8.035186609701998e-08,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "B",
+   "scope": "ETH",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 101855.90974277261,
+   "net_usdt": 1855.9097427726083,
+   "max_drawdown": -0.025789019813240444,
+   "n_buys": 5,
+   "n_round_trips": 5,
+   "win_rate": 0.4,
+   "fees_usdt": 162.47442331682683,
+   "open_positions_at_end": 0,
+   "avg_exposure": 5.2581715769244657e-08,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "B",
+   "scope": "BTC+ETH",
+   "start": "2018-07-30",
+   "end": "2023-12-31",
+   "final_liquidation_usdt": 102579.24919400633,
+   "net_usdt": 2579.2491940063337,
+   "max_drawdown": -0.05427065105994644,
+   "n_buys": 9,
+   "n_round_trips": 9,
+   "win_rate": 0.3333333333333333,
+   "fees_usdt": 385.67866086256686,
+   "open_positions_at_end": 0,
+   "avg_exposure": 1.2842868854644388e-07,
+   "identity_ok": true,
+   "window": "样本内"
+  },
+  {
+   "variant": "A",
+   "scope": "BTC",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 98888.85968183611,
+   "net_usdt": -1111.1403181638889,
+   "max_drawdown": -0.013384293456944585,
+   "n_buys": 1,
+   "n_round_trips": 1,
+   "win_rate": 0.0,
+   "fees_usdt": 77.1666242414974,
+   "open_positions_at_end": 0,
+   "avg_exposure": 1.8537676969534028e-08,
+   "identity_ok": true,
+   "window": "样本外"
+  },
+  {
+   "variant": "A",
+   "scope": "ETH",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 98920.70929351721,
+   "net_usdt": -1079.2907064827887,
+   "max_drawdown": -0.011214381105700055,
+   "n_buys": 1,
+   "n_round_trips": 1,
+   "win_rate": 0.0,
+   "fees_usdt": 41.68263058490755,
+   "open_positions_at_end": 0,
+   "avg_exposure": 6.112733849047747e-09,
+   "identity_ok": true,
+   "window": "样本外"
+  },
+  {
+   "variant": "A",
+   "scope": "BTC+ETH",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 97821.56140954324,
+   "net_usdt": -2178.4385904567607,
+   "max_drawdown": -0.022201176777441045,
+   "n_buys": 2,
+   "n_round_trips": 2,
+   "win_rate": 0.0,
+   "fees_usdt": 118.01640262245996,
+   "open_positions_at_end": 0,
+   "avg_exposure": 2.485778237320334e-08,
+   "identity_ok": true,
+   "window": "样本外"
+  },
+  {
+   "variant": "B",
+   "scope": "BTC",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 98888.85968183611,
+   "net_usdt": -1111.1403181638889,
+   "max_drawdown": -0.013384293456944585,
+   "n_buys": 1,
+   "n_round_trips": 1,
+   "win_rate": 0.0,
+   "fees_usdt": 77.1666242414974,
+   "open_positions_at_end": 0,
+   "avg_exposure": 1.8537676969534028e-08,
+   "identity_ok": true,
+   "window": "样本外"
+  },
+  {
+   "variant": "B",
+   "scope": "ETH",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 98920.70929351721,
+   "net_usdt": -1079.2907064827887,
+   "max_drawdown": -0.011214381105700055,
+   "n_buys": 1,
+   "n_round_trips": 1,
+   "win_rate": 0.0,
+   "fees_usdt": 41.68263058490755,
+   "open_positions_at_end": 0,
+   "avg_exposure": 6.112733849047747e-09,
+   "identity_ok": true,
+   "window": "样本外"
+  },
+  {
+   "variant": "B",
+   "scope": "BTC+ETH",
+   "start": "2024-01-01",
+   "end": "2026-11-23",
+   "final_liquidation_usdt": 97821.56140954324,
+   "net_usdt": -2178.4385904567607,
+   "max_drawdown": -0.022201176777441045,
+   "n_buys": 2,
+   "n_round_trips": 2,
+   "win_rate": 0.0,
+   "fees_usdt": 118.01640262245996,
+   "open_positions_at_end": 0,
+   "avg_exposure": 2.485778237320334e-08,
+   "identity_ok": true,
+   "window": "样本外"
+  }
+ ],
+ "judgement": {
+  "c1_oos_net_higher": false,
+  "c2_oos_dd_not_worse_2pp": true,
+  "c3_is_same_direction": false,
+  "too_few_samples": true,
+  "oos_signal_episodes": 4,
+  "unstable": false,
+  "btc_eth_direction": [
+   0,
+   0
+  ],
+  "verdict": "保留 A，继续观察"
+ },
+ "generated_at_utc": "2026-11-24 17:16:03.303968+00:00",
+ "category": "历史研究（价格历史已反复研究过，非盲测）",
+ "real_trading": "disabled (no implementation)"
+}
