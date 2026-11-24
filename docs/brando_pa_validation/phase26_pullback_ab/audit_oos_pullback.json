@@ -1,0 +1,232 @@
+[
+ {
+  "symbol": "BTCUSDT",
+  "signal_date": "2025-07-09",
+  "episode_high": 110529.0,
+  "episode_high_date": "2025-07-03",
+  "pullback_low": 107255.7,
+  "depth": 0.6029287161539884,
+  "support_zone": [
+   101452.19671567468,
+   107432.20328432531
+  ],
+  "planned_entry_close": 111239.3,
+  "invalidation": 104471.79671567469,
+  "risk_pct": 0.060837341518018485,
+  "risk_atr": 2.693197987492867,
+  "atr14": 2512.8131373012316,
+  "entry_vs_zone_high_atr": 1.515073548112505,
+  "recovered_share_of_pullback": 1.2169981364372353,
+  "resistances_above": [],
+  "R_to_episode_high": -0.10495746661034923,
+  "R_nearest_resistance": null,
+  "R_if_entry_at_zone_high": 0.10288905401537948,
+  "tight_invalidation": 106627.49671567469,
+  "R_with_tight_stop": null,
+  "classification": "上方空间确实不够",
+  "plan_reason": "A 回调买入：回调 60% 至支撑区 [101452,107432]（强度 10），缩量后确认日收盘 111239 > 区域上沿与昨高，收盘位置 0.79，量比 1.12; 上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+  "plan_ok": false,
+  "signal_days_same_episode_30d": [
+   "2025-07-09",
+   "2025-07-10"
+  ],
+  "hindsight": {
+   "fill_next_open": 111517.39825,
+   "risk_at_fill_pct": 0.06317939303542987,
+   "target_1_5R": 122085.80055148796,
+   "close_rule": {
+    "event": "先到 +1.5R",
+    "date": "2025-07-14",
+    "days": 5,
+    "mfe_R_before": 1.661831384156076
+   },
+   "intraday_low_rule": {
+    "event": "先到 +1.5R",
+    "date": "2025-07-14",
+    "days": 5,
+    "mfe_R_before": 1.661831384156076
+   },
+   "max_high_60d_R": 1.8426534181290772,
+   "min_low_60d_R": -0.6056825991662679
+  }
+ },
+ {
+  "symbol": "BTCUSDT",
+  "signal_date": "2025-07-22",
+  "episode_high": 123226.0,
+  "episode_high_date": "2025-07-14",
+  "pullback_low": 115726.7,
+  "depth": 0.4745010946180226,
+  "support_zone": [
+   114974.93920220406,
+   116478.46079779594
+  ],
+  "planned_entry_close": 119954.9,
+  "invalidation": 114974.93920220406,
+  "risk_pct": 0.04151527613958195,
+  "risk_atr": 1.6560988589709864,
+  "atr14": 3007.043191183784,
+  "entry_vs_zone_high_atr": 1.1560988589709895,
+  "recovered_share_of_pullback": 0.5638126225114338,
+  "resistances_above": [
+   {
+    "low": 122474.23920220406,
+    "high": 123977.76079779594,
+    "strength": 1,
+    "R": 0.5058953884374128
+   }
+  ],
+  "R_to_episode_high": 0.6568525602546408,
+  "R_nearest_resistance": 0.5058953884374128,
+  "R_if_entry_at_zone_high": 3.9878232690417694,
+  "tight_invalidation": 114974.93920220406,
+  "R_with_tight_stop": 0.5058953884374128,
+  "classification": "入场太晚",
+  "plan_reason": "A 回调买入：回调 47% 至支撑区 [114975,116478]（强度 1），缩量后确认日收盘 119955 > 区域上沿与昨高，收盘位置 0.93，量比 1.63; 上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+  "plan_ok": false,
+  "signal_days_same_episode_30d": [
+   "2025-07-22"
+  ],
+  "hindsight": {
+   "fill_next_open": 120254.8875,
+   "risk_at_fill_pct": 0.04390630940298324,
+   "target_1_5R": 128174.80994669392,
+   "close_rule": {
+    "event": "先失效",
+    "date": "2025-08-01",
+    "days": 10,
+    "mfe_R_before": -0.03312295691853688
+   },
+   "intraday_low_rule": {
+    "event": "先失效",
+    "date": "2025-07-25",
+    "days": 3,
+    "mfe_R_before": -0.03312295691853688
+   },
+   "max_high_60d_R": 0.804006452444256,
+   "min_low_60d_R": -2.463070993598318
+  }
+ },
+ {
+  "symbol": "BTCUSDT",
+  "signal_date": "2025-09-10",
+  "episode_high": 113400.0,
+  "episode_high_date": "2025-09-05",
+  "pullback_low": 109967.1,
+  "depth": 0.5581951219512186,
+  "support_zone": [
+   97057.2172018113,
+   112657.3827981887
+  ],
+  "planned_entry_close": 113957.7,
+  "invalidation": 106555.6172018113,
+  "risk_pct": 0.06495465245603148,
+  "risk_atr": 2.664986379809875,
+  "atr14": 2777.5311927548296,
+  "entry_vs_zone_high_atr": 0.4681557511228549,
+  "recovered_share_of_pullback": 1.1624573975356107,
+  "resistances_above": [
+   {
+    "low": 116725.6172018113,
+    "high": 118114.3827981887,
+    "strength": 1,
+    "R": 0.373937616921634
+   },
+   {
+    "low": 119133.6172018113,
+    "high": 120943.6827981887,
+    "strength": 2,
+    "R": 0.69925145974831
+   },
+   {
+    "low": 122531.6172018113,
+    "high": 125194.3827981887,
+    "strength": 6,
+    "R": 1.158311442275322
+   }
+  ],
+  "R_to_episode_high": -0.07534365869785559,
+  "R_nearest_resistance": 0.373937616921634,
+  "R_if_entry_at_zone_high": 0.007904991245687188,
+  "tight_invalidation": 109272.7172018113,
+  "R_with_tight_stop": 0.5908062678226769,
+  "classification": "上方空间确实不够",
+  "plan_reason": "A 回调买入：回调 56% 至支撑区 [97057,112657]（强度 41），缩量后确认日收盘 113958 > 区域上沿与昨高，收盘位置 0.89，量比 1.26; 上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+  "plan_ok": false,
+  "signal_days_same_episode_30d": [
+   "2025-09-10",
+   "2025-09-11",
+   "2025-09-12",
+   "2025-09-16"
+  ],
+  "hindsight": {
+   "fill_next_open": 114242.59425,
+   "risk_at_fill_pct": 0.06728643636511866,
+   "target_1_5R": 125773.05982228304,
+   "close_rule": {
+    "event": "先到 +1.5R",
+    "date": "2025-10-05",
+    "days": 25,
+    "mfe_R_before": 1.5022037502662966
+   },
+   "intraday_low_rule": {
+    "event": "先到 +1.5R",
+    "date": "2025-10-05",
+    "days": 25,
+    "mfe_R_before": 1.5022037502662966
+   },
+   "max_high_60d_R": 1.5555407119132174,
+   "min_low_60d_R": -1.9905606786747867
+  }
+ },
+ {
+  "symbol": "ETHUSDT",
+  "signal_date": "2024-03-11",
+  "episode_high": 3523.8,
+  "episode_high_date": "2024-02-29",
+  "pullback_low": 3179.08,
+  "depth": 0.25425766527264565,
+  "support_zone": [
+   3130.560887489545,
+   3227.5991125104547
+  ],
+  "planned_entry_close": 4065.14,
+  "invalidation": 3130.560887489545,
+  "risk_pct": 0.22990084290097137,
+  "risk_atr": 4.815520442119981,
+  "atr14": 194.0764500418186,
+  "entry_vs_zone_high_atr": 4.31552044211998,
+  "recovered_share_of_pullback": 2.5703759572986753,
+  "resistances_above": [],
+  "R_to_episode_high": -0.5792340025082082,
+  "R_nearest_resistance": null,
+  "R_if_entry_at_zone_high": 2.552414524541447,
+  "tight_invalidation": 3130.560887489545,
+  "R_with_tight_stop": null,
+  "classification": "入场太晚",
+  "plan_reason": "A 回调买入：回调 25% 至支撑区 [3131,3228]（强度 1），缩量后确认日收盘 4065 > 区域上沿与昨高，收盘位置 0.94，量比 1.21; 上方无满足 ≥1.5R 的已确认阻力区 → WAIT",
+  "plan_ok": false,
+  "signal_days_same_episode_30d": [
+   "2024-03-11"
+  ],
+  "hindsight": {
+   "fill_next_open": 4075.3028499999996,
+   "risk_at_fill_pct": 0.23182128967677937,
+   "target_1_5R": 5492.415793765681,
+   "close_rule": {
+    "event": "先失效",
+    "date": "2024-04-13",
+    "days": 33,
+    "mfe_R_before": 0.018372371175169645
+   },
+   "intraday_low_rule": {
+    "event": "先失效",
+    "date": "2024-03-20",
+    "days": 9,
+    "mfe_R_before": 0.018372371175169645
+   },
+   "max_high_60d_R": 0.018372371175169645,
+   "min_low_60d_R": -1.3588608328443899
+  }
+ }
+]
