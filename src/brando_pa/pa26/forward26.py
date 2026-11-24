@@ -84,6 +84,14 @@ def _core(rec: dict) -> dict:
 
 
 def run(now: pd.Timestamp | None = None, fwd_dir: Path = FWD_DIR) -> dict:
+    """每次运行都在 runs.jsonl（只追加哈希链）留一条运行记录，无信号、无新日线也记录。"""
+    s = _run(now, fwd_dir); c = s.get("scopes", {}).get("BTC+ETH", {})
+    _append(fwd_dir / "runs.jsonl", {"kind": "run", "run_at_utc": str(now or pd.Timestamp.now(tz="UTC")), "status": s.get("status"), "as_of_day": s.get("as_of_day"), "new_day_records": s.get("new_day_records", 0),
+                                     "combo_net_usdt": c.get("net_usdt"), "combo_max_drawdown": c.get("max_drawdown"), "n_signals_combo": c.get("n_signals"), "n_fills_combo": c.get("n_fills")})
+    return s
+
+
+def _run(now: pd.Timestamp | None = None, fwd_dir: Path = FWD_DIR) -> dict:
     now = now or pd.Timestamp.now(tz="UTC"); daily = fwd_dir / "daily.jsonl"; events = fwd_dir / "events.jsonl"
     fz = verify_freeze(fwd_dir)
     if not fz["ok"]:
@@ -116,7 +124,7 @@ def run(now: pd.Timestamp | None = None, fwd_dir: Path = FWD_DIR) -> dict:
         summary["scopes"][name] = {"net_usdt": float(r.final["liquidation_usdt"] - M.INITIAL), "liquidation_usdt": float(r.final["liquidation_usdt"]), "max_drawdown": M.max_dd(nav["liquidation"]), "days": len(nav),
                                    "n_signals": int(len(sig)), "n_signals_accepted": int(sig.accepted.astype(bool).sum()) if len(sig) else 0, "rejection_reasons": (sig[~sig.accepted.astype(bool)].reason.astype(str).str.split("; ").str[-1].value_counts().to_dict() if len(sig) else {}),
                                    "n_fills": int(len(r.fills)), "open_positions": int(r.final["open_positions"]), "fees_usdt": float(r.final["fees_usdt"])}
-    summary["new_day_records"] = n_new; summary["chains"] = {"daily": verify_chain(daily), "events": verify_chain(events)}; summary["status"] = "ok"
+    summary["new_day_records"] = n_new; summary["chains"] = {"daily": verify_chain(daily), "events": verify_chain(events), "runs": verify_chain(fwd_dir / "runs.jsonl")}; summary["status"] = "ok"
     (fwd_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     return summary
 

@@ -103,3 +103,11 @@ def test_forward_freeze_and_waiting(tmp_path, monkeypatch):
     s = F.run(now=T(F.FORWARD_START) + pd.Timedelta(hours=12), fwd_dir=tmp_path); assert s["status"].startswith("等待首根新日线")      # 冻结后第一根日线尚未收盘：不取数、不记录
     monkeypatch.setattr(F, "FORWARD_START", "2026-01-01"); assert not F.verify_freeze(tmp_path)["ok"]                          # 改任何冻结参数 → 校验失败
     s2 = F.run(now=T("2026-12-01"), fwd_dir=tmp_path); assert s2["status"].startswith("冻结规则被改动") and (tmp_path / "events.jsonl").exists()
+
+
+def test_forward_run_log_written_even_without_new_day(tmp_path):
+    from brando_pa.pa26 import forward26 as F
+    from brando_pa.trendsys.paper import verify_chain
+    F.freeze(tmp_path); F.run(now=T(F.FORWARD_START) + pd.Timedelta(hours=6), fwd_dir=tmp_path)
+    lines = (tmp_path / "runs.jsonl").read_text(encoding="utf-8").strip().splitlines()
+    assert len(lines) == 1 and '"status": "等待首根新日线' in lines[0] and verify_chain(tmp_path / "runs.jsonl")["ok"]
