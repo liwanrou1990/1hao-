@@ -1,0 +1,85 @@
+{
+ "as_of_day": "2026-11-24",
+ "run_at_utc": "2026-11-25 00:18:10.391621+00:00",
+ "freeze": {
+  "ok": true,
+  "changed_files": [],
+  "spec_ok": true
+ },
+ "history_check": {
+  "BTCUSDT": {
+   "days": 3239,
+   "mismatch_counts": {
+    "open": 0,
+    "high": 0,
+    "low": 0,
+    "close": 0,
+    "volume": 0
+   }
+  },
+  "ETHUSDT": {
+   "days": 3239,
+   "mismatch_counts": {
+    "open": 0,
+    "high": 0,
+    "low": 0,
+    "close": 0,
+    "volume": 0
+   }
+  }
+ },
+ "scopes": {
+  "BTC": {
+   "net_usdt": 0.0,
+   "liquidation_usdt": 100000.0,
+   "max_drawdown": 0.0,
+   "days": 1,
+   "n_signals": 0,
+   "n_signals_accepted": 0,
+   "rejection_reasons": {},
+   "n_fills": 0,
+   "open_positions": 0,
+   "fees_usdt": 0.0
+  },
+  "ETH": {
+   "net_usdt": 0.0,
+   "liquidation_usdt": 100000.0,
+   "max_drawdown": 0.0,
+   "days": 1,
+   "n_signals": 0,
+   "n_signals_accepted": 0,
+   "rejection_reasons": {},
+   "n_fills": 0,
+   "open_positions": 0,
+   "fees_usdt": 0.0
+  },
+  "BTC+ETH": {
+   "net_usdt": 0.0,
+   "liquidation_usdt": 100000.0,
+   "max_drawdown": 0.0,
+   "days": 1,
+   "n_signals": 0,
+   "n_signals_accepted": 0,
+   "rejection_reasons": {},
+   "n_fills": 0,
+   "open_positions": 0,
+   "fees_usdt": 0.0
+  }
+ },
+ "new_day_records": 3,
+ "chains": {
+  "daily": {
+   "ok": true,
+   "n": 3
+  },
+  "events": {
+   "ok": true,
+   "n": 0
+  },
+  "runs": {
+   "ok": true,
+   "n": 0
+  }
+ },
+ "status": "ok"
+}
