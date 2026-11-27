@@ -1,6 +1,6 @@
 {
- "as_of_day": "2026-11-25",
- "run_at_utc": "2026-11-26 00:19:08.702546+00:00",
+ "as_of_day": "2026-11-26",
+ "run_at_utc": "2026-11-27 00:17:59.633828+00:00",
  "freeze": {
   "ok": true,
   "changed_files": [],
@@ -33,7 +33,7 @@
    "net_usdt": 0.0,
    "liquidation_usdt": 100000.0,
    "max_drawdown": 0.0,
-   "days": 2,
+   "days": 3,
    "n_signals": 0,
    "n_signals_accepted": 0,
    "rejection_reasons": {},
@@ -45,7 +45,7 @@
    "net_usdt": 0.0,
    "liquidation_usdt": 100000.0,
    "max_drawdown": 0.0,
-   "days": 2,
+   "days": 3,
    "n_signals": 0,
    "n_signals_accepted": 0,
    "rejection_reasons": {},
@@ -57,7 +57,7 @@
    "net_usdt": 0.0,
    "liquidation_usdt": 100000.0,
    "max_drawdown": 0.0,
-   "days": 2,
+   "days": 3,
    "n_signals": 0,
    "n_signals_accepted": 0,
    "rejection_reasons": {},
@@ -70,7 +70,7 @@
  "chains": {
   "daily": {
    "ok": true,
-   "n": 6
+   "n": 9
   },
   "events": {
    "ok": true,
@@ -78,7 +78,7 @@
   },
   "runs": {
    "ok": true,
-   "n": 1
+   "n": 2
   }
  },
  "status": "ok"
